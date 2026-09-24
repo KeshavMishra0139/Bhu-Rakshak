@@ -500,8 +500,9 @@
     "in_person_here": "इस जगह की सड़क-स्तर तस्वीर",
     "in_person_none": "इस जगह के {{d}} के भीतर कोई सड़क-स्तर तस्वीर नहीं है।",
     "in_person_open": "Google Maps में खोलें",
-    "in_person_close": "ज़मीनी दृश्य बंद करें",
-    "in_person_point": "स्थान {{lat}}, {{lng}}"
+    "in_person_point": "स्थान {{lat}}, {{lng}}",
+    "mode_map": "मानचित्र",
+    "view_mode": "मानचित्र या ज़मीनी दृश्य"
   },
   "drawer": {
     "overview": "सारांश",

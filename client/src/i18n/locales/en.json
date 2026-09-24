@@ -494,14 +494,15 @@
     "src_rain": "Rainfall: Open-Meteo live forecast",
     "src_imd": "Warnings: IMD district feed",
     "in_person": "In-person view",
-    "in_person_hint": "Click a pin, a station or any spot on the map to look around at street level.",
+    "in_person_hint": "Click a pin, a station or any spot on the map to see it at street level.",
     "in_person_loading": "Looking for street-level imagery…",
     "in_person_dist": "Nearest street-level imagery is {{d}} away",
     "in_person_here": "Street-level imagery at this spot",
     "in_person_none": "No street-level imagery within {{d}} of this spot.",
     "in_person_open": "Open in Google Maps",
-    "in_person_close": "Close in-person view",
-    "in_person_point": "Point {{lat}}, {{lng}}"
+    "in_person_point": "Point {{lat}}, {{lng}}",
+    "mode_map": "Map",
+    "view_mode": "Map or in-person view"
   },
   "drawer": {
     "overview": "Overview",

@@ -1,7 +1,7 @@
 // Corridor watch map for the authority dashboard, following the team's citizen-portal map:
 // a plain Google map with Google's own controls and classic pins labelled by risk level,
 // plus optional operational layers (corridors, road status, citizen reports, resources).
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AdvancedMarker, Map, Marker, Polyline, useMap } from '@vis.gl/react-google-maps';
 import { useTranslation } from 'react-i18next';
 import type { Level, LocationSnap, Report, Resource, Road } from '../../api/types';
@@ -41,9 +41,11 @@ type Props = {
   reports: Report[];
   resources: Resource[];
   corridorColors: Record<string, string>;
+  /** Extra map-bound controllers (e.g. the in-person view). */
+  children?: ReactNode;
 };
 
-export function WatchMap({ mapId, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors }: Props) {
+export function WatchMap({ mapId, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors, children }: Props) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [hoverRoad, setHoverRoad] = useState<{ text: string; pos: google.maps.LatLngLiteral } | null>(null);
@@ -53,7 +55,7 @@ export function WatchMap({ mapId, onMapClick, locations, horizon, activeId, onSe
 
   return (
     <Map mapId={mapId} defaultCenter={MAP_CENTER} defaultZoom={9} mapTypeControl fullscreenControl zoomControl streetViewControl
-      className="h-full w-full min-h-[300px]" onClick={onMapClick ? (e) => { if (e.detail.latLng) onMapClick(e.detail.latLng); } : undefined}>
+      className="h-full w-full min-h-[440px]" onClick={onMapClick ? (e) => { if (e.detail.latLng) onMapClick(e.detail.latLng); } : undefined}>
       {layers.corridors && roads.map((r) => (
         <Polyline key={`c-${r.id}`} path={pathOf(r)} clickable={false} strokeOpacity={0} icons={DASH(corridorColors[r.corridor_id] || '#7CC4CF')} />
       ))}
@@ -93,6 +95,7 @@ export function WatchMap({ mapId, onMapClick, locations, horizon, activeId, onSe
         );
       })}
       <PanTo target={active ? { lat: active.lat, lng: active.lng } : null} />
+      {children}
     </Map>
   );
 }

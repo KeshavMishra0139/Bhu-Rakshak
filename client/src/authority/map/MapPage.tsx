@@ -2,7 +2,7 @@
 // with the location drawer and forecast horizon on top.
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding } from 'lucide-react';
+import { MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Loader2 } from 'lucide-react';
 import type { AlertItem, Level, LocationSnap, Report, Resource, Road } from '../../api/types';
 import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream } from '../../live/RiskStreamProvider';
@@ -10,7 +10,7 @@ import { useLive } from '../useLive';
 import { useAuthority } from '../AuthorityContext';
 import { WatchMap, levelAt, type LayerKey } from './WatchMap';
 import { DetailDrawer } from './DetailDrawer';
-import { InPersonView, type ViewTarget } from './InPersonView';
+import { InPersonController, RADII, type StreetStatus, type ViewTarget } from './InPersonView';
 import { GoogleMapsFrame, useGoogleConfig } from '../../lib/googleMaps';
 import { LEVELS, riskConfig } from '../../lib/risk';
 import { placeName } from '../../lib/format';
@@ -41,14 +41,20 @@ export default function MapPage() {
   const horizons = [0, ...riskConfig.forecastHorizonsHours];
   const online = list.filter((l) => l.risk).length;
 
-  // In-person view: street-level imagery for the selected place, or for any spot clicked on the map.
-  const [inPerson, setInPerson] = useState(false);
+  // Map / In-person view share one map area: in-person mode shows Google Street View nearest to the
+  // selected place or to any spot clicked on the map.
+  const [mode, setMode] = useState<'map' | 'street'>('map');
+  const [streetVisible, setStreetVisible] = useState(false);
+  const [street, setStreet] = useState<StreetStatus>({ state: 'idle' });
   const [viewPoint, setViewPoint] = useState<ViewTarget | null>(null);
   const selected = list.find((l) => l.id === selectedId);
-  useEffect(() => {
-    if (inPerson && selected) setViewPoint({ lat: selected.lat, lng: selected.lng, label: placeName(selected, lang) });
-  }, [inPerson, selected?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  const pointFor = (l: LocationSnap): ViewTarget => ({ lat: l.lat, lng: l.lng, label: placeName(l, lang) });
+  useEffect(() => { if (mode === 'street' && selected) setViewPoint(pointFor(selected)); }, [selected?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  const switchMode = (m: 'map' | 'street') => { setMode(m); setViewPoint(m === 'street' && selected ? pointFor(selected) : null); };
+  // Google's pegman can open street view too; keep the toggle in step.
+  const onVisibleChange = (v: boolean) => { setStreetVisible(v); if (v) setMode('street'); };
   const pickPoint = (pos: google.maps.LatLngLiteral) => setViewPoint({ ...pos, label: t('map.in_person_point', { lat: pos.lat.toFixed(4), lng: pos.lng.toFixed(4) }) });
+  const km = (m: number) => (m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(1)} km`);
 
   const alertedSince = (l: LocationSnap) => (alerts.data?.alerts || []).some((a) => !a.cancelled_at && a.kind === 'warning' && l.risk && a.created_at >= l.risk.level_since &&
     ((a.target_type === 'location' && a.target_id === l.id) || (a.target_type === 'corridor' && a.target_id === l.corridor_id) || (a.target_type === 'district' && a.target_id === l.district)));
@@ -59,39 +65,63 @@ export default function MapPage() {
         <GoogleMapsFrame className="map-console lg:h-full">
         {(cfg) => (
         <div className="map-console lg:h-full">
-          <div className="flex flex-col min-h-0">
-          {/* Map */}
-          <div className={`relative flex-1 min-w-0 overflow-hidden bg-[#dcebdc] ${inPerson ? 'min-h-[300px]' : 'min-h-[440px]'}`}>
-            <WatchMap mapId={cfg.map_id} onMapClick={inPerson ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId} onSelect={select} layers={layers} corridorColors={corridorColors}
-              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} />
-            <div className="absolute left-3 top-14 flex items-center gap-2 rounded-xl border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-bold text-[#315542] shadow-sm backdrop-blur">
-              <MapPinned size={13} aria-hidden /> {t('map.watch_title')}
+          {/* Map (and in-person view in the same area) */}
+          <div className="relative min-h-[440px] overflow-hidden bg-[#dcebdc]">
+            <WatchMap mapId={cfg.map_id} onMapClick={mode === 'street' ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId} onSelect={select} layers={layers} corridorColors={corridorColors}
+              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []}>
+              <InPersonController enabled={mode === 'street'} target={viewPoint} onStatus={setStreet} onVisibleChange={onVisibleChange} />
+            </WatchMap>
+
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex w-max max-w-[92%] flex-col items-center gap-1.5">
+              <div role="radiogroup" aria-label={t('map.view_mode')} className="flex rounded-xl border border-white/80 bg-white/95 p-0.5 shadow-sm backdrop-blur">
+                {(['map', 'street'] as const).map((m) => (
+                  <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => switchMode(m)}
+                    className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold ${mode === m ? 'bg-[#2a5d43] text-[#d7efd8]' : 'text-[#315542] hover:bg-[#e8f3ed]'}`}>
+                    {m === 'map' ? <MapIcon size={13} aria-hidden /> : <PersonStanding size={13} aria-hidden />}
+                    {m === 'map' ? t('map.mode_map') : t('map.in_person')}
+                  </button>
+                ))}
+              </div>
+              {mode === 'street' && (street.state !== 'idle' || !streetVisible) && (
+                <p role="status" className="flex max-w-full items-center gap-2 rounded-lg bg-[#15241c]/90 px-3 py-1.5 text-center text-[11px] text-[#d7efd8] shadow">
+                  {street.state === 'loading' && <><Loader2 size={13} className="animate-spin shrink-0" aria-hidden />{t('map.in_person_loading')}</>}
+                  {street.state === 'none' && <>{viewPoint?.label} · {t('map.in_person_none', { d: km(RADII[RADII.length - 1]) })}</>}
+                  {street.state === 'idle' && t('map.in_person_hint')}
+                  {street.state === 'found' && (
+                    <>
+                      <span className="truncate">{viewPoint?.label} · {street.distanceM > 150 ? t('map.in_person_dist', { d: km(street.distanceM) }) : (street.description || t('map.in_person_here'))}</span>
+                      <a className="shrink-0 inline-flex items-center gap-1 font-bold underline-offset-2 hover:underline"
+                        href={`https://www.google.com/maps/@?api=1&map_action=pano&pano=${encodeURIComponent(street.panoId)}`} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink size={12} aria-hidden />{t('map.in_person_open')}
+                      </a>
+                    </>
+                  )}
+                </p>
+              )}
             </div>
-            <div className="absolute left-3 top-[6.25rem] flex flex-wrap items-center gap-2 max-w-[80%]" role="group" aria-label={t('map.layers')}>
-              <button type="button" aria-pressed={inPerson} onClick={() => { setInPerson((v) => !v); if (inPerson) setViewPoint(null); }}
-                className={`map-legend ${inPerson ? '!bg-[#2a5d43] !text-[#d7efd8] !border-[#2a5d43]' : ''}`}>
-                <PersonStanding size={12} aria-hidden /> {t('map.in_person')}
-              </button>
-              <span className="map-legend"><Layers size={12} aria-hidden /> {t('map.layers')}</span>
-              {layerKeys.map((k) => (
-                <button key={k} type="button" aria-pressed={layers[k]} onClick={() => setLayers((x) => ({ ...x, [k]: !x[k] }))}
-                  className={`map-legend ${layers[k] ? '!bg-[#2a5d43] !text-[#d7efd8] !border-[#2a5d43]' : ''}`}>
-                  {t(`map.layer_${k}`)}
-                </button>
-              ))}
-            </div>
-            <div className="absolute bottom-4 left-4 flex flex-wrap gap-2 max-w-[70%]">
-              {LEVELS.map((lv) => (
-                <span key={lv} className="map-legend"><span className={`h-2 w-2 rounded-full ${DOT[lv]}`} aria-hidden /> {t(`levels.${lv}`)}</span>
-              ))}
-              {googleCfg && !googleCfg.api_key && <span className="map-legend !text-[#a8681f]">{t('map.google_key_missing')}</span>}
-            </div>
-          </div>
-          {inPerson && (
-            <div className="flex-1 min-w-0 min-h-[320px] border-t border-white/10">
-              <InPersonView target={viewPoint} onClose={() => { setInPerson(false); setViewPoint(null); }} />
-            </div>
-          )}
+
+            {!streetVisible && (
+              <>
+                <div className="absolute left-3 top-14 flex items-center gap-2 rounded-xl border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-bold text-[#315542] shadow-sm backdrop-blur">
+                  <MapPinned size={13} aria-hidden /> {t('map.watch_title')}
+                </div>
+                <div className="absolute left-3 top-[6.25rem] flex flex-wrap items-center gap-2 max-w-[80%]" role="group" aria-label={t('map.layers')}>
+                  <span className="map-legend"><Layers size={12} aria-hidden /> {t('map.layers')}</span>
+                  {layerKeys.map((k) => (
+                    <button key={k} type="button" aria-pressed={layers[k]} onClick={() => setLayers((x) => ({ ...x, [k]: !x[k] }))}
+                      className={`map-legend ${layers[k] ? '!bg-[#2a5d43] !text-[#d7efd8] !border-[#2a5d43]' : ''}`}>
+                      {t(`map.layer_${k}`)}
+                    </button>
+                  ))}
+                </div>
+                <div className="absolute bottom-4 left-4 flex flex-wrap gap-2 max-w-[70%]">
+                  {LEVELS.map((lv) => (
+                    <span key={lv} className="map-legend"><span className={`h-2 w-2 rounded-full ${DOT[lv]}`} aria-hidden /> {t(`levels.${lv}`)}</span>
+                  ))}
+                  {googleCfg && !googleCfg.api_key && <span className="map-legend !text-[#a8681f]">{t('map.google_key_missing')}</span>}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Live risk stations */}
