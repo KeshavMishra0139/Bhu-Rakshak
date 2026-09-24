@@ -49,7 +49,7 @@ export default function Landing() {
                 <div><dt className="text-sm text-on-brand/70">{t('landing.stat_refresh')}</dt><dd className="text-3xl font-bold text-white tabular-nums">{weatherAt ? timeIST(weatherAt, i18n.language) : '–'}</dd></div>
               </dl>
             </div>
-            <div className="relative">
+            <div className="relative isolate">
               <div className="h-[380px] lg:h-[460px] rounded-2xl overflow-hidden border border-white/15 shadow-2xl">
                 <Suspense fallback={<div className="h-full w-full bg-white/5 animate-pulse" />}><LandingMap /></Suspense>
               </div>

@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Crosshair, Volume2, Square, ChevronDown, Send, Phone, Sparkles } from 'lucide-react';
 import { api } from '../api/client';
-import type { Me, Road, Stakeholder } from '../api/types';
+import type { ImdSummary, Me, Road, Stakeholder } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
 import { useRiskStream, useStreamEvent } from '../live/RiskStreamProvider';
 import { useCitizen } from './CitizenContext';
 import { RiskBadge } from '../components/RiskBadge';
 import { UpdatedAgo } from '../components/UpdatedAgo';
+import { ImdPanel } from '../components/ImdPanel';
 import { placeName, timeIST } from '../lib/format';
 import { driverPlain } from '../lib/factors';
 import { LEVEL_ICON, TREND_ICON, levelVar } from '../lib/risk';
@@ -161,6 +162,7 @@ export default function CitizenHome() {
                     ))}
                   </dl>
                 )}
+                <ImdPanel imd={r.conditions.imd as ImdSummary | null | undefined} className="mt-4" />
               </div>
               <div className="sm:self-start"><RiskBadge level={r.level} /></div>
             </div>

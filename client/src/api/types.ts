@@ -4,6 +4,16 @@ export type SubRole = 'district_officer' | 'police' | 'bro' | 'rescue' | 'sdma';
 export type Role = 'citizen' | 'authority' | 'admin' | 'developer';
 
 export interface Driver { key: string; contribution: number }
+
+export type ImdColor = 'green' | 'yellow' | 'orange' | 'red';
+/** India Meteorological Department district warning (today and the next two days) and any active nowcast. */
+export interface ImdSummary {
+  days: { codes: number[]; color: ImdColor | null }[];
+  nowcast: { color: ImdColor | null; cats: number[]; message: string | null; valid_until: string | null } | null;
+  issued: { date: string | null; utc: string | null } | null;
+  fetched_at: string | null;
+  source: 'IMD';
+}
 export interface ForecastPoint { h: number; score: number; level: Level }
 
 export interface Risk {
@@ -17,7 +27,8 @@ export interface Risk {
   time_to_threshold: { level: Level; hours: number } | null;
   priority: number;
   exposure_score?: number;
-  conditions: Record<string, number | string | null>;
+  /** Feature values; `imd` holds the IMD district warning summary (null when IMD has nothing current). */
+  conditions: Record<string, number | string | null | ImdSummary>;
   model_version: string;
   level_since: string;
   updated_at: string;

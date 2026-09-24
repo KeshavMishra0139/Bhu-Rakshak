@@ -419,7 +419,9 @@
     "minutes": "{{count}} min",
     "reports_verified": "Field reports verified",
     "none_yet": "None yet",
-    "phase_note": "User approvals, the audit log and SOP editing arrive in the admin build phase."
+    "phase_note": "User approvals, the audit log and SOP editing arrive in the admin build phase.",
+    "feed_imd": "IMD warnings",
+    "status_not_configured": "Not configured"
   },
   "notfound": {
     "title": "Page not found",
@@ -452,7 +454,6 @@
     "satellite": "Satellite",
     "terrain": "Terrain",
     "street": "Street",
-    "mappls": "Mappls",
     "layers": "Layers",
     "layer_risk": "Risk markers",
     "layer_corridors": "Corridors",
@@ -481,7 +482,8 @@
     "history_pin": "Past landslide ({{year}})",
     "resources_short": "{{name}}: {{status}}",
     "show_panel": "Show location list",
-    "hide_panel": "Hide location list"
+    "hide_panel": "Hide location list",
+    "google_key_missing": "Google Maps key not set (development mode)"
   },
   "drawer": {
     "overview": "Overview",
@@ -751,13 +753,12 @@
     "status_d": "This prototype's risk engine is a configurable baseline: transparent weights anchored on live Open-Meteo data, with gentle live variation between weather updates. Our machine-learning model is being integrated behind the same interface. Slope, geology and exposure values are seed placeholders until official layers are connected. We do not publish accuracy figures until the model has been validated.",
     "credits": "Data and map credits",
     "c_openmeteo": "Weather and soil-moisture data by Open-Meteo.com, licensed under CC BY 4.0.",
-    "c_esri": "Satellite imagery: Esri World Imagery (Esri, Maxar, Earthstar Geographics and the GIS user community).",
     "c_bhuvan": "Thematic overlays: Bhuvan, ISRO / NRSC (shown when the service is reachable).",
-    "c_osm": "Street and label data © OpenStreetMap contributors; label and street tiles by CARTO; terrain by OpenTopoMap.",
-    "c_mappls": "Mappls (MapmyIndia) basemap, when configured.",
     "c_boundary": "India's boundary is drawn from an official Survey of India file supplied by the deployer.",
     "team": "Team",
-    "team_d": "Built by Team ByteMatrix."
+    "team_d": "Built by Team ByteMatrix.",
+    "c_google": "Maps: Google Maps. Map data © Google.",
+    "c_imd": "Weather warnings and nowcasts: India Meteorological Department (IMD), Ministry of Earth Sciences."
   },
   "adminx": {
     "pending": "Pending approvals",
@@ -799,5 +800,52 @@
     "split_left": "Authority",
     "split_right": "Citizen",
     "reset_done": "Demo data reset"
+  },
+  "imd": {
+    "title": "IMD weather warning",
+    "source": "Source: India Meteorological Department (IMD)",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "day3": "Day after",
+    "nowcast": "Next few hours",
+    "valid_until": "valid until {{time}}",
+    "none": "No warning",
+    "color_green": "Green · no warning",
+    "color_yellow": "Yellow · be aware",
+    "color_orange": "Orange · be prepared",
+    "color_red": "Red · take action",
+    "w_2": "Heavy rain",
+    "w_3": "Heavy snow",
+    "w_4": "Thunderstorm and lightning",
+    "w_5": "Hailstorm",
+    "w_6": "Dust storm",
+    "w_7": "Dust-raising winds",
+    "w_8": "Strong surface winds",
+    "w_9": "Heat wave",
+    "w_10": "Hot day",
+    "w_11": "Warm night",
+    "w_12": "Cold wave",
+    "w_13": "Cold day",
+    "w_14": "Ground frost",
+    "w_15": "Fog",
+    "w_16": "Very heavy rain",
+    "w_17": "Extremely heavy rain",
+    "n_2": "Light rain",
+    "n_3": "Light snow",
+    "n_4": "Light thunderstorm",
+    "n_5": "Slight dust storm",
+    "n_6": "Lightning possible",
+    "n_7": "Moderate rain",
+    "n_8": "Moderate snow",
+    "n_9": "Moderate thunderstorm",
+    "n_10": "Moderate dust storm",
+    "n_11": "Lightning likely",
+    "n_12": "Heavy rain",
+    "n_13": "Heavy snow",
+    "n_14": "Severe thunderstorm",
+    "n_15": "Very severe thunderstorm",
+    "n_31": "Thunderstorm with hail",
+    "n_32": "Severe dust storm",
+    "n_33": "Lightning very likely"
   }
 }

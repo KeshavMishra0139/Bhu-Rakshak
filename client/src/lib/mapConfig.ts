@@ -1,47 +1,21 @@
-// Every map source in one place, so providers can be swapped without touching components.
-// Credits for these sources are shown on the About page only (and in Leaflet's small attribution line,
-// which tile licences require).
+// Map settings in one place. All maps use Google Maps (see lib/googleMaps.tsx); credits are on the About page,
+// and Google's own attribution stays on every map as its terms require.
 export type Basemap = {
-  id: 'satellite' | 'terrain' | 'street' | 'mappls';
-  url: string | ((theme: 'light' | 'dark') => string);
-  labelsUrl?: string;
-  attribution: string;
-  maxZoom: number;
-  subdomains?: string;
+  id: 'satellite' | 'terrain' | 'street';
+  /** Google map type. "hybrid" is satellite imagery with Google's labels and roads. */
+  mapTypeId: 'hybrid' | 'terrain' | 'roadmap';
 };
 
 export const BASEMAPS: Basemap[] = [
-  {
-    id: 'satellite',
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    // Labels-only layer (light text for dark imagery); boundaries come from our own official overlay.
-    labelsUrl: 'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',
-    attribution: 'Imagery © Esri, Maxar, Earthstar Geographics | Labels © CARTO, © OpenStreetMap contributors',
-    maxZoom: 18,
-    subdomains: 'abcd',
-  },
-  {
-    id: 'terrain',
-    url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-    attribution: '© OpenStreetMap contributors, SRTM | Style © OpenTopoMap (CC-BY-SA)',
-    maxZoom: 16,
-    subdomains: 'abc',
-  },
-  {
-    id: 'street',
-    url: (theme) => (theme === 'dark'
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'),
-    attribution: '© OpenStreetMap contributors © CARTO',
-    maxZoom: 18,
-    subdomains: 'abcd',
-  },
+  { id: 'satellite', mapTypeId: 'hybrid' },
+  { id: 'terrain', mapTypeId: 'terrain' },
+  { id: 'street', mapTypeId: 'roadmap' },
 ];
 
 /** Sikkim and surroundings. */
-export const MAP_BOUNDS: [[number, number], [number, number]] = [[26.45, 87.6], [28.3, 89.25]];
-export const MAP_CENTER: [number, number] = [27.33, 88.5];
+export const MAP_BOUNDS = { south: 26.45, west: 87.6, north: 28.3, east: 89.25 };
+export const MAP_CENTER = { lat: 27.33, lng: 88.5 };
 export const MAP_MIN_ZOOM = 8;
 export const OFFICIAL_BOUNDARY_URL = '/geo/india_boundary.geojson';
-/** Tile errors within this window before falling back to the next basemap. */
-export const TILE_ERROR_LIMIT = 12;
+
+export const toLatLng = ([lat, lng]: [number, number]) => ({ lat, lng });

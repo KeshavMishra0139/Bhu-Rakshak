@@ -75,24 +75,33 @@ Actions taken while viewing as another role are logged as `developer (as <role>)
 
 | | Component |
 | --- | --- |
-| **Real** | Open-Meteo weather and soil moisture (fetched every 30 min, cached, served offline), auth and roles, inbox routing and escalation, incidents with SOP checklist and audit log, alerts with dashboard delivery and acknowledgement counts, citizen reports with verification, roads, resources, situation report, EN/HI, themes |
+| **Real** | Open-Meteo weather and soil moisture (fetched every 30 min, cached, served offline), IMD district warnings and nowcasts (every 30 min once `IMD_API_KEY` and `IMD_TOKEN` are set), Google Maps, auth and roles, inbox routing and escalation, incidents with SOP checklist and audit log, alerts with dashboard delivery and acknowledgement counts, citizen reports with verification, roads, resources, situation report, EN/HI, themes |
 | **Generated** | Live risk values: a transparent baseline engine anchored on real weather, with bounded live variation and the Storm scenario. Derived features (saturation index, cloudburst and freeze–thaw flags). Assistant answers (templates over live data). Historical landslide points (seeded from per-location counts). |
 | **Seed placeholders** | Slope, geology, NDVI, land cover, river and road distance, landslide history, population and facilities (`server/src/data/*.json`), road statuses, resources and contacts |
 | **Pending / stubs (labelled in code)** | Trained ML model (`ModelPredictionProvider`, `POST {MODEL_URL}/predict`); SMS and push delivery (`notifications/providers.js`, logged through the provider interface); seismic feed and ground sensors; official Survey of India boundary (place it at `client/public/geo/india_boundary.geojson`; until then the legend shows "Official boundary data pending"); real GIS layers from Bhuvan, GSI and the census |
 
 No accuracy figures are claimed anywhere. Confidence reflects only data freshness and agreement.
 
+## Weather data
+
+- **Open-Meteo** (no key): hourly rain, snow, temperature and five soil-moisture layers for every location, 7 days back and 3 ahead (`server/src/ingest/openMeteo.js`).
+- **IMD** (`server/src/ingest/imd.js`): district-wise warnings (5 days) and district-wise nowcasts (next ~3 hours) from the IMD API portal, `https://api.imd.gov.in/api/v1`.
+  - Register at [api.imd.gov.in](https://api.imd.gov.in) and put your API key and JWT in `IMD_API_KEY` and `IMD_TOKEN`. Requests send them as `x-api-key` and `Authorization: Bearer …`. The older `mausam.imd.gov.in/api/*` endpoints need your server's IP whitelisted by IMD instead.
+  - Warnings are matched to our districts by both old and new Sikkim names (`server/src/data/imd_districts.json`).
+  - Heavy, very heavy and extremely heavy rain warnings, thunderstorms and the nowcast become the `imd_warning` risk factor (weight 0.04, taken from the model rain forecast). When IMD has nothing current for a district, that share falls back to the Open-Meteo forecast, so scores are unchanged without IMD credentials.
+  - Officers see the warning in the location drawer and citizens see it on Home, always with "Source: IMD" as IMD's API guidelines require. System health shows the IMD feed status.
+
 ## Maps
 
-All sources live in `client/src/lib/mapConfig.ts`:
+All maps use **Google Maps** through `@vis.gl/react-google-maps` (`client/src/lib/googleMaps.tsx`, settings in `client/src/lib/mapConfig.ts`):
 
-- **Satellite (default):** Esri World Imagery with a labels-only overlay.
-- **Terrain:** OpenTopoMap.
-- **Street:** CARTO/OSM, light or dark to match the theme.
-- **Bhuvan:** layers come from the WMS URL on the official Bhuvan wiki (`https://bhuvan-vec2.nrsc.gov.in/bhuvan/wms`, WMS 1.1.1). The server discovers Sikkim and Himalayan geomorphology, lineament, LULC, flood-hazard and glacial-lake layers from its GetCapabilities, so no layer names are guessed. If the service is unreachable the section is hidden, and a layer whose tiles keep failing is removed quietly. `BHUVAN_TOKEN`, if set, is sent as `token=`.
-- **Mappls:** set both `MAPPLS_API_KEY` and `MAPPLS_TILE_URL` (a raster tile template from your Mappls console containing `{key}`). The template isn't hard-coded because a verified public one couldn't be confirmed.
+- **Key:** set `GOOGLE_MAPS_API_KEY` to a Maps JavaScript API browser key and restrict it to your site's HTTP referrers. The server hands it to the browser at `/api/map/google`, so changing it needs no rebuild. Without a key, maps still load but show "For development purposes only" and a Google notice.
+- **Map ID:** `GOOGLE_MAPS_MAP_ID` (defaults to Google's `DEMO_MAP_ID`, fine for development). It enables the vector map, markers and the light/dark colour scheme.
+- **Boundaries:** maps load with `region=IN`, so Google draws India's borders as required in India. The official Survey of India overlay (`client/public/geo/india_boundary.geojson`) is still drawn on top when supplied.
+- **Basemaps:** Satellite (Google hybrid: imagery with labels), Terrain and Street.
+- **Bhuvan:** layers come from the WMS URL on the official Bhuvan wiki (`https://bhuvan-vec2.nrsc.gov.in/bhuvan/wms`, WMS 1.1.1) and are drawn as Google map tiles. The server discovers Sikkim and Himalayan geomorphology, lineament, LULC, flood-hazard and glacial-lake layers from its GetCapabilities, so no layer names are guessed. If the service is unreachable the section is hidden. `BHUVAN_TOKEN`, if set, is sent as `token=`.
 
-Data credits appear only on the About page.
+Data credits appear on the About page; Google's own attribution stays on every map.
 
 ## Configuration
 
@@ -103,12 +112,12 @@ Data credits appear only on the About page.
 ## Test status
 
 - **Tested here:**
-  - 19 server unit tests.
+  - 26 server unit tests, including IMD parsing, district matching, day selection, nowcast expiry, the engine fallback and the credential headers.
   - HTTP integration of every endpoint and permission rule, run against small Express stand-ins because packages couldn't be installed in the build environment.
   - SSE fan-out: each role gets only its own events.
   - Storm timing: High after about 60 s, Critical after about 120 s.
-  - The whole client passed a syntax check and a type check against stand-in library types, and every translation key exists in both languages.
-- **Not yet run:** the client hasn't been bundled or opened in a real browser. Run `npm install && npm run dev`; any compile error will be small and quick to fix.
+  - The client type-checks and builds, every translation key exists in both languages, and the landing, authority and citizen maps were checked in a browser (without a Google key).
+- **Not yet run against live services:** IMD (needs your API key and JWT; the response parsing follows IMD's published field reference) and Google Maps with a real key.
 
 ## Troubleshooting
 

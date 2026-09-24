@@ -11,6 +11,7 @@ import { MapView, type LayerKey, type MapConfigResp } from './MapView';
 import { LocationPanel } from './LocationPanel';
 import { DetailDrawer } from './DetailDrawer';
 import { BASEMAPS, type Basemap } from '../../lib/mapConfig';
+import { useGoogleConfig } from '../../lib/googleMaps';
 import { LEVELS, LEVEL_ICON, levelVar, riskConfig } from '../../lib/risk';
 
 const LAYER_KEYS: LayerKey[] = ['risk', 'corridors', 'roads', 'rain', 'soil', 'history', 'reports', 'resources', 'boundary'];
@@ -29,6 +30,7 @@ export default function MapPage() {
   const [bhuvanOn, setBhuvanOn] = useState<string[]>([]);
   const [history, setHistory] = useState<{ lat: number; lng: number; year: number }[]>([]);
   const [boundaryPending, setBoundaryPending] = useState(false);
+  const googleCfg = useGoogleConfig();
 
   const roads = useLive<{ roads: Road[] }>('/roads', ['road_updated']);
   const alerts = useLive<{ alerts: AlertItem[] }>('/alerts', ['alert_published', 'alert_cancelled']);
@@ -40,8 +42,7 @@ export default function MapPage() {
     api.get<{ points: { lat: number; lng: number; year: number }[] }>('/map/history').then((d) => setHistory(d.points)).catch(() => {});
   }, []);
 
-  const basemapIds = useMemo(() => [...BASEMAPS.map((b) => b.id), ...(config?.mappls ? ['mappls' as const] : [])], [config]);
-  const nextBasemap = () => setBasemap((b) => basemapIds[(basemapIds.indexOf(b) + 1) % basemapIds.length]);
+  const basemapIds = BASEMAPS.map((b) => b.id);
   const corridorColors = useMemo(() => Object.fromEntries(corridors.map((c) => [c.id, c.color])), [corridors]);
   const horizons = [0, ...riskConfig.forecastHorizonsHours];
 
@@ -57,9 +58,7 @@ export default function MapPage() {
       </div>
 
       <div className="relative flex-1 min-w-0">
-        <MapView basemap={basemap} onBasemapFail={nextBasemap} layers={layers} bhuvanOn={bhuvanOn}
-          onBhuvanFail={(n) => { setBhuvanOn((x) => x.filter((y) => y !== n)); setConfig((c) => c && { ...c, bhuvan: { ...c.bhuvan, layers: c.bhuvan.layers.filter((l) => l.name !== n) } }); }}
-          config={config} locations={list} corridorColors={corridorColors} roads={roads.data?.roads || []} reports={reports.data?.reports || []}
+        <MapView basemap={basemap} layers={layers} bhuvanOn={bhuvanOn} config={config} locations={list} corridorColors={corridorColors} roads={roads.data?.roads || []} reports={reports.data?.reports || []}
           resources={resources.data?.resources || []} history={history} alerts={alerts.data?.alerts || []} horizon={horizon}
           selectedId={selectedId} onSelect={select} onBoundaryState={setBoundaryPending} />
 
@@ -129,6 +128,7 @@ export default function MapPage() {
           })}
           <p className="text-muted">{t('map.marker_size')}</p>
           {boundaryPending && layers.boundary && <p className="text-muted inline-flex items-center gap-1"><MapIcon size={12} aria-hidden />{t('map.boundary_pending')}</p>}
+          {googleCfg && !googleCfg.api_key && <p className="text-risk-high inline-flex items-center gap-1"><MapIcon size={12} aria-hidden />{t('map.google_key_missing')}</p>}
         </div>
       </div>
 

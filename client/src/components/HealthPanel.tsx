@@ -6,11 +6,11 @@ import { dateTimeIST } from '../lib/format';
 
 type Health = {
   live_updated_at: string | null;
-  feeds?: Record<'weather' | 'prediction' | 'seismic' | 'sensors', { status?: string; last_success?: string | null; last_update?: string | null }>;
+  feeds?: Record<'weather' | 'imd' | 'prediction' | 'seismic' | 'sensors', { status?: string; last_success?: string | null; last_update?: string | null }>;
   active_users?: number; alerts_sent_today?: number; avg_detection_to_alert_min?: number | null;
   reports?: { total: number; verified_pct: number | null };
 };
-const DOT: Record<string, string> = { ok: 'bg-risk-low', degraded: 'bg-risk-moderate', error: 'bg-risk-critical', not_connected: 'bg-muted' };
+const DOT: Record<string, string> = { ok: 'bg-risk-low', degraded: 'bg-risk-moderate', error: 'bg-risk-critical', not_connected: 'bg-muted', not_configured: 'bg-muted' };
 
 /** Small, discreet System health panel (authority tools menu and admin page). */
 export function HealthPanel({ compact = false }: { compact?: boolean }) {
@@ -22,7 +22,7 @@ export function HealthPanel({ compact = false }: { compact?: boolean }) {
     const id = setInterval(load, 15000);
     return () => clearInterval(id);
   }, []);
-  const feeds = ['weather', 'prediction', 'seismic', 'sensors'] as const;
+  const feeds = ['weather', 'imd', 'prediction', 'seismic', 'sensors'] as const;
   const stats: [string, string][] = [
     [t('admin.active_users'), String(h?.active_users ?? '–')],
     [t('admin.alerts_today'), String(h?.alerts_sent_today ?? '–')],
