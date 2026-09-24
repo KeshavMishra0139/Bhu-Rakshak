@@ -483,7 +483,16 @@
     "resources_short": "{{name}}: {{status}}",
     "show_panel": "स्थान सूची दिखाएँ",
     "hide_panel": "स्थान सूची छिपाएँ",
-    "google_key_missing": "Google Maps कुंजी सेट नहीं है (डेवलपमेंट मोड)"
+    "google_key_missing": "Google Maps कुंजी सेट नहीं है (डेवलपमेंट मोड)",
+    "watch_title": "सिक्किम और दार्जिलिंग कॉरिडोर निगरानी मानचित्र",
+    "region": "सिक्किम · दार्जिलिंग पहाड़ियाँ",
+    "stations": "लाइव जोखिम स्टेशन",
+    "online": "{{count}} ऑनलाइन",
+    "rain_live": "बारिश लाइव",
+    "refreshing": "अपडेट हो रहा है",
+    "mm24": "मिमी / 24 घं",
+    "src_rain": "बारिश: Open-Meteo लाइव पूर्वानुमान",
+    "src_imd": "चेतावनियाँ: IMD ज़िला फ़ीड"
   },
   "drawer": {
     "overview": "सारांश",

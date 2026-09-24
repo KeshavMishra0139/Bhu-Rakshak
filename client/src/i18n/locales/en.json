@@ -483,7 +483,16 @@
     "resources_short": "{{name}}: {{status}}",
     "show_panel": "Show location list",
     "hide_panel": "Hide location list",
-    "google_key_missing": "Google Maps key not set (development mode)"
+    "google_key_missing": "Google Maps key not set (development mode)",
+    "watch_title": "Sikkim & Darjeeling corridor watch map",
+    "region": "Sikkim · Darjeeling hills",
+    "stations": "Live risk stations",
+    "online": "{{count}} online",
+    "rain_live": "rainfall live",
+    "refreshing": "refreshing",
+    "mm24": "mm / 24h",
+    "src_rain": "Rainfall: Open-Meteo live forecast",
+    "src_imd": "Warnings: IMD district feed"
   },
   "drawer": {
     "overview": "Overview",

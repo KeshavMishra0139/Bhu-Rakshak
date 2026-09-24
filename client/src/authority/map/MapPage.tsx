@@ -1,140 +1,113 @@
-import { useEffect, useMemo, useState } from 'react';
+// Authority map: the team's corridor watch console (Google map + live risk stations rail),
+// with the location drawer and forecast horizon on top.
 import { useTranslation } from 'react-i18next';
-import { Layers, PanelLeftClose, PanelLeftOpen, Map as MapIcon } from 'lucide-react';
-import { api } from '../../api/client';
-import type { AlertItem, Report, Resource, Road } from '../../api/types';
-import { useAuth } from '../../auth/AuthProvider';
+import { MapPinned, CloudRain, CloudLightning, AlertTriangle } from 'lucide-react';
+import type { AlertItem, Level, LocationSnap } from '../../api/types';
 import { useRiskStream } from '../../live/RiskStreamProvider';
 import { useLive } from '../useLive';
 import { useAuthority } from '../AuthorityContext';
-import { MapView, type LayerKey, type MapConfigResp } from './MapView';
-import { LocationPanel } from './LocationPanel';
+import { WatchMap, levelAt } from './WatchMap';
 import { DetailDrawer } from './DetailDrawer';
-import { BASEMAPS, type Basemap } from '../../lib/mapConfig';
 import { useGoogleConfig } from '../../lib/googleMaps';
-import { LEVELS, LEVEL_ICON, levelVar, riskConfig } from '../../lib/risk';
+import { LEVELS, riskConfig } from '../../lib/risk';
+import { placeName } from '../../lib/format';
 
-const LAYER_KEYS: LayerKey[] = ['risk', 'corridors', 'roads', 'rain', 'soil', 'history', 'reports', 'resources', 'boundary'];
-const DEFAULT_LAYERS: Record<LayerKey, boolean> = { risk: true, corridors: true, roads: false, rain: false, soil: false, history: false, reports: true, resources: false, boundary: true };
+// Colours from the team's watch map, plus a deeper red for Critical (the portal has three levels).
+const DOT: Record<Level, string> = { low: 'bg-[#3f8c70]', moderate: 'bg-[#d9983d]', high: 'bg-[#cf624f]', critical: 'bg-[#9e2a2b]' };
+const VALUE: Record<Level, string> = { low: 'text-[#9dd2a6]', moderate: 'text-[#f4c993]', high: 'text-[#f1846d]', critical: 'text-[#ff7a7a]' };
+const PILL: Record<Level, string> = {
+  low: 'bg-[#2d6143] text-[#b4e1b9]', moderate: 'bg-[#6b512a] text-[#ffd993]', high: 'bg-[#71372f] text-[#ffb4a4]', critical: 'bg-[#5a1d1f] text-[#ff9c9c]',
+};
 
 export default function MapPage() {
   const { t, i18n } = useTranslation();
-  const { can } = useAuth();
-  const { list, corridors, changedAt } = useRiskStream();
+  const lang = i18n.language;
+  const { list } = useRiskStream();
   const { selectedId, select, horizon, setHorizon } = useAuthority();
-  const [basemap, setBasemap] = useState<Basemap['id']>('satellite');
-  const [layers, setLayers] = useState(DEFAULT_LAYERS);
-  const [layersOpen, setLayersOpen] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(() => window.innerWidth >= 900);
-  const [config, setConfig] = useState<MapConfigResp | null>(null);
-  const [bhuvanOn, setBhuvanOn] = useState<string[]>([]);
-  const [history, setHistory] = useState<{ lat: number; lng: number; year: number }[]>([]);
-  const [boundaryPending, setBoundaryPending] = useState(false);
   const googleCfg = useGoogleConfig();
-
-  const roads = useLive<{ roads: Road[] }>('/roads', ['road_updated']);
   const alerts = useLive<{ alerts: AlertItem[] }>('/alerts', ['alert_published', 'alert_cancelled']);
-  const reports = useLive<{ reports: Report[] }>(can('incidents.view') ? '/reports' : null, ['report_updated']);
-  const resources = useLive<{ resources: Resource[] }>(can('incidents.view') ? '/resources' : null, ['resource_updated', 'incident_updated']);
-
-  useEffect(() => {
-    api.get<MapConfigResp>('/map/config').then(setConfig).catch(() => {});
-    api.get<{ points: { lat: number; lng: number; year: number }[] }>('/map/history').then((d) => setHistory(d.points)).catch(() => {});
-  }, []);
-
-  const basemapIds = BASEMAPS.map((b) => b.id);
-  const corridorColors = useMemo(() => Object.fromEntries(corridors.map((c) => [c.id, c.color])), [corridors]);
   const horizons = [0, ...riskConfig.forecastHorizonsHours];
+  const online = list.filter((l) => l.risk).length;
+
+  const alertedSince = (l: LocationSnap) => (alerts.data?.alerts || []).some((a) => !a.cancelled_at && a.kind === 'warning' && l.risk && a.created_at >= l.risk.level_since &&
+    ((a.target_type === 'location' && a.target_id === l.id) || (a.target_type === 'corridor' && a.target_id === l.corridor_id) || (a.target_type === 'district' && a.target_id === l.district)));
 
   return (
     <div className="relative flex h-full min-h-0">
-      {/* Left panel */}
-      <div className={`${panelOpen ? 'w-[330px]' : 'w-0'} shrink-0 overflow-hidden transition-[width] duration-300 bg-surface border-r border-line z-[500]
-        max-md:absolute max-md:inset-y-0 max-md:left-0 ${panelOpen ? 'max-md:w-[88vw] max-md:shadow-2xl' : ''}`}>
-        <div className="w-[330px] max-md:w-[88vw] h-full">
-          <LocationPanel locations={list} alerts={alerts.data?.alerts || []} horizon={horizon} selectedId={selectedId}
-            onSelect={(id) => { select(id); if (window.innerWidth < 768) setPanelOpen(false); }} changedAt={changedAt} />
-        </div>
-      </div>
-
-      <div className="relative flex-1 min-w-0">
-        <MapView basemap={basemap} layers={layers} bhuvanOn={bhuvanOn} config={config} locations={list} corridorColors={corridorColors} roads={roads.data?.roads || []} reports={reports.data?.reports || []}
-          resources={resources.data?.resources || []} history={history} alerts={alerts.data?.alerts || []} horizon={horizon}
-          selectedId={selectedId} onSelect={select} onBoundaryState={setBoundaryPending} />
-
-        <button type="button" onClick={() => setPanelOpen((v) => !v)} className="absolute top-3 left-3 z-[600] card h-10 w-10 inline-flex items-center justify-center shadow"
-          aria-label={panelOpen ? t('map.hide_panel') : t('map.show_panel')} aria-expanded={panelOpen}>
-          {panelOpen ? <PanelLeftClose size={18} aria-hidden /> : <PanelLeftOpen size={18} aria-hidden />}
-        </button>
-
-        {/* Basemap + layers */}
-        <div className="absolute top-3 right-3 z-[600] flex flex-col items-end gap-2">
-          <div className="card shadow flex p-0.5" role="radiogroup" aria-label={t('map.basemap')}>
-            {basemapIds.map((b) => (
-              <button key={b} type="button" role="radio" aria-checked={basemap === b} onClick={() => setBasemap(b)}
-                className={`px-2.5 py-1.5 text-xs font-semibold rounded-md ${basemap === b ? 'bg-brand text-white' : 'text-muted hover:text-ink'}`}>
-                {t(`map.${b}`)}
-              </button>
-            ))}
-          </div>
-          <button type="button" onClick={() => setLayersOpen((v) => !v)} aria-expanded={layersOpen} className="card shadow h-10 px-3 inline-flex items-center gap-2 text-sm font-semibold">
-            <Layers size={17} aria-hidden />{t('map.layers')}
-          </button>
-          {layersOpen && (
-            <fieldset className="card shadow-lg p-3 w-60 space-y-1.5 max-h-[60vh] overflow-y-auto">
-              <legend className="sr-only">{t('map.layers')}</legend>
-              {LAYER_KEYS.filter((k) => (k !== 'reports' && k !== 'resources') || can('incidents.view')).map((k) => (
-                <label key={k} className="flex items-center gap-2 text-sm py-0.5">
-                  <input type="checkbox" className="h-4 w-4 accent-[rgb(var(--brand))]" checked={layers[k]} onChange={(e) => setLayers({ ...layers, [k]: e.target.checked })} />
-                  {t(`map.layer_${k}`)}
-                </label>
+      <div className="flex-1 min-w-0 p-3 max-md:p-0 overflow-y-auto">
+        <div className="map-console lg:h-full">
+          {/* Map */}
+          <div className="relative min-h-[440px] overflow-hidden bg-[#dcebdc]">
+            <WatchMap locations={list} horizon={horizon} activeId={selectedId} onSelect={select} lang={lang} />
+            <div className="absolute left-3 top-14 flex items-center gap-2 rounded-xl border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-bold text-[#315542] shadow-sm backdrop-blur">
+              <MapPinned size={13} aria-hidden /> {t('map.watch_title')}
+            </div>
+            <div className="absolute bottom-4 left-4 flex flex-wrap gap-2 max-w-[70%]">
+              {LEVELS.map((lv) => (
+                <span key={lv} className="map-legend"><span className={`h-2 w-2 rounded-full ${DOT[lv]}`} aria-hidden /> {t(`levels.${lv}`)}</span>
               ))}
-              {config?.bhuvan.available && config.bhuvan.layers.length > 0 && (
-                <div className="pt-2 mt-1 border-t border-line">
-                  <p className="text-xs font-semibold text-muted mb-1">{t('map.bhuvan')}</p>
-                  {config.bhuvan.layers.map((l) => (
-                    <label key={l.name} className="flex items-center gap-2 text-sm py-0.5">
-                      <input type="checkbox" className="h-4 w-4 accent-[rgb(var(--brand))]" checked={bhuvanOn.includes(l.name)}
-                        onChange={(e) => setBhuvanOn((x) => (e.target.checked ? [...x, l.name] : x.filter((y) => y !== l.name)))} />
-                      <span className="truncate" title={l.name}>{l.title || l.name}</span>
-                    </label>
-                  ))}
-                </div>
-              )}
-            </fieldset>
-          )}
-        </div>
-
-        {/* Forecast time slider */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[600] card shadow-lg px-3 py-2 max-w-[92%]">
-          <div role="radiogroup" aria-label={t('map.time')} className="flex items-center gap-1">
-            <span className="text-xs font-semibold text-muted mr-1 hidden sm:inline">{t('map.time')}</span>
-            {horizons.map((h) => (
-              <button key={h} type="button" role="radio" aria-checked={horizon === h} onClick={() => setHorizon(h)}
-                className={`px-2.5 py-1.5 rounded-md text-sm font-semibold font-mono ${horizon === h ? 'bg-ink text-bg' : 'text-muted hover:text-ink'}`}>
-                {h === 0 ? t('map.now') : t('map.plus_h', { h })}
-              </button>
-            ))}
+              {googleCfg && !googleCfg.api_key && <span className="map-legend !text-[#a8681f]">{t('map.google_key_missing')}</span>}
+            </div>
           </div>
-          {horizon > 0 && <p className="text-xs text-center mt-1 text-muted" role="status">{t('map.forecast_note', { h: horizon })}</p>}
-        </div>
 
-        {/* Legend */}
-        <div className="absolute bottom-4 left-3 z-[600] card shadow px-3 py-2 text-xs space-y-1 max-md:hidden">
-          <p className="font-semibold">{t('map.legend')}</p>
-          {LEVELS.map((lv) => {
-            const Icon = LEVEL_ICON[lv];
-            return <p key={lv} className="flex items-center gap-1.5"><Icon size={13} style={{ color: levelVar(lv) }} aria-hidden />{t(`levels.${lv}`)}</p>;
-          })}
-          <p className="text-muted">{t('map.marker_size')}</p>
-          {boundaryPending && layers.boundary && <p className="text-muted inline-flex items-center gap-1"><MapIcon size={12} aria-hidden />{t('map.boundary_pending')}</p>}
-          {googleCfg && !googleCfg.api_key && <p className="text-risk-high inline-flex items-center gap-1"><MapIcon size={12} aria-hidden />{t('map.google_key_missing')}</p>}
+          {/* Live risk stations */}
+          <aside className="map-rail flex flex-col min-h-0" aria-labelledby="stations-title">
+            <div className="flex items-start justify-between border-b border-white/10 pb-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#819488]">{t('map.region')}</p>
+                <h2 id="stations-title" className="mt-1 text-xl font-semibold text-white">{t('map.stations')}</h2>
+              </div>
+              <span className="rounded-full bg-[#2a5d43] px-2 py-1 text-[9px] font-bold text-[#d7efd8]">{t('map.online', { count: online })}</span>
+            </div>
+
+            <div role="radiogroup" aria-label={t('map.time')} className="mt-3 flex items-center gap-1 rounded-xl bg-white/5 p-1">
+              {horizons.map((h) => (
+                <button key={h} type="button" role="radio" aria-checked={horizon === h} onClick={() => setHorizon(h)}
+                  className={`flex-1 rounded-lg px-1.5 py-1 text-[11px] font-bold font-mono ${horizon === h ? 'bg-[#2a5d43] text-[#d7efd8]' : 'text-[#91a297] hover:text-white'}`}>
+                  {h === 0 ? t('map.now') : t('map.plus_h', { h })}
+                </button>
+              ))}
+            </div>
+            {horizon > 0 && <p className="mt-1 text-[10px] text-[#91a297]" role="status">{t('map.forecast_note', { h: horizon })}</p>}
+
+            <div className="mt-3 overflow-y-auto pr-1 max-lg:max-h-[420px] lg:flex-1 lg:min-h-0">
+              {list.map((l) => {
+                const lv = levelAt(l, horizon);
+                if (!lv) return null;
+                const rain = l.risk?.conditions?.rain_24h;
+                const live = l.risk?.conditions?.data_source === 'open-meteo';
+                const noAlert = horizon === 0 && lv === 'critical' && !alertedSince(l);
+                return (
+                  <button key={l.id} type="button" onClick={() => select(l.id)} aria-pressed={selectedId === l.id}
+                    className={`map-table-row ${selectedId === l.id ? 'active' : ''}`}>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-xs font-bold text-[#f4f7f3]">{placeName(l, lang)}</span>
+                      <span className="mt-1 block text-[10px] text-[#85998b]">
+                        {t(`districts.${l.district}`)} · {live ? t('map.rain_live') : t('map.refreshing')}
+                      </span>
+                      {noAlert && <span className="mt-1 flex items-center gap-1 text-[10px] font-bold text-[#ff9c9c]"><AlertTriangle size={11} aria-hidden />{t('map.critical_no_alert')}</span>}
+                    </span>
+                    <span className="text-right">
+                      <span className={`block text-xs font-bold ${VALUE[lv]}`}>{typeof rain === 'number' ? rain.toFixed(1) : '–'}</span>
+                      <span className="text-[9px] text-[#7f9284]">{t('map.mm24')}</span>
+                    </span>
+                    <span className={`ml-3 rounded-full px-2 py-1 text-[9px] font-bold ${PILL[lv]}`}>{t(`levels.${lv}`)}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-4 border-t border-white/10 pt-4 text-[10px] leading-5 text-[#91a297]">
+              <div className="flex items-center gap-2"><CloudRain size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_rain')}</div>
+              <div className="mt-1 flex items-center gap-2"><CloudLightning size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_imd')}</div>
+            </div>
+          </aside>
         </div>
       </div>
 
       {/* Right detail drawer */}
       {selectedId && (
-        <div className="w-[400px] max-w-full shrink-0 bg-surface border-l border-line z-[650] max-lg:absolute max-lg:inset-y-0 max-lg:right-0 max-lg:shadow-2xl" lang={i18n.language}>
+        <div className="w-[400px] max-w-full shrink-0 bg-surface border-l border-line z-[650] max-lg:absolute max-lg:inset-y-0 max-lg:right-0 max-lg:shadow-2xl" lang={lang}>
           <DetailDrawer id={selectedId} onClose={() => select(null)} />
         </div>
       )}

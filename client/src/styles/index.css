@@ -98,6 +98,25 @@ html[lang='hi'] body { @apply font-deva; line-height: 1.65; }
 
 /* ---------- Map ---------- */
 .gm-style { font-family: inherit; }
+/* Corridor watch console (authority map), from the team's citizen-portal map. */
+.map-console {
+  background: rgb(21 36 28); border: 1px solid rgb(155 193 161 / 0.22); border-radius: 1.5rem; min-height: 440px;
+  display: grid; overflow: hidden; box-shadow: 0 22px 60px rgb(6 17 12 / 0.24);
+}
+@media (min-width: 1024px) { .map-console { grid-template-columns: minmax(0, 1fr) 360px; grid-template-rows: minmax(0, 1fr); } }
+@media (max-width: 767px) { .map-console { border-radius: 0; border: 0; } }
+.map-rail { color: #fff; background: linear-gradient(rgb(24 36 30), rgb(16 25 20)); padding: 1.15rem; }
+.map-legend {
+  color: rgb(71 99 80); background: rgb(255 255 255 / 0.9); border: 1px solid rgb(255 255 255 / 0.7); border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.45rem 0.6rem; font-size: 0.62rem; font-weight: 800;
+  box-shadow: 0 4px 12px rgb(25 45 31 / 0.08);
+}
+.map-table-row {
+  display: flex; align-items: center; gap: 0.45rem; width: 100%; padding: 0.8rem 0.45rem; text-align: left;
+  border-bottom: 1px solid rgb(255 255 255 / 0.07); transition: background 0.16s, transform 0.16s;
+}
+.map-table-row:hover, .map-table-row.active { background: rgb(106 160 119 / 0.16); border-radius: 0.75rem; transform: translateX(2px); }
+.map-table-row:focus-visible { outline: 2px solid #9dc6a5; outline-offset: 2px; border-radius: 0.75rem; }
 .risk-marker { box-shadow: 0 1px 3px rgb(0 0 0 / 0.45); transition: background-color 0.8s ease, width 0.8s ease, height 0.8s ease; }
 .risk-pulse { animation: br-ring 1.8s ease-out infinite; }
 @keyframes br-ring {
