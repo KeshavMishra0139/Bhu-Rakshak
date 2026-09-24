@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { q } from '../db/index.js';
-import { addClient, controlsForActor } from '../events/sse.js';
+import { addClient, controlsForActor, currentSeq, eventsSince } from '../events/sse.js';
 import { snapshot, corridors } from './locations.js';
 import { hourIndex, istHourOfDay } from '../ingest/features.js';
 import { rampFor } from '../prediction/liveInputs.js';
@@ -12,15 +12,30 @@ import { riskForActor } from './locations.js';
 
 const r = Router();
 
-r.get('/risk/stream', (req, res) => {
+/** The stream's opening snapshot (also sent to polling clients that need a fresh start). */
+function helloFor(actor) {
   const feed = q.one("SELECT status, last_success FROM feed_status WHERE feed = 'open_meteo'");
-  addClient(req, res, {
+  return {
     server_time: new Date().toISOString(),
     corridors: corridors(),
-    locations: snapshot(req.actor),
+    locations: snapshot(actor),
     weather_last_success: feed?.last_success || null,
-    controls: controlsForActor(req.actor),
-  });
+    controls: controlsForActor(actor),
+  };
+}
+
+r.get('/risk/stream', (req, res) => addClient(req, res, helloFor(req.actor)));
+
+/**
+ * Polling fallback for networks that buffer the stream: events after ?since=<seq>, filtered like the stream.
+ * Without a usable `since` (first call, or events dropped from the buffer) it also returns the snapshot.
+ */
+r.get('/risk/poll', (req, res) => {
+  const since = Number(req.query.since);
+  const out = Number.isInteger(since) && since >= 0
+    ? eventsSince(since, req.actor, req.user?.id || null)
+    : { seq: currentSeq(), complete: false, events: [] };
+  res.set('Cache-Control', 'no-store').json(out.complete ? out : { ...out, hello: helloFor(req.actor) });
 });
 
 /** Forecast risk + hourly rain for the next 48 h, and a "best time to travel" daylight window. */

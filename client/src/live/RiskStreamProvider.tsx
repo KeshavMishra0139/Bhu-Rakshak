@@ -1,5 +1,7 @@
 // One SSE connection per tab. Holds the live location snapshot and fans out escalation / inbox events.
 // Reconnects automatically, and re-opens when the signed-in identity (or developer "view as") changes.
+// If the stream opens but delivers nothing (some proxies and tunnels buffer SSE), it switches to polling
+// /api/risk/poll, which returns the same events filtered the same way.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { AlertItem, Controls, Corridor, InboxMessage, LocationSnap, Risk, RiskEvent, Road } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
@@ -35,6 +37,9 @@ type Ctx = {
 
 const StreamContext = createContext<Ctx | null>(null);
 const WATCHDOG_MS = 45000;
+/** No "hello" from the stream within this time → assume it is being buffered and poll instead. */
+const HELLO_TIMEOUT_MS = 8000;
+const POLL_MS = 3000;
 const CACHE_KEY = 'br.snapshot.v1';
 type Cached = { locations: Record<string, LocationSnap>; corridors: Corridor[]; at: string };
 const readCache = (): Cached | null => { try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch { return null; } };
@@ -61,37 +66,24 @@ export function RiskStreamProvider({ children }: { children: ReactNode }) {
     let es: EventSource | null = null;
     let watchdog: ReturnType<typeof setTimeout> | undefined;
     let retry: ReturnType<typeof setTimeout> | undefined;
+    let helloTimer: ReturnType<typeof setTimeout> | undefined;
+    let pollTimer: ReturnType<typeof setTimeout> | undefined;
+    let polling = false;
+    let pollSeq = -1;
     let closed = false;
 
-    const kick = () => {
-      clearTimeout(watchdog);
-      watchdog = setTimeout(() => { setStatus('reconnecting'); open(); }, WATCHDOG_MS);
-    };
-
-    const on = (type: string, fn: (data: any) => void) => es!.addEventListener(type, (ev) => {
-      kick();
-      try { fn(JSON.parse((ev as MessageEvent).data)); } catch (e) { console.error('stream parse', type, e); }
-    });
-
-    function open() {
-      es?.close();
-      if (closed) return;
-      es = new EventSource(`/api/risk/stream${PANE ? `?view_as=${PANE}` : ''}`);
-      es.onopen = () => { setStatus('live'); kick(); };
-      es.onerror = () => {
-        setStatus(navigator.onLine ? 'reconnecting' : 'offline');
-        // EventSource retries by itself; if the server closed it for good, retry manually.
-        if (es && es.readyState === EventSource.CLOSED) { clearTimeout(retry); retry = setTimeout(open, 4000); }
-      };
-      on('hello', (d: { locations: LocationSnap[]; corridors: Corridor[]; weather_last_success: string | null; controls: Controls | null; server_time: string }) => {
+    // One handler per event, shared by the stream and the polling fallback.
+    const handlers: Record<string, (data: any) => void> = {
+      hello: (d: { locations: LocationSnap[]; corridors: Corridor[]; weather_last_success: string | null; controls: Controls | null; server_time: string }) => {
+        clearTimeout(helloTimer);
         setLocations(Object.fromEntries(d.locations.map((l) => [l.id, l])));
         setCorridors(d.corridors);
         setWeatherAt(d.weather_last_success);
         setControls(d.controls);
         setLastUpdateAt(d.server_time);
         setStatus('live');
-      });
-      on('risk_update', (batch: Risk[]) => {
+      },
+      risk_update: (batch: Risk[]) => {
         setLocations((prev) => {
           const next = { ...prev };
           for (const r of batch) {
@@ -104,22 +96,75 @@ export function RiskStreamProvider({ children }: { children: ReactNode }) {
         const now = Date.now();
         setChangedAt((prev) => ({ ...prev, ...Object.fromEntries(batch.map((r) => [r.location_id, now])) }));
         setLastUpdateAt(new Date().toISOString());
-      });
-      on('risk_escalation', (e) => emit('risk_escalation', e));
-      on('risk_deescalation', (e) => emit('risk_deescalation', e));
-      on('inbox_message', (m) => emit('inbox_message', m));
-      on('inbox_updated', (u) => emit('inbox_updated', u));
-      on('controls', (c: Controls) => setControls(c));
-      for (const ev of ['alert_published', 'alert_cancelled', 'road_updated', 'incident_updated', 'resource_updated', 'report_updated', 'citizen_ack']) {
-        on(ev, (d) => emit(ev, d));
+      },
+      controls: (c: Controls) => setControls(c),
+      weather_refreshed: (w: { at: string }) => setWeatherAt(w.at),
+      heartbeat: () => { /* keeps the watchdog happy */ },
+    };
+    for (const ev of ['risk_escalation', 'risk_deescalation', 'inbox_message', 'inbox_updated', 'alert_published', 'alert_cancelled',
+      'road_updated', 'incident_updated', 'resource_updated', 'report_updated', 'citizen_ack']) {
+      handlers[ev] = (d) => emit(ev, d);
+    }
+    const handle = (type: string, data: unknown) => {
+      try { handlers[type]?.(data); } catch (e) { console.error('live event', type, e); }
+    };
+
+    const kick = () => {
+      clearTimeout(watchdog);
+      watchdog = setTimeout(() => { setStatus('reconnecting'); open(); }, WATCHDOG_MS);
+    };
+
+    async function poll() {
+      if (closed) return;
+      try {
+        const res = await fetch(`/api/risk/poll?since=${pollSeq}${PANE ? `&view_as=${PANE}` : ''}`, { credentials: 'include', cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const body: { seq: number; hello?: unknown; events: { type: string; data: unknown }[] } = await res.json();
+        if (closed) return;
+        if (body.hello) handle('hello', body.hello);
+        for (const e of body.events) handle(e.type, e.data);
+        pollSeq = body.seq;
+        setStatus('live');
+      } catch {
+        setStatus(navigator.onLine ? 'reconnecting' : 'offline');
       }
-      on('weather_refreshed', (w: { at: string }) => setWeatherAt(w.at));
-      on('heartbeat', () => { /* keeps the watchdog happy */ });
+      pollTimer = setTimeout(poll, POLL_MS);
+    }
+
+    function startPolling() {
+      if (polling || closed) return;
+      polling = true;
+      es?.close();
+      es = null;
+      clearTimeout(watchdog);
+      clearTimeout(retry);
+      console.info('[live] stream is being buffered by the network; polling instead');
+      poll();
+    }
+
+    function open() {
+      es?.close();
+      if (closed || polling) return;
+      es = new EventSource(`/api/risk/stream${PANE ? `?view_as=${PANE}` : ''}`);
+      clearTimeout(helloTimer);
+      helloTimer = setTimeout(startPolling, HELLO_TIMEOUT_MS);
+      es.onopen = () => { setStatus('live'); kick(); };
+      es.onerror = () => {
+        setStatus(navigator.onLine ? 'reconnecting' : 'offline');
+        // EventSource retries by itself; if the server closed it for good, retry manually.
+        if (es && es.readyState === EventSource.CLOSED) { clearTimeout(retry); retry = setTimeout(open, 4000); }
+      };
+      for (const type of Object.keys(handlers)) {
+        es.addEventListener(type, (ev) => {
+          kick();
+          try { handle(type, JSON.parse((ev as MessageEvent).data)); } catch (e) { console.error('stream parse', type, e); }
+        });
+      }
     }
 
     setStatus('connecting');
     open();
-    const onOnline = () => { setStatus('reconnecting'); open(); };
+    const onOnline = () => { setStatus('reconnecting'); if (!polling) open(); };
     const onOffline = () => setStatus('offline');
     window.addEventListener('online', onOnline);
     window.addEventListener('offline', onOffline);
@@ -127,6 +172,8 @@ export function RiskStreamProvider({ children }: { children: ReactNode }) {
       closed = true;
       clearTimeout(watchdog);
       clearTimeout(retry);
+      clearTimeout(helloTimer);
+      clearTimeout(pollTimer);
       es?.close();
       window.removeEventListener('online', onOnline);
       window.removeEventListener('offline', onOffline);
