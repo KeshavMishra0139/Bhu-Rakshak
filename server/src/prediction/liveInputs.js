@@ -7,6 +7,7 @@ import { riskConfig } from '../config/shared.js';
 import { featuresAt, hourIndex, istHourOfDay } from '../ingest/features.js';
 import { clamp, round, safeJson } from '../lib/util.js';
 import { getControls } from './controls.js';
+import { imdSeverity } from '../ingest/imd.js';
 
 const cache = new Map();     // locationId -> { fetchedAt, hourly, source }
 const drift = new Map();     // locationId -> { rainMul, satOff, wetting, lastMs }
@@ -132,13 +133,15 @@ export function liveInputsFor(loc, nowMs) {
   const i = hourIndex(w.hourly, nowMs);
   const base = featuresAt(w.hourly, i);
   const d = stepDrift(loc.id, nowMs, base.rain_intensity);
-  const features = overlay(base, loc, nowMs, d, 0);
+  // Official IMD rain severity for the district (null when IMD has nothing current → engine uses the model forecast).
+  const withImd = (f, h) => ({ ...f, imd_rain_severity: loc.district ? imdSeverity(loc.district, nowMs + h * 3600000) : null });
+  const features = withImd(overlay(base, loc, nowMs, d, 0), 0);
   const lastIdx = w.hourly.time.length - 1;
   return {
     features,
     source: w.source,
     fetchedAt: w.fetchedAt,
-    forecastFeatures: (h) => overlay(featuresAt(w.hourly, Math.min(lastIdx, i + h)), loc, nowMs, d, h),
+    forecastFeatures: (h) => withImd(overlay(featuresAt(w.hourly, Math.min(lastIdx, i + h)), loc, nowMs, d, h), h),
   };
 }
 

@@ -91,9 +91,18 @@ CREATE TABLE IF NOT EXISTS weather_cache (
   source        TEXT NOT NULL       -- 'open-meteo' | 'fallback_climatology'
 );
 
+-- Latest IMD district warnings and nowcasts, one row per (product, our district). Survives restarts.
+CREATE TABLE IF NOT EXISTS imd_cache (
+  product       TEXT NOT NULL,      -- 'warning' | 'nowcast'
+  district      TEXT NOT NULL,      -- our district name (locations.district)
+  data_json     TEXT NOT NULL,      -- normalised summary (see ingest/imd.js)
+  fetched_at    TEXT NOT NULL,
+  PRIMARY KEY (product, district)
+);
+
 CREATE TABLE IF NOT EXISTS feed_status (
-  feed          TEXT PRIMARY KEY,   -- 'open_meteo', 'prediction', 'seismic', 'sensors'
-  status        TEXT NOT NULL,      -- 'ok' | 'degraded' | 'error' | 'not_connected'
+  feed          TEXT PRIMARY KEY,   -- 'open_meteo', 'imd', 'prediction', 'seismic', 'sensors'
+  status        TEXT NOT NULL,      -- 'ok' | 'degraded' | 'error' | 'not_connected' | 'not_configured'
   last_success  TEXT,
   last_attempt  TEXT,
   message       TEXT

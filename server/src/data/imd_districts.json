@@ -1,0 +1,11 @@
+{
+  "_comment": "Maps our district names (locations.district) to the names IMD may use. Sikkim was reorganised in 2021, so both the old and new district names are listed. Where several IMD districts match, the most severe warning wins. Names are compared in upper case with spaces and punctuation removed. When an IMD row carries a state, it must match `state` too.",
+  "districts": {
+    "North Sikkim": { "state": "SIKKIM", "names": ["NORTH SIKKIM", "MANGAN"] },
+    "East Sikkim": { "state": "SIKKIM", "names": ["EAST SIKKIM", "GANGTOK", "PAKYONG"] },
+    "South Sikkim": { "state": "SIKKIM", "names": ["SOUTH SIKKIM", "NAMCHI"] },
+    "West Sikkim": { "state": "SIKKIM", "names": ["WEST SIKKIM", "GYALSHING", "GEYZING", "SORENG"] },
+    "Darjeeling": { "state": "WEST BENGAL", "names": ["DARJEELING", "DARJILING"] },
+    "Kalimpong": { "state": "WEST BENGAL", "names": ["KALIMPONG"] }
+  }
+}

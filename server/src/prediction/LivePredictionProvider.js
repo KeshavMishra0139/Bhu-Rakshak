@@ -3,6 +3,7 @@ import { PredictionProvider } from './PredictionProvider.js';
 import { q } from '../db/index.js';
 import { riskConfig } from '../config/shared.js';
 import { liveInputsFor } from './liveInputs.js';
+import { imdSummary } from '../ingest/imd.js';
 import {
   ENGINE_VERSION, normaliseStatic, normaliseDynamic, scoreFrom, levelFromScore, confidenceOf, LEVEL_RANK,
 } from './engine.js';
@@ -41,7 +42,7 @@ export class LivePredictionProvider extends PredictionProvider {
     const nowMs = at.getTime();
     const st = this.staticFor(locationId);
     if (!st) throw new Error(`unknown location ${locationId}`);
-    const inputs = liveInputsFor({ id: locationId, corridor_id: st.row.corridor_id }, nowMs);
+    const inputs = liveInputsFor({ id: locationId, corridor_id: st.row.corridor_id, district: st.row.district }, nowMs);
     if (!inputs) throw new Error(`no weather inputs for ${locationId}`);
 
     const now = this.scoreFeatures(locationId, inputs.features);
@@ -79,7 +80,7 @@ export class LivePredictionProvider extends PredictionProvider {
       trend: null,
       forecast,
       time_to_threshold: timeToThreshold,
-      conditions: { ...inputs.features, data_source: inputs.source, data_fetched_at: inputs.fetchedAt },
+      conditions: { ...inputs.features, data_source: inputs.source, data_fetched_at: inputs.fetchedAt, imd: imdSummary(st.row.district, nowMs) },
       model_version: ENGINE_VERSION,
       updated_at: at.toISOString(),
     };

@@ -28,6 +28,7 @@ r.get('/health', (req, res) => {
     ...base,
     feeds: {
       weather: { status: feeds.open_meteo?.status, last_success: feeds.open_meteo?.last_success, message: feeds.open_meteo?.message },
+      imd: { status: feeds.imd?.status || 'not_configured', last_success: feeds.imd?.last_success, message: feeds.imd?.message },
       prediction: { status: feeds.prediction?.status || 'ok', last_update: riskService.lastTickAt, message: feeds.prediction?.status === 'degraded' ? feeds.prediction.message : null },
       seismic: { status: feeds.seismic?.status || 'not_connected' },
       sensors: { status: feeds.sensors?.status || 'not_connected' },

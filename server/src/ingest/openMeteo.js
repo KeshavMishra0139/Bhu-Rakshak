@@ -27,7 +27,7 @@ export function buildForecastUrl(locations) {
   return `${FORECAST_URL}?${params.toString()}`;
 }
 
-function setFeed(feed, status, message, success) {
+export function setFeed(feed, status, message, success) {
   const now = nowIso();
   q.run(`INSERT INTO feed_status(feed, status, last_success, last_attempt, message)
          VALUES (:feed, :status, :ls, :now, :message)

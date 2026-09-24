@@ -6,7 +6,7 @@ import { riskConfig, factorsConfig } from '../config/shared.js';
 import { ah, HttpError, safeJson } from '../lib/util.js';
 
 const r = Router();
-const CITIZEN_CONDITION_KEYS = ['rain_intensity', 'rain_24h', 'rain_fc_24h', 'rain_fc_48h', 'data_fetched_at'];
+const CITIZEN_CONDITION_KEYS = ['rain_intensity', 'rain_24h', 'rain_fc_24h', 'rain_fc_48h', 'data_fetched_at', 'imd'];
 
 /** Trim technical detail for people without risk.details (citizens, guests). */
 export function riskForActor(risk, actor) {

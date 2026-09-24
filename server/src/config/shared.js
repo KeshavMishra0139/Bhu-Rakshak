@@ -14,4 +14,5 @@ export const seedData = {
   staticLayers: readJson(path.join(dataDir, 'static_layers.json')),
   exposure: readJson(path.join(dataDir, 'exposure.json')),
   operations: readJson(path.join(dataDir, 'operations.json')),
+  imdDistricts: readJson(path.join(dataDir, 'imd_districts.json')),
 };

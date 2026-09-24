@@ -4,7 +4,7 @@
 import { riskConfig, seedData } from '../config/shared.js';
 import { clamp, round } from '../lib/util.js';
 
-export const ENGINE_VERSION = 'baseline-0.3';
+export const ENGINE_VERSION = 'baseline-0.4';
 
 /** Weights sum to 1.0. Keys match factors.json → drivers. */
 export const WEIGHTS = {
@@ -12,7 +12,8 @@ export const WEIGHTS = {
   rain_72h: 0.17,
   rain_24h: 0.15,
   rain_intensity: 0.09,
-  rain_forecast: 0.08,
+  rain_forecast: 0.04,
+  imd_warning: 0.04, // official IMD district warning / nowcast; falls back to rain_forecast when IMD has nothing current
   soil_saturation: 0.19,
   freeze_thaw: 0.04,
   // Susceptibility (static) — 0.28: a steep, weak slope on a dry day stays Low.
@@ -55,11 +56,14 @@ export function normaliseDynamic(f, elevation_m = 0) {
     if ((f.snow_depth || 0) > 0.02 && (f.temperature ?? 0) > 2) freezeThaw = clamp(freezeThaw + 0.4, 0, 1);
     if ((f.freezing_level ?? 99999) < elevation_m + 300 && (f.rain_intensity || 0) > 1) freezeThaw = clamp(freezeThaw + 0.2, 0, 1);
   }
+  const rainForecast = sat(f.rain_fc_24h, 60);
   return {
     rain_72h: sat(f.rain_72h, 120),
     rain_24h: sat(f.rain_24h, 60),
     rain_intensity: sat(f.rain_intensity, 12),
-    rain_forecast: sat(f.rain_fc_24h, 60),
+    rain_forecast: rainForecast,
+    imd_warning: f.imd_rain_severity == null ? rainForecast : clamp(f.imd_rain_severity, 0, 1),
+    imd_fallback: f.imd_rain_severity == null,
     soil_saturation: clamp(((f.saturation_index ?? 0) - 0.65) / 0.3, 0, 1),
     freeze_thaw: freezeThaw,
   };
@@ -111,6 +115,12 @@ export function scoreFrom(staticN, dynamicN) {
   score += interaction;
   const soil = contributions.find((c) => c.key === 'soil_saturation');
   soil.value += interaction;
+  // Without current IMD data the imd_warning share was filled from the model forecast: credit it there.
+  if (dynamicN.imd_fallback) {
+    const imd = contributions.find((c) => c.key === 'imd_warning');
+    contributions.find((c) => c.key === 'rain_forecast').value += imd.value;
+    imd.value = 0;
+  }
   score = clamp(score, 0, 1);
   const total = contributions.reduce((a, c) => a + c.value, 0) || 1;
   const drivers = contributions
