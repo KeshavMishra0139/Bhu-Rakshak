@@ -39,6 +39,8 @@ export const env = {
   devModeEnabled: bool(process.env.DEV_MODE_ENABLED, false),
   devPassword: process.env.DEV_PASSWORD || '',
   devAccessCode: process.env.DEV_ACCESS_CODE || '',
+  // Private-preview password for the whole site (empty = no gate). See auth/siteGate.js.
+  sitePassword: process.env.SITE_PASSWORD || '',
   bhuvanToken: process.env.BHUVAN_TOKEN || '',
   // IMD API (api.imd.gov.in): an API key and a JWT, both issued by the IMD API portal.
   imdBaseUrl: (process.env.IMD_BASE_URL || 'https://api.imd.gov.in/api/v1').replace(/\/$/, ''),

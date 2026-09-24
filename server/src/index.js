@@ -13,6 +13,7 @@ const { default: cookieParser } = await import('cookie-parser');
 const { openDb, closeDb } = await import('./db/index.js');
 const { seedIfEmpty } = await import('./db/seed.js');
 const { attachUser } = await import('./auth/middleware.js');
+const { siteGate } = await import('./auth/siteGate.js');
 const { startWeatherSchedule, stopWeatherSchedule } = await import('./ingest/openMeteo.js');
 const { startImdSchedule, stopImdSchedule } = await import('./ingest/imd.js');
 const { riskService } = await import('./prediction/liveLoop.js');
@@ -26,6 +27,7 @@ export async function createApp() {
   app.set('trust proxy', 1);
   app.use(express.json({ limit: '4mb' }));
   app.use(cookieParser());
+  app.use(siteGate());
   app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
