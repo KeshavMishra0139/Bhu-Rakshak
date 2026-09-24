@@ -30,7 +30,7 @@ Open **http://localhost:5173**. The API runs on port 4000; Vite proxies `/api`. 
 | `npm test` | Server tests (engine, hysteresis, features, inbox routing, permissions, alert templates, assistant) |
 | `npm run build` then `npm start` | Production build; the server also serves `client/dist` on port 4000 |
 
-With no internet the app still runs. It uses a clearly labelled fallback weather series until Open-Meteo is reachable; maps need a connection to Google.
+With no internet the app still runs. It uses a clearly labelled fallback weather series until Open-Meteo is reachable; map tiles and Street View need an internet connection.
 
 ## Demo credentials
 
@@ -64,7 +64,7 @@ Actions taken while viewing as another role are logged as `developer (as <role>)
 ## 2-minute judge demo
 
 1. **(0:00) Landing.** Show the live mini-map, the headline stats and "How it works". Switch to Hindi and back with one tap.
-2. **(0:15) Split view.** Sign in as developer and open **Split view**. On the left is the authority watch map (Google Maps, pins labelled by risk level, corridors, and the live risk stations rail); on the right is the citizen site for Mangan.
+2. **(0:15) Split view.** Sign in as developer and open **Split view**. On the left is the authority watch map (satellite map, pins labelled by risk level, corridors, the live risk stations rail and the in-person Street View toggle); on the right is the citizen site for Mangan.
 3. **(0:30) Storm.** In **Demo controls**, start the Storm scenario on *North Sikkim Highway*. About a minute later Mangan and Chungthang turn **High**: the officer's Inbox badge lights up with a toast and chime, and the citizen pane shows the alarm banner and sounds the High beep. About two minutes in they turn **Critical**, and the citizen siren and the stronger officer chime follow. For a faster show, use *Force level → Critical* on Mangan.
 4. **(1:00) Officer response.** Open the Inbox message: it shows drivers, forecast, what's exposed and the suggested actions. Press **Acknowledge**, then **Create incident** and assign *SDRF team B*. Tick "Close the road". Press **Draft alert**; the English and Hindi text is pre-filled. Send it.
 5. **(1:25) Citizen side.** The alert appears instantly under Alerts, with *I understand*, *Share on WhatsApp* and *Call 112*. Press *I understand* on the banner; the officer's drawer shows the acknowledgement count go up.
@@ -75,7 +75,7 @@ Actions taken while viewing as another role are logged as `developer (as <role>)
 
 | | Component |
 | --- | --- |
-| **Real** | Open-Meteo weather and soil moisture (fetched every 30 min, cached, served offline), IMD district warnings and nowcasts (every 30 min once `IMD_API_KEY` and `IMD_TOKEN` are set), Google Maps, auth and roles, inbox routing and escalation, incidents with SOP checklist and audit log, alerts with dashboard delivery and acknowledgement counts, citizen reports with verification, roads, resources, situation report, EN/HI, themes |
+| **Real** | Open-Meteo weather and soil moisture (fetched every 30 min, cached, served offline), IMD district warnings and nowcasts (every 30 min once `IMD_API_KEY` and `IMD_TOKEN` are set), Esri satellite and street maps, Google Street View (embedded), auth and roles, inbox routing and escalation, incidents with SOP checklist and audit log, alerts with dashboard delivery and acknowledgement counts, citizen reports with verification, roads, resources, situation report, EN/HI, themes |
 | **Generated** | Live risk values: a transparent baseline engine anchored on real weather, with bounded live variation and the Storm scenario. Derived features (saturation index, cloudburst and freeze–thaw flags). Assistant answers (templates over live data). Historical landslide points (seeded from per-location counts). |
 | **Seed placeholders** | Slope, geology, NDVI, land cover, river and road distance, landslide history, population and facilities (`server/src/data/*.json`), road statuses, resources and contacts |
 | **Pending / stubs (labelled in code)** | Trained ML model (`ModelPredictionProvider`, `POST {MODEL_URL}/predict`); SMS and push delivery (`notifications/providers.js`, logged through the provider interface); seismic feed and ground sensors; official Survey of India boundary (place it at `client/public/geo/india_boundary.geojson`; until then the legend shows "Official boundary data pending"); real GIS layers from Bhuvan, GSI and the census |
@@ -93,16 +93,18 @@ No accuracy figures are claimed anywhere. Confidence reflects only data freshnes
 
 ## Maps
 
-All maps use **Google Maps** through `@vis.gl/react-google-maps` (`client/src/lib/googleMaps.tsx`, settings in `client/src/lib/mapConfig.ts`):
+No map needs an API key, billing or sign-up. Sources and settings are in `client/src/lib/mapConfig.ts`; maps are drawn with Leaflet.
 
-- **Key:** set `GOOGLE_MAPS_API_KEY` to a Maps JavaScript API browser key and restrict it to your site's HTTP referrers. The server hands it to the browser at `/api/map/google`, so changing it needs no rebuild. Without a key, maps still load but show "For development purposes only" and a Google notice.
-- **Map ID:** `GOOGLE_MAPS_MAP_ID` (defaults to Google's `DEMO_MAP_ID`, fine for development). It enables the vector map, markers and the light/dark colour scheme.
-- **Boundaries:** maps load with `region=IN`, so Google draws India's borders as required in India. The official Survey of India overlay (`client/public/geo/india_boundary.geojson`) is still drawn on top when supplied.
-- **Authority map:** the team's corridor watch console (same design as the citizen portal): a Google map with Google's own Map/Satellite, fullscreen, zoom and Street View controls, classic pins labelled ✓ (Low), • (Moderate), ! (High) and !! (Critical), and a "Live risk stations" rail listing every location with its 24 h rainfall and level. Selecting a pin or a row opens the location drawer; the rail also holds the forecast time selector. Layer chips on the map toggle corridor lines, road status, citizen reports and rescue resources (the last two for roles that can see incidents). A **Map / In-person view** toggle at the top switches the same map area into Google Street View: pick a pin, a station or any spot and it shows the nearest street-level imagery (searching up to 10 km, facing the chosen point), with a link to open it in Google Maps. Dragging Google's pegman does the same; switching back to Map returns to the same view. Google shows the Map/Satellite switch only once a real key is set.
-- **Landing and citizen maps:** Satellite (Google hybrid: imagery with labels) on the landing page and a street map for citizen routes and report pins.
-- **Bhuvan:** layers come from the WMS URL on the official Bhuvan wiki (`https://bhuvan-vec2.nrsc.gov.in/bhuvan/wms`, WMS 1.1.1) and are drawn as Google map tiles. The server discovers Sikkim and Himalayan geomorphology, lineament, LULC, flood-hazard and glacial-lake layers from its GetCapabilities, so no layer names are guessed. If the service is unreachable the section is hidden. `BHUVAN_TOKEN`, if set, is sent as `token=`.
+- **Satellite (default):** Esri World Imagery, with Esri's road and place-name overlays.
+- **Street:** Esri World Street Map (light theme) or Esri Dark Gray with its labels (dark theme). CARTO's basemaps now need a key, so they are not used.
+- **Terrain:** OpenTopoMap.
+- **In-person view:** real Google Street View, shown in the same map area through Google's standard "Embed a map" iframe (the embed Google offers under Share → Embed a map; free, no key). Google's imagery here is mostly in towns (confirmed in Gangtok and Rangpo); elsewhere Google says "No Street View available", and **Open in Google Maps** searches around the spot on Google's site. Free open alternatives (Mapillary, KartaView, Panoramax) were checked and barely cover Sikkim.
+- **Authority map:** the team's corridor watch console (same design as the citizen portal): classic red pins labelled ✓ (Low), • (Moderate), ! (High) and !! (Critical), a Satellite / Street / Terrain switch, full-screen button, and a "Live risk stations" rail listing every location with its 24 h rainfall and level. Selecting a pin or a row opens the location drawer; the rail also holds the forecast time selector. Layer chips toggle corridor lines, road status, citizen reports and rescue resources (the last two for roles that can see incidents). A **Map / In-person view** toggle switches the same map area to Street View at the selected place, or at any spot you click; **Pick another spot** returns to the map to choose again.
+- **Landing and citizen maps:** satellite with labels on the landing page; the street map for citizen routes and report pins.
+- **Boundaries:** the official Survey of India overlay (`client/public/geo/india_boundary.geojson`) is the only boundary source the team uses for India's borders; the Esri place-name layer shows neighbouring country names around Sikkim.
+- **Bhuvan:** the server still discovers Sikkim and Himalayan WMS layers from the official Bhuvan service (`/api/map/config`, `BHUVAN_TOKEN` sent as `token=` if set), but the current watch map does not draw them.
 
-Data credits appear on the About page; Google's own attribution stays on every map.
+Data credits are on the About page and in each map's attribution line.
 
 ## Configuration
 
@@ -117,8 +119,8 @@ Data credits appear on the About page; Google's own attribution stays on every m
   - HTTP integration of every endpoint and permission rule, run against small Express stand-ins because packages couldn't be installed in the build environment.
   - SSE fan-out: each role gets only its own events.
   - Storm timing: High after about 60 s, Critical after about 120 s.
-  - The client type-checks and builds, every translation key exists in both languages, and the landing, authority and citizen maps were checked in a browser (without a Google key).
-- **Not yet run against live services:** IMD (needs your API key and JWT; the response parsing follows IMD's published field reference) and Google Maps with a real key.
+  - The client type-checks and builds, every translation key exists in both languages, and the landing, authority and citizen maps and the in-person view were checked in a browser.
+- **Not yet run against live services:** IMD (needs your API key and JWT; the response parsing follows IMD's published field reference).
 
 ## Troubleshooting
 

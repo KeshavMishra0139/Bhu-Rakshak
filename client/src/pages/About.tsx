@@ -34,6 +34,8 @@ export default function About() {
           <ul className="mt-3 space-y-2 list-disc pl-5">
             <li>{t('about.c_openmeteo')} <a className="text-brand underline" href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">open-meteo.com</a> · <a className="text-brand underline" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></li>
             <li>{t('about.c_imd')} <a className="text-brand underline" href="https://mausam.imd.gov.in/" target="_blank" rel="noopener noreferrer">mausam.imd.gov.in</a></li>
+            <li>{t('about.c_esri')}</li>
+            <li>{t('about.c_osm')} <a className="text-brand underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">openstreetmap.org/copyright</a></li>
             <li>{t('about.c_google')}</li>
             <li>{t('about.c_bhuvan')} <a className="text-brand underline" href="https://bhuvan.nrsc.gov.in/" target="_blank" rel="noopener noreferrer">bhuvan.nrsc.gov.in</a></li>
             <li>{t('about.c_boundary')}</li>

@@ -1,7 +1,8 @@
-// Small Google map for citizen screens (road detail, report pin). Loaded lazily to keep pages light.
-import { Map, Polyline } from '@vis.gl/react-google-maps';
-import { GoogleMapsFrame, MapDot, useMapColorScheme } from '../lib/googleMaps';
-import { MAP_BOUNDS, MAP_MIN_ZOOM, toLatLng } from '../lib/mapConfig';
+// Small Leaflet map for citizen screens (road detail, report pin). Loaded lazily to keep pages light.
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Polyline, CircleMarker, useMapEvents } from 'react-leaflet';
+import { useTheme } from '../theme/ThemeProvider';
+import { BASEMAPS, MAP_BOUNDS, basemapOverlays, basemapUrl } from '../lib/mapConfig';
 
 type Props = {
   center: [number, number];
@@ -14,21 +15,24 @@ type Props = {
   height?: number;
 };
 
+function Picker({ onPick }: { onPick: (l: [number, number]) => void }) {
+  useMapEvents({ click: (e) => onPick([e.latlng.lat, e.latlng.lng]) });
+  return null;
+}
+
 export default function MiniMap({ center, zoom = 11, line, lineColor = '#1F7A8C', pin, onPick, label, height = 220 }: Props) {
-  const colorScheme = useMapColorScheme();
+  const { resolved } = useTheme();
+  const street = BASEMAPS.find((b) => b.id === 'street')!;
+  const url = basemapUrl(street, resolved);
   return (
     <div className="rounded-card overflow-hidden border border-line" style={{ height }} role="region" aria-label={label}>
-      <GoogleMapsFrame>
-        {(cfg) => (
-          <Map mapId={cfg.map_id} colorScheme={colorScheme} mapTypeId="roadmap" defaultCenter={toLatLng(center)} defaultZoom={zoom}
-            minZoom={MAP_MIN_ZOOM} restriction={{ latLngBounds: MAP_BOUNDS, strictBounds: false }} gestureHandling="cooperative"
-            disableDefaultUI zoomControl clickableIcons={false} style={{ width: '100%', height: '100%' }}
-            onClick={onPick ? (e) => { const p = e.detail.latLng; if (p) onPick([p.lat, p.lng]); } : undefined}>
-            {line && line.length > 1 && <Polyline path={line.map(toLatLng)} strokeColor={lineColor} strokeWeight={6} strokeOpacity={0.9} clickable={false} />}
-            {pin && <MapDot position={toLatLng(pin)} radius={9} fill="#C62828" stroke="#fff" strokeWidth={3} />}
-          </Map>
-        )}
-      </GoogleMapsFrame>
+      <MapContainer center={center} zoom={zoom} minZoom={8} maxBounds={MAP_BOUNDS} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
+        <TileLayer url={url} attribution={street.attribution} maxZoom={street.maxZoom} />
+        {basemapOverlays(street, resolved).map((o) => <TileLayer key={o.url} url={o.url} maxZoom={street.maxZoom} />)}
+        {line && line.length > 1 && <Polyline positions={line} pathOptions={{ color: lineColor, weight: 6, opacity: 0.9 }} />}
+        {pin && <CircleMarker center={pin} radius={9} pathOptions={{ color: '#fff', weight: 3, fillColor: '#C62828', fillOpacity: 1 }} />}
+        {onPick && <Picker onPick={onPick} />}
+      </MapContainer>
     </div>
   );
 }

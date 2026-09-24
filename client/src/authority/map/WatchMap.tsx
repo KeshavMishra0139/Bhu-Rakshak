@@ -1,12 +1,14 @@
-// Corridor watch map for the authority dashboard, following the team's citizen-portal map:
-// a plain Google map with Google's own controls and classic pins labelled by risk level,
+// Corridor watch map for the authority dashboard, in the style of the team's citizen-portal map:
+// classic red map pins labelled by risk level, on free Esri satellite / street and OpenTopoMap terrain tiles (Leaflet),
 // plus optional operational layers (corridors, road status, citizen reports, resources).
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { AdvancedMarker, Map, Marker, Polyline, useMap } from '@vis.gl/react-google-maps';
+import 'leaflet/dist/leaflet.css';
+import { useEffect, useMemo } from 'react';
+import L from 'leaflet';
+import { CircleMarker, MapContainer, Marker, Polyline, ScaleControl, TileLayer, Tooltip, ZoomControl, useMap, useMapEvents } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import type { Level, LocationSnap, Report, Resource, Road } from '../../api/types';
-import { MapDot } from '../../lib/googleMaps';
-import { MAP_CENTER } from '../../lib/mapConfig';
+import { useTheme } from '../../theme/ThemeProvider';
+import { BASEMAPS, MAP_BOUNDS, MAP_CENTER, MAP_MIN_ZOOM, basemapOverlays, basemapUrl, type Basemap } from '../../lib/mapConfig';
 import { placeName } from '../../lib/format';
 
 /** Pin label per level: tick for calm, dot to watch, exclamation for danger. */
@@ -16,22 +18,54 @@ export type LayerKey = 'corridors' | 'roads' | 'reports' | 'resources';
 
 const ROAD_COLOR: Record<Road['status'], string> = { open: '#2F8F4E', cleared: '#2F8F4E', caution: '#C99A12', restricted: '#D9731A', blocked: '#C62828' };
 const RES_ICON: Record<Resource['type'], [string, string]> = { excavator: ['J', '#8a6d1d'], rescue_team: ['R', '#1F7A8C'], ambulance: ['A', '#b3261e'], shelter: ['S', '#3f6e3a'] };
-// Dashes for corridor lines: Google draws dashed polylines as repeated symbols on an invisible stroke.
-const DASH = (color: string) => [{ icon: { path: 'M 0,-1 0,1', strokeColor: color, strokeOpacity: 0.75, strokeWeight: 4, scale: 2 }, offset: '0', repeat: '12px' }];
 
 export const levelAt = (l: LocationSnap, horizon: number): Level | null =>
   !l.risk ? null : horizon === 0 ? l.risk.level : (l.risk.forecast?.find((f) => f.h === horizon)?.level || l.risk.level);
 
-function PanTo({ target }: { target: google.maps.LatLngLiteral | null }) {
+// Classic teardrop map pin (26×37) with a white label, anchored at its tip.
+const pinCache = new Map<string, L.DivIcon>();
+function pinIcon(label: string, active: boolean) {
+  const key = `${label}|${active}`;
+  let icon = pinCache.get(key);
+  if (!icon) {
+    icon = L.divIcon({
+      className: `watch-pin${active ? ' active' : ''}`,
+      iconSize: [26, 37],
+      iconAnchor: [13, 37],
+      tooltipAnchor: [0, -34],
+      html: `<svg width="26" height="37" viewBox="0 0 26 37" aria-hidden="true"><path d="M13 0.8C6.2 0.8 0.8 6.2 0.8 13c0 9.4 12.2 23.2 12.2 23.2S25.2 22.4 25.2 13C25.2 6.2 19.8 0.8 13 0.8z" fill="#EA4335" stroke="#A52714" stroke-width="1.2"/></svg><span>${label}</span>`,
+    });
+    pinCache.set(key, icon);
+  }
+  return icon;
+}
+
+function PanTo({ target }: { target: [number, number] | null }) {
   const map = useMap();
-  useEffect(() => { if (map && target) map.panTo(target); }, [map, target?.lat, target?.lng]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (target) map.panTo(target, { animate: true }); }, [target?.[0], target?.[1]]); // eslint-disable-line react-hooks/exhaustive-deps
+  return null;
+}
+
+/** Keep Leaflet's size in step with its container (the drawer and rail change the map's width). */
+function AutoResize() {
+  const map = useMap();
+  useEffect(() => {
+    const ro = new ResizeObserver(() => map.invalidateSize());
+    ro.observe(map.getContainer());
+    return () => ro.disconnect();
+  }, [map]);
+  return null;
+}
+
+function ClickHandler({ onClick }: { onClick?: (pos: { lat: number; lng: number }) => void }) {
+  useMapEvents({ click: (e) => onClick?.({ lat: e.latlng.lat, lng: e.latlng.lng }) });
   return null;
 }
 
 type Props = {
-  mapId: string;
+  basemap: Basemap['id'];
   /** Clicks on empty map (used by the in-person view to pick a spot). */
-  onMapClick?: (pos: google.maps.LatLngLiteral) => void;
+  onMapClick?: (pos: { lat: number; lng: number }) => void;
   locations: LocationSnap[];
   horizon: number;
   activeId: string | null;
@@ -41,61 +75,66 @@ type Props = {
   reports: Report[];
   resources: Resource[];
   corridorColors: Record<string, string>;
-  /** Extra map-bound controllers (e.g. the in-person view). */
-  children?: ReactNode;
 };
 
-export function WatchMap({ mapId, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors, children }: Props) {
+export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors }: Props) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-  const [hoverRoad, setHoverRoad] = useState<{ text: string; pos: google.maps.LatLngLiteral } | null>(null);
+  const { resolved } = useTheme();
+  const base = BASEMAPS.find((b) => b.id === basemap) || BASEMAPS[0];
   const byId = useMemo(() => Object.fromEntries(locations.map((l) => [l.id, l])), [locations]);
-  const pathOf = (r: Road) => r.path.map((id) => byId[id]).filter(Boolean).map((l) => ({ lat: l.lat, lng: l.lng }));
+  const pathOf = (r: Road) => r.path.map((id) => byId[id]).filter(Boolean).map((l) => [l.lat, l.lng] as [number, number]);
   const active = activeId ? byId[activeId] : undefined;
 
   return (
-    <Map mapId={mapId} defaultCenter={MAP_CENTER} defaultZoom={9} mapTypeControl fullscreenControl zoomControl streetViewControl
-      className="h-full w-full min-h-[440px]" onClick={onMapClick ? (e) => { if (e.detail.latLng) onMapClick(e.detail.latLng); } : undefined}>
+    <MapContainer center={MAP_CENTER} zoom={9} minZoom={MAP_MIN_ZOOM} maxBounds={MAP_BOUNDS} maxBoundsViscosity={0.9} zoomControl={false}
+      className="h-full w-full min-h-[440px]" attributionControl>
+      <TileLayer key={`${base.id}-${resolved}`} url={basemapUrl(base, resolved)} attribution={base.attribution} maxZoom={base.maxZoom}
+        subdomains={base.subdomains || 'abc'} />
+      {basemapOverlays(base, resolved).map((o) => <TileLayer key={`${base.id}-${resolved}-${o.url}`} url={o.url} subdomains={o.subdomains || 'abc'} maxZoom={base.maxZoom} />)}
+
       {layers.corridors && roads.map((r) => (
-        <Polyline key={`c-${r.id}`} path={pathOf(r)} clickable={false} strokeOpacity={0} icons={DASH(corridorColors[r.corridor_id] || '#7CC4CF')} />
+        <Polyline key={`c-${r.id}`} positions={pathOf(r)} interactive={false}
+          pathOptions={{ color: corridorColors[r.corridor_id] || '#7CC4CF', weight: 4, opacity: 0.8, dashArray: '2 8', lineCap: 'round' }} />
       ))}
       {layers.roads && roads.map((r) => (
-        <Polyline key={`r-${r.id}-${r.status}`} path={pathOf(r)} strokeColor={ROAD_COLOR[r.status]} strokeWeight={6} strokeOpacity={0.85}
-          onMouseOver={(e) => e.latLng && setHoverRoad({ text: `${lang === 'hi' ? r.name_hi : r.name_en}: ${t(`roads.st_${r.status}`)}`, pos: e.latLng.toJSON() })}
-          onMouseOut={() => setHoverRoad(null)} />
+        <Polyline key={`r-${r.id}-${r.status}`} positions={pathOf(r)} pathOptions={{ color: ROAD_COLOR[r.status], weight: 6, opacity: 0.85 }}>
+          <Tooltip sticky>{lang === 'hi' ? r.name_hi : r.name_en}: {t(`roads.st_${r.status}`)}</Tooltip>
+        </Polyline>
       ))}
-      {hoverRoad && (
-        <AdvancedMarker position={hoverRoad.pos} clickable={false} zIndex={2000}>
-          <span className="gm-tip gm-tip-static">{hoverRoad.text}</span>
-        </AdvancedMarker>
-      )}
       {layers.reports && reports.map((r) => (
-        <MapDot key={`rep-${r.id}`} position={{ lat: r.lat, lng: r.lng }} radius={6} stroke="#fff" strokeWidth={2} zIndex={6}
-          fill={r.status === 'verified' ? '#2F8F4E' : r.status === 'rejected' ? '#777' : '#D9731A'}
-          label={`${t('map.report_pin')}: ${t(`reports.ty_${r.type}`)} (${t(`reports.st_${r.status}`)})`} />
+        <CircleMarker key={`rep-${r.id}`} center={[r.lat, r.lng]} radius={6}
+          pathOptions={{ color: '#fff', weight: 2, fillColor: r.status === 'verified' ? '#2F8F4E' : r.status === 'rejected' ? '#777' : '#D9731A', fillOpacity: 1 }}>
+          <Tooltip>{t('map.report_pin')}: {t(`reports.ty_${r.type}`)} ({t(`reports.st_${r.status}`)})</Tooltip>
+        </CircleMarker>
       ))}
       {layers.resources && resources.filter((r) => r.lat != null).map((r, i) => {
         const [letter, color] = RES_ICON[r.type];
+        const icon = L.divIcon({ className: '', html: `<span class="res-icon" style="background:${color};opacity:${r.status === 'unavailable' ? 0.5 : 1}">${letter}</span>`, iconSize: [22, 22] });
         return (
-          <AdvancedMarker key={`res-${r.id}`} position={{ lat: r.lat! + 0.012 + (i % 3) * 0.006, lng: r.lng! - 0.018 + (i % 4) * 0.008 }} clickable={false} zIndex={7}>
-            <div className="gm-dot">
-              <span className="res-icon" style={{ background: color, opacity: r.status === 'unavailable' ? 0.5 : 1 }}>{letter}</span>
-              <span className="gm-tip">{t('map.resources_short', { name: r.name, status: t(`resources.st_${r.status}`) })}</span>
-            </div>
-          </AdvancedMarker>
+          <Marker key={`res-${r.id}`} position={[r.lat! + 0.012 + (i % 3) * 0.006, r.lng! - 0.018 + (i % 4) * 0.008]} icon={icon} keyboard={false}>
+            <Tooltip>{t('map.resources_short', { name: r.name, status: t(`resources.st_${r.status}`) })}</Tooltip>
+          </Marker>
         );
       })}
 
       {locations.map((l) => {
         const lv = levelAt(l, horizon);
         if (!lv) return null;
+        const isActive = l.id === activeId;
         return (
-          <Marker key={l.id} position={{ lat: l.lat, lng: l.lng }} title={placeName(l, lang)} zIndex={l.id === activeId ? 1000 : 100}
-            label={{ text: PIN_LABEL[lv], color: '#ffffff', fontWeight: '700' }} onClick={() => onSelect(l.id)} />
+          <Marker key={l.id} position={[l.lat, l.lng]} icon={pinIcon(PIN_LABEL[lv], isActive)} zIndexOffset={isActive ? 1000 : 0}
+            title={placeName(l, lang)} alt={`${placeName(l, lang)}: ${t(`levels.${lv}`)}`} eventHandlers={{ click: () => onSelect(l.id) }}>
+            <Tooltip direction="top">{placeName(l, lang)} · {t(`levels.${lv}`)}{horizon ? ` (+${horizon}h)` : ''}</Tooltip>
+          </Marker>
         );
       })}
-      <PanTo target={active ? { lat: active.lat, lng: active.lng } : null} />
-      {children}
-    </Map>
+
+      <PanTo target={active ? [active.lat, active.lng] : null} />
+      <ClickHandler onClick={onMapClick} />
+      <AutoResize />
+      <ZoomControl position="bottomright" />
+      <ScaleControl position="bottomright" imperial={false} />
+    </MapContainer>
   );
 }

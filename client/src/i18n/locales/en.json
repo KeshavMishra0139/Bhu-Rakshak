@@ -483,7 +483,6 @@
     "resources_short": "{{name}}: {{status}}",
     "show_panel": "Show location list",
     "hide_panel": "Hide location list",
-    "google_key_missing": "Google Maps key not set (development mode)",
     "watch_title": "Sikkim & Darjeeling corridor watch map",
     "region": "Sikkim · Darjeeling hills",
     "stations": "Live risk stations",
@@ -494,15 +493,16 @@
     "src_rain": "Rainfall: Open-Meteo live forecast",
     "src_imd": "Warnings: IMD district feed",
     "in_person": "In-person view",
-    "in_person_hint": "Click a pin, a station or any spot on the map to see it at street level.",
-    "in_person_loading": "Looking for street-level imagery…",
-    "in_person_dist": "Nearest street-level imagery is {{d}} away",
-    "in_person_here": "Street-level imagery at this spot",
-    "in_person_none": "No street-level imagery within {{d}} of this spot.",
+    "in_person_hint": "Click a pin, a station or a spot on a road to see it at street level.",
     "in_person_open": "Open in Google Maps",
     "in_person_point": "Point {{lat}}, {{lng}}",
     "mode_map": "Map",
-    "view_mode": "Map or in-person view"
+    "view_mode": "Map or in-person view",
+    "in_person_pick": "Pick another spot",
+    "in_person_tip": "If Google shows \"No Street View available\", pick a spot on a road.",
+    "fullscreen": "Full screen",
+    "exit_fullscreen": "Exit full screen",
+    "src_maps": "Maps: Esri satellite · OpenStreetMap · Google Street View"
   },
   "drawer": {
     "overview": "Overview",
@@ -776,8 +776,10 @@
     "c_boundary": "India's boundary is drawn from an official Survey of India file supplied by the deployer.",
     "team": "Team",
     "team_d": "Built by Team ByteMatrix.",
-    "c_google": "Maps: Google Maps. Map data © Google.",
-    "c_imd": "Weather warnings and nowcasts: India Meteorological Department (IMD), Ministry of Earth Sciences."
+    "c_google": "In-person view: Google Street View, shown through Google Maps’ embed.",
+    "c_imd": "Weather warnings and nowcasts: India Meteorological Department (IMD), Ministry of Earth Sciences.",
+    "c_esri": "Satellite imagery: Esri World Imagery (Esri, Maxar, Earthstar Geographics and the GIS user community); road overlay © Esri.",
+    "c_osm": "Street map: Esri World Street Map (Esri, HERE, Garmin, © OpenStreetMap contributors); terrain by OpenTopoMap (© OpenStreetMap contributors, SRTM)."
   },
   "adminx": {
     "pending": "Pending approvals",

@@ -40,9 +40,6 @@ export const env = {
   devPassword: process.env.DEV_PASSWORD || '',
   devAccessCode: process.env.DEV_ACCESS_CODE || '',
   bhuvanToken: process.env.BHUVAN_TOKEN || '',
-  // Google Maps JavaScript API browser key. Restrict it to your site's HTTP referrers in Google Cloud.
-  googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || '',
-  googleMapsMapId: process.env.GOOGLE_MAPS_MAP_ID || 'DEMO_MAP_ID',
   // IMD API (api.imd.gov.in): an API key and a JWT, both issued by the IMD API portal.
   imdBaseUrl: (process.env.IMD_BASE_URL || 'https://api.imd.gov.in/api/v1').replace(/\/$/, ''),
   imdApiKey: process.env.IMD_API_KEY || '',

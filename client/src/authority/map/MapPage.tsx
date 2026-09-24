@@ -1,8 +1,9 @@
-// Authority map: the team's corridor watch console (Google map + live risk stations rail),
-// with the location drawer and forecast horizon on top.
-import { useEffect, useMemo, useState } from 'react';
+// Authority map: the team's corridor watch console (map + live risk stations rail), with the location drawer,
+// forecast horizon, basemap switch and a Map / In-person view toggle in one map area.
+// Maps are free Esri satellite and OpenStreetMap tiles; the in-person view is Google Street View (embed, no key).
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Loader2 } from 'lucide-react';
+import { MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Crosshair, Maximize2, Minimize2, Satellite } from 'lucide-react';
 import type { AlertItem, Level, LocationSnap, Report, Resource, Road } from '../../api/types';
 import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream } from '../../live/RiskStreamProvider';
@@ -10,8 +11,8 @@ import { useLive } from '../useLive';
 import { useAuthority } from '../AuthorityContext';
 import { WatchMap, levelAt, type LayerKey } from './WatchMap';
 import { DetailDrawer } from './DetailDrawer';
-import { InPersonController, RADII, type StreetStatus, type ViewTarget } from './InPersonView';
-import { GoogleMapsFrame, useGoogleConfig } from '../../lib/googleMaps';
+import { InPersonView, type ViewTarget } from './InPersonView';
+import { BASEMAPS, streetViewLink, type Basemap } from '../../lib/mapConfig';
 import { LEVELS, riskConfig } from '../../lib/risk';
 import { placeName } from '../../lib/format';
 
@@ -21,104 +22,132 @@ const VALUE: Record<Level, string> = { low: 'text-[#9dd2a6]', moderate: 'text-[#
 const PILL: Record<Level, string> = {
   low: 'bg-[#2d6143] text-[#b4e1b9]', moderate: 'bg-[#6b512a] text-[#ffd993]', high: 'bg-[#71372f] text-[#ffb4a4]', critical: 'bg-[#5a1d1f] text-[#ff9c9c]',
 };
-
 const LAYER_KEYS: LayerKey[] = ['corridors', 'roads', 'reports', 'resources'];
+const SEG = 'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold';
+const SEG_ON = 'bg-[#2a5d43] text-[#d7efd8]';
+const SEG_OFF = 'text-[#315542] hover:bg-[#e8f3ed]';
 
 export default function MapPage() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const { can } = useAuth();
   const { list, corridors } = useRiskStream();
+  const { selectedId, select, horizon, setHorizon } = useAuthority();
   const [layers, setLayers] = useState<Record<LayerKey, boolean>>({ corridors: true, roads: false, reports: true, resources: false });
+  const [basemap, setBasemap] = useState<Basemap['id']>('satellite');
   const roads = useLive<{ roads: Road[] }>('/roads', ['road_updated']);
   const reports = useLive<{ reports: Report[] }>(can('incidents.view') ? '/reports' : null, ['report_updated']);
   const resources = useLive<{ resources: Resource[] }>(can('incidents.view') ? '/resources' : null, ['resource_updated', 'incident_updated']);
+  const alerts = useLive<{ alerts: AlertItem[] }>('/alerts', ['alert_published', 'alert_cancelled']);
   const corridorColors = useMemo(() => Object.fromEntries(corridors.map((c) => [c.id, c.color])), [corridors]);
   const layerKeys = LAYER_KEYS.filter((k) => (k !== 'reports' && k !== 'resources') || can('incidents.view'));
-  const { selectedId, select, horizon, setHorizon } = useAuthority();
-  const googleCfg = useGoogleConfig();
-  const alerts = useLive<{ alerts: AlertItem[] }>('/alerts', ['alert_published', 'alert_cancelled']);
   const horizons = [0, ...riskConfig.forecastHorizonsHours];
   const online = list.filter((l) => l.risk).length;
 
-  // Map / In-person view share one map area: in-person mode shows Google Street View nearest to the
-  // selected place or to any spot clicked on the map.
+  const alertedSince = (l: LocationSnap) => (alerts.data?.alerts || []).some((a) => !a.cancelled_at && a.kind === 'warning' && l.risk && a.created_at >= l.risk.level_since &&
+    ((a.target_type === 'location' && a.target_id === l.id) || (a.target_type === 'corridor' && a.target_id === l.corridor_id) || (a.target_type === 'district' && a.target_id === l.district)));
+
+  // Map / In-person view share one map area. In-person shows Google Street View at the selected place,
+  // or at any spot clicked on the map.
   const [mode, setMode] = useState<'map' | 'street'>('map');
-  const [streetVisible, setStreetVisible] = useState(false);
-  const [street, setStreet] = useState<StreetStatus>({ state: 'idle' });
   const [viewPoint, setViewPoint] = useState<ViewTarget | null>(null);
   const selected = list.find((l) => l.id === selectedId);
   const pointFor = (l: LocationSnap): ViewTarget => ({ lat: l.lat, lng: l.lng, label: placeName(l, lang) });
   useEffect(() => { if (mode === 'street' && selected) setViewPoint(pointFor(selected)); }, [selected?.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const switchMode = (m: 'map' | 'street') => { setMode(m); setViewPoint(m === 'street' && selected ? pointFor(selected) : null); };
-  // Google's pegman can open street view too; keep the toggle in step.
-  const onVisibleChange = (v: boolean) => { setStreetVisible(v); if (v) setMode('street'); };
-  const pickPoint = (pos: google.maps.LatLngLiteral) => setViewPoint({ ...pos, label: t('map.in_person_point', { lat: pos.lat.toFixed(4), lng: pos.lng.toFixed(4) }) });
-  const km = (m: number) => (m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(1)} km`);
+  const pickPoint = (pos: { lat: number; lng: number }) => setViewPoint({ ...pos, label: t('map.in_person_point', { lat: pos.lat.toFixed(4), lng: pos.lng.toFixed(4) }) });
+  const showingStreet = mode === 'street' && !!viewPoint;
 
-  const alertedSince = (l: LocationSnap) => (alerts.data?.alerts || []).some((a) => !a.cancelled_at && a.kind === 'warning' && l.risk && a.created_at >= l.risk.level_since &&
-    ((a.target_type === 'location' && a.target_id === l.id) || (a.target_type === 'corridor' && a.target_id === l.corridor_id) || (a.target_type === 'district' && a.target_id === l.district)));
+  // Fullscreen for the map area.
+  const mapArea = useRef<HTMLDivElement>(null);
+  const [isFull, setIsFull] = useState(false);
+  useEffect(() => {
+    const on = () => setIsFull(document.fullscreenElement === mapArea.current);
+    document.addEventListener('fullscreenchange', on);
+    return () => document.removeEventListener('fullscreenchange', on);
+  }, []);
+  const toggleFull = () => (document.fullscreenElement ? document.exitFullscreen() : mapArea.current?.requestFullscreen())?.catch(() => {});
 
   return (
     <div className="relative flex h-full min-h-0">
       <div className="flex-1 min-w-0 p-3 max-md:p-0 overflow-y-auto">
-        <GoogleMapsFrame className="map-console lg:h-full">
-        {(cfg) => (
         <div className="map-console lg:h-full">
           {/* Map (and in-person view in the same area) */}
-          <div className="relative min-h-[440px] overflow-hidden bg-[#dcebdc]">
-            <WatchMap mapId={cfg.map_id} onMapClick={mode === 'street' ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId} onSelect={select} layers={layers} corridorColors={corridorColors}
-              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []}>
-              <InPersonController enabled={mode === 'street'} target={viewPoint} onStatus={setStreet} onVisibleChange={onVisibleChange} />
-            </WatchMap>
+          <div ref={mapArea} className="relative isolate min-h-[440px] overflow-hidden bg-[#dcebdc]">
+            <WatchMap basemap={basemap} onMapClick={mode === 'street' ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId}
+              onSelect={select} layers={layers} corridorColors={corridorColors}
+              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} />
+            {showingStreet && <div className="absolute inset-0 z-[1050]"><InPersonView target={viewPoint} /></div>}
 
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex w-max max-w-[92%] flex-col items-center gap-1.5">
-              <div role="radiogroup" aria-label={t('map.view_mode')} className="flex rounded-xl border border-white/80 bg-white/95 p-0.5 shadow-sm backdrop-blur">
-                {(['map', 'street'] as const).map((m) => (
-                  <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => switchMode(m)}
-                    className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold ${mode === m ? 'bg-[#2a5d43] text-[#d7efd8]' : 'text-[#315542] hover:bg-[#e8f3ed]'}`}>
-                    {m === 'map' ? <MapIcon size={13} aria-hidden /> : <PersonStanding size={13} aria-hidden />}
-                    {m === 'map' ? t('map.mode_map') : t('map.in_person')}
+            {/* Top overlays, stacked so they wrap instead of overlapping on narrow maps */}
+            <div className={`pointer-events-none absolute inset-x-3 top-3 z-[1100] flex flex-col gap-2 ${showingStreet ? 'items-end' : 'items-start'}`}>
+              <div className={`flex w-full flex-wrap items-start gap-2 ${showingStreet ? 'justify-end' : 'justify-between'}`}>
+                <div role="radiogroup" aria-label={t('map.view_mode')} className="pointer-events-auto flex rounded-xl border border-white/80 bg-white/95 p-0.5 shadow-sm backdrop-blur">
+                  {(['map', 'street'] as const).map((m) => (
+                    <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => switchMode(m)} className={`${SEG} ${mode === m ? SEG_ON : SEG_OFF}`}>
+                      {m === 'map' ? <MapIcon size={13} aria-hidden /> : <PersonStanding size={13} aria-hidden />}
+                      {m === 'map' ? t('map.mode_map') : t('map.in_person')}
+                    </button>
+                  ))}
+                </div>
+                <div className="pointer-events-auto flex items-center gap-2">
+                  {!showingStreet && (
+                    <div role="radiogroup" aria-label={t('map.basemap')} className="flex rounded-xl border border-white/80 bg-white/95 p-0.5 shadow-sm backdrop-blur">
+                      {BASEMAPS.map((b) => (
+                        <button key={b.id} type="button" role="radio" aria-checked={basemap === b.id} onClick={() => setBasemap(b.id)} className={`${SEG} ${basemap === b.id ? SEG_ON : SEG_OFF}`}>
+                          {b.id === 'satellite' && <Satellite size={13} aria-hidden />}{t(`map.${b.id}`)}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <button type="button" onClick={toggleFull} aria-label={isFull ? t('map.exit_fullscreen') : t('map.fullscreen')} title={isFull ? t('map.exit_fullscreen') : t('map.fullscreen')}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/80 bg-white/95 text-[#315542] shadow-sm hover:bg-[#e8f3ed]">
+                    {isFull ? <Minimize2 size={16} aria-hidden /> : <Maximize2 size={16} aria-hidden />}
                   </button>
-                ))}
+                </div>
               </div>
-              {mode === 'street' && (street.state !== 'idle' || !streetVisible) && (
-                <p role="status" className="flex max-w-full items-center gap-2 rounded-lg bg-[#15241c]/90 px-3 py-1.5 text-center text-[11px] text-[#d7efd8] shadow">
-                  {street.state === 'loading' && <><Loader2 size={13} className="animate-spin shrink-0" aria-hidden />{t('map.in_person_loading')}</>}
-                  {street.state === 'none' && <>{viewPoint?.label} · {t('map.in_person_none', { d: km(RADII[RADII.length - 1]) })}</>}
-                  {street.state === 'idle' && t('map.in_person_hint')}
-                  {street.state === 'found' && (
+
+              {mode === 'street' && (
+                <p role="status" className={`pointer-events-auto flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg bg-[#15241c]/90 px-3 py-1.5 text-[11px] text-[#d7efd8] shadow ${showingStreet ? 'max-w-[62%] justify-end text-right' : 'max-w-full'}`}>
+                  {!viewPoint ? t('map.in_person_hint') : (
                     <>
-                      <span className="truncate">{viewPoint?.label} · {street.distanceM > 150 ? t('map.in_person_dist', { d: km(street.distanceM) }) : (street.description || t('map.in_person_here'))}</span>
-                      <a className="shrink-0 inline-flex items-center gap-1 font-bold underline-offset-2 hover:underline"
-                        href={`https://www.google.com/maps/@?api=1&map_action=pano&pano=${encodeURIComponent(street.panoId)}`} target="_blank" rel="noopener noreferrer">
+                      <span className="truncate font-bold">{viewPoint.label}</span>
+                      <button type="button" onClick={() => setViewPoint(null)} className="inline-flex items-center gap-1 font-bold hover:underline">
+                        <Crosshair size={12} aria-hidden />{t('map.in_person_pick')}
+                      </button>
+                      <a className="inline-flex items-center gap-1 font-bold hover:underline" href={streetViewLink(viewPoint.lat, viewPoint.lng)} target="_blank" rel="noopener noreferrer">
                         <ExternalLink size={12} aria-hidden />{t('map.in_person_open')}
                       </a>
+                      <span className="basis-full text-[10px] text-[#91a297]">{t('map.in_person_tip')}</span>
                     </>
                   )}
                 </p>
               )}
+
+              {!showingStreet && (
+                <>
+                  <div className="pointer-events-auto flex items-center gap-2 rounded-xl border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-bold text-[#315542] shadow-sm backdrop-blur">
+                    <MapPinned size={13} aria-hidden /> {t('map.watch_title')}
+                  </div>
+                  <div className="pointer-events-auto flex flex-wrap items-center gap-2 max-w-full" role="group" aria-label={t('map.layers')}>
+                    <span className="map-legend"><Layers size={12} aria-hidden /> {t('map.layers')}</span>
+                    {layerKeys.map((k) => (
+                      <button key={k} type="button" aria-pressed={layers[k]} onClick={() => setLayers((x) => ({ ...x, [k]: !x[k] }))}
+                        className={`map-legend ${layers[k] ? '!bg-[#2a5d43] !text-[#d7efd8] !border-[#2a5d43]' : ''}`}>
+                        {t(`map.layer_${k}`)}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
-            {!streetVisible && (
+            {!showingStreet && (
               <>
-                <div className="absolute left-3 top-14 flex items-center gap-2 rounded-xl border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-bold text-[#315542] shadow-sm backdrop-blur">
-                  <MapPinned size={13} aria-hidden /> {t('map.watch_title')}
-                </div>
-                <div className="absolute left-3 top-[6.25rem] flex flex-wrap items-center gap-2 max-w-[80%]" role="group" aria-label={t('map.layers')}>
-                  <span className="map-legend"><Layers size={12} aria-hidden /> {t('map.layers')}</span>
-                  {layerKeys.map((k) => (
-                    <button key={k} type="button" aria-pressed={layers[k]} onClick={() => setLayers((x) => ({ ...x, [k]: !x[k] }))}
-                      className={`map-legend ${layers[k] ? '!bg-[#2a5d43] !text-[#d7efd8] !border-[#2a5d43]' : ''}`}>
-                      {t(`map.layer_${k}`)}
-                    </button>
-                  ))}
-                </div>
-                <div className="absolute bottom-4 left-4 flex flex-wrap gap-2 max-w-[70%]">
+                <div className="absolute bottom-6 left-4 z-[1000] flex flex-wrap gap-2 max-w-[70%]">
                   {LEVELS.map((lv) => (
                     <span key={lv} className="map-legend"><span className={`h-2 w-2 rounded-full ${DOT[lv]}`} aria-hidden /> {t(`levels.${lv}`)}</span>
                   ))}
-                  {googleCfg && !googleCfg.api_key && <span className="map-legend !text-[#a8681f]">{t('map.google_key_missing')}</span>}
                 </div>
               </>
             )}
@@ -174,11 +203,10 @@ export default function MapPage() {
             <div className="mt-4 border-t border-white/10 pt-4 text-[10px] leading-5 text-[#91a297]">
               <div className="flex items-center gap-2"><CloudRain size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_rain')}</div>
               <div className="mt-1 flex items-center gap-2"><CloudLightning size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_imd')}</div>
+              <div className="mt-1 flex items-center gap-2"><Satellite size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_maps')}</div>
             </div>
           </aside>
         </div>
-        )}
-        </GoogleMapsFrame>
       </div>
 
       {/* Right detail drawer */}

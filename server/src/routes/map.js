@@ -1,4 +1,4 @@
-// Map configuration served to the client: the Google Maps browser key, Bhuvan WMS layers (discovered from the official service's
+// Map configuration served to the client: Bhuvan WMS layers (discovered from the official service's
 // GetCapabilities, never guessed), and seed historical landslide points.
 import { Router } from 'express';
 import { q } from '../db/index.js';
@@ -36,16 +36,10 @@ async function bhuvanLayers() {
   return cache;
 }
 
-// Google Maps settings every map needs before it can load. A browser key is public by design:
-// protect it with HTTP-referrer restrictions in Google Cloud.
-const googleConfig = () => ({ api_key: env.googleMapsApiKey || null, map_id: env.googleMapsMapId });
-r.get('/map/google', (_req, res) => res.json(googleConfig()));
-
 r.get('/map/config', ah(async (_req, res) => {
   const b = await bhuvanLayers();
   res.json({
     bhuvan: { available: b.ok && b.layers.length > 0, url: BHUVAN_WMS_URL, version: '1.1.1', token: env.bhuvanToken || null, layers: b.layers },
-    google: googleConfig(),
   });
 }));
 

@@ -483,7 +483,6 @@
     "resources_short": "{{name}}: {{status}}",
     "show_panel": "स्थान सूची दिखाएँ",
     "hide_panel": "स्थान सूची छिपाएँ",
-    "google_key_missing": "Google Maps कुंजी सेट नहीं है (डेवलपमेंट मोड)",
     "watch_title": "सिक्किम और दार्जिलिंग कॉरिडोर निगरानी मानचित्र",
     "region": "सिक्किम · दार्जिलिंग पहाड़ियाँ",
     "stations": "लाइव जोखिम स्टेशन",
@@ -494,15 +493,16 @@
     "src_rain": "बारिश: Open-Meteo लाइव पूर्वानुमान",
     "src_imd": "चेतावनियाँ: IMD ज़िला फ़ीड",
     "in_person": "ज़मीनी दृश्य",
-    "in_person_hint": "सड़क-स्तर पर देखने के लिए कोई पिन, स्टेशन या मानचित्र पर कोई जगह चुनें।",
-    "in_person_loading": "सड़क-स्तर की तस्वीरें खोजी जा रही हैं…",
-    "in_person_dist": "सबसे नज़दीकी सड़क-स्तर तस्वीर {{d}} दूर है",
-    "in_person_here": "इस जगह की सड़क-स्तर तस्वीर",
-    "in_person_none": "इस जगह के {{d}} के भीतर कोई सड़क-स्तर तस्वीर नहीं है।",
+    "in_person_hint": "सड़क-स्तर पर देखने के लिए कोई पिन, स्टेशन या सड़क पर कोई जगह चुनें।",
     "in_person_open": "Google Maps में खोलें",
     "in_person_point": "स्थान {{lat}}, {{lng}}",
     "mode_map": "मानचित्र",
-    "view_mode": "मानचित्र या ज़मीनी दृश्य"
+    "view_mode": "मानचित्र या ज़मीनी दृश्य",
+    "in_person_pick": "दूसरी जगह चुनें",
+    "in_person_tip": "अगर Google \"No Street View available\" दिखाए, तो किसी सड़क पर जगह चुनें।",
+    "fullscreen": "पूरी स्क्रीन",
+    "exit_fullscreen": "पूरी स्क्रीन से बाहर",
+    "src_maps": "मानचित्र: Esri उपग्रह · OpenStreetMap · Google Street View"
   },
   "drawer": {
     "overview": "सारांश",
@@ -776,8 +776,10 @@
     "c_boundary": "भारत की सीमा तैनाती करने वाले द्वारा दी गई भारतीय सर्वेक्षण विभाग की आधिकारिक फ़ाइल से बनती है।",
     "team": "टीम",
     "team_d": "टीम ByteMatrix द्वारा बनाया गया।",
-    "c_google": "मानचित्र: Google Maps. मानचित्र डेटा © Google.",
-    "c_imd": "मौसम चेतावनियाँ और नाउकास्ट: भारत मौसम विज्ञान विभाग (IMD), पृथ्वी विज्ञान मंत्रालय।"
+    "c_google": "ज़मीनी दृश्य: Google Street View, Google Maps एम्बेड के माध्यम से।",
+    "c_imd": "मौसम चेतावनियाँ और नाउकास्ट: भारत मौसम विज्ञान विभाग (IMD), पृथ्वी विज्ञान मंत्रालय।",
+    "c_esri": "उपग्रह चित्र: Esri World Imagery (Esri, Maxar, Earthstar Geographics और GIS उपयोगकर्ता समुदाय); सड़क परत © Esri.",
+    "c_osm": "सड़क मानचित्र: Esri World Street Map (Esri, HERE, Garmin, © OpenStreetMap योगदानकर्ता); भू-भाग OpenTopoMap (© OpenStreetMap योगदानकर्ता, SRTM)."
   },
   "adminx": {
     "pending": "मंज़ूरी बाकी",
