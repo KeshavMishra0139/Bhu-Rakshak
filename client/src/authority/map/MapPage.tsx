@@ -1,12 +1,14 @@
 // Authority map: the team's corridor watch console (Google map + live risk stations rail),
 // with the location drawer and forecast horizon on top.
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPinned, CloudRain, CloudLightning, AlertTriangle } from 'lucide-react';
-import type { AlertItem, Level, LocationSnap } from '../../api/types';
+import { MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers } from 'lucide-react';
+import type { AlertItem, Level, LocationSnap, Report, Resource, Road } from '../../api/types';
+import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream } from '../../live/RiskStreamProvider';
 import { useLive } from '../useLive';
 import { useAuthority } from '../AuthorityContext';
-import { WatchMap, levelAt } from './WatchMap';
+import { WatchMap, levelAt, type LayerKey } from './WatchMap';
 import { DetailDrawer } from './DetailDrawer';
 import { useGoogleConfig } from '../../lib/googleMaps';
 import { LEVELS, riskConfig } from '../../lib/risk';
@@ -19,10 +21,19 @@ const PILL: Record<Level, string> = {
   low: 'bg-[#2d6143] text-[#b4e1b9]', moderate: 'bg-[#6b512a] text-[#ffd993]', high: 'bg-[#71372f] text-[#ffb4a4]', critical: 'bg-[#5a1d1f] text-[#ff9c9c]',
 };
 
+const LAYER_KEYS: LayerKey[] = ['corridors', 'roads', 'reports', 'resources'];
+
 export default function MapPage() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-  const { list } = useRiskStream();
+  const { can } = useAuth();
+  const { list, corridors } = useRiskStream();
+  const [layers, setLayers] = useState<Record<LayerKey, boolean>>({ corridors: true, roads: false, reports: true, resources: false });
+  const roads = useLive<{ roads: Road[] }>('/roads', ['road_updated']);
+  const reports = useLive<{ reports: Report[] }>(can('incidents.view') ? '/reports' : null, ['report_updated']);
+  const resources = useLive<{ resources: Resource[] }>(can('incidents.view') ? '/resources' : null, ['resource_updated', 'incident_updated']);
+  const corridorColors = useMemo(() => Object.fromEntries(corridors.map((c) => [c.id, c.color])), [corridors]);
+  const layerKeys = LAYER_KEYS.filter((k) => (k !== 'reports' && k !== 'resources') || can('incidents.view'));
   const { selectedId, select, horizon, setHorizon } = useAuthority();
   const googleCfg = useGoogleConfig();
   const alerts = useLive<{ alerts: AlertItem[] }>('/alerts', ['alert_published', 'alert_cancelled']);
@@ -38,9 +49,19 @@ export default function MapPage() {
         <div className="map-console lg:h-full">
           {/* Map */}
           <div className="relative min-h-[440px] overflow-hidden bg-[#dcebdc]">
-            <WatchMap locations={list} horizon={horizon} activeId={selectedId} onSelect={select} lang={lang} />
+            <WatchMap locations={list} horizon={horizon} activeId={selectedId} onSelect={select} layers={layers} corridorColors={corridorColors}
+              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} />
             <div className="absolute left-3 top-14 flex items-center gap-2 rounded-xl border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-bold text-[#315542] shadow-sm backdrop-blur">
               <MapPinned size={13} aria-hidden /> {t('map.watch_title')}
+            </div>
+            <div className="absolute left-3 top-[6.25rem] flex flex-wrap items-center gap-2 max-w-[80%]" role="group" aria-label={t('map.layers')}>
+              <span className="map-legend"><Layers size={12} aria-hidden /> {t('map.layers')}</span>
+              {layerKeys.map((k) => (
+                <button key={k} type="button" aria-pressed={layers[k]} onClick={() => setLayers((x) => ({ ...x, [k]: !x[k] }))}
+                  className={`map-legend ${layers[k] ? '!bg-[#2a5d43] !text-[#d7efd8] !border-[#2a5d43]' : ''}`}>
+                  {t(`map.layer_${k}`)}
+                </button>
+              ))}
             </div>
             <div className="absolute bottom-4 left-4 flex flex-wrap gap-2 max-w-[70%]">
               {LEVELS.map((lv) => (
