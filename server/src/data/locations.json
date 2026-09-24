@@ -1,0 +1,29 @@
+{
+  "_comment": "SEED DATA. Approximate coordinates (WGS84, checked against public gazetteers to ~0.01°). Districts use the pre-2021 Sikkim naming as requested in the brief.",
+  "corridors": [
+    { "id": "nh10", "name_en": "NH-10 (Sevoke–Rangpo–Singtam)", "name_hi": "NH-10 (सेवोके–रंगपो–सिंगताम)", "color": "#3aa6b9" },
+    { "id": "nh310", "name_en": "NH-310 (Gangtok–Nathula)", "name_hi": "NH-310 (गंगटोक–नाथुला)", "color": "#7b8cde" },
+    { "id": "north", "name_en": "North Sikkim Highway (Mangan–Chungthang–Lachung/Lachen)", "name_hi": "उत्तर सिक्किम राजमार्ग (मंगन–चुंगथांग–लाचुंग/लाचेन)", "color": "#c07ad6" },
+    { "id": "west", "name_en": "West Sikkim (Namchi–Jorethang–Gyalshing–Pelling)", "name_hi": "पश्चिम सिक्किम (नामची–जोरेथांग–ग्यालशिंग–पेलिंग)", "color": "#d1a054" },
+    { "id": "hills", "name_en": "Darjeeling–Kalimpong hills", "name_hi": "दार्जिलिंग–कालिम्पोंग पहाड़ियाँ", "color": "#5fb28a" }
+  ],
+  "locations": [
+    { "id": "sevoke", "name_en": "Sevoke", "name_hi": "सेवोके", "district": "Darjeeling", "corridor": "nh10", "lat": 26.905, "lng": 88.475, "road": "NH-10" },
+    { "id": "melli", "name_en": "Melli", "name_hi": "मेल्ली", "district": "South Sikkim", "corridor": "nh10", "lat": 27.090, "lng": 88.450, "road": "NH-10" },
+    { "id": "rangpo", "name_en": "Rangpo", "name_hi": "रंगपो", "district": "East Sikkim", "corridor": "nh10", "lat": 27.176, "lng": 88.531, "road": "NH-10" },
+    { "id": "singtam", "name_en": "Singtam", "name_hi": "सिंगताम", "district": "East Sikkim", "corridor": "nh10", "lat": 27.234, "lng": 88.497, "road": "NH-10" },
+    { "id": "gangtok", "name_en": "Gangtok", "name_hi": "गंगटोक", "district": "East Sikkim", "corridor": "nh310", "lat": 27.330, "lng": 88.612, "road": "NH-10 / NH-310" },
+    { "id": "nathula_rd", "name_en": "Nathula road (Tsomgo)", "name_hi": "नाथुला मार्ग (त्सोमगो)", "district": "East Sikkim", "corridor": "nh310", "lat": 27.374, "lng": 88.763, "road": "NH-310" },
+    { "id": "mangan", "name_en": "Mangan", "name_hi": "मंगन", "district": "North Sikkim", "corridor": "north", "lat": 27.509, "lng": 88.533, "road": "North Sikkim Highway" },
+    { "id": "chungthang", "name_en": "Chungthang", "name_hi": "चुंगथांग", "district": "North Sikkim", "corridor": "north", "lat": 27.603, "lng": 88.646, "road": "North Sikkim Highway" },
+    { "id": "lachung", "name_en": "Lachung", "name_hi": "लाचुंग", "district": "North Sikkim", "corridor": "north", "lat": 27.689, "lng": 88.744, "road": "North Sikkim Highway" },
+    { "id": "lachen", "name_en": "Lachen", "name_hi": "लाचेन", "district": "North Sikkim", "corridor": "north", "lat": 27.717, "lng": 88.556, "road": "North Sikkim Highway" },
+    { "id": "namchi", "name_en": "Namchi", "name_hi": "नामची", "district": "South Sikkim", "corridor": "west", "lat": 27.166, "lng": 88.364, "road": "Melli–Namchi road" },
+    { "id": "jorethang", "name_en": "Jorethang", "name_hi": "जोरेथांग", "district": "South Sikkim", "corridor": "west", "lat": 27.128, "lng": 88.282, "road": "Jorethang–Gyalshing road" },
+    { "id": "gyalshing", "name_en": "Gyalshing", "name_hi": "ग्यालशिंग", "district": "West Sikkim", "corridor": "west", "lat": 27.289, "lng": 88.258, "road": "Jorethang–Gyalshing road" },
+    { "id": "pelling", "name_en": "Pelling", "name_hi": "पेलिंग", "district": "West Sikkim", "corridor": "west", "lat": 27.300, "lng": 88.236, "road": "Gyalshing–Pelling road" },
+    { "id": "kalimpong", "name_en": "Kalimpong", "name_hi": "कालिम्पोंग", "district": "Kalimpong", "corridor": "hills", "lat": 27.060, "lng": 88.470, "road": "NH-717A" },
+    { "id": "darjeeling", "name_en": "Darjeeling", "name_hi": "दार्जिलिंग", "district": "Darjeeling", "corridor": "hills", "lat": 27.041, "lng": 88.266, "road": "NH-110 (Hill Cart Road)" },
+    { "id": "kurseong", "name_en": "Kurseong", "name_hi": "कर्सियांग", "district": "Darjeeling", "corridor": "hills", "lat": 26.881, "lng": 88.277, "road": "NH-110 (Hill Cart Road)" }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "_comment": "Single source of truth for risk thresholds, hysteresis and notification timers. Read by the server and imported by the client.",
+  "levels": ["low", "moderate", "high", "critical"],
+  "thresholds": { "moderate": 0.35, "high": 0.55, "critical": 0.75 },
+  "hysteresis": {
+    "margin": 0.03,
+    "minDwellSecondsBeforeDowngrade": 90
+  },
+  "trend": { "windowMinutes": 20, "deltaThreshold": 0.015 },
+  "forecastHorizonsHours": [6, 12, 24, 48],
+  "cloudburstThresholdMmPerHour": 100,
+  "veryHeavyHourlyRainMm": 30,
+  "live": {
+    "tickMinSeconds": 15,
+    "tickMaxSeconds": 30,
+    "openMeteoRefreshMinutes": 30,
+    "episodeEveryMinutes": [8, 15],
+    "episodeDurationMinutes": [4, 8],
+    "speedOptions": [1, 2, 5]
+  },
+  "citizenAlarm": {
+    "highRepeatMinutes": 15,
+    "criticalRepeatMinutes": 5,
+    "snoozeMinutes": 10,
+    "defaultVolume": 0.5
+  },
+  "inbox": {
+    "criticalUnackEscalationMinutes": 10,
+    "escalationCheckSeconds": 60
+  },
+  "management": {
+    "unverifiedReportWarningMinutes": 30,
+    "criticalWithoutAlertWarningMinutes": 15
+  },
+  "scenario": {
+    "rampSeconds": 150,
+    "maxRainIntensityBoostMm": 28,
+    "maxRain24hBoostMm": 140,
+    "maxRain72hBoostMm": 180,
+    "maxSaturationBoost": 0.32
+  }
+}

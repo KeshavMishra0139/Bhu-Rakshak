@@ -1,0 +1,19 @@
+{
+  "name": "bhu-rakshak",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Bhu-Rakshak (भू-रक्षक) — AI-based landslide early warning for Sikkim. Team ByteMatrix, SIH 2026 (SIH26001).",
+  "workspaces": ["server", "client"],
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "dev": "concurrently -k -n server,client -c cyan,magenta \"npm:dev -w server\" \"npm:dev -w client\"",
+    "seed": "npm run seed -w server",
+    "reset": "npm run reset -w server",
+    "test": "npm test -w server",
+    "build": "npm run build -w client",
+    "start": "npm start -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "FeatureCollection",
+  "name": "india_boundary_placeholder",
+  "_comment": "PLACEHOLDER. Replace with the Survey of India compliant boundary GeoJSON. While this collection is empty the map shows 'Official boundary data pending' in the legend and draws nothing.",
+  "features": []
+}

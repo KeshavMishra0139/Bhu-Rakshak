@@ -1,0 +1,155 @@
+export type Level = 'low' | 'moderate' | 'high' | 'critical';
+export type Trend = 'rising' | 'steady' | 'falling';
+export type SubRole = 'district_officer' | 'police' | 'bro' | 'rescue' | 'sdma';
+export type Role = 'citizen' | 'authority' | 'admin' | 'developer';
+
+export interface Driver { key: string; contribution: number }
+export interface ForecastPoint { h: number; score: number; level: Level }
+
+export interface Risk {
+  location_id: string;
+  score: number;
+  level: Level;
+  confidence: number;
+  drivers: Driver[];
+  trend: Trend;
+  forecast: ForecastPoint[];
+  time_to_threshold: { level: Level; hours: number } | null;
+  priority: number;
+  exposure_score?: number;
+  conditions: Record<string, number | string | null>;
+  model_version: string;
+  level_since: string;
+  updated_at: string;
+}
+
+export interface LocationSnap {
+  id: string;
+  name_en: string;
+  name_hi: string;
+  district: string;
+  corridor_id: string;
+  lat: number;
+  lng: number;
+  road: string | null;
+  field_verified_at: string | null;
+  exposure_score: number | null;
+  risk: Risk | null;
+}
+
+export interface Corridor { id: string; name_en: string; name_hi: string; color: string }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  role: Role;
+  sub_role: SubRole | null;
+  status: 'active' | 'pending' | 'rejected';
+  badge_id: string | null;
+  department: string | null;
+  district: string | null;
+  home_location_id: string | null;
+  home_village: string | null;
+  language: 'en' | 'hi';
+  theme: 'light' | 'dark' | 'system';
+  text_size: 'normal' | 'large';
+  prefs: Record<string, unknown>;
+  rejection_reason: string | null;
+  created_at: string;
+}
+
+export interface Actor {
+  role: Role;
+  sub_role: SubRole | null;
+  district: string | null;
+  home_location_id: string | null;
+  language: 'en' | 'hi';
+  viewing_as: Record<string, unknown> | null;
+}
+
+export interface Me { user: User; actor: Actor; capabilities: string[]; dev_mode: boolean }
+
+export interface InboxMessage {
+  id: string;
+  location_id: string;
+  level: Level;
+  type: 'escalation' | 'deescalation' | 're_escalation';
+  title_key: string;
+  params: {
+    location_en: string; location_hi: string; district: string; corridor_id: string;
+    from: Level; to: Level; score: number; confidence: number; trend: Trend;
+    drivers: Driver[]; forecast: ForecastPoint[];
+    exposure: { population: number; roads: string[]; facilities: string[]; critical_infra: string[] };
+    sops: { key: string; en: string; hi: string }[];
+  };
+  priority: number;
+  escalated: boolean;
+  parent_id: string | null;
+  created_at: string;
+  read: boolean;
+  acknowledged_by: string | null;
+  acknowledged_by_name: string | null;
+  acknowledged_at: string | null;
+  incident_id: string | null;
+  target_roles: SubRole[];
+  target_district: string;
+  tags: string[];
+}
+
+export interface Controls {
+  scenario: { active: boolean; corridors: string[]; intensity: number; startedAt: string | null; by: string | null };
+  paused: boolean;
+  speed: number;
+  forced: Record<string, Level>;
+}
+
+export interface RiskEvent {
+  location_id: string; name_en: string; name_hi: string; district: string; corridor_id: string;
+  from: Level; to: Level; score: number; confidence: number; drivers: Driver[]; trend: Trend; priority: number; at: string;
+}
+
+export interface Road {
+  id: string; name_en: string; name_hi: string; corridor_id: string; path: string[];
+  status: 'open' | 'caution' | 'restricted' | 'blocked' | 'cleared';
+  eta_clear_hours: number | null; diversion_en: string | null; diversion_hi: string | null;
+  tourist_advisory: boolean; heavy_vehicle_advisory: boolean; updated_by: string | null; updated_at: string;
+}
+
+export interface AlertItem {
+  id: string; severity: Level; kind: 'warning' | 'all_clear' | 'cancel';
+  target_type: 'location' | 'corridor' | 'district'; target_id: string;
+  target_name_en: string; target_name_hi: string; target_district: string | null; target_corridor: string | null;
+  title_en: string; title_hi: string; body_en: string; body_hi: string; channels: string[];
+  incident_id: string | null; created_at: string; cancelled_at: string | null; created_by?: string;
+  deliveries?: { channel: string; status: string; detail: string; at: string }[]; ack_count?: number;
+}
+
+export type Stage = 'detected' | 'under_verification' | 'verified' | 'alert_issued' | 'response_underway' | 'resolved' | 'closed';
+
+export interface Resource {
+  id: string; type: 'excavator' | 'rescue_team' | 'ambulance' | 'shelter'; name: string; location_id: string; district: string;
+  status: 'available' | 'deployed' | 'unavailable'; capacity: number | null; occupancy: number; location_en?: string; location_hi?: string;
+  lat?: number; lng?: number; incident_id?: string | null;
+}
+
+export interface Incident {
+  id: string; location_id: string; title: string; stage: Stage; level: Level; owner_id: string | null; owner_name: string | null;
+  source: string; notes: string | null; detected_at: string; alert_issued_at: string | null; resolved_at: string | null; closed_at: string | null;
+  updated_at: string; name_en: string; name_hi: string; district: string; resource_count?: number; sop_done?: number;
+  events?: { id: number; from_stage: Stage | null; to_stage: Stage | null; note: string | null; actor: string; at: string }[];
+  sop_ticks?: { sop_key: string; done: number; actor: string; at: string }[];
+  resources?: Resource[];
+  alerts?: { id: string; severity: Level; kind: string; title_en: string; title_hi: string; created_at: string; cancelled_at: string | null }[];
+}
+
+export interface Sop { level: Level; key: string; text_en: string; text_hi: string; roles: SubRole[]; ord: number }
+
+export interface Report {
+  id: string; user_id: string | null; type: string; description: string | null; lat: number; lng: number; location_id: string | null;
+  status: 'submitted' | 'verified' | 'rejected' | 'resolved'; reviewed_by: string | null; reviewed_at: string | null; created_at: string;
+  has_photo: boolean; name_en?: string; name_hi?: string; district?: string;
+}
+
+export interface Stakeholder { id: number; role: string; district: string; name: string | null; phone: string | null }

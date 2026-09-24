@@ -1,0 +1,118 @@
+# Bhu-Rakshak (भू-रक्षक)
+
+Landslide early warning and risk management for Sikkim and the Darjeeling hills.
+Team ByteMatrix, Smart India Hackathon 2026 (SIH26001). **Predict → Visualize → Verify → Warn.**
+
+One app, two products chosen by the account role:
+
+- **Authority dashboard**: a full-screen, map-first command centre with an inbox, incidents, alerts, field reports, roads, resources, an audit log, a situation report and system health.
+- **Citizen website**: a calm, responsive site with five sections (Home, Roads, Alerts, Report, Profile) and a High/Critical alarm.
+
+Both work in English and Hindi, and in Light / Dark / System themes.
+
+## Run it
+
+Requirements: **Node.js 22.13 or newer** (`node -v`). It uses Node's built-in SQLite, so nothing needs compiling.
+
+```bash
+npm install
+cp .env.example .env          # Windows PowerShell: Copy-Item .env.example .env
+# optional: set DEV_PASSWORD in .env to enable the developer account
+npm run dev
+```
+
+Open **http://localhost:5173**. The API runs on port 4000; Vite proxies `/api`. The database is created and seeded on first start.
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Server (auto-restart) and client together |
+| `npm run reset` | Delete the database and reseed |
+| `npm test` | Server tests (engine, hysteresis, features, inbox routing, permissions, alert templates, assistant) |
+| `npm run build` then `npm start` | Production build; the server also serves `client/dist` on port 4000 |
+
+With no internet the app still runs. It uses a clearly labelled fallback weather series until Open-Meteo is reachable, and the map falls back to the next basemap if tiles fail.
+
+## Demo credentials
+
+Every demo account uses the password **`Demo@2026`** (`DEMO_PASSWORD`). The login page also has one-tap demo buttons.
+
+| Account | Role | Can do |
+| --- | --- | --- |
+| citizen@demo.in | Citizen, home Mangan | Citizen website, alarm, reports |
+| officer@demo.in | SDMA, statewide | Everything: alerts, Storm scenario, incidents, audit |
+| dm.north@demo.in | District Officer, North Sikkim | Everything within North Sikkim |
+| police@demo.in | Police, East Sikkim | Closures, diversions, advisories, verify reports |
+| bro@demo.in | Road authority, North Sikkim | Mark roads blocked / cleared, verify reports |
+| rescue@demo.in | Rescue, North Sikkim | Deploy resources, response status |
+| admin@demo.in | Admin | Approvals, users, audit log, health, contacts |
+| pending.officer@demo.in | Official awaiting approval | Shows "Verification in progress" |
+| dev@demo.in | Developer (only if `DEV_PASSWORD` is set) | Everything, plus the developer bar |
+
+### Developer / Admin mode
+
+To use it, set `DEV_PASSWORD` (and optionally `DEV_ACCESS_CODE`), restart, and use **Sign in as Developer / Admin** at the bottom of the login page. A purple bar then appears at the top of every screen, with:
+
+- **View as** Authority (sub-role and district), Citizen (home place) or Admin
+- **Split view**: authority map on the left, citizen site at phone width on the right, both live from one login
+- **Demo controls**: Storm scenario with a corridor picker, force a location's level, pause and resume, speed 1×/2×/5×, and reset demo data
+- Language and theme toggles
+
+Actions taken while viewing as another role are logged as `developer (as <role>)`.
+
+**Before any public deployment set `DEV_MODE_ENABLED=false` and `DEMO_LOGIN_ENABLED=false`.** With developer mode off, every `/api/dev/*` route returns 404 and the sign-in link disappears.
+
+## 2-minute judge demo
+
+1. **(0:00) Landing.** Show the live mini-map, the headline stats and "How it works". Switch to Hindi and back with one tap.
+2. **(0:15) Split view.** Sign in as developer and open **Split view**. On the left is the authority map (satellite with labels, risk markers sized by severity, corridors); on the right is the citizen site for Mangan.
+3. **(0:30) Storm.** In **Demo controls**, start the Storm scenario on *North Sikkim Highway*. About a minute later Mangan and Chungthang turn **High**: the officer's Inbox badge lights up with a toast and chime, and the citizen pane shows the alarm banner and sounds the High beep. About two minutes in they turn **Critical**, and the citizen siren and the stronger officer chime follow. For a faster show, use *Force level → Critical* on Mangan.
+4. **(1:00) Officer response.** Open the Inbox message: it shows drivers, forecast, what's exposed and the suggested actions. Press **Acknowledge**, then **Create incident** and assign *SDRF team B*. Tick "Close the road". Press **Draft alert**; the English and Hindi text is pre-filled. Send it.
+5. **(1:25) Citizen side.** The alert appears instantly under Alerts, with *I understand*, *Share on WhatsApp* and *Call 112*. Press *I understand* on the banner; the officer's drawer shows the acknowledgement count go up.
+6. **(1:40) Verify loop.** In the citizen pane, send a report (debris, pin on the map). As the officer, verify it: Mangan gets the field-verified tick.
+7. **(1:50) Close.** Open **Tools → Situation report**, which is printable. Stop the storm and watch levels ease back without flickering.
+
+## What is real, generated or pending
+
+| | Component |
+| --- | --- |
+| **Real** | Open-Meteo weather and soil moisture (fetched every 30 min, cached, served offline), auth and roles, inbox routing and escalation, incidents with SOP checklist and audit log, alerts with dashboard delivery and acknowledgement counts, citizen reports with verification, roads, resources, situation report, EN/HI, themes |
+| **Generated** | Live risk values: a transparent baseline engine anchored on real weather, with bounded live variation and the Storm scenario. Derived features (saturation index, cloudburst and freeze–thaw flags). Assistant answers (templates over live data). Historical landslide points (seeded from per-location counts). |
+| **Seed placeholders** | Slope, geology, NDVI, land cover, river and road distance, landslide history, population and facilities (`server/src/data/*.json`), road statuses, resources and contacts |
+| **Pending / stubs (labelled in code)** | Trained ML model (`ModelPredictionProvider`, `POST {MODEL_URL}/predict`); SMS and push delivery (`notifications/providers.js`, logged through the provider interface); seismic feed and ground sensors; official Survey of India boundary (place it at `client/public/geo/india_boundary.geojson`; until then the legend shows "Official boundary data pending"); real GIS layers from Bhuvan, GSI and the census |
+
+No accuracy figures are claimed anywhere. Confidence reflects only data freshness and agreement.
+
+## Maps
+
+All sources live in `client/src/lib/mapConfig.ts`:
+
+- **Satellite (default):** Esri World Imagery with a labels-only overlay.
+- **Terrain:** OpenTopoMap.
+- **Street:** CARTO/OSM, light or dark to match the theme.
+- **Bhuvan:** layers come from the WMS URL on the official Bhuvan wiki (`https://bhuvan-vec2.nrsc.gov.in/bhuvan/wms`, WMS 1.1.1). The server discovers Sikkim and Himalayan geomorphology, lineament, LULC, flood-hazard and glacial-lake layers from its GetCapabilities, so no layer names are guessed. If the service is unreachable the section is hidden, and a layer whose tiles keep failing is removed quietly. `BHUVAN_TOKEN`, if set, is sent as `token=`.
+- **Mappls:** set both `MAPPLS_API_KEY` and `MAPPLS_TILE_URL` (a raster tile template from your Mappls console containing `{key}`). The template isn't hard-coded because a verified public one couldn't be confirmed.
+
+Data credits appear only on the About page.
+
+## Configuration
+
+- **Risk:** thresholds, hysteresis, alarm repeat times, escalation and management timers are in `shared/config/risk.json`.
+- **Factors:** each factor's unit, English/Hindi label and data source is in `shared/config/factors.json`.
+- **Alert text:** bilingual templates are in `server/src/data/alert_templates.json`.
+
+## Test status
+
+- **Tested here:**
+  - 19 server unit tests.
+  - HTTP integration of every endpoint and permission rule, run against small Express stand-ins because packages couldn't be installed in the build environment.
+  - SSE fan-out: each role gets only its own events.
+  - Storm timing: High after about 60 s, Critical after about 120 s.
+  - The whole client passed a syntax check and a type check against stand-in library types, and every translation key exists in both languages.
+- **Not yet run:** the client hasn't been bundled or opened in a real browser. Run `npm install && npm run dev`; any compile error will be small and quick to fix.
+
+## Troubleshooting
+
+- **`node:sqlite` not found:** upgrade to Node 22.13+.
+- **No alarm sound:** browsers need one tap first. Press "Turn on sounds" on the citizen site, or use Profile → Test alarm.
+- **Everyone logged out after a restart:** set a fixed `JWT_SECRET`.
+- **Want a clean demo:** `npm run reset`, or the developer bar's *Reset demo data*.

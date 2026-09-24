@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme tokens as RGB triplets so Tailwind can apply alpha. */
+:root,
+[data-theme='light'] {
+  --bg: 246 244 239;          /* warm paper */
+  --surface: 255 255 255;
+  --surface-2: 238 235 227;
+  --ink: 22 36 42;
+  --muted: 88 104 110;
+  --line: 218 213 202;
+  --brand: 15 94 110;         /* teal: actions, links */
+  --brand-deep: 11 42 51;     /* teal-navy: sidebar, brand panel */
+  --on-brand: 232 241 242;
+  --focus: 31 122 140;
+  --risk-low: 47 143 78;
+  --risk-moderate: 201 154 18;
+  --risk-high: 217 115 26;
+  --risk-critical: 198 40 40;
+  --risk-moderate-ink: 70 52 0;  /* text on amber */
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: 10 21 26;
+  --surface: 16 32 40;
+  --surface-2: 22 42 52;
+  --ink: 228 237 239;
+  --muted: 150 168 174;
+  --line: 36 62 74;
+  --brand: 92 182 196;
+  --brand-deep: 7 20 25;
+  --on-brand: 220 236 239;
+  --focus: 124 196 207;
+  --risk-low: 84 186 118;
+  --risk-moderate: 229 190 72;
+  --risk-high: 240 140 62;
+  --risk-critical: 239 83 80;
+  --risk-moderate-ink: 40 30 0;
+  color-scheme: dark;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+html[data-text-size='large'] { font-size: 18px; }
+
+body {
+  @apply bg-bg text-ink font-sans antialiased;
+  line-height: 1.5;
+}
+html[lang='hi'] body { @apply font-deva; line-height: 1.65; }
+
+/* Visible keyboard focus everywhere. */
+:focus-visible {
+  outline: 2px solid rgb(var(--focus));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  .card { @apply bg-surface border border-line rounded-card; }
+  .label-mono { @apply font-mono text-[0.75rem] text-muted tracking-normal; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[0.95rem] font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed; min-height: 44px; }
+  .btn-primary { @apply btn bg-brand text-white hover:bg-brand/90; }
+  [data-theme='dark'] .btn-primary { @apply text-brand-deep; }
+  .btn-secondary { @apply btn bg-surface text-ink border border-line hover:bg-surface-2; }
+  .btn-ghost { @apply btn bg-transparent text-ink hover:bg-surface-2; }
+  .btn-danger { @apply btn bg-risk-critical text-white hover:bg-risk-critical/90; }
+  .input { @apply w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-ink placeholder:text-muted/70 focus:border-brand; min-height: 44px; }
+  .field-label { @apply block text-sm font-semibold mb-1.5; }
+  .field-hint { @apply mt-1 text-sm text-muted; }
+  .field-error { @apply mt-1 text-sm text-risk-critical; }
+}
+
+/* Live pulse on the LIVE indicator only. */
+@keyframes br-pulse {
+  0% { box-shadow: 0 0 0 0 rgb(var(--risk-low) / 0.55); }
+  70% { box-shadow: 0 0 0 7px rgb(var(--risk-low) / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(var(--risk-low) / 0); }
+}
+.live-dot { animation: br-pulse 2s infinite; }
+
+/* Brief highlight when a value changes. */
+@keyframes br-flash { from { background-color: rgb(var(--brand) / 0.14); } to { background-color: transparent; } }
+.value-flash { animation: br-flash 1.2s ease-out; }
+
+/* ---------- Map ---------- */
+.leaflet-container { font-family: inherit; background: rgb(var(--surface-2)); }
+.risk-marker { filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.45)); transition: fill 0.8s ease, r 0.8s ease; }
+.risk-pulse { animation: br-ring 1.8s ease-out infinite; transform-origin: center; transform-box: fill-box; }
+@keyframes br-ring { 0% { stroke-opacity: 0.9; stroke-width: 2; } 100% { stroke-opacity: 0; stroke-width: 14; } }
+.leaflet-tooltip { background: rgb(var(--surface)); color: rgb(var(--ink)); border: 1px solid rgb(var(--line)); box-shadow: 0 2px 8px rgb(0 0 0 / 0.2); font-size: 0.85rem; }
+.leaflet-tooltip-top:before { border-top-color: rgb(var(--surface)); }
+.leaflet-bar a, .leaflet-bar a:hover { background: rgb(var(--surface)); color: rgb(var(--ink)); border-color: rgb(var(--line)); }
+.leaflet-control-scale-line { background: rgb(var(--surface) / 0.85); color: rgb(var(--ink)); border-color: rgb(var(--ink)); }
+.leaflet-control-attribution { background: rgb(var(--surface) / 0.75) !important; color: rgb(var(--muted)); font-size: 10px; }
+.leaflet-control-attribution a { color: rgb(var(--muted)); }
+.res-icon { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; font: 700 11px/1 'IBM Plex Mono', monospace; color: #fff; border: 2px solid #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.4); }
+@media print { .no-print { display: none !important; } body { background: #fff; } }

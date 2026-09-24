@@ -1,0 +1,27 @@
+{
+  "_comment": "Bilingual alert templates. {place} and {road} are filled in by the server. Simple everyday Hindi for citizens.",
+  "title": {
+    "moderate": { "en": "Moderate landslide risk: {place}", "hi": "{place}: भूस्खलन का मध्यम खतरा" },
+    "high": { "en": "High landslide risk: {place}", "hi": "{place}: भूस्खलन का ज़्यादा खतरा" },
+    "critical": { "en": "Critical landslide danger: {place}", "hi": "{place}: भूस्खलन का गंभीर खतरा" },
+    "all_clear": { "en": "All clear: {place}", "hi": "{place}: खतरा टल गया" }
+  },
+  "body": {
+    "moderate": {
+      "en": "Landslide risk is moderate around {place}. Avoid unnecessary travel on {road} after dark and watch for falling stones.",
+      "hi": "{place} के आसपास भूस्खलन का खतरा मध्यम है। अंधेरा होने के बाद {road} पर बेवजह यात्रा न करें और गिरते पत्थरों पर नज़र रखें।"
+    },
+    "high": {
+      "en": "High landslide risk around {place}. Avoid travel on {road}. Stay away from slopes, streams and road cuttings, and follow local officials.",
+      "hi": "{place} के आसपास भूस्खलन का खतरा ज़्यादा है। {road} पर यात्रा न करें। ढलान, नालों और सड़क कटाई से दूर रहें और स्थानीय अधिकारियों की बात मानें।"
+    },
+    "critical": {
+      "en": "Critical landslide danger at {place}. Move to a safe place now, away from slopes and the river. Do not travel on {road}. Call 112 in an emergency.",
+      "hi": "{place} में भूस्खलन का गंभीर खतरा। अभी सुरक्षित जगह पर जाएँ, ढलान और नदी से दूर रहें। {road} पर यात्रा न करें। आपात स्थिति में 112 पर कॉल करें।"
+    },
+    "all_clear": {
+      "en": "The landslide risk around {place} has come down. Roads may still have debris, so drive carefully.",
+      "hi": "{place} के आसपास भूस्खलन का खतरा कम हो गया है। सड़कों पर मलबा हो सकता है, इसलिए सावधानी से चलाएँ।"
+    }
+  }
+}

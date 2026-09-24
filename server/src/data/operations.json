@@ -1,0 +1,72 @@
+{
+  "_comment": "SEED DATA for demo screens. Road statuses, resources, contacts and incidents are illustrative placeholders, not live operational data.",
+  "roads": [
+    { "id": "nh10_sevoke_rangpo", "name_en": "NH-10: Sevoke – Rangpo", "name_hi": "NH-10: सेवोके – रंगपो", "corridor": "nh10", "path": ["sevoke", "melli", "rangpo"], "status": "caution", "eta_clear_hours": null, "diversion_en": "Via Kalimpong – Lava – Gorubathan (NH-717A)", "diversion_hi": "कालिम्पोंग – लावा – गोरुबथान होकर (NH-717A)", "tourist_advisory": 0, "heavy_vehicle_advisory": 1 },
+    { "id": "nh10_rangpo_gangtok", "name_en": "NH-10: Rangpo – Singtam – Gangtok", "name_hi": "NH-10: रंगपो – सिंगताम – गंगटोक", "corridor": "nh10", "path": ["rangpo", "singtam", "gangtok"], "status": "open", "eta_clear_hours": null, "diversion_en": "", "diversion_hi": "", "tourist_advisory": 0, "heavy_vehicle_advisory": 0 },
+    { "id": "nh310_gangtok_nathula", "name_en": "NH-310: Gangtok – Tsomgo – Nathula", "name_hi": "NH-310: गंगटोक – त्सोमगो – नाथुला", "corridor": "nh310", "path": ["gangtok", "nathula_rd"], "status": "open", "eta_clear_hours": null, "diversion_en": "", "diversion_hi": "", "tourist_advisory": 0, "heavy_vehicle_advisory": 0 },
+    { "id": "north_gangtok_mangan", "name_en": "North Sikkim Hwy: Gangtok – Mangan", "name_hi": "उत्तर सिक्किम राजमार्ग: गंगटोक – मंगन", "corridor": "north", "path": ["gangtok", "mangan"], "status": "open", "eta_clear_hours": null, "diversion_en": "", "diversion_hi": "", "tourist_advisory": 0, "heavy_vehicle_advisory": 0 },
+    { "id": "north_mangan_chungthang", "name_en": "North Sikkim Hwy: Mangan – Chungthang", "name_hi": "उत्तर सिक्किम राजमार्ग: मंगन – चुंगथांग", "corridor": "north", "path": ["mangan", "chungthang"], "status": "caution", "eta_clear_hours": null, "diversion_en": "No alternative road. Hold vehicles at Mangan if closed.", "diversion_hi": "कोई वैकल्पिक सड़क नहीं। बंद होने पर वाहन मंगन में रोकें।", "tourist_advisory": 1, "heavy_vehicle_advisory": 1 },
+    { "id": "north_chungthang_lachung", "name_en": "Chungthang – Lachung", "name_hi": "चुंगथांग – लाचुंग", "corridor": "north", "path": ["chungthang", "lachung"], "status": "open", "eta_clear_hours": null, "diversion_en": "", "diversion_hi": "", "tourist_advisory": 1, "heavy_vehicle_advisory": 0 },
+    { "id": "north_chungthang_lachen", "name_en": "Chungthang – Lachen", "name_hi": "चुंगथांग – लाचेन", "corridor": "north", "path": ["chungthang", "lachen"], "status": "restricted", "eta_clear_hours": 6, "diversion_en": "Tourist permits paused on this stretch.", "diversion_hi": "इस हिस्से पर पर्यटक परमिट रोके गए हैं।", "tourist_advisory": 1, "heavy_vehicle_advisory": 1 },
+    { "id": "west_melli_jorethang", "name_en": "Melli – Namchi – Jorethang", "name_hi": "मेल्ली – नामची – जोरेथांग", "corridor": "west", "path": ["melli", "namchi", "jorethang"], "status": "open", "eta_clear_hours": null, "diversion_en": "", "diversion_hi": "", "tourist_advisory": 0, "heavy_vehicle_advisory": 0 },
+    { "id": "west_jorethang_pelling", "name_en": "Jorethang – Gyalshing – Pelling", "name_hi": "जोरेथांग – ग्यालशिंग – पेलिंग", "corridor": "west", "path": ["jorethang", "gyalshing", "pelling"], "status": "open", "eta_clear_hours": null, "diversion_en": "", "diversion_hi": "", "tourist_advisory": 0, "heavy_vehicle_advisory": 0 },
+    { "id": "nh110_kurseong_darjeeling", "name_en": "NH-110: Kurseong – Darjeeling", "name_hi": "NH-110: कर्सियांग – दार्जिलिंग", "corridor": "hills", "path": ["kurseong", "darjeeling"], "status": "open", "eta_clear_hours": null, "diversion_en": "", "diversion_hi": "", "tourist_advisory": 0, "heavy_vehicle_advisory": 0 },
+    { "id": "nh717a_kalimpong", "name_en": "NH-717A: Kalimpong approach", "name_hi": "NH-717A: कालिम्पोंग मार्ग", "corridor": "hills", "path": ["sevoke", "kalimpong"], "status": "open", "eta_clear_hours": null, "diversion_en": "", "diversion_hi": "", "tourist_advisory": 0, "heavy_vehicle_advisory": 0 }
+  ],
+  "resources": [
+    { "id": "jcb_rangpo_1", "type": "excavator", "name": "JCB excavator R-1", "location_id": "rangpo", "district": "East Sikkim", "status": "available", "capacity": null },
+    { "id": "jcb_singtam_1", "type": "excavator", "name": "JCB excavator S-1", "location_id": "singtam", "district": "East Sikkim", "status": "available", "capacity": null },
+    { "id": "jcb_mangan_1", "type": "excavator", "name": "JCB excavator M-1", "location_id": "mangan", "district": "North Sikkim", "status": "deployed", "capacity": null },
+    { "id": "jcb_chungthang_1", "type": "excavator", "name": "Excavator C-1 (road authority)", "location_id": "chungthang", "district": "North Sikkim", "status": "available", "capacity": null },
+    { "id": "jcb_sevoke_1", "type": "excavator", "name": "JCB excavator SV-1", "location_id": "sevoke", "district": "Darjeeling", "status": "available", "capacity": null },
+    { "id": "team_sdrf_gangtok", "type": "rescue_team", "name": "SDRF team A", "location_id": "gangtok", "district": "East Sikkim", "status": "available", "capacity": 20 },
+    { "id": "team_ndrf_det", "type": "rescue_team", "name": "NDRF detachment", "location_id": "gangtok", "district": "East Sikkim", "status": "available", "capacity": 30 },
+    { "id": "team_sdrf_mangan", "type": "rescue_team", "name": "SDRF team B", "location_id": "mangan", "district": "North Sikkim", "status": "available", "capacity": 15 },
+    { "id": "amb_gangtok_1", "type": "ambulance", "name": "Ambulance G-1", "location_id": "gangtok", "district": "East Sikkim", "status": "available", "capacity": 2 },
+    { "id": "amb_singtam_1", "type": "ambulance", "name": "Ambulance S-1", "location_id": "singtam", "district": "East Sikkim", "status": "available", "capacity": 2 },
+    { "id": "amb_mangan_1", "type": "ambulance", "name": "Ambulance M-1", "location_id": "mangan", "district": "North Sikkim", "status": "unavailable", "capacity": 2 },
+    { "id": "shelter_rangpo", "type": "shelter", "name": "Relief shelter, Rangpo", "location_id": "rangpo", "district": "East Sikkim", "status": "available", "capacity": 250 },
+    { "id": "shelter_mangan", "type": "shelter", "name": "Relief shelter, Mangan", "location_id": "mangan", "district": "North Sikkim", "status": "available", "capacity": 180 },
+    { "id": "shelter_namchi", "type": "shelter", "name": "Relief shelter, Namchi", "location_id": "namchi", "district": "South Sikkim", "status": "available", "capacity": 400 },
+    { "id": "shelter_kalimpong", "type": "shelter", "name": "Relief shelter, Kalimpong", "location_id": "kalimpong", "district": "Kalimpong", "status": "available", "capacity": 300 }
+  ],
+  "sops": {
+    "moderate": [
+      { "key": "increase_patrol", "en": "Increase patrolling on the affected stretch", "hi": "प्रभावित हिस्से पर गश्त बढ़ाएँ", "roles": ["police", "bro"] },
+      { "key": "watch_drains", "en": "Check roadside drains and culverts for blockage", "hi": "सड़क किनारे नालियाँ और पुलिया जाँचें", "roles": ["bro"] },
+      { "key": "prestage_jcb", "en": "Pre-position an excavator nearby", "hi": "पास में एक्सकेवेटर तैनात रखें", "roles": ["bro", "district_officer"] },
+      { "key": "inform_panchayat", "en": "Inform the local panchayat / ward office", "hi": "स्थानीय पंचायत / वार्ड कार्यालय को सूचित करें", "roles": ["district_officer"] }
+    ],
+    "high": [
+      { "key": "restrict_heavy", "en": "Restrict heavy vehicles", "hi": "भारी वाहनों पर रोक लगाएँ", "roles": ["police"] },
+      { "key": "tourist_advisory", "en": "Issue tourist advisory and pause permits if needed", "hi": "पर्यटक सलाह जारी करें, ज़रूरत हो तो परमिट रोकें", "roles": ["district_officer", "police"] },
+      { "key": "alert_citizens", "en": "Send a High alert to citizens in the area", "hi": "क्षेत्र के नागरिकों को उच्च खतरे की चेतावनी भेजें", "roles": ["district_officer", "sdma"] },
+      { "key": "standby_rescue", "en": "Put rescue team and ambulance on standby", "hi": "बचाव दल और एम्बुलेंस को तैयार रखें", "roles": ["rescue"] },
+      { "key": "prepare_shelter", "en": "Prepare the nearest relief shelter", "hi": "नज़दीकी राहत शिविर तैयार करें", "roles": ["district_officer"] }
+    ],
+    "critical": [
+      { "key": "close_road", "en": "Close the road and set up barricades", "hi": "सड़क बंद करें और बैरिकेड लगाएँ", "roles": ["police", "bro"] },
+      { "key": "evacuate_lowlying", "en": "Evacuate houses below the slope and near the river", "hi": "ढलान के नीचे और नदी के पास के घर खाली कराएँ", "roles": ["district_officer", "rescue", "police"] },
+      { "key": "open_shelters", "en": "Open relief shelters", "hi": "राहत शिविर खोलें", "roles": ["district_officer"] },
+      { "key": "deploy_rescue", "en": "Deploy rescue team to the site", "hi": "बचाव दल को मौके पर भेजें", "roles": ["rescue"] },
+      { "key": "critical_alert", "en": "Send a Critical alert to citizens", "hi": "नागरिकों को गंभीर खतरे की चेतावनी भेजें", "roles": ["district_officer", "sdma"] },
+      { "key": "notify_sdma", "en": "Notify SDMA control room", "hi": "SDMA नियंत्रण कक्ष को सूचित करें", "roles": ["district_officer"] }
+    ]
+  },
+  "stakeholders": [
+    { "role": "District Control Room", "district": "East Sikkim", "name": "To be configured", "phone": "" },
+    { "role": "District Control Room", "district": "North Sikkim", "name": "To be configured", "phone": "" },
+    { "role": "District Control Room", "district": "South Sikkim", "name": "To be configured", "phone": "" },
+    { "role": "District Control Room", "district": "West Sikkim", "name": "To be configured", "phone": "" },
+    { "role": "District Control Room", "district": "Kalimpong", "name": "To be configured", "phone": "" },
+    { "role": "District Control Room", "district": "Darjeeling", "name": "To be configured", "phone": "" },
+    { "role": "SDMA Sikkim", "district": "All", "name": "To be configured", "phone": "" },
+    { "role": "Road authority (BRO / NHIDCL)", "district": "All", "name": "To be configured", "phone": "" },
+    { "role": "National emergency number", "district": "All", "name": "ERSS", "phone": "112" }
+  ],
+  "incidents": [
+    { "id": "inc_seed_1", "location_id": "sevoke", "title": "Debris on NH-10 near Sevoke", "stage": "closed", "level": "high", "hours_ago_detected": 240, "hours_ago_closed": 200, "notes": "Road cleared by excavator. Monitoring continued." },
+    { "id": "inc_seed_2", "location_id": "mangan", "title": "Slope cracks reported above Mangan market", "stage": "response_underway", "level": "high", "hours_ago_detected": 20, "hours_ago_closed": null, "notes": "Field team inspecting. Excavator M-1 deployed." },
+    { "id": "inc_seed_3", "location_id": "chungthang", "title": "Partial road subsidence near Chungthang", "stage": "under_verification", "level": "moderate", "hours_ago_detected": 3, "hours_ago_closed": null, "notes": "Citizen report received with photo." }
+  ]
+}
