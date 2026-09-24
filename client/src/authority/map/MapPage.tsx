@@ -1,8 +1,8 @@
 // Authority map: the team's corridor watch console (Google map + live risk stations rail),
 // with the location drawer and forecast horizon on top.
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers } from 'lucide-react';
+import { MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding } from 'lucide-react';
 import type { AlertItem, Level, LocationSnap, Report, Resource, Road } from '../../api/types';
 import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream } from '../../live/RiskStreamProvider';
@@ -10,7 +10,8 @@ import { useLive } from '../useLive';
 import { useAuthority } from '../AuthorityContext';
 import { WatchMap, levelAt, type LayerKey } from './WatchMap';
 import { DetailDrawer } from './DetailDrawer';
-import { useGoogleConfig } from '../../lib/googleMaps';
+import { InPersonView, type ViewTarget } from './InPersonView';
+import { GoogleMapsFrame, useGoogleConfig } from '../../lib/googleMaps';
 import { LEVELS, riskConfig } from '../../lib/risk';
 import { placeName } from '../../lib/format';
 
@@ -40,21 +41,37 @@ export default function MapPage() {
   const horizons = [0, ...riskConfig.forecastHorizonsHours];
   const online = list.filter((l) => l.risk).length;
 
+  // In-person view: street-level imagery for the selected place, or for any spot clicked on the map.
+  const [inPerson, setInPerson] = useState(false);
+  const [viewPoint, setViewPoint] = useState<ViewTarget | null>(null);
+  const selected = list.find((l) => l.id === selectedId);
+  useEffect(() => {
+    if (inPerson && selected) setViewPoint({ lat: selected.lat, lng: selected.lng, label: placeName(selected, lang) });
+  }, [inPerson, selected?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  const pickPoint = (pos: google.maps.LatLngLiteral) => setViewPoint({ ...pos, label: t('map.in_person_point', { lat: pos.lat.toFixed(4), lng: pos.lng.toFixed(4) }) });
+
   const alertedSince = (l: LocationSnap) => (alerts.data?.alerts || []).some((a) => !a.cancelled_at && a.kind === 'warning' && l.risk && a.created_at >= l.risk.level_since &&
     ((a.target_type === 'location' && a.target_id === l.id) || (a.target_type === 'corridor' && a.target_id === l.corridor_id) || (a.target_type === 'district' && a.target_id === l.district)));
 
   return (
     <div className="relative flex h-full min-h-0">
       <div className="flex-1 min-w-0 p-3 max-md:p-0 overflow-y-auto">
+        <GoogleMapsFrame className="map-console lg:h-full">
+        {(cfg) => (
         <div className="map-console lg:h-full">
+          <div className="flex flex-col min-h-0">
           {/* Map */}
-          <div className="relative min-h-[440px] overflow-hidden bg-[#dcebdc]">
-            <WatchMap locations={list} horizon={horizon} activeId={selectedId} onSelect={select} layers={layers} corridorColors={corridorColors}
+          <div className={`relative flex-1 min-w-0 overflow-hidden bg-[#dcebdc] ${inPerson ? 'min-h-[300px]' : 'min-h-[440px]'}`}>
+            <WatchMap mapId={cfg.map_id} onMapClick={inPerson ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId} onSelect={select} layers={layers} corridorColors={corridorColors}
               roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} />
             <div className="absolute left-3 top-14 flex items-center gap-2 rounded-xl border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-bold text-[#315542] shadow-sm backdrop-blur">
               <MapPinned size={13} aria-hidden /> {t('map.watch_title')}
             </div>
             <div className="absolute left-3 top-[6.25rem] flex flex-wrap items-center gap-2 max-w-[80%]" role="group" aria-label={t('map.layers')}>
+              <button type="button" aria-pressed={inPerson} onClick={() => { setInPerson((v) => !v); if (inPerson) setViewPoint(null); }}
+                className={`map-legend ${inPerson ? '!bg-[#2a5d43] !text-[#d7efd8] !border-[#2a5d43]' : ''}`}>
+                <PersonStanding size={12} aria-hidden /> {t('map.in_person')}
+              </button>
               <span className="map-legend"><Layers size={12} aria-hidden /> {t('map.layers')}</span>
               {layerKeys.map((k) => (
                 <button key={k} type="button" aria-pressed={layers[k]} onClick={() => setLayers((x) => ({ ...x, [k]: !x[k] }))}
@@ -69,6 +86,12 @@ export default function MapPage() {
               ))}
               {googleCfg && !googleCfg.api_key && <span className="map-legend !text-[#a8681f]">{t('map.google_key_missing')}</span>}
             </div>
+          </div>
+          {inPerson && (
+            <div className="flex-1 min-w-0 min-h-[320px] border-t border-white/10">
+              <InPersonView target={viewPoint} onClose={() => { setInPerson(false); setViewPoint(null); }} />
+            </div>
+          )}
           </div>
 
           {/* Live risk stations */}
@@ -124,6 +147,8 @@ export default function MapPage() {
             </div>
           </aside>
         </div>
+        )}
+        </GoogleMapsFrame>
       </div>
 
       {/* Right detail drawer */}
