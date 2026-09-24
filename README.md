@@ -30,7 +30,7 @@ Open **http://localhost:5173**. The API runs on port 4000; Vite proxies `/api`. 
 | `npm test` | Server tests (engine, hysteresis, features, inbox routing, permissions, alert templates, assistant) |
 | `npm run build` then `npm start` | Production build; the server also serves `client/dist` on port 4000 |
 
-With no internet the app still runs. It uses a clearly labelled fallback weather series until Open-Meteo is reachable, and the map falls back to the next basemap if tiles fail.
+With no internet the app still runs. It uses a clearly labelled fallback weather series until Open-Meteo is reachable; maps need a connection to Google.
 
 ## Demo credentials
 
@@ -64,7 +64,7 @@ Actions taken while viewing as another role are logged as `developer (as <role>)
 ## 2-minute judge demo
 
 1. **(0:00) Landing.** Show the live mini-map, the headline stats and "How it works". Switch to Hindi and back with one tap.
-2. **(0:15) Split view.** Sign in as developer and open **Split view**. On the left is the authority map (satellite with labels, risk markers sized by severity, corridors); on the right is the citizen site for Mangan.
+2. **(0:15) Split view.** Sign in as developer and open **Split view**. On the left is the authority watch map (Google Maps, pins labelled by risk level, corridors, and the live risk stations rail); on the right is the citizen site for Mangan.
 3. **(0:30) Storm.** In **Demo controls**, start the Storm scenario on *North Sikkim Highway*. About a minute later Mangan and Chungthang turn **High**: the officer's Inbox badge lights up with a toast and chime, and the citizen pane shows the alarm banner and sounds the High beep. About two minutes in they turn **Critical**, and the citizen siren and the stronger officer chime follow. For a faster show, use *Force level → Critical* on Mangan.
 4. **(1:00) Officer response.** Open the Inbox message: it shows drivers, forecast, what's exposed and the suggested actions. Press **Acknowledge**, then **Create incident** and assign *SDRF team B*. Tick "Close the road". Press **Draft alert**; the English and Hindi text is pre-filled. Send it.
 5. **(1:25) Citizen side.** The alert appears instantly under Alerts, with *I understand*, *Share on WhatsApp* and *Call 112*. Press *I understand* on the banner; the officer's drawer shows the acknowledgement count go up.
