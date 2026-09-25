@@ -64,7 +64,10 @@ export default function MapPage() {
 
   // Search: monitored places open their drawer; any other place gets a blue pin (and, in-person, its street view).
   const [searchPin, setSearchPin] = useState<SearchPin | null>(null);
-  const pickStation = (id: string) => { setSearchPin(null); select(id); };
+  // Every station pick (pin, list row or search) re-centres the map on it.
+  const [focusTick, setFocusTick] = useState(0);
+  const focusStation = (id: string) => { select(id); setFocusTick((n) => n + 1); };
+  const pickStation = (id: string) => { setSearchPin(null); focusStation(id); };
   const pickPlace = (pin: SearchPin) => { setSearchPin(pin); if (mode === 'street') setViewPoint(pin); };
   // Entering in-person view starts at the searched place, else the selected station, else asks for a spot.
   const switchMode = (m: 'map' | 'street') => { setMode(m); setViewPoint(m === 'street' ? (searchPin || (selected ? pointFor(selected) : null)) : null); };
@@ -86,7 +89,7 @@ export default function MapPage() {
           {/* Map (and in-person view in the same area) */}
           <div ref={mapArea} className="relative isolate min-h-[440px] overflow-hidden bg-[#dcebdc]">
             <WatchMap basemap={basemap} onMapClick={mode === 'street' ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId}
-              onSelect={select} layers={layers} corridorColors={corridorColors}
+              onSelect={focusStation} focusTick={focusTick} layers={layers} corridorColors={corridorColors}
               roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} searchPin={searchPin} />
             {showingStreet && <div className="absolute inset-0 z-[1050]"><InPersonView target={viewPoint} /></div>}
             {/* Inset map while in person: click anywhere on it to move the street view there. Kept above Google's logo. */}
@@ -196,7 +199,7 @@ export default function MapPage() {
                 const live = l.risk?.conditions?.data_source === 'open-meteo';
                 const noAlert = horizon === 0 && lv === 'critical' && !alertedSince(l);
                 return (
-                  <button key={l.id} type="button" onClick={() => select(l.id)} aria-pressed={selectedId === l.id}
+                  <button key={l.id} type="button" onClick={() => focusStation(l.id)} aria-pressed={selectedId === l.id}
                     className={`map-table-row ${selectedId === l.id ? 'active' : ''}`}>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-xs font-bold text-[#f4f7f3]">{placeName(l, lang)}</span>

@@ -8,7 +8,7 @@ import { CircleMarker, MapContainer, Marker, Polyline, ScaleControl, TileLayer, 
 import { useTranslation } from 'react-i18next';
 import type { Level, LocationSnap, Report, Resource, Road } from '../../api/types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { BASEMAPS, MAP_BOUNDS, MAP_CENTER, MAP_MIN_ZOOM, basemapOverlays, basemapUrl, type Basemap } from '../../lib/mapConfig';
+import { BASEMAPS, WATCH_BOUNDS, MAP_CENTER, MAP_MIN_ZOOM, basemapNativeZoom, basemapOverlays, basemapUrl, type Basemap } from '../../lib/mapConfig';
 import { placeName } from '../../lib/format';
 
 /** Pin label per level: tick for calm, dot to watch, exclamation for danger. */
@@ -40,6 +40,9 @@ function pinIcon(label: string, active: boolean) {
   return icon;
 }
 
+/** Smooth moves only when the page is visible; browsers pause animation frames in hidden tabs, which would stall them. */
+const animate = () => document.visibilityState === 'visible';
+
 /** Blue pin for a searched place (distinct from the red risk pins). */
 const searchIcon = L.divIcon({
   className: 'watch-pin search-pin',
@@ -53,13 +56,22 @@ export type SearchPin = { lat: number; lng: number; label: string };
 
 function FlyTo({ pin }: { pin: SearchPin | null }) {
   const map = useMap();
-  useEffect(() => { if (pin) map.flyTo([pin.lat, pin.lng], Math.max(map.getZoom(), 14), { duration: 0.8 }); }, [pin?.lat, pin?.lng]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (pin) map.flyTo([pin.lat, pin.lng], Math.max(map.getZoom(), 14), { duration: 0.8, animate: animate() }); }, [pin?.lat, pin?.lng]); // eslint-disable-line react-hooks/exhaustive-deps
   return null;
 }
 
-function PanTo({ target }: { target: [number, number] | null }) {
+/**
+ * Centre the selected station. Selecting also opens the details drawer, which narrows the map in the same render,
+ * so sync Leaflet's size first; otherwise the resize that follows cancels the pan. `tick` re-centres on every pick,
+ * even of the station that is already selected.
+ */
+function PanTo({ target, tick }: { target: [number, number] | null; tick: number }) {
   const map = useMap();
-  useEffect(() => { if (target) map.panTo(target, { animate: true }); }, [target?.[0], target?.[1]]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!target) return;
+    map.invalidateSize({ pan: false });
+    map.panTo(target, { animate: animate() });
+  }, [target?.[0], target?.[1], tick]); // eslint-disable-line react-hooks/exhaustive-deps
   return null;
 }
 
@@ -94,9 +106,11 @@ type Props = {
   corridorColors: Record<string, string>;
   /** A place found with the search box. */
   searchPin?: SearchPin | null;
+  /** Increments on every station pick, so picking the same station again re-centres it. */
+  focusTick?: number;
 };
 
-export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors, searchPin = null }: Props) {
+export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors, searchPin = null, focusTick = 0 }: Props) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const { resolved } = useTheme();
@@ -106,11 +120,11 @@ export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, on
   const active = activeId ? byId[activeId] : undefined;
 
   return (
-    <MapContainer center={MAP_CENTER} zoom={9} minZoom={MAP_MIN_ZOOM} maxBounds={MAP_BOUNDS} maxBoundsViscosity={0.9} zoomControl={false}
+    <MapContainer center={MAP_CENTER} zoom={9} minZoom={MAP_MIN_ZOOM} maxBounds={WATCH_BOUNDS} maxBoundsViscosity={0.7} zoomControl={false}
       className="h-full w-full min-h-[440px]" attributionControl>
-      <TileLayer key={`${base.id}-${resolved}`} url={basemapUrl(base, resolved)} attribution={base.attribution} maxZoom={base.maxZoom}
+      <TileLayer key={`${base.id}-${resolved}`} url={basemapUrl(base, resolved)} attribution={base.attribution} maxZoom={base.maxZoom} maxNativeZoom={basemapNativeZoom(base, resolved)}
         subdomains={base.subdomains || 'abc'} />
-      {basemapOverlays(base, resolved).map((o) => <TileLayer key={`${base.id}-${resolved}-${o.url}`} url={o.url} subdomains={o.subdomains || 'abc'} maxZoom={base.maxZoom} />)}
+      {basemapOverlays(base, resolved).map((o) => <TileLayer key={`${base.id}-${resolved}-${o.url}`} url={o.url} subdomains={o.subdomains || 'abc'} maxZoom={base.maxZoom} maxNativeZoom={o.nativeZoom ?? basemapNativeZoom(base, resolved)} />)}
 
       {layers.corridors && roads.map((r) => (
         <Polyline key={`c-${r.id}`} positions={pathOf(r)} interactive={false}
@@ -155,7 +169,7 @@ export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, on
         </Marker>
       )}
       <FlyTo pin={searchPin} />
-      <PanTo target={active ? [active.lat, active.lng] : null} />
+      <PanTo target={active ? [active.lat, active.lng] : null} tick={focusTick} />
       <ClickHandler onClick={onMapClick} />
       <AutoResize />
       <ZoomControl position="bottomright" />

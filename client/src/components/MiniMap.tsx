@@ -2,7 +2,7 @@
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Polyline, CircleMarker, useMapEvents } from 'react-leaflet';
 import { useTheme } from '../theme/ThemeProvider';
-import { BASEMAPS, MAP_BOUNDS, basemapOverlays, basemapUrl } from '../lib/mapConfig';
+import { BASEMAPS, MAP_BOUNDS, basemapNativeZoom, basemapOverlays, basemapUrl } from '../lib/mapConfig';
 
 type Props = {
   center: [number, number];
@@ -27,8 +27,8 @@ export default function MiniMap({ center, zoom = 11, line, lineColor = '#1F7A8C'
   return (
     <div className="rounded-card overflow-hidden border border-line" style={{ height }} role="region" aria-label={label}>
       <MapContainer center={center} zoom={zoom} minZoom={8} maxBounds={MAP_BOUNDS} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
-        <TileLayer url={url} attribution={street.attribution} maxZoom={street.maxZoom} />
-        {basemapOverlays(street, resolved).map((o) => <TileLayer key={o.url} url={o.url} maxZoom={street.maxZoom} />)}
+        <TileLayer url={url} attribution={street.attribution} maxZoom={street.maxZoom} maxNativeZoom={basemapNativeZoom(street, resolved)} />
+        {basemapOverlays(street, resolved).map((o) => <TileLayer key={o.url} url={o.url} maxZoom={street.maxZoom} maxNativeZoom={o.nativeZoom ?? basemapNativeZoom(street, resolved)} />)}
         {line && line.length > 1 && <Polyline positions={line} pathOptions={{ color: lineColor, weight: 6, opacity: 0.9 }} />}
         {pin && <CircleMarker center={pin} radius={9} pathOptions={{ color: '#fff', weight: 3, fillColor: '#C62828', fillOpacity: 1 }} />}
         {onPick && <Picker onPick={onPick} />}
