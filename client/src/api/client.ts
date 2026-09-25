@@ -4,6 +4,17 @@ export class ApiError extends Error {
   constructor(public status: number, public code: string) { super(code); }
 }
 
+/**
+ * The private-preview password (SITE_PASSWORD) locks the API with 401 "site_locked" when the access cookie is
+ * missing or out of date. Send the person to the access page instead of leaving the app stuck reconnecting.
+ */
+let redirecting = false;
+export function goToAccessPage() {
+  if (redirecting || location.pathname.startsWith('/__access')) return;
+  redirecting = true;
+  location.assign(`/__access?next=${encodeURIComponent(location.pathname + location.search)}`);
+}
+
 async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
   let res: Response;
   try {
@@ -21,6 +32,7 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   }
   const text = await res.text();
   const data = text ? (() => { try { return JSON.parse(text); } catch { return null; } })() : null;
+  if (res.status === 401 && data?.error === 'site_locked') goToAccessPage();
   if (!res.ok) throw new ApiError(res.status, data?.error || 'generic');
   return data as T;
 }

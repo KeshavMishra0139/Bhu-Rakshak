@@ -13,6 +13,8 @@ export default defineConfig({
     proxy: {
       // SSE works through this proxy; the server disables buffering on /api/risk/stream.
       '/api': { target: 'http://localhost:4000', changeOrigin: true },
+      // Private-preview access page (SITE_PASSWORD), served by the API server.
+      '/__access': { target: 'http://localhost:4000', changeOrigin: true },
     },
   },
   build: { outDir: 'dist', sourcemap: false },

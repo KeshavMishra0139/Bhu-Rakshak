@@ -6,6 +6,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { AlertItem, Controls, Corridor, InboxMessage, LocationSnap, Risk, RiskEvent, Road } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
 import { PANE } from '../lib/viewAs';
+import { goToAccessPage } from '../api/client';
 
 export type StreamStatus = 'connecting' | 'live' | 'reconnecting' | 'offline';
 type EventMap = {
@@ -118,6 +119,7 @@ export function RiskStreamProvider({ children }: { children: ReactNode }) {
       if (closed) return;
       try {
         const res = await fetch(`/api/risk/poll?since=${pollSeq}${PANE ? `&view_as=${PANE}` : ''}`, { credentials: 'include', cache: 'no-store' });
+        if (res.status === 401 && (await res.clone().json().catch(() => null))?.error === 'site_locked') { goToAccessPage(); return; }
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const body: { seq: number; hello?: unknown; events: { type: string; data: unknown }[] } = await res.json();
         if (closed) return;
