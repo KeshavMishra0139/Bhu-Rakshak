@@ -6,11 +6,16 @@ type Stop = Point | string;
 
 const stop = (s: Stop) => (typeof s === 'string' ? s : `${s.lat.toFixed(5)},${s.lng.toFixed(5)}`);
 
-/** Driving directions from origin (or the person's current location if omitted) to destination, via waypoints. */
-export function googleDirectionsUrl({ origin, destination, waypoints = [] }: { origin?: Stop; destination: Stop; waypoints?: Stop[] }) {
+/**
+ * Driving directions from origin (or the person's current location if omitted) to destination, via waypoints.
+ * `navigate` starts turn-by-turn navigation straight away; Google only does that from the current location,
+ * so it is used without an origin (with an origin it shows a route preview instead).
+ */
+export function googleDirectionsUrl({ origin, destination, waypoints = [], navigate = false }: { origin?: Stop; destination: Stop; waypoints?: Stop[]; navigate?: boolean }) {
   const p = new URLSearchParams({ api: '1', destination: stop(destination), travelmode: 'driving' });
   if (origin) p.set('origin', stop(origin));
   if (waypoints.length) p.set('waypoints', waypoints.map(stop).join('|'));
+  if (navigate) p.set('dir_action', 'navigate');
   return `https://www.google.com/maps/dir/?${p.toString()}`;
 }
 

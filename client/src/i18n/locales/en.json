@@ -718,7 +718,14 @@
     "gmaps_alt": "Alternate route in Google Maps",
     "gmaps_opens": "opens Google Maps",
     "gmaps_note": "Opens Google Maps with turn-by-turn directions. Check this page for road status before you go.",
-    "gmaps_no_alt": "There is no alternate road. Wait for the road to reopen; this page updates live."
+    "gmaps_no_alt": "There is no alternate road. Wait for the road to reopen; this page updates live.",
+    "nav_title": "Start travelling",
+    "nav_towards_label": "Where are you going?",
+    "nav_towards": "Towards {{place}}",
+    "nav_start": "Start navigation in Google Maps",
+    "nav_note": "Starts turn-by-turn voice directions from where you are now. Allow location access when Google Maps asks.",
+    "nav_via_diversion": "This road is not safe right now, so navigation goes through the officers' diversion: {{via}}. Starts from where you are now.",
+    "nav_blocked": "This road is closed and there is no safe diversion. Do not travel now; this page will update when it reopens."
   },
   "resources": {
     "title": "Resources",

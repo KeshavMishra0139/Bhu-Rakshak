@@ -2,9 +2,9 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown, Clock, Route, Bus, Truck, Navigation, Shuffle } from 'lucide-react';
 import { api, errorKey } from '../api/client';
-import type { Road } from '../api/types';
+import type { LocationSnap, Road } from '../api/types';
 import { useRiskStream, useStreamEvent } from '../live/RiskStreamProvider';
-import { dateTimeIST } from '../lib/format';
+import { dateTimeIST, placeName } from '../lib/format';
 import { RoadBadge, citizenRoadState } from './RoadBadge';
 import { diversionPlaces, googleDirectionsUrl } from '../lib/directions';
 
@@ -26,7 +26,7 @@ function useViaStops(names: string[], enabled: boolean): Stop[] {
         try {
           const d = await api.get<{ results: { lat: number; lng: number }[] }>(`/map/geocode?q=${encodeURIComponent(n)}`);
           viaCache.set(n, d.results[0] ? { lat: d.results[0].lat, lng: d.results[0].lng } : `${n}, India`);
-        } catch { viaCache.set(n, `${n}, India`); }
+        } catch { continue; } // not cached: the name is used for now and the search is retried next time
         if (!cancelled) bump((x) => x + 1);
       }
     })();
@@ -36,25 +36,58 @@ function useViaStops(names: string[], enabled: boolean): Stop[] {
 }
 
 /** Google Maps buttons for one road: the road itself, and the officers' diversion when one is given ("Via A – B"). */
-function RoadDirections({ road, stops, state }: { road: Road; stops: { lat: number; lng: number }[]; state: ReturnType<typeof citizenRoadState> }) {
-  const { t } = useTranslation();
+function RoadDirections({ road, stops, state }: { road: Road; stops: LocationSnap[]; state: ReturnType<typeof citizenRoadState> }) {
+  const { t, i18n } = useTranslation();
   const via = diversionPlaces(road.diversion_en);
   const viaStops = useViaStops(via, via.length > 0);
+  // Which end of the road the person is heading to (roads are listed one way; people travel both).
+  const [towardsStart, setTowardsStart] = useState(false);
   if (stops.length < 2) return null;
   const origin = stops[0];
   const destination = stops[stops.length - 1];
   const routeUrl = googleDirectionsUrl({ origin, destination, waypoints: stops.slice(1, -1) });
   const altUrl = via.length ? googleDirectionsUrl({ origin, destination, waypoints: viaStops }) : null;
+
+  // Start travelling: turn-by-turn from where the person is now. On a closed or risky road with an officers'
+  // diversion, navigation goes through the diversion towns; on an open road Google picks the way.
+  const target = towardsStart ? origin : destination;
+  const useDiversion = state !== 'open' && via.length > 0;
+  const blocked = state === 'avoid' && !useDiversion;
+  const navUrl = googleDirectionsUrl({ destination: target, waypoints: useDiversion ? (towardsStart ? [...viaStops].reverse() : viaStops) : [], navigate: true });
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
+      <section className="rounded-lg border border-line p-3 space-y-2" aria-label={t('roads.nav_title')}>
+        <h3 className="font-bold inline-flex items-center gap-1.5"><Navigation size={17} aria-hidden />{t('roads.nav_title')}</h3>
+        <div role="radiogroup" aria-label={t('roads.nav_towards_label')} className="flex flex-wrap gap-2">
+          {[destination, origin].map((end, i) => {
+            const on = towardsStart === (i === 1);
+            return (
+              <button key={end.id} type="button" role="radio" aria-checked={on} onClick={() => setTowardsStart(i === 1)}
+                className={`rounded-pill border px-3 py-1.5 text-sm font-semibold ${on ? 'border-brand bg-brand/15 text-ink' : 'border-line text-muted hover:text-ink'}`}>
+                {t('roads.nav_towards', { place: placeName(end, i18n.language) })}
+              </button>
+            );
+          })}
+        </div>
+        {blocked ? (
+          <p className="text-sm font-semibold text-risk-critical">{t('roads.nav_blocked')}</p>
+        ) : (
+          <>
+            <a href={navUrl} target="_blank" rel="noopener noreferrer" className="btn-primary w-full sm:w-auto">
+              <Navigation size={18} aria-hidden />{t('roads.nav_start')}<span className="sr-only"> ({t('roads.gmaps_opens')})</span>
+            </a>
+            <p className="text-sm text-muted">{useDiversion ? t('roads.nav_via_diversion', { via: via.join(' – ') }) : t('roads.nav_note')}</p>
+          </>
+        )}
+      </section>
       <div className="flex flex-wrap gap-2">
         {altUrl && (
-          <a href={altUrl} target="_blank" rel="noopener noreferrer" className={state === 'open' ? 'btn-secondary' : 'btn-primary'}>
+          <a href={altUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary">
             <Shuffle size={18} aria-hidden />{t('roads.gmaps_alt')}<span className="sr-only"> ({t('roads.gmaps_opens')})</span>
           </a>
         )}
-        <a href={routeUrl} target="_blank" rel="noopener noreferrer" className={altUrl && state !== 'open' ? 'btn-secondary' : 'btn-primary'}>
-          <Navigation size={18} aria-hidden />{t('roads.gmaps_route')}<span className="sr-only"> ({t('roads.gmaps_opens')})</span>
+        <a href={routeUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary">
+          <Route size={18} aria-hidden />{t('roads.gmaps_route')}<span className="sr-only"> ({t('roads.gmaps_opens')})</span>
         </a>
       </div>
       <p className="text-sm text-muted">{state === 'avoid' && !altUrl ? t('roads.gmaps_no_alt') : t('roads.gmaps_note')}</p>
