@@ -21,6 +21,7 @@ type EventMap = {
   resource_updated: { id: string };
   report_updated: { id: string; location_id: string; status: string };
   citizen_ack: { location_id: string; level: string };
+  weather_refreshed: { at: string; source?: string };
 };
 type Listener<K extends keyof EventMap> = (payload: EventMap[K]) => void;
 
@@ -99,7 +100,7 @@ export function RiskStreamProvider({ children }: { children: ReactNode }) {
         setLastUpdateAt(new Date().toISOString());
       },
       controls: (c: Controls) => setControls(c),
-      weather_refreshed: (w: { at: string }) => setWeatherAt(w.at),
+      weather_refreshed: (w: { at: string; source?: string }) => { if (w.source !== 'seismic') setWeatherAt(w.at); emit('weather_refreshed', w); },
       heartbeat: () => { /* keeps the watchdog happy */ },
     };
     for (const ev of ['risk_escalation', 'risk_deescalation', 'inbox_message', 'inbox_updated', 'alert_published', 'alert_cancelled',

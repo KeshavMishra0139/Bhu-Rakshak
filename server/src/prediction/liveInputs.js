@@ -8,6 +8,7 @@ import { featuresAt, hourIndex, istHourOfDay } from '../ingest/features.js';
 import { clamp, round, safeJson } from '../lib/util.js';
 import { getControls } from './controls.js';
 import { imdSeverity } from '../ingest/imd.js';
+import { seismicSeverity } from '../ingest/seismic.js';
 
 const cache = new Map();     // locationId -> { fetchedAt, hourly, source }
 const drift = new Map();     // locationId -> { rainMul, satOff, wetting, lastMs }
@@ -134,7 +135,12 @@ export function liveInputsFor(loc, nowMs) {
   const base = featuresAt(w.hourly, i);
   const d = stepDrift(loc.id, nowMs, base.rain_intensity);
   // Official IMD rain severity for the district (null when IMD has nothing current → engine uses the model forecast).
-  const withImd = (f, h) => ({ ...f, imd_rain_severity: loc.district ? imdSeverity(loc.district, nowMs + h * 3600000) : null });
+  // Plus recent earthquake shaking at the slope (NCS / USGS), fading over the following days.
+  const withImd = (f, h) => ({
+    ...f,
+    imd_rain_severity: loc.district ? imdSeverity(loc.district, nowMs + h * 3600000) : null,
+    seismic_shaking: seismicSeverity(loc, nowMs + h * 3600000),
+  });
   const features = withImd(overlay(base, loc, nowMs, d, 0), 0);
   const lastIdx = w.hourly.time.length - 1;
   return {

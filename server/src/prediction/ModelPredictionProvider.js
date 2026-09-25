@@ -6,6 +6,7 @@ import { PredictionProvider } from './PredictionProvider.js';
 import { q } from '../db/index.js';
 import { liveInputsFor } from './liveInputs.js';
 import { imdSummary } from '../ingest/imd.js';
+import { seismicSummary } from '../ingest/seismic.js';
 import { nowIso } from '../lib/util.js';
 
 export class ModelPredictionProvider extends PredictionProvider {
@@ -27,7 +28,7 @@ export class ModelPredictionProvider extends PredictionProvider {
 
   async getRisk(locationId, at = new Date()) {
     const st = this.fallback.staticFor(locationId);
-    const inputs = liveInputsFor({ id: locationId, corridor_id: st.row.corridor_id, district: st.row.district }, at.getTime());
+    const inputs = liveInputsFor({ id: locationId, corridor_id: st.row.corridor_id, district: st.row.district, lat: st.row.lat, lng: st.row.lng }, at.getTime());
     try {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), this.timeoutMs);
@@ -42,7 +43,7 @@ export class ModelPredictionProvider extends PredictionProvider {
       const out = await res.json();
       if (typeof out.score !== 'number' || !out.level) throw new Error('bad schema');
       this.setStatus('ok', 'model service');
-      return { conditions: { ...(inputs?.features || {}), imd: imdSummary(st.row.district, at.getTime()) }, trend: null, ...out, location_id: locationId, updated_at: out.updated_at || at.toISOString() };
+      return { conditions: { ...(inputs?.features || {}), imd: imdSummary(st.row.district, at.getTime()), seismic: seismicSummary(st.row, at.getTime()) }, trend: null, ...out, location_id: locationId, updated_at: out.updated_at || at.toISOString() };
     } catch (e) {
       this.setStatus('degraded', `Model unavailable (${e.message}); using baseline engine`);
       return this.fallback.getRisk(locationId, at);

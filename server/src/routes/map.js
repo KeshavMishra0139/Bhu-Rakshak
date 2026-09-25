@@ -5,6 +5,9 @@ import { q } from '../db/index.js';
 import { env } from '../config/env.js';
 import { requireAuth } from '../auth/middleware.js';
 import { ah, HttpError } from '../lib/util.js';
+import { seismicData, intensityAt, distanceKm, RADIUS_KM } from '../ingest/seismic.js';
+
+const REGION_POINT = { lat: 27.33, lng: 88.5 };
 
 const r = Router();
 
@@ -105,6 +108,19 @@ r.get('/map/history', (_req, res) => {
     }
   }
   res.json({ source: 'static_seed', points });
+});
+
+// Recent earthquakes near the region + NCS seismograph stations (public government data, see ingest/seismic.js).
+r.get('/map/seismic', requireAuth(), (_req, res) => {
+  const { quakes, stations, fetchedAt } = seismicData();
+  const feed = q.one("SELECT status, message FROM feed_status WHERE feed = 'seismic'") || null;
+  const now = Date.now();
+  res.json({
+    quakes: quakes.map((e) => ({ ...e, mmi_region: Math.round(intensityAt(e, REGION_POINT) * 10) / 10, age_hours: Math.round((now - new Date(e.time).getTime()) / 3600000) })),
+    stations: stations.filter((s) => distanceKm(s, REGION_POINT) <= RADIUS_KM),
+    fetched_at: fetchedAt,
+    feed,
+  });
 });
 
 export default r;

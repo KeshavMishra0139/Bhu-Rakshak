@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, errorKey } from '../api/client';
 import { useRiskStream } from '../live/RiskStreamProvider';
 
-type StreamEv = 'alert_published' | 'alert_cancelled' | 'road_updated' | 'incident_updated' | 'resource_updated' | 'report_updated' | 'inbox_message' | 'inbox_updated' | 'citizen_ack';
+type StreamEv = 'alert_published' | 'alert_cancelled' | 'road_updated' | 'incident_updated' | 'resource_updated' | 'report_updated' | 'inbox_message' | 'inbox_updated' | 'citizen_ack' | 'weather_refreshed';
 
 /** GET `path`, and refetch (debounced) whenever one of `events` arrives on the live stream. */
 export function useLive<T>(path: string | null, events: StreamEv[]) {

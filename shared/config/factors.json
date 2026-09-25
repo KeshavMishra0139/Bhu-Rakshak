@@ -25,7 +25,7 @@
     { "key": "weather_code", "unit": "WMO code", "en": "Weather condition", "hi": "मौसम की स्थिति", "source": "real_feed", "feed": "open-meteo:hourly.weather_code" },
     { "key": "humidity", "unit": "%", "en": "Relative humidity", "hi": "सापेक्ष आर्द्रता", "source": "real_feed", "feed": "open-meteo:hourly.relative_humidity_2m" },
     { "key": "cloud_cover", "unit": "%", "en": "Cloud cover", "hi": "बादल", "source": "real_feed", "feed": "open-meteo:hourly.cloud_cover" },
-    { "key": "seismic_recent", "unit": "events/7d", "en": "Recent earthquakes nearby", "hi": "आसपास हाल के भूकंप", "source": "not_connected", "feed": "STUB: seismic feed hook (server/src/ingest/seismic.js)" },
+    { "key": "seismic_recent", "unit": "events/7d", "en": "Recent earthquakes nearby", "hi": "आसपास हाल के भूकंप", "source": "real_feed", "feed": "National Center for Seismology (riseq.seismo.gov.in) + USGS FDSN backup" },
     { "key": "sensor_rain_gauge", "unit": "mm/h", "en": "Rain gauge", "hi": "वर्षा मापी", "source": "not_connected", "feed": "STUB: future ground sensor" },
     { "key": "sensor_piezometer", "unit": "kPa", "en": "Piezometer (pore pressure)", "hi": "पीज़ोमीटर (छिद्र दबाव)", "source": "not_connected", "feed": "STUB: future ground sensor" },
     { "key": "sensor_tilt", "unit": "°", "en": "Tilt / strain sensor", "hi": "झुकाव / तनाव सेंसर", "source": "not_connected", "feed": "STUB: future ground sensor" }
@@ -68,6 +68,7 @@
     "river_proximity": { "en": "Close to river (toe erosion)", "hi": "नदी के पास (कटाव)", "plainEn": "the river is cutting into the slope", "plainHi": "नदी ढलान को काट रही है" },
     "fault": { "en": "Near a fault / lineament", "hi": "भ्रंश रेखा के पास", "plainEn": "the ground here is naturally cracked", "plainHi": "यहाँ ज़मीन में प्राकृतिक दरारें हैं" },
     "low_vegetation": { "en": "Sparse vegetation", "hi": "कम वनस्पति", "plainEn": "few trees are holding the soil", "plainHi": "मिट्टी को थामने वाले पेड़ कम हैं" },
+    "seismic": { "en": "Recent earthquake shaking", "hi": "हाल के भूकंप के झटके", "plainEn": "a recent earthquake shook this slope", "plainHi": "हाल ही में आए भूकंप ने इस ढलान को हिलाया है" },
     "freeze_thaw": { "en": "Freeze–thaw / snowmelt", "hi": "जमाव–पिघलाव / बर्फ पिघलना", "plainEn": "ice and snow are melting", "plainHi": "बर्फ पिघल रही है" }
   }
 }

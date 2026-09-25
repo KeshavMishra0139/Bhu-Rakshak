@@ -321,3 +321,10 @@ CREATE TABLE IF NOT EXISTS app_settings (
   key   TEXT PRIMARY KEY,
   value TEXT NOT NULL
 );
+
+-- Latest earthquakes near the region and the national seismograph network (NCS, with USGS as backup). Survives restarts.
+CREATE TABLE IF NOT EXISTS seismic_cache (
+  kind          TEXT PRIMARY KEY,   -- 'quakes' | 'stations'
+  data_json     TEXT NOT NULL,      -- normalised list (see ingest/seismic.js)
+  fetched_at    TEXT NOT NULL
+);

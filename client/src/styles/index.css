@@ -132,4 +132,5 @@ html[lang='hi'] body { @apply font-deva; line-height: 1.65; }
 .leaflet-control-attribution { background: rgb(var(--surface) / 0.75) !important; color: rgb(var(--muted)); font-size: 10px; }
 .leaflet-control-attribution a { color: rgb(var(--muted)); }
 .res-icon { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; font: 700 11px/1 'IBM Plex Mono', monospace; color: #fff; border: 2px solid #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.4); }
+.seismo-station { display: block; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid #6a3fb5; filter: drop-shadow(0 0 1.5px #fff) drop-shadow(0 1px 2px rgb(0 0 0 / 0.5)); }
 @media print { .no-print { display: none !important; } body { background: #fff; } }

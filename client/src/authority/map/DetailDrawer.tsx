@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { X, Megaphone, ClipboardPlus, BadgeCheck, Users } from 'lucide-react';
 import { AreaChart, Area, ResponsiveContainer, YAxis, XAxis, Tooltip as RTooltip, ReferenceLine } from 'recharts';
 import { api, errorKey } from '../../api/client';
-import type { ImdSummary, Incident, LocationSnap, Resource, Road, Sop } from '../../api/types';
+import type { ImdSummary, SeismicSummary, Incident, LocationSnap, Resource, Road, Sop } from '../../api/types';
 import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream, useStreamEvent } from '../../live/RiskStreamProvider';
 import { RiskBadge } from '../../components/RiskBadge';
 import { UpdatedAgo } from '../../components/UpdatedAgo';
 import { ImdPanel } from '../../components/ImdPanel';
+import { SeismicPanel } from '../../components/SeismicPanel';
 import { dateTimeIST, num, pct, placeName, timeIST } from '../../lib/format';
 import { driverLabel, factorLabel, factorMeta, notConnectedFactors } from '../../lib/factors';
 import { TREND_ICON, levelVar, riskConfig } from '../../lib/risk';
@@ -127,6 +128,7 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
             <p className="text-sm">{t('drawer.level_since', { time: dateTimeIST(r.level_since, lang) })} · <UpdatedAgo at={r.updated_at} /></p>
             <p className="text-sm font-semibold">{r.time_to_threshold ? t('drawer.next_threshold', { level: t(`levels.${r.time_to_threshold.level}`), hours: r.time_to_threshold.hours }) : t('drawer.no_threshold')}</p>
             <ImdPanel imd={c.imd as ImdSummary | null} />
+            <SeismicPanel seismic={c.seismic as SeismicSummary | null} />
             <section>
               <h3 className="font-bold mb-2">{t('drawer.drivers')}</h3>
               <ul className="space-y-2">

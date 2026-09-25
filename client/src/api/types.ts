@@ -14,6 +14,17 @@ export interface ImdSummary {
   fetched_at: string | null;
   source: 'IMD';
 }
+/** Recent earthquake shaking at a location (NCS, with USGS as backup) and its nearest NCS seismograph. */
+export interface SeismicSummary {
+  events_7d: number;
+  strongest: { mag: number; time: string; depth_km: number; source: 'NCS' | 'USGS'; place: string | null; distance_km: number; mmi: number; severity: number } | null;
+  nearest_station: { code: string; name: string; distance_km: number } | null;
+  fetched_at: string | null;
+  source: string;
+}
+export interface Quake { id: string; source: 'NCS' | 'USGS'; time: string; mag: number; depth_km: number; lat: number; lng: number; place: string | null; mmi_region: number; age_hours: number }
+export interface SeismoStation { code: string; name: string; state: string | null; lat: number; lng: number }
+export interface SeismicData { quakes: Quake[]; stations: SeismoStation[]; fetched_at: string | null; feed: { status: string; message: string | null } | null }
 export interface ForecastPoint { h: number; score: number; level: Level }
 
 export interface Risk {
@@ -28,7 +39,7 @@ export interface Risk {
   priority: number;
   exposure_score?: number;
   /** Feature values; `imd` holds the IMD district warning summary (null when IMD has nothing current). */
-  conditions: Record<string, number | string | null | ImdSummary>;
+  conditions: Record<string, number | string | null | ImdSummary | SeismicSummary>;
   model_version: string;
   level_since: string;
   updated_at: string;

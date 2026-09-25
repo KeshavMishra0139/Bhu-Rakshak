@@ -6,7 +6,7 @@ import { dateTimeIST } from '../lib/format';
 
 type Health = {
   live_updated_at: string | null;
-  feeds?: Record<'weather' | 'imd' | 'prediction' | 'seismic' | 'sensors', { status?: string; last_success?: string | null; last_update?: string | null }>;
+  feeds?: Record<'weather' | 'imd' | 'prediction' | 'seismic' | 'sensors', { status?: string; last_success?: string | null; last_update?: string | null; message?: string | null }>;
   active_users?: number; alerts_sent_today?: number; avg_detection_to_alert_min?: number | null;
   reports?: { total: number; verified_pct: number | null };
 };
@@ -39,7 +39,8 @@ export function HealthPanel({ compact = false }: { compact?: boolean }) {
           return (
             <li key={k} className="flex items-center gap-3 py-2">
               <span className={`h-2.5 w-2.5 rounded-full ${DOT[status] || 'bg-muted'}`} aria-hidden />
-              <span className="flex-1"><span className="font-semibold">{t(`admin.feed_${k}`)}</span> <span className="text-muted">· {t(`admin.status_${status}`)}</span></span>
+              <span className="flex-1"><span className="font-semibold">{t(`admin.feed_${k}`)}</span> <span className="text-muted">· {t(`admin.status_${status}`)}</span>
+                {(k === 'seismic' || k === 'sensors') && f?.message && <span className="block text-xs text-muted">{f.message}</span>}</span>
               {when && <span className="label-mono">{dateTimeIST(when, i18n.language)}</span>}
             </li>
           );

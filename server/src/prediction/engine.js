@@ -4,7 +4,7 @@
 import { riskConfig, seedData } from '../config/shared.js';
 import { clamp, round } from '../lib/util.js';
 
-export const ENGINE_VERSION = 'baseline-0.4';
+export const ENGINE_VERSION = 'baseline-0.5';
 
 /** Weights sum to 1.0. Keys match factors.json → drivers. */
 export const WEIGHTS = {
@@ -25,6 +25,9 @@ export const WEIGHTS = {
   fault: 0.02,
   low_vegetation: 0.02,
 };
+
+/** Extra score for strong recent shaking (on top of WEIGHTS; 0 when there has been no nearby earthquake). */
+export const SEISMIC_WEIGHT = 0.16;
 
 const sat = (v, k) => 1 - Math.exp(-Math.max(0, v || 0) / k);
 const lithoWeakness = seedData.staticLayers.lithology_weakness;
@@ -66,6 +69,7 @@ export function normaliseDynamic(f, elevation_m = 0) {
     imd_fallback: f.imd_rain_severity == null,
     soil_saturation: clamp(((f.saturation_index ?? 0) - 0.65) / 0.3, 0, 1),
     freeze_thaw: freezeThaw,
+    seismic: clamp(f.seismic_shaking || 0, 0, 1),
   };
 }
 
@@ -115,6 +119,11 @@ export function scoreFrom(staticN, dynamicN) {
   score += interaction;
   const soil = contributions.find((c) => c.key === 'soil_saturation');
   soil.value += interaction;
+  // Recent earthquake shaking (NCS / USGS): additive, so a quiet day scores exactly as before. Steep and wet
+  // slopes suffer most: shaking loosens the slope and the next rain finishes the job.
+  const seismic = SEISMIC_WEIGHT * (dynamicN.seismic || 0) * (0.4 + 0.6 * staticN.slope) * (1 + 0.5 * dynamicN.soil_saturation);
+  score += seismic;
+  contributions.push({ key: 'seismic', value: seismic });
   // Without current IMD data the imd_warning share was filled from the model forecast: credit it there.
   if (dynamicN.imd_fallback) {
     const imd = contributions.find((c) => c.key === 'imd_warning');

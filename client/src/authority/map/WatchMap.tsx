@@ -6,15 +6,15 @@ import { useEffect, useMemo } from 'react';
 import L from 'leaflet';
 import { CircleMarker, MapContainer, Marker, Polyline, ScaleControl, TileLayer, Tooltip, ZoomControl, useMap, useMapEvents } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
-import type { Level, LocationSnap, Report, Resource, Road } from '../../api/types';
+import type { Level, LocationSnap, Report, Resource, Road, SeismicData } from '../../api/types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { BASEMAPS, WATCH_BOUNDS, MAP_CENTER, MAP_MIN_ZOOM, basemapNativeZoom, basemapOverlays, basemapUrl, type Basemap } from '../../lib/mapConfig';
-import { placeName } from '../../lib/format';
+import { dateTimeIST, placeName } from '../../lib/format';
 
 /** Pin label per level: tick for calm, dot to watch, exclamation for danger. */
 export const PIN_LABEL: Record<Level, string> = { low: '✓', moderate: '•', high: '!', critical: '!!' };
 
-export type LayerKey = 'corridors' | 'roads' | 'reports' | 'resources';
+export type LayerKey = 'corridors' | 'roads' | 'reports' | 'resources' | 'seismic';
 
 const ROAD_COLOR: Record<Road['status'], string> = { open: '#2F8F4E', cleared: '#2F8F4E', caution: '#C99A12', restricted: '#D9731A', blocked: '#C62828' };
 const RES_ICON: Record<Resource['type'], [string, string]> = { excavator: ['J', '#8a6d1d'], rescue_team: ['R', '#1F7A8C'], ambulance: ['A', '#b3261e'], shelter: ['S', '#3f6e3a'] };
@@ -86,6 +86,11 @@ function AutoResize() {
   return null;
 }
 
+// Seismic layer: earthquakes sized by magnitude and coloured by age; NCS seismograph stations as triangles.
+export const quakeRadius = (mag: number) => Math.max(4, Math.min(22, 2.2 * Math.pow(1.6, mag)));
+export const quakeColor = (ageHours: number) => (ageHours <= 24 ? '#d7263d' : ageHours <= 24 * 7 ? '#f08a24' : '#f2c14e');
+const STATION_ICON = L.divIcon({ className: '', html: '<span class="seismo-station" aria-hidden="true"></span>', iconSize: [16, 14], iconAnchor: [8, 10] });
+
 function ClickHandler({ onClick }: { onClick?: (pos: { lat: number; lng: number }) => void }) {
   useMapEvents({ click: (e) => onClick?.({ lat: e.latlng.lat, lng: e.latlng.lng }) });
   return null;
@@ -104,13 +109,15 @@ type Props = {
   reports: Report[];
   resources: Resource[];
   corridorColors: Record<string, string>;
+  /** Recent earthquakes and NCS seismograph stations. */
+  seismic?: SeismicData | null;
   /** A place found with the search box. */
   searchPin?: SearchPin | null;
   /** Increments on every station pick, so picking the same station again re-centres it. */
   focusTick?: number;
 };
 
-export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors, searchPin = null, focusTick = 0 }: Props) {
+export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors, seismic = null, searchPin = null, focusTick = 0 }: Props) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const { resolved } = useTheme();
@@ -139,6 +146,20 @@ export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, on
         <CircleMarker key={`rep-${r.id}`} center={[r.lat, r.lng]} radius={6}
           pathOptions={{ color: '#fff', weight: 2, fillColor: r.status === 'verified' ? '#2F8F4E' : r.status === 'rejected' ? '#777' : '#D9731A', fillOpacity: 1 }}>
           <Tooltip>{t('map.report_pin')}: {t(`reports.ty_${r.type}`)} ({t(`reports.st_${r.status}`)})</Tooltip>
+        </CircleMarker>
+      ))}
+      {layers.seismic && seismic?.stations.map((s) => (
+        <Marker key={`st-${s.code}`} position={[s.lat, s.lng]} icon={STATION_ICON} keyboard={false}>
+          <Tooltip>{t('seismic.station_tip', { name: s.name, code: s.code })}</Tooltip>
+        </Marker>
+      ))}
+      {layers.seismic && seismic?.quakes.map((e) => (
+        <CircleMarker key={`q-${e.id}`} center={[e.lat, e.lng]} radius={quakeRadius(e.mag)}
+          pathOptions={{ color: '#fff', weight: 1.5, fillColor: quakeColor(e.age_hours), fillOpacity: 0.8 }}>
+          <Tooltip>
+            <strong>M{e.mag.toFixed(1)}</strong> · {t('seismic.depth_km', { km: Math.round(e.depth_km) })} · {e.source}<br />
+            {dateTimeIST(e.time, lang)}{e.place ? ` · ${e.place}` : ''}
+          </Tooltip>
         </CircleMarker>
       ))}
       {layers.resources && resources.filter((r) => r.lat != null).map((r, i) => {

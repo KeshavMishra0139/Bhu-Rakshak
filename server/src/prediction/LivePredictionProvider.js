@@ -4,6 +4,7 @@ import { q } from '../db/index.js';
 import { riskConfig } from '../config/shared.js';
 import { liveInputsFor } from './liveInputs.js';
 import { imdSummary } from '../ingest/imd.js';
+import { seismicSummary } from '../ingest/seismic.js';
 import {
   ENGINE_VERSION, normaliseStatic, normaliseDynamic, scoreFrom, levelFromScore, confidenceOf, LEVEL_RANK,
 } from './engine.js';
@@ -20,7 +21,7 @@ export class LivePredictionProvider extends PredictionProvider {
   staticFor(locationId) {
     let s = this.staticCache.get(locationId);
     if (!s) {
-      const row = q.one(`SELECT l.id, l.corridor_id, l.district, l.field_verified_at, s.* FROM locations l
+      const row = q.one(`SELECT l.id, l.corridor_id, l.district, l.lat, l.lng, l.field_verified_at, s.* FROM locations l
                          JOIN static_layers s ON s.location_id = l.id WHERE l.id = :id`, { id: locationId });
       if (!row) return null;
       s = { row, norm: normaliseStatic(row) };
@@ -42,7 +43,7 @@ export class LivePredictionProvider extends PredictionProvider {
     const nowMs = at.getTime();
     const st = this.staticFor(locationId);
     if (!st) throw new Error(`unknown location ${locationId}`);
-    const inputs = liveInputsFor({ id: locationId, corridor_id: st.row.corridor_id, district: st.row.district }, nowMs);
+    const inputs = liveInputsFor({ id: locationId, corridor_id: st.row.corridor_id, district: st.row.district, lat: st.row.lat, lng: st.row.lng }, nowMs);
     if (!inputs) throw new Error(`no weather inputs for ${locationId}`);
 
     const now = this.scoreFeatures(locationId, inputs.features);
@@ -80,7 +81,7 @@ export class LivePredictionProvider extends PredictionProvider {
       trend: null,
       forecast,
       time_to_threshold: timeToThreshold,
-      conditions: { ...inputs.features, data_source: inputs.source, data_fetched_at: inputs.fetchedAt, imd: imdSummary(st.row.district, nowMs) },
+      conditions: { ...inputs.features, data_source: inputs.source, data_fetched_at: inputs.fetchedAt, imd: imdSummary(st.row.district, nowMs), seismic: seismicSummary(st.row, nowMs) },
       model_version: ENGINE_VERSION,
       updated_at: at.toISOString(),
     };

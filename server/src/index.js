@@ -16,6 +16,7 @@ const { attachUser } = await import('./auth/middleware.js');
 const { siteGate } = await import('./auth/siteGate.js');
 const { startWeatherSchedule, stopWeatherSchedule } = await import('./ingest/openMeteo.js');
 const { startImdSchedule, stopImdSchedule } = await import('./ingest/imd.js');
+const { startSeismicSchedule, stopSeismicSchedule } = await import('./ingest/seismic.js');
 const { riskService } = await import('./prediction/liveLoop.js');
 const { startInbox, stopInbox } = await import('./notifications/inbox.js');
 const { wireSse } = await import('./events/sse.js');
@@ -77,6 +78,7 @@ async function main() {
   if (seedIfEmpty()) console.log('[db] seeded demo data');
   await startWeatherSchedule();
   await startImdSchedule();
+  await startSeismicSchedule();
   await riskService.init();
   riskService.start();
   startInbox();
@@ -94,6 +96,7 @@ async function main() {
     stopInbox();
     stopWeatherSchedule();
     stopImdSchedule();
+    stopSeismicSchedule();
     server.close(() => { closeDb(); process.exit(0); });
     setTimeout(() => process.exit(0), 3000).unref();
   };

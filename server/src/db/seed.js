@@ -121,7 +121,7 @@ function seedFeeds() {
     for (const [feed, status, message] of [
       ['open_meteo', 'degraded', 'Waiting for first fetch'],
       ['prediction', 'ok', `Provider: ${env.predictionMode}`],
-      ['seismic', 'not_connected', 'Seismic feed hook — not connected'],
+      ['seismic', 'degraded', 'Waiting for first earthquake fetch (NCS / USGS)'],
       ['sensors', 'not_connected', 'Ground sensors (rain gauge, piezometer, tilt) — not connected'],
     ]) {
       q.run('INSERT INTO feed_status(feed, status, last_attempt, message) VALUES (:feed, :status, :now, :message)', { feed, status, now, message });

@@ -3,13 +3,13 @@
 // Maps are free Esri satellite and OpenStreetMap tiles; the in-person view is Google Street View (embed, no key).
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Crosshair, Maximize2, Minimize2, Satellite } from 'lucide-react';
-import type { AlertItem, Level, LocationSnap, Report, Resource, Road } from '../../api/types';
+import { Activity, MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Crosshair, Maximize2, Minimize2, Satellite } from 'lucide-react';
+import type { AlertItem, Level, LocationSnap, Report, Resource, Road, SeismicData } from '../../api/types';
 import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream } from '../../live/RiskStreamProvider';
 import { useLive } from '../useLive';
 import { useAuthority } from '../AuthorityContext';
-import { WatchMap, levelAt, type LayerKey, type SearchPin } from './WatchMap';
+import { WatchMap, levelAt, quakeColor, type LayerKey, type SearchPin } from './WatchMap';
 import { MapSearch } from './MapSearch';
 import { MapTypePicker } from './MapTypePicker';
 import { DetailDrawer } from './DetailDrawer';
@@ -26,7 +26,7 @@ const VALUE: Record<Level, string> = { low: 'text-[#9dd2a6]', moderate: 'text-[#
 const PILL: Record<Level, string> = {
   low: 'bg-[#2d6143] text-[#b4e1b9]', moderate: 'bg-[#6b512a] text-[#ffd993]', high: 'bg-[#71372f] text-[#ffb4a4]', critical: 'bg-[#5a1d1f] text-[#ff9c9c]',
 };
-const LAYER_KEYS: LayerKey[] = ['corridors', 'roads', 'reports', 'resources'];
+const LAYER_KEYS: LayerKey[] = ['corridors', 'roads', 'seismic', 'reports', 'resources'];
 const SEG = 'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold';
 const SEG_ON = 'bg-[#2a5d43] text-[#d7efd8]';
 const SEG_OFF = 'text-[#315542] hover:bg-[#e8f3ed]';
@@ -37,11 +37,12 @@ export default function MapPage() {
   const { can } = useAuth();
   const { list, corridors } = useRiskStream();
   const { selectedId, select, horizon, setHorizon } = useAuthority();
-  const [layers, setLayers] = useState<Record<LayerKey, boolean>>({ corridors: true, roads: false, reports: true, resources: false });
+  const [layers, setLayers] = useState<Record<LayerKey, boolean>>({ corridors: true, roads: false, seismic: true, reports: true, resources: false });
   const [basemap, setBasemap] = useState<Basemap['id']>('hybrid');
   const roads = useLive<{ roads: Road[] }>('/roads', ['road_updated']);
   const reports = useLive<{ reports: Report[] }>(can('incidents.view') ? '/reports' : null, ['report_updated']);
   const resources = useLive<{ resources: Resource[] }>(can('incidents.view') ? '/resources' : null, ['resource_updated', 'incident_updated']);
+  const seismic = useLive<SeismicData>('/map/seismic', ['weather_refreshed']);
   const alerts = useLive<{ alerts: AlertItem[] }>('/alerts', ['alert_published', 'alert_cancelled']);
   const corridorColors = useMemo(() => Object.fromEntries(corridors.map((c) => [c.id, c.color])), [corridors]);
   const layerKeys = LAYER_KEYS.filter((k) => (k !== 'reports' && k !== 'resources') || can('incidents.view'));
@@ -90,7 +91,7 @@ export default function MapPage() {
           <div ref={mapArea} className="relative isolate min-h-[440px] overflow-hidden bg-[#dcebdc]">
             <WatchMap basemap={basemap} onMapClick={mode === 'street' ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId}
               onSelect={focusStation} focusTick={focusTick} layers={layers} corridorColors={corridorColors}
-              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} searchPin={searchPin} />
+              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} seismic={seismic.data} searchPin={searchPin} />
             {showingStreet && <div className="absolute inset-0 z-[1050]"><InPersonView target={viewPoint} /></div>}
             {/* Inset map while in person: click anywhere on it to move the street view there. Kept above Google's logo. */}
             {showingStreet && (
@@ -166,6 +167,14 @@ export default function MapPage() {
                   {LEVELS.map((lv) => (
                     <span key={lv} className="map-legend"><span className={`h-2 w-2 rounded-full ${DOT[lv]}`} aria-hidden /> {t(`levels.${lv}`)}</span>
                   ))}
+                  {layers.seismic && seismic.data && (
+                    <span className="map-legend" title={seismic.data.feed?.message || undefined}>
+                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: quakeColor(12) }} aria-hidden />{t('seismic.legend_24h')}
+                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: quakeColor(100) }} aria-hidden />{t('seismic.legend_7d')}
+                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: quakeColor(400) }} aria-hidden />{t('seismic.legend_30d')}
+                      <span className="seismo-station !inline-block scale-75" aria-hidden />{t('seismic.legend_station')}
+                    </span>
+                  )}
                 </div>
               </>
             )}
@@ -221,6 +230,7 @@ export default function MapPage() {
             <div className="mt-4 border-t border-white/10 pt-4 text-[10px] leading-5 text-[#91a297]">
               <div className="flex items-center gap-2"><CloudRain size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_rain')}</div>
               <div className="mt-1 flex items-center gap-2"><CloudLightning size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_imd')}</div>
+              <div className="mt-1 flex items-center gap-2"><Activity size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_seismic')}</div>
               <div className="mt-1 flex items-center gap-2"><Satellite size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_maps')}</div>
             </div>
           </aside>

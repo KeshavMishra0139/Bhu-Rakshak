@@ -432,8 +432,8 @@
     "health_title": "System health",
     "feed_weather": "Weather feed",
     "feed_prediction": "Prediction service",
-    "feed_seismic": "Seismic feed",
-    "feed_sensors": "Ground sensors",
+    "feed_seismic": "Earthquakes (NCS / USGS)",
+    "feed_sensors": "Ground sensors (NCS seismographs)",
     "status_ok": "Working",
     "status_degraded": "Using cached data",
     "status_error": "Not reachable",
@@ -517,6 +517,7 @@
     "mm24": "mm / 24h",
     "src_rain": "Rainfall: Open-Meteo live forecast",
     "src_imd": "Warnings: IMD district feed",
+    "src_seismic": "Earthquakes & seismographs: NCS (USGS backup)",
     "in_person": "In-person view",
     "in_person_hint": "Click a pin, a station or a spot on a road to see it at street level.",
     "in_person_open": "Open in Google Maps",
@@ -547,7 +548,8 @@
     "search_loading": "Searching places…",
     "search_credit": "Place search © OpenStreetMap contributors",
     "inset_label": "Small map: click to move the street view",
-    "inset_hint": "Click this map to move the street view there"
+    "inset_hint": "Click this map to move the street view there",
+    "layer_seismic": "Earthquakes & sensors"
   },
   "drawer": {
     "overview": "Overview",
@@ -918,5 +920,30 @@
     "n_31": "Thunderstorm with hail",
     "n_32": "Severe dust storm",
     "n_33": "Lightning very likely"
+  },
+  "seismic": {
+    "title": "Earthquakes & ground motion",
+    "quiet": "No damaging shaking here recently.",
+    "shaken": "Recent shaking here (intensity {{mmi}}): slope may be weakened.",
+    "events_7d_one": "{{count}} earthquake in the region in 7 days.",
+    "events_7d_other": "{{count}} earthquakes in the region in 7 days.",
+    "strongest": "Strongest shaking here (last 30 days)",
+    "km_away": "{{km}} km away",
+    "depth_km": "{{km}} km deep",
+    "intensity_here": "Estimated intensity here",
+    "nearest_station": "Nearest NCS seismograph",
+    "mmi_1": "not felt",
+    "mmi_2": "barely felt",
+    "mmi_3": "weak",
+    "mmi_4": "light",
+    "mmi_5": "moderate",
+    "mmi_6": "strong",
+    "mmi_7": "very strong",
+    "source": "Source: National Center for Seismology (NCS), Ministry of Earth Sciences; USGS as backup.",
+    "station_tip": "NCS seismograph: {{name}} [{{code}}]",
+    "legend_24h": "24 h",
+    "legend_7d": "7 days",
+    "legend_30d": "30 days",
+    "legend_station": "Seismograph"
   }
 }
