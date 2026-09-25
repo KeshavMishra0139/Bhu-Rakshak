@@ -40,6 +40,23 @@ function pinIcon(label: string, active: boolean) {
   return icon;
 }
 
+/** Blue pin for a searched place (distinct from the red risk pins). */
+const searchIcon = L.divIcon({
+  className: 'watch-pin search-pin',
+  iconSize: [26, 37],
+  iconAnchor: [13, 37],
+  tooltipAnchor: [0, -34],
+  html: '<svg width="26" height="37" viewBox="0 0 26 37" aria-hidden="true"><path d="M13 0.8C6.2 0.8 0.8 6.2 0.8 13c0 9.4 12.2 23.2 12.2 23.2S25.2 22.4 25.2 13C25.2 6.2 19.8 0.8 13 0.8z" fill="#1a73e8" stroke="#0b4fb3" stroke-width="1.2"/><circle cx="13" cy="13" r="4.5" fill="#fff"/></svg>',
+});
+
+export type SearchPin = { lat: number; lng: number; label: string };
+
+function FlyTo({ pin }: { pin: SearchPin | null }) {
+  const map = useMap();
+  useEffect(() => { if (pin) map.flyTo([pin.lat, pin.lng], Math.max(map.getZoom(), 14), { duration: 0.8 }); }, [pin?.lat, pin?.lng]); // eslint-disable-line react-hooks/exhaustive-deps
+  return null;
+}
+
 function PanTo({ target }: { target: [number, number] | null }) {
   const map = useMap();
   useEffect(() => { if (target) map.panTo(target, { animate: true }); }, [target?.[0], target?.[1]]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -75,9 +92,11 @@ type Props = {
   reports: Report[];
   resources: Resource[];
   corridorColors: Record<string, string>;
+  /** A place found with the search box. */
+  searchPin?: SearchPin | null;
 };
 
-export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors }: Props) {
+export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors, searchPin = null }: Props) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const { resolved } = useTheme();
@@ -130,6 +149,12 @@ export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, on
         );
       })}
 
+      {searchPin && (
+        <Marker position={[searchPin.lat, searchPin.lng]} icon={searchIcon} zIndexOffset={2000} title={searchPin.label} keyboard={false}>
+          <Tooltip direction="top" permanent>{searchPin.label}</Tooltip>
+        </Marker>
+      )}
+      <FlyTo pin={searchPin} />
       <PanTo target={active ? [active.lat, active.lng] : null} />
       <ClickHandler onClick={onMapClick} />
       <AutoResize />

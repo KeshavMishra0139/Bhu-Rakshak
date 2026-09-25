@@ -1,11 +1,59 @@
 // Map configuration served to the client: Bhuvan WMS layers (discovered from the official service's
-// GetCapabilities, never guessed), and seed historical landslide points.
+// GetCapabilities, never guessed), seed historical landslide points, and place search.
 import { Router } from 'express';
 import { q } from '../db/index.js';
 import { env } from '../config/env.js';
-import { ah } from '../lib/util.js';
+import { requireAuth } from '../auth/middleware.js';
+import { ah, HttpError } from '../lib/util.js';
 
 const r = Router();
+
+// ---------- Place search (OpenStreetMap Nominatim) ----------
+// Nominatim's free service allows at most 1 request per second from an identified application and asks
+// callers to cache results, so every search goes through here: signed-in users only, cached, and throttled.
+export const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
+const GEOCODE_VIEWBOX = '87.6,28.3,89.25,26.45'; // Sikkim, Darjeeling and Kalimpong (matches the map bounds)
+const geocodeCache = new Map(); // query -> { at, results }
+const GEOCODE_TTL_MS = 24 * 3600000;
+let nextGeocodeAt = 0;
+
+export function simplifyPlace(p) {
+  const parts = String(p.display_name || '').split(',').map((s) => s.trim()).filter(Boolean);
+  return {
+    name: p.name || parts[0] || '',
+    detail: parts.slice(1, 4).join(', '),
+    lat: Number(p.lat),
+    lng: Number(p.lon),
+    kind: p.type || p.category || null,
+  };
+}
+
+export async function geocode(query, fetchImpl = globalThis.fetch) {
+  const key = query.toLowerCase();
+  const hit = geocodeCache.get(key);
+  if (hit && Date.now() - hit.at < GEOCODE_TTL_MS) return hit.results;
+  const wait = nextGeocodeAt - Date.now();
+  nextGeocodeAt = Math.max(Date.now(), nextGeocodeAt) + 1100;
+  if (wait > 0) await new Promise((res) => setTimeout(res, wait));
+  const params = new URLSearchParams({ format: 'jsonv2', q: query, countrycodes: 'in', viewbox: GEOCODE_VIEWBOX, bounded: '1', limit: '6', 'accept-language': 'en' });
+  const res = await fetchImpl(`${NOMINATIM_URL}?${params}`, { headers: { 'User-Agent': 'Bhu-Rakshak/0.1 (SIH 2026 landslide early warning prototype)' }, signal: AbortSignal.timeout(10000) });
+  if (!res.ok) throw new HttpError(502, 'search_unavailable');
+  const results = (await res.json()).map(simplifyPlace).filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng));
+  geocodeCache.set(key, { at: Date.now(), results });
+  if (geocodeCache.size > 500) geocodeCache.delete(geocodeCache.keys().next().value);
+  return results;
+}
+
+r.get('/map/geocode', requireAuth(), ah(async (req, res) => {
+  const query = String(req.query.q || '').trim();
+  if (query.length < 2 || query.length > 100) throw new HttpError(400, 'invalid_query');
+  try {
+    res.json({ results: await geocode(query), source: 'OpenStreetMap Nominatim' });
+  } catch (e) {
+    if (e instanceof HttpError) throw e;
+    throw new HttpError(502, 'search_unavailable');
+  }
+}));
 // Documented on the official Bhuvan wiki ("How to use WMS services"), WMS version 1.1.1.
 export const BHUVAN_WMS_URL = 'https://bhuvan-vec2.nrsc.gov.in/bhuvan/wms';
 const THEMES = [/geomorph/i, /lineament/i, /lulc|land ?use/i, /flood/i, /glacial|glof|lake/i];

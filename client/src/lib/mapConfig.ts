@@ -1,12 +1,13 @@
 // Every map source in one place. None needs an API key or billing.
-// - Maps: Esri World Imagery (satellite), Esri World Street Map / Dark Gray (street), OpenTopoMap (terrain), drawn with Leaflet.
-//   (CARTO's basemaps now require an API key, so they are not used.)
+// - Maps (Leaflet): Esri World Imagery (hybrid and satellite), Esri World Street Map / Dark Gray (street),
+//   Esri World Topographic Map (topo), OpenTopoMap (terrain). CARTO's basemaps now require an API key, so they are
+//   not used. Mappls (MapmyIndia) also needs an account key, so it is not wired in.
 // - In-person view: Google Street View through Google's standard "Embed a map" iframe (no key).
 // Credits are on the About page and in Leaflet's attribution line, as the tile licences require.
 type Theme = 'light' | 'dark';
 export type Overlay = { url: string; subdomains?: string };
 export type Basemap = {
-  id: 'satellite' | 'street' | 'terrain';
+  id: 'hybrid' | 'satellite' | 'street' | 'topo' | 'terrain';
   url: string | ((theme: Theme) => string);
   /** Overlays drawn on top (road network and place names), optionally per theme. */
   overlays?: Overlay[] | ((theme: Theme) => Overlay[]);
@@ -15,29 +16,47 @@ export type Basemap = {
   subdomains?: string;
 };
 
+const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services';
+const IMAGERY = `${ESRI}/World_Imagery/MapServer/tile/{z}/{y}/{x}`;
+const IMAGERY_CREDIT = 'Imagery © Esri, Maxar, Earthstar Geographics';
+
 export const BASEMAPS: Basemap[] = [
   {
-    id: 'satellite',
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    // Satellite imagery with the road network and place names on top.
+    id: 'hybrid',
+    url: IMAGERY,
     overlays: [
-      { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}' },
-      { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}' },
+      { url: `${ESRI}/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}` },
+      { url: `${ESRI}/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}` },
     ],
-    attribution: 'Imagery © Esri, Maxar, Earthstar Geographics | Roads and places © Esri',
+    attribution: `${IMAGERY_CREDIT} | Roads and places © Esri`,
+    maxZoom: 19,
+  },
+  {
+    // Imagery only: best for spotting fresh scars, debris and river changes.
+    id: 'satellite',
+    url: IMAGERY,
+    attribution: IMAGERY_CREDIT,
     maxZoom: 19,
   },
   {
     id: 'street',
     url: (theme) => (theme === 'dark'
-      ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
-      : 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'),
-    overlays: (theme) => (theme === 'dark'
-      ? [{ url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}' }]
-      : []),
+      ? `${ESRI}/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}`
+      : `${ESRI}/World_Street_Map/MapServer/tile/{z}/{y}/{x}`),
+    overlays: (theme) => (theme === 'dark' ? [{ url: `${ESRI}/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}` }] : []),
     attribution: 'Map © Esri, HERE, Garmin, © OpenStreetMap contributors, and the GIS user community',
-    maxZoom: 16,
+    maxZoom: 19,
   },
   {
+    // Contours, hill shading and trails.
+    id: 'topo',
+    url: `${ESRI}/World_Topo_Map/MapServer/tile/{z}/{y}/{x}`,
+    attribution: 'Map © Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS user community',
+    maxZoom: 19,
+  },
+  {
+    // Relief shading with contour lines, from OpenStreetMap and SRTM elevation.
     id: 'terrain',
     url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
     attribution: '© OpenStreetMap contributors, SRTM | Style © OpenTopoMap (CC-BY-SA)',
@@ -48,6 +67,11 @@ export const BASEMAPS: Basemap[] = [
 
 export const basemapUrl = (b: Basemap, theme: Theme) => (typeof b.url === 'function' ? b.url(theme) : b.url);
 export const basemapOverlays = (b: Basemap, theme: Theme): Overlay[] => (typeof b.overlays === 'function' ? b.overlays(theme) : b.overlays || []);
+
+/** One tile over Gangtok (zoom 10) for the map-type picker's preview thumbnails. */
+const THUMB = { z: 10, x: 764, y: 431 };
+export const tileThumb = (url: string) => url.replace('{z}', String(THUMB.z)).replace('{x}', String(THUMB.x)).replace('{y}', String(THUMB.y))
+  .replace('{s}', 'a').replace('{r}', '');
 
 /** Sikkim and surroundings. */
 export const MAP_BOUNDS: [[number, number], [number, number]] = [[26.45, 87.6], [28.3, 89.25]];

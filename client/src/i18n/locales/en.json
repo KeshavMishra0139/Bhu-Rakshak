@@ -527,7 +527,27 @@
     "in_person_tip": "If Google shows \"No Street View available\", pick a spot on a road.",
     "fullscreen": "Full screen",
     "exit_fullscreen": "Exit full screen",
-    "src_maps": "Maps: Esri satellite · OpenStreetMap · Google Street View"
+    "src_maps": "Maps: Esri satellite · OpenStreetMap · Google Street View",
+    "map_type": "Map type",
+    "hybrid": "Hybrid",
+    "topo": "Topographic",
+    "hybrid_hint": "Satellite imagery with roads and place names.",
+    "satellite_hint": "Imagery only: best for spotting fresh scars, debris and river changes.",
+    "street_hint": "Roads, towns and landmarks.",
+    "topo_hint": "Contours, hill shading, trails and landmarks.",
+    "terrain_hint": "Relief shading and contour lines from elevation data.",
+    "search_label": "Search a place",
+    "search_placeholder": "Search a place or monitored station",
+    "search_clear": "Clear search",
+    "search_stations": "Monitored stations",
+    "search_places": "Other places",
+    "search_none": "No matching places in Sikkim or the Darjeeling hills.",
+    "search_more": "Type at least 3 letters to search all places.",
+    "search_unavailable": "Place search is unavailable right now. Monitored stations still work.",
+    "search_loading": "Searching places…",
+    "search_credit": "Place search © OpenStreetMap contributors",
+    "inset_label": "Small map: click to move the street view",
+    "inset_hint": "Click this map to move the street view there"
   },
   "drawer": {
     "overview": "Overview",
@@ -691,7 +711,12 @@
     "none_near": "No monitored roads for this area.",
     "tourists_note": "Tourists: check before you travel",
     "heavy_note": "Heavy vehicles restricted",
-    "route": "Route"
+    "route": "Route",
+    "gmaps_route": "Route in Google Maps",
+    "gmaps_alt": "Alternate route in Google Maps",
+    "gmaps_opens": "opens Google Maps",
+    "gmaps_note": "Opens Google Maps with turn-by-turn directions. Check this page for road status before you go.",
+    "gmaps_no_alt": "There is no alternate road. Wait for the road to reopen; this page updates live."
   },
   "resources": {
     "title": "Resources",

@@ -1,7 +1,7 @@
 // Authority map: the team's corridor watch console (map + live risk stations rail), with the location drawer,
 // forecast horizon, basemap switch and a Map / In-person view toggle in one map area.
 // Maps are free Esri satellite and OpenStreetMap tiles; the in-person view is Google Street View (embed, no key).
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Crosshair, Maximize2, Minimize2, Satellite } from 'lucide-react';
 import type { AlertItem, Level, LocationSnap, Report, Resource, Road } from '../../api/types';
@@ -9,10 +9,14 @@ import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream } from '../../live/RiskStreamProvider';
 import { useLive } from '../useLive';
 import { useAuthority } from '../AuthorityContext';
-import { WatchMap, levelAt, type LayerKey } from './WatchMap';
+import { WatchMap, levelAt, type LayerKey, type SearchPin } from './WatchMap';
+import { MapSearch } from './MapSearch';
+import { MapTypePicker } from './MapTypePicker';
 import { DetailDrawer } from './DetailDrawer';
 import { InPersonView, type ViewTarget } from './InPersonView';
-import { BASEMAPS, streetViewLink, type Basemap } from '../../lib/mapConfig';
+import { streetViewLink, type Basemap } from '../../lib/mapConfig';
+
+const MiniMap = lazy(() => import('../../components/MiniMap'));
 import { LEVELS, riskConfig } from '../../lib/risk';
 import { placeName } from '../../lib/format';
 
@@ -34,7 +38,7 @@ export default function MapPage() {
   const { list, corridors } = useRiskStream();
   const { selectedId, select, horizon, setHorizon } = useAuthority();
   const [layers, setLayers] = useState<Record<LayerKey, boolean>>({ corridors: true, roads: false, reports: true, resources: false });
-  const [basemap, setBasemap] = useState<Basemap['id']>('satellite');
+  const [basemap, setBasemap] = useState<Basemap['id']>('hybrid');
   const roads = useLive<{ roads: Road[] }>('/roads', ['road_updated']);
   const reports = useLive<{ reports: Report[] }>(can('incidents.view') ? '/reports' : null, ['report_updated']);
   const resources = useLive<{ resources: Resource[] }>(can('incidents.view') ? '/resources' : null, ['resource_updated', 'incident_updated']);
@@ -54,9 +58,16 @@ export default function MapPage() {
   const selected = list.find((l) => l.id === selectedId);
   const pointFor = (l: LocationSnap): ViewTarget => ({ lat: l.lat, lng: l.lng, label: placeName(l, lang) });
   useEffect(() => { if (mode === 'street' && selected) setViewPoint(pointFor(selected)); }, [selected?.id]); // eslint-disable-line react-hooks/exhaustive-deps
-  const switchMode = (m: 'map' | 'street') => { setMode(m); setViewPoint(m === 'street' && selected ? pointFor(selected) : null); };
+
   const pickPoint = (pos: { lat: number; lng: number }) => setViewPoint({ ...pos, label: t('map.in_person_point', { lat: pos.lat.toFixed(4), lng: pos.lng.toFixed(4) }) });
   const showingStreet = mode === 'street' && !!viewPoint;
+
+  // Search: monitored places open their drawer; any other place gets a blue pin (and, in-person, its street view).
+  const [searchPin, setSearchPin] = useState<SearchPin | null>(null);
+  const pickStation = (id: string) => { setSearchPin(null); select(id); };
+  const pickPlace = (pin: SearchPin) => { setSearchPin(pin); if (mode === 'street') setViewPoint(pin); };
+  // Entering in-person view starts at the searched place, else the selected station, else asks for a spot.
+  const switchMode = (m: 'map' | 'street') => { setMode(m); setViewPoint(m === 'street' ? (searchPin || (selected ? pointFor(selected) : null)) : null); };
 
   // Fullscreen for the map area.
   const mapArea = useRef<HTMLDivElement>(null);
@@ -76,8 +87,18 @@ export default function MapPage() {
           <div ref={mapArea} className="relative isolate min-h-[440px] overflow-hidden bg-[#dcebdc]">
             <WatchMap basemap={basemap} onMapClick={mode === 'street' ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId}
               onSelect={select} layers={layers} corridorColors={corridorColors}
-              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} />
+              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} searchPin={searchPin} />
             {showingStreet && <div className="absolute inset-0 z-[1050]"><InPersonView target={viewPoint} /></div>}
+            {/* Inset map while in person: click anywhere on it to move the street view there. Kept above Google's logo. */}
+            {showingStreet && (
+              <div className="absolute bottom-10 left-3 z-[1100] w-[220px] overflow-hidden rounded-xl border-2 border-white bg-white shadow-lg max-sm:w-[170px]">
+                <Suspense fallback={<div className="h-[150px] animate-pulse bg-[#dcebdc]" />}>
+                  <MiniMap key={`${viewPoint.lat.toFixed(4)},${viewPoint.lng.toFixed(4)}`} center={[viewPoint.lat, viewPoint.lng]} zoom={15}
+                    pin={[viewPoint.lat, viewPoint.lng]} onPick={([lat, lng]) => pickPoint({ lat, lng })} label={t('map.inset_label')} height={150} />
+                </Suspense>
+                <p className="bg-[#15241c] px-2 py-1 text-[10px] font-semibold text-[#d7efd8]">{t('map.inset_hint')}</p>
+              </div>
+            )}
 
             {/* Top overlays, stacked so they wrap instead of overlapping on narrow maps */}
             <div className={`pointer-events-none absolute inset-x-3 top-3 z-[1100] flex flex-col gap-2 ${showingStreet ? 'items-end' : 'items-start'}`}>
@@ -91,21 +112,15 @@ export default function MapPage() {
                   ))}
                 </div>
                 <div className="pointer-events-auto flex items-center gap-2">
-                  {!showingStreet && (
-                    <div role="radiogroup" aria-label={t('map.basemap')} className="flex rounded-xl border border-white/80 bg-white/95 p-0.5 shadow-sm backdrop-blur">
-                      {BASEMAPS.map((b) => (
-                        <button key={b.id} type="button" role="radio" aria-checked={basemap === b.id} onClick={() => setBasemap(b.id)} className={`${SEG} ${basemap === b.id ? SEG_ON : SEG_OFF}`}>
-                          {b.id === 'satellite' && <Satellite size={13} aria-hidden />}{t(`map.${b.id}`)}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                  {!showingStreet && <MapTypePicker value={basemap} onChange={setBasemap} />}
                   <button type="button" onClick={toggleFull} aria-label={isFull ? t('map.exit_fullscreen') : t('map.fullscreen')} title={isFull ? t('map.exit_fullscreen') : t('map.fullscreen')}
                     className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/80 bg-white/95 text-[#315542] shadow-sm hover:bg-[#e8f3ed]">
                     {isFull ? <Minimize2 size={16} aria-hidden /> : <Maximize2 size={16} aria-hidden />}
                   </button>
                 </div>
               </div>
+
+              <MapSearch locations={list} onPickStation={pickStation} onPickPlace={pickPlace} />
 
               {mode === 'street' && (
                 <p role="status" className={`pointer-events-auto flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg bg-[#15241c]/90 px-3 py-1.5 text-[11px] text-[#d7efd8] shadow ${showingStreet ? 'max-w-[62%] justify-end text-right' : 'max-w-full'}`}>
