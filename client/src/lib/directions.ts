@@ -4,6 +4,12 @@
 type Point = { lat: number; lng: number };
 type Stop = Point | string;
 
+/** At most `max` items, always keeping the first and last. */
+export function thin<T>(items: T[], max: number): T[] {
+  if (items.length <= max) return items;
+  return Array.from({ length: max }, (_, i) => items[Math.round((i * (items.length - 1)) / (max - 1))]);
+}
+
 const stop = (s: Stop) => (typeof s === 'string' ? s : `${s.lat.toFixed(5)},${s.lng.toFixed(5)}`);
 
 /**
@@ -14,7 +20,9 @@ const stop = (s: Stop) => (typeof s === 'string' ? s : `${s.lat.toFixed(5)},${s.
 export function googleDirectionsUrl({ origin, destination, waypoints = [], navigate = false }: { origin?: Stop; destination: Stop; waypoints?: Stop[]; navigate?: boolean }) {
   const p = new URLSearchParams({ api: '1', destination: stop(destination), travelmode: 'driving' });
   if (origin) p.set('origin', stop(origin));
-  if (waypoints.length) p.set('waypoints', waypoints.map(stop).join('|'));
+  // Phone browsers accept at most 3 waypoints: keep the first and last, and spread the rest evenly.
+  const via = navigate ? thin(waypoints, 3) : waypoints;
+  if (via.length) p.set('waypoints', via.map(stop).join('|'));
   if (navigate) p.set('dir_action', 'navigate');
   return `https://www.google.com/maps/dir/?${p.toString()}`;
 }
