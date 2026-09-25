@@ -37,12 +37,18 @@ const ROAD = { en: { open: 'open', caution: 'open with caution', restricted: 're
 // IST hour boundaries fall on :30 UTC, so the rounded start prints as a whole IST hour ("7 am").
 const fmtTime = (iso, lang) => new Intl.DateTimeFormat(lang === 'hi' ? 'hi-IN' : 'en-IN', { hour: 'numeric', timeZone: 'Asia/Kolkata' }).format(new Date(iso));
 
-function intentOf(text) {
+export const INTENTS = ['travel', 'why', 'rain', 'prepare', 'status', 'signs', 'report', 'emergency'];
+
+// Order matters: danger first, then the more specific topics.
+export function intentOf(text) {
   const s = String(text || '').toLowerCase();
+  if (/emergenc|trapped|stuck|injur|hurt|help me|sos|ambulance|बचाओ|मदद|फँस|फंस|घायल|आपात/.test(s)) return 'emergency';
+  if (/report|inform|tell (the )?(officials|authorit)|रिपोर्ट|सूचना|बताऊँ|बताना/.test(s)) return 'report';
+  if (/crack|stone|rock|boulder|tilt|\blean|mud|sign|sound|rumbl|दरार|पत्थर|चट्टान|झुक|मटमैल|संकेत|आवाज़/.test(s)) return 'signs';
   if (/travel|drive|road|go |journey|यात्रा|सड़क|जाना|जाऊँ|रास्ता/.test(s)) return 'travel';
   if (/why|reason|cause|क्यों|कारण/.test(s)) return 'why';
-  if (/rain|weather|बारिश|मौसम/.test(s)) return 'rain';
-  if (/do|prepare|safe|what should|करूँ|करें|सुरक्षित|तैयारी/.test(s)) return 'prepare';
+  if (/\brain|weather|बारिश|मौसम/.test(s)) return 'rain';
+  if (/do|prepare|safe|should|ready|kit|bag|clean|drain|करूँ|करें|सुरक्षित|तैयारी/.test(s)) return 'prepare';
   return 'status';
 }
 
@@ -95,6 +101,20 @@ export function answer({ intent, locationId, lang }) {
     if (level === 'critical') T('Move to a safe place now, away from slopes and the river. Keep your phone charged and call 112 if you are in danger.', 'अभी सुरक्षित जगह पर जाएँ, ढलान और नदी से दूर। फ़ोन चार्ज रखें और खतरे में हों तो 112 पर कॉल करें।');
     else if (level === 'high') T('Keep an emergency bag ready (water, torch, medicines, documents). Watch for new cracks, tilting trees or muddy water, and avoid slopes.', 'एक आपात बैग तैयार रखें (पानी, टॉर्च, दवाइयाँ, कागज़ात)। नई दरारें, झुके पेड़ या मटमैला पानी दिखे तो ध्यान दें, और ढलान से दूर रहें।');
     else T('No special action needed now. Keep drains near your house clear and report any cracks or falling stones in the Report section.', 'अभी कोई खास कदम ज़रूरी नहीं। घर के पास की नालियाँ साफ़ रखें और दरार या गिरते पत्थर दिखें तो रिपोर्ट सेक्शन में बताएँ।');
+  } else if (intent === 'emergency') {
+    T('If anyone is hurt, trapped or in danger, **call 112 now**. Move away from the slope, the river and the road below it, towards open, higher ground. Do not go back for belongings.',
+      'अगर कोई घायल है, फँसा है या खतरे में है तो **अभी 112 पर कॉल करें**। ढलान, नदी और उसके नीचे की सड़क से दूर, खुली और ऊँची जगह की ओर जाएँ। सामान लेने वापस न जाएँ।');
+    T(`Right now the landslide risk at ${place} is ${LV.en[level]}.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`);
+  } else if (intent === 'signs') {
+    T('Warning signs of a landslide: **new cracks** in the ground, road or walls; **tilting trees, poles or fences**; **muddy water** in streams or springs; **falling stones**; or a rumbling sound.',
+      'भूस्खलन के चेतावनी संकेत: ज़मीन, सड़क या दीवारों में **नई दरारें**; **झुकते पेड़, खंभे या बाड़**; नालों या झरनों में **मटमैला पानी**; **गिरते पत्थर**; या गड़गड़ाहट की आवाज़।');
+    T('If you see them: move away from the slope at once, warn people nearby, then send a report with a photo from a safe place (Report section). If anyone is in danger, **call 112**.',
+      'अगर ये दिखें: तुरंत ढलान से दूर जाएँ, आसपास के लोगों को बताएँ, फिर सुरक्षित जगह से फ़ोटो के साथ रिपोर्ट भेजें (रिपोर्ट सेक्शन)। कोई खतरे में हो तो **112 पर कॉल करें**।');
+    if (level === 'high' || level === 'critical') T(`Take this seriously: the risk at ${place} is already ${LV.en[level]}.`, `इसे गंभीरता से लें: ${place} में खतरा पहले से ${LV.hi[level]} है।`);
+  } else if (intent === 'report') {
+    T('Open **Report** at the bottom of the screen: choose what you saw, add a photo if it is safe, mark the spot on the map or use your location, and send. Officials check every report and you will see when yours is verified.',
+      'स्क्रीन के नीचे **रिपोर्ट** खोलें: जो देखा वह चुनें, सुरक्षित हो तो फ़ोटो जोड़ें, नक्शे पर जगह चुनें या अपनी लोकेशन दें, और भेजें। अधिकारी हर रिपोर्ट जाँचते हैं और आपकी रिपोर्ट सत्यापित होने पर आपको दिखेगा।');
+    T('Only report from a safe place. If anyone is in danger, **call 112** first.', 'सिर्फ़ सुरक्षित जगह से रिपोर्ट करें। कोई खतरे में हो तो पहले **112 पर कॉल करें**।');
   } else {
     T(`The landslide risk at ${place} is ${LV.en[level]} right now.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`);
     if (why.length) T(`Mainly because ${why.join(' and ')}.`, `मुख्य कारण: ${why.join(' और ')}।`);
@@ -102,10 +122,10 @@ export function answer({ intent, locationId, lang }) {
   return { intent, location_id: loc.id, level, text: lines.join(' '), sources: ['live_risk', 'forecast', 'roads'], engine: 'template-v1' };
 }
 
-// { question?: string, intent?: 'travel'|'why'|'rain'|'prepare'|'status', location_id, lang }
+// { question?: string, intent?: one of INTENTS, location_id, lang }. Answers may mark key phrases with **bold**.
 r.post('/assistant', rateLimit({ bucket: 'assistant', max: 60, windowMs: 5 * 60000 }), ah(async (req, res) => {
   const b = req.body || {};
-  const intent = ['travel', 'why', 'rain', 'prepare', 'status'].includes(b.intent) ? b.intent : intentOf(b.question);
+  const intent = INTENTS.includes(b.intent) ? b.intent : intentOf(b.question);
   res.json(answer({ intent, locationId: String(b.location_id || req.actor?.homeLocationId || ''), lang: b.lang }));
 }));
 

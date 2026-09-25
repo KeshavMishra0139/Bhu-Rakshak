@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { CitizenProvider } from './CitizenContext';
 import { CitizenLayout } from './CitizenLayout';
+import { SaathiProvider } from './Saathi';
 import CitizenHome from './CitizenHome';
 import CitizenRoads from './CitizenRoads';
 import CitizenAlerts from './CitizenAlerts';
@@ -22,6 +23,7 @@ function Profile() {
 export default function CitizenApp() {
   return (
     <CitizenProvider>
+      <SaathiProvider>
       <CitizenLayout>
         <Routes>
           <Route index element={<CitizenHome />} />
@@ -32,6 +34,7 @@ export default function CitizenApp() {
           <Route path="*" element={<CitizenHome />} />
         </Routes>
       </CitizenLayout>
+      </SaathiProvider>
     </CitizenProvider>
   );
 }

@@ -1,12 +1,13 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Crosshair, Volume2, Square, ChevronDown, Send, Phone, Sparkles } from 'lucide-react';
+import { Crosshair, Volume2, Square, ChevronDown, Phone, Sparkles, MessageCircle } from 'lucide-react';
 import { api } from '../api/client';
 import type { ImdSummary, Me, Road, Stakeholder } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
 import { useRiskStream, useStreamEvent } from '../live/RiskStreamProvider';
 import { useCitizen } from './CitizenContext';
+import { useSaathi } from './Saathi';
 import { RiskBadge } from '../components/RiskBadge';
 import { UpdatedAgo } from '../components/UpdatedAgo';
 import { ImdPanel } from '../components/ImdPanel';
@@ -191,7 +192,7 @@ export default function CitizenHome() {
             ) : <div className="mt-4 h-32 rounded bg-surface-2 animate-pulse" />}
           </section>
 
-          <Assistant locationId={loc.id} place={placeName(loc, lang)} />
+          <SaathiCard place={placeName(loc, lang)} />
 
           <section className="card p-5" aria-labelledby="roads-title">
             <div className="flex items-center justify-between gap-2">
@@ -231,45 +232,31 @@ export default function CitizenHome() {
   );
 }
 
-function Assistant({ locationId, place }: { locationId: string; place: string }) {
-  const { t, i18n } = useTranslation();
-  const [q, setQ] = useState('');
-  const [answer, setAnswer] = useState<{ q: string; text: string } | null>(null);
-  const [busy, setBusy] = useState(false);
-  async function ask(payload: { intent?: string; question?: string }, label: string) {
-    setBusy(true);
-    try {
-      const d = await api.post<{ text: string }>('/assistant', { ...payload, location_id: locationId, lang: i18n.language });
-      setAnswer({ q: label, text: d.text });
-    } catch { setAnswer({ q: label, text: t('errors.generic') }); } finally { setBusy(false); }
-  }
-  const submit = (e: FormEvent) => { e.preventDefault(); if (q.trim()) { ask({ question: q }, q); setQ(''); } };
+/** Quick start for Saathi, the assistant that lives in the floating chat panel on every citizen page. */
+function SaathiCard({ place }: { place: string }) {
+  const { t } = useTranslation();
+  const { open } = useSaathi();
   return (
     <section className="card p-5" aria-labelledby="ask-title">
-      <h2 id="ask-title" className="text-lg font-bold inline-flex items-center gap-2"><Sparkles size={20} className="text-brand" aria-hidden />{t('citizen.assistant_title')}</h2>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {(['travel', 'why', 'prepare'] as const).map((k) => (
-          <button key={k} type="button" disabled={busy} className="rounded-pill border border-line px-3.5 py-2 text-[0.95rem] font-semibold hover:bg-surface-2 min-h-[44px]"
-            onClick={() => ask({ intent: k }, t(`citizen.q_${k}`))}>
+      <div className="flex items-start gap-3">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#f4c993] text-[#49311f]" aria-hidden><Sparkles size={20} /></span>
+        <div className="min-w-0">
+          <h2 id="ask-title" className="text-lg font-bold">{t('citizen.saathi_card_title')}</h2>
+          <p className="text-muted">{t('citizen.saathi_card_body')}</p>
+        </div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {(['travel', 'signs', 'prepare'] as const).map((k) => (
+          <button key={k} type="button" className="rounded-pill border border-line px-3.5 py-2 text-[0.95rem] font-semibold hover:bg-surface-2 min-h-[44px] text-left"
+            onClick={() => open({ intent: k, label: t(`citizen.q_${k}`) })}>
             {t(`citizen.q_${k}`)}
           </button>
         ))}
       </div>
-      <div aria-live="polite" className="mt-3">
-        {busy && <p className="text-muted">{t('common.loading')}</p>}
-        {answer && !busy && (
-          <div className="rounded-lg bg-surface-2 p-4">
-            <p className="text-sm font-semibold text-muted">{answer.q}</p>
-            <p className="mt-1 text-[1.05rem]">{answer.text}</p>
-          </div>
-        )}
-      </div>
-      <form onSubmit={submit} className="mt-3 flex gap-2">
-        <label htmlFor="ask" className="sr-only">{t('citizen.assistant_placeholder')}</label>
-        <input id="ask" className="input" placeholder={t('citizen.assistant_placeholder')} value={q} onChange={(e) => setQ(e.target.value)} />
-        <button type="submit" className="btn-primary" disabled={busy || !q.trim()} aria-label={t('citizen.ask')}><Send size={18} aria-hidden /></button>
-      </form>
-      <p className="mt-2 text-sm text-muted">{t('citizen.assistant_note', { place })}</p>
+      <button type="button" className="btn-primary mt-4 w-full sm:w-auto" onClick={() => open()}>
+        <MessageCircle size={18} aria-hidden />{t('citizen.saathi_open')}
+      </button>
+      <p className="mt-2 text-sm text-muted">{t('citizen.saathi_note', { place })}</p>
     </section>
   );
 }

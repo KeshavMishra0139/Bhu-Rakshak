@@ -9,7 +9,7 @@ for (const s of ['', '-wal', '-shm']) fs.rmSync(process.env.DB_PATH + s, { force
 
 const { seedIfEmpty } = await import('../src/db/seed.js');
 const { draftAlert } = await import('../src/routes/alerts.js');
-const { answer } = await import('../src/routes/insights.js');
+const { answer, intentOf } = await import('../src/routes/insights.js');
 const { ensureFallback } = await import('../src/ingest/openMeteo.js');
 const { q } = await import('../src/db/index.js');
 const { can } = await import('../src/auth/permissions.js');
@@ -33,6 +33,19 @@ test('assistant answers from live data in the chosen language', () => {
   const hi = answer({ intent: 'why', locationId: 'gangtok', lang: 'hi' });
   assert.match(hi.text, /गंगटोक/);
   assert.match(hi.text, /आज भारी बारिश/);
+});
+
+test('assistant recognises safety questions in English and Hindi, danger first', () => {
+  assert.equal(intentOf('What should I do if I see cracks?'), 'signs');
+  assert.equal(intentOf('How do I report an incident?'), 'report');
+  assert.equal(intentOf('Help me, my family is trapped near the road'), 'emergency');
+  assert.equal(intentOf('दीवार में दरार दिख रही है'), 'signs');
+  assert.equal(intentOf('मदद चाहिए'), 'emergency');
+  assert.equal(intentOf('Is it safe to travel today?'), 'travel');
+  assert.equal(intentOf('Should I clean the drains?'), 'prepare');
+  const em = answer({ intent: 'emergency', locationId: 'gangtok', lang: 'en' });
+  assert.match(em.text, /\*\*call 112 now\*\*/);
+  assert.match(answer({ intent: 'report', locationId: 'gangtok', lang: 'hi' }).text, /रिपोर्ट/);
 });
 
 test('role-aware tools follow the permissions map', () => {

@@ -6,7 +6,7 @@ Team ByteMatrix, Smart India Hackathon 2026 (SIH26001). **Predict → Visualize 
 One app, two products chosen by the account role:
 
 - **Authority dashboard**: a full-screen, map-first command centre with an inbox, incidents, alerts, field reports, roads, resources, an audit log, a situation report and system health.
-- **Citizen website**: a calm, responsive site with five sections (Home, Roads, Alerts, Report, Profile) and a High/Critical alarm.
+- **Citizen website**: a calm, responsive site with five sections (Home, Roads, Alerts, Report, Profile), a High/Critical alarm, and **Bhu-Rakshak Saathi**, a safety assistant (floating "Ask Saathi" button on every page, styled after the team portal's Saathi). Saathi answers in English or Hindi from live risk, rain and road data for the chosen place: travel safety, why the risk is what it is, what to do now, landslide warning signs, how to report, rain, and emergencies (always pointing to 112). It takes typed or spoken questions (browser speech recognition, Chrome/Edge) and can read answers aloud.
 
 Both work in English and Hindi, and in Light / Dark / System themes.
 
@@ -76,7 +76,7 @@ Actions taken while viewing as another role are logged as `developer (as <role>)
 | | Component |
 | --- | --- |
 | **Real** | Open-Meteo weather and soil moisture (fetched every 30 min, cached, served offline), IMD district warnings and nowcasts (every 30 min once `IMD_API_KEY` and `IMD_TOKEN` are set), Esri satellite and street maps, Google Street View (embedded), auth and roles, inbox routing and escalation, incidents with SOP checklist and audit log, alerts with dashboard delivery and acknowledgement counts, citizen reports with verification, roads, resources, situation report, EN/HI, themes |
-| **Generated** | Live risk values: a transparent baseline engine anchored on real weather, with bounded live variation and the Storm scenario. Derived features (saturation index, cloudburst and freeze–thaw flags). Assistant answers (templates over live data). Historical landslide points (seeded from per-location counts). |
+| **Generated** | Live risk values: a transparent baseline engine anchored on real weather, with bounded live variation and the Storm scenario. Derived features (saturation index, cloudburst and freeze–thaw flags). Saathi assistant answers (templates over live data; no external AI service). Historical landslide points (seeded from per-location counts). |
 | **Seed placeholders** | Slope, geology, NDVI, land cover, river and road distance, landslide history, population and facilities (`server/src/data/*.json`), road statuses, resources and contacts |
 | **Pending / stubs (labelled in code)** | Trained ML model (`ModelPredictionProvider`, `POST {MODEL_URL}/predict`); SMS and push delivery (`notifications/providers.js`, logged through the provider interface); seismic feed and ground sensors; official Survey of India boundary (place it at `client/public/geo/india_boundary.geojson`; until then the legend shows "Official boundary data pending"); real GIS layers from Bhuvan, GSI and the census |
 
