@@ -83,7 +83,7 @@ export default function CitizenRoads() {
       </div>
       {err && <p className="field-error" role="alert">{t(err)}</p>}
       {!roads && !err && <div className="space-y-2">{[0, 1, 2].map((k) => <div key={k} className="h-16 card animate-pulse" />)}</div>}
-      <ul className="grid gap-3 md:grid-cols-2">
+      <ul className="grid gap-3 md:grid-cols-2 items-start">
         {sorted.map((r) => {
           const expanded = open === r.id;
           const line = r.path.map((id) => locations[id]).filter(Boolean).map((l) => [l.lat, l.lng] as [number, number]);
