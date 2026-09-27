@@ -2,7 +2,7 @@
   "app": {
     "name": "Bhu-Rakshak",
     "name_local": "भू-रक्षक",
-    "tagline": "Landslide early warning for Sikkim and the Darjeeling hills",
+    "tagline": "Landslide early warning for Sikkim, the Darjeeling hills and North-East India",
     "team": "Team ByteMatrix, Smart India Hackathon 2026"
   },
   "common": {
@@ -472,11 +472,11 @@
   },
   "landing": {
     "headline": "Know the ground before the convoy moves.",
-    "body": "Bhu-Rakshak watches rainfall, soil moisture and slope conditions across Sikkim and the Darjeeling hills, and warns officials and residents when landslide risk rises.",
+    "body": "Bhu-Rakshak watches rainfall, soil moisture, slope and earthquake shaking across Sikkim and the Darjeeling hills — and, as a preview, at hill towns across North-East India — and warns officials and residents when landslide risk rises.",
     "open_live": "Open the live risk board",
     "for_residents": "For residents and travellers",
     "for_officials": "For officials",
-    "one_line": "Live landslide risk for Sikkim and the Darjeeling hills, for the officials who keep roads open and the people who travel them.",
+    "one_line": "Live landslide risk for Sikkim, the Darjeeling hills and North-East India, for the officials who keep roads open and the people who travel them.",
     "stat_monitored": "Locations monitored",
     "stat_watches": "Active watches (High or Critical)",
     "stat_refresh": "Last data refresh",
@@ -832,7 +832,7 @@
   },
   "about": {
     "title": "About & methodology",
-    "intro": "Bhu-Rakshak is an early-warning and risk-management platform for landslides in Sikkim and the Darjeeling hills, built by Team ByteMatrix for Smart India Hackathon 2026 (SIH26001).",
+    "intro": "Bhu-Rakshak is an early-warning and risk-management platform for landslides in Sikkim and the Darjeeling hills, with a preview across North-East India (Assam, Meghalaya, Nagaland, Manipur, Mizoram, Arunachal Pradesh), built by Team ByteMatrix for Smart India Hackathon 2026 (SIH26001).",
     "pipeline": "How it works",
     "p_data": "Data",
     "p_data_d": "Hourly rainfall, soil moisture at five depths, temperature, snow and freezing level for each place, refreshed every 30 minutes. Slope, rock type, vegetation, past landslides and exposure come from stored layers.",
