@@ -11,7 +11,7 @@ import { useRiskStream } from '../live/RiskStreamProvider';
 import { LanguageToggle } from '../components/LanguageToggle';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { useToasts } from '../components/Toasts';
-import { placeName } from '../lib/format';
+import { placeName, isDeva } from '../lib/format';
 import { LEVELS, riskConfig } from '../lib/risk';
 
 const SUB_ROLES = ['district_officer', 'police', 'bro', 'rescue', 'sdma'] as const;
@@ -107,7 +107,7 @@ export function DevBar() {
               {corridors.map((c) => (
                 <label key={c.id} className="flex items-center gap-1.5 text-sm">
                   <input type="checkbox" className="h-4 w-4 accent-[rgb(var(--brand))]" checked={storm.includes(c.id)} onChange={(e) => setStorm((s) => (e.target.checked ? [...s, c.id] : s.filter((x) => x !== c.id)))} />
-                  <span className="truncate">{(i18n.language === 'hi' ? c.name_hi : c.name_en).split(' (')[0]}</span>
+                  <span className="truncate">{(isDeva(i18n.language) ? c.name_hi : c.name_en).split(' (')[0]}</span>
                 </label>
               ))}
             </div>

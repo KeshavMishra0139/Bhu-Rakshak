@@ -6,7 +6,7 @@ import type { AlertItem } from '../api/types';
 import { useRiskStream, useStreamEvent } from '../live/RiskStreamProvider';
 import { useCitizen } from './CitizenContext';
 import { RiskBadge } from '../components/RiskBadge';
-import { dateTimeIST } from '../lib/format';
+import { dateTimeIST, isDeva } from '../lib/format';
 import { levelVar } from '../lib/risk';
 
 const ACKED = 'br.alertAcks';
@@ -38,8 +38,8 @@ export default function CitizenAlerts() {
   }
 
   const share = (a: AlertItem) => {
-    const title = lang === 'hi' ? a.title_hi : a.title_en;
-    const body = lang === 'hi' ? a.body_hi : a.body_en;
+    const title = isDeva(lang) ? a.title_hi : a.title_en;
+    const body = isDeva(lang) ? a.body_hi : a.body_en;
     return `https://wa.me/?text=${encodeURIComponent(`${title}\n${body}\n— ${t('app.name')} (${dateTimeIST(a.created_at, lang)} IST)`)}`;
   };
 
@@ -66,9 +66,9 @@ export default function CitizenAlerts() {
                 {cancelled && <span className="text-sm font-semibold">{t('citizen.cancelled')}</span>}
                 <span className="label-mono ml-auto">{dateTimeIST(a.created_at, lang)}</span>
               </div>
-              <h2 className="mt-2 text-xl font-bold">{lang === 'hi' ? a.title_hi : a.title_en}</h2>
-              <p className="text-sm text-muted">{lang === 'hi' ? a.target_name_hi : a.target_name_en}</p>
-              <p className="mt-2 text-[1.05rem]">{lang === 'hi' ? a.body_hi : a.body_en}</p>
+              <h2 className="mt-2 text-xl font-bold">{isDeva(lang) ? a.title_hi : a.title_en}</h2>
+              <p className="text-sm text-muted">{isDeva(lang) ? a.target_name_hi : a.target_name_en}</p>
+              <p className="mt-2 text-[1.05rem]">{isDeva(lang) ? a.body_hi : a.body_en}</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {!clear && !cancelled && (acked.includes(a.id)
                   ? <span className="inline-flex items-center gap-1.5 text-risk-low font-semibold min-h-[44px]"><CheckCircle2 size={18} aria-hidden />{t('citizen.thanks_ack')}</span>

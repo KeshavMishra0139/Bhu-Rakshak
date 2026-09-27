@@ -99,7 +99,8 @@
     "label": "Language",
     "en": "English",
     "hi": "हिन्दी",
-    "switch": "हिन्दी में देखें"
+    "switch": "हिन्दी में देखें",
+    "ne": "नेपाली"
   },
   "roles": {
     "citizen": "Citizen",
@@ -568,10 +569,13 @@
     "inset_hint": "Click this map to move the street view there",
     "layer_seismic": "Earthquakes & sensors",
     "minimise": "Minimise map",
+    "minimise_short": "Minimise",
     "minimised": "Map minimised",
     "show_map": "Show map",
     "minimised_high_one": "{{count}} place High or Critical",
-    "minimised_high_other": "{{count}} places High or Critical"
+    "minimised_high_other": "{{count}} places High or Critical",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out"
   },
   "drawer": {
     "overview": "Overview",
@@ -850,7 +854,7 @@
     "p_feedback": "Field feedback",
     "p_feedback_d": "Verified citizen and field reports mark a place as field-verified, which raises confidence and feeds future model training.",
     "status": "Current status",
-    "status_d": "This prototype's risk engine is a configurable baseline: transparent weights anchored on live Open-Meteo data, with gentle live variation between weather updates. Our machine-learning model is being integrated behind the same interface. Slope, geology and exposure values are seed placeholders until official layers are connected. We do not publish accuracy figures until the model has been validated.",
+    "status_d": "This prototype's main risk engine is a configurable baseline: transparent weights anchored on live Open-Meteo, IMD and earthquake data. Our machine-learning model runs alongside it as an experimental second opinion for officers. Slope, geology and exposure values are seed placeholders until official layers are connected. We don't claim accuracy beyond what our published backtests show.",
     "credits": "Data and map credits",
     "c_openmeteo": "Weather and soil-moisture data by Open-Meteo.com, licensed under CC BY 4.0.",
     "c_bhuvan": "Thematic overlays: Bhuvan, ISRO / NRSC (shown when the service is reachable).",

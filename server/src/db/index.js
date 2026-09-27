@@ -14,7 +14,40 @@ export function openDb(file = env.dbPath) {
   db = new DatabaseSync(file);
   db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON; PRAGMA busy_timeout = 3000;');
   db.exec(fs.readFileSync(path.join(here, 'schema.sql'), 'utf8'));
+  migrateUserLanguages(db);
   return db;
+}
+
+/**
+ * One-time migration: databases created before Nepali allowed only 'en'/'hi' in users.language. SQLite can't
+ * change a CHECK in place, so the table is rebuilt (same columns, rows and indexes) inside one transaction, and
+ * rolled back if any foreign key would break. No-op once done or on a new database.
+ */
+function migrateUserLanguages(d) {
+  const OLD = "CHECK (language IN ('en','hi'))";
+  const row = d.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'users'").get();
+  if (!row?.sql.includes(OLD)) return;
+  const indexes = d.prepare("SELECT sql FROM sqlite_master WHERE type = 'index' AND tbl_name = 'users' AND sql IS NOT NULL").all().map((r) => r.sql);
+  const createNew = row.sql.replace(OLD, "CHECK (language IN ('en','hi','ne'))").replace(/^CREATE TABLE (IF NOT EXISTS )?"?users"?/, 'CREATE TABLE users_new');
+  const before = d.prepare('SELECT COUNT(*) AS n FROM users').get().n;
+  d.exec('PRAGMA foreign_keys = OFF');
+  try {
+    d.exec('BEGIN');
+    d.exec(createNew);
+    d.exec('INSERT INTO users_new SELECT * FROM users');
+    d.exec('DROP TABLE users');
+    d.exec('ALTER TABLE users_new RENAME TO users');
+    for (const sql of indexes) d.exec(sql);
+    const after = d.prepare('SELECT COUNT(*) AS n FROM users').get().n;
+    const broken = d.prepare('PRAGMA foreign_key_check').all();
+    if (after !== before || broken.length) throw new Error(`users migration check failed (${before}→${after} rows, ${broken.length} broken references)`);
+    d.exec('COMMIT');
+  } catch (e) {
+    d.exec('ROLLBACK');
+    throw e;
+  } finally {
+    d.exec('PRAGMA foreign_keys = ON');
+  }
 }
 
 export function closeDb() {

@@ -115,8 +115,11 @@ export function speak(text: string, lang: string) {
   if (!('speechSynthesis' in window)) return false;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = lang === 'hi' ? 'hi-IN' : 'en-IN';
-  const voice = window.speechSynthesis.getVoices().find((v) => v.lang.toLowerCase().startsWith(lang === 'hi' ? 'hi' : 'en-in'));
+  const voices = window.speechSynthesis.getVoices();
+  // Nepali voices are rare on phones: use one if present, else a Hindi voice (same script, widely understood).
+  const want = lang === 'ne' ? (voices.some((v) => v.lang.toLowerCase().startsWith('ne')) ? 'ne' : 'hi') : lang === 'hi' ? 'hi' : 'en-in';
+  u.lang = want === 'ne' ? 'ne-NP' : want === 'hi' ? 'hi-IN' : 'en-IN';
+  const voice = voices.find((v) => v.lang.toLowerCase().startsWith(want));
   if (voice) u.voice = voice;
   window.speechSynthesis.speak(u);
   return true;

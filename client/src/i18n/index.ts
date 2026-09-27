@@ -2,13 +2,15 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import en from './locales/en.json';
 import hi from './locales/hi.json';
+import ne from './locales/ne.json';
 
-export type Lang = 'en' | 'hi';
+export type Lang = 'en' | 'hi' | 'ne';
+export const LANGS: Lang[] = ['en', 'hi', 'ne'];
 const stored = (() => { try { return localStorage.getItem('br.lang'); } catch { return null; } })();
-const initial: Lang = stored === 'hi' ? 'hi' : 'en';
+const initial: Lang = stored === 'hi' || stored === 'ne' ? stored : 'en';
 
 i18n.use(initReactI18next).init({
-  resources: { en: { translation: en }, hi: { translation: hi } },
+  resources: { en: { translation: en }, hi: { translation: hi }, ne: { translation: ne } },
   lng: initial,
   fallbackLng: 'en',
   interpolation: { escapeValue: false },

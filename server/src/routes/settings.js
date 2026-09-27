@@ -35,7 +35,7 @@ r.put('/settings', requireAuth({ allowPending: true }), ah(async (req, res) => {
   const u = req.user;
   const patch = {};
   if (typeof b.name === 'string' && b.name.trim()) patch.name = b.name.trim().slice(0, 80);
-  if (b.language && ['en', 'hi'].includes(b.language)) patch.language = b.language;
+  if (b.language && ['en', 'hi', 'ne'].includes(b.language)) patch.language = b.language;
   if (b.theme && ['light', 'dark', 'system'].includes(b.theme)) patch.theme = b.theme;
   if (b.text_size && ['normal', 'large'].includes(b.text_size)) patch.text_size = b.text_size;
   if (b.home_location_id !== undefined) {

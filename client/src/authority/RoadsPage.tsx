@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { api, errorKey } from '../api/client';
 import type { Road } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
-import { dateTimeIST } from '../lib/format';
+import { dateTimeIST, isDeva } from '../lib/format';
 import { useLive } from './useLive';
 
 const STATUS: Road['status'][] = ['open', 'caution', 'restricted', 'blocked', 'cleared'];
@@ -28,7 +28,7 @@ function RoadRow({ road, onSaved }: { road: Road; onSaved: () => void }) {
   return (
     <li className="card p-4 space-y-3" style={{ borderLeft: `6px solid ${COLOR[road.status]}` }}>
       <div className="flex flex-wrap items-center gap-2">
-        <h2 className="font-bold flex-1">{lang === 'hi' ? road.name_hi : road.name_en}</h2>
+        <h2 className="font-bold flex-1">{isDeva(lang) ? road.name_hi : road.name_en}</h2>
         <span className="rounded-pill px-2.5 py-0.5 text-xs font-bold" style={{ background: COLOR[road.status], color: road.status === 'caution' ? 'rgb(var(--risk-moderate-ink))' : '#fff' }}>{t(`roads.st_${road.status}`)}</span>
       </div>
       <p className="label-mono">{t('common.updated', { time: dateTimeIST(road.updated_at, lang) })}{road.updated_by ? ` · ${road.updated_by}` : ''}</p>
@@ -61,7 +61,7 @@ function RoadRow({ road, onSaved }: { road: Road; onSaved: () => void }) {
       ) : (
         <>
           {road.eta_clear_hours != null && <p>{t('roads.eta', { count: road.eta_clear_hours })}</p>}
-          {(lang === 'hi' ? road.diversion_hi : road.diversion_en) && <p><strong>{t('roads.diversion')}:</strong> {lang === 'hi' ? road.diversion_hi : road.diversion_en}</p>}
+          {(isDeva(lang) ? road.diversion_hi : road.diversion_en) && <p><strong>{t('roads.diversion')}:</strong> {isDeva(lang) ? road.diversion_hi : road.diversion_en}</p>}
         </>
       )}
     </li>

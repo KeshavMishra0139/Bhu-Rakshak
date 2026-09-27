@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { CloudLightning } from 'lucide-react';
 import { api, errorKey } from '../../api/client';
 import { useRiskStream } from '../../live/RiskStreamProvider';
+import { isDeva } from '../../lib/format';
 
 /** Storm scenario for District Officer / SDMA / Admin. State arrives back over the stream. */
 export function ScenarioControl() {
@@ -33,7 +34,7 @@ export function ScenarioControl() {
             <label key={c.id} className="inline-flex items-start gap-2 text-[0.95rem]">
               <input type="checkbox" className="mt-1 h-4 w-4 accent-[rgb(var(--brand))]" checked={picked.includes(c.id)}
                 onChange={(e) => setPicked((p) => (e.target.checked ? [...p, c.id] : p.filter((x) => x !== c.id)))} />
-              {i18n.language === 'hi' ? c.name_hi : c.name_en}
+              {isDeva(i18n.language) ? c.name_hi : c.name_en}
             </label>
           ))}
         </div>

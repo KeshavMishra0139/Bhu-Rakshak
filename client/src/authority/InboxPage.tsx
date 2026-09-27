@@ -7,7 +7,7 @@ import type { Incident, InboxMessage } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
 import { useRiskStream, useStreamEvent } from '../live/RiskStreamProvider';
 import { RiskBadge } from '../components/RiskBadge';
-import { dateTimeIST, num, placeName } from '../lib/format';
+import { dateTimeIST, num, placeName, isDeva } from '../lib/format';
 import { driverLabel } from '../lib/factors';
 import { levelVar } from '../lib/risk';
 import { withPane } from '../lib/viewAs';
@@ -84,7 +84,7 @@ export default function InboxPage() {
         </div>
         <select aria-label={t('common.corridor')} className="input !min-h-[38px] py-1.5 max-w-[220px] text-sm" value={corridor} onChange={(e) => setCorridor(e.target.value)}>
           <option value="">{t('common.all_corridors')}</option>
-          {corridors.map((c) => <option key={c.id} value={c.id}>{lang === 'hi' ? c.name_hi : c.name_en}</option>)}
+          {corridors.map((c) => <option key={c.id} value={c.id}>{isDeva(lang) ? c.name_hi : c.name_en}</option>)}
         </select>
         <select aria-label={t('common.sort')} className="input !min-h-[38px] py-1.5 max-w-[150px] text-sm" value={sort} onChange={(e) => setSort(e.target.value as 'newest' | 'priority')}>
           <option value="newest">{t('common.newest')}</option>
@@ -152,7 +152,7 @@ export default function InboxPage() {
                     {p.sops?.length > 0 && (
                       <>
                         <h3 className="font-semibold text-sm">{t('inbox.suggested')}</h3>
-                        <ul className="mt-1 list-disc pl-5">{p.sops.map((s) => <li key={s.key}>{lang === 'hi' ? s.hi : s.en}</li>)}</ul>
+                        <ul className="mt-1 list-disc pl-5">{p.sops.map((s) => <li key={s.key}>{isDeva(lang) ? s.hi : s.en}</li>)}</ul>
                       </>
                     )}
                     {m.acknowledged_at && (

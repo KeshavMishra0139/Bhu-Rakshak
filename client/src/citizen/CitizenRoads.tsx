@@ -4,7 +4,7 @@ import { ChevronDown, Clock, Route, Bus, Truck, Navigation, Shuffle } from 'luci
 import { api, errorKey } from '../api/client';
 import type { LocationSnap, Road } from '../api/types';
 import { useRiskStream, useStreamEvent } from '../live/RiskStreamProvider';
-import { dateTimeIST, placeName } from '../lib/format';
+import { dateTimeIST, placeName, isDeva } from '../lib/format';
 import { RoadBadge, citizenRoadState } from './RoadBadge';
 import { diversionPlaces, googleDirectionsUrl } from '../lib/directions';
 
@@ -120,13 +120,13 @@ export default function CitizenRoads() {
         {sorted.map((r) => {
           const expanded = open === r.id;
           const line = r.path.map((id) => locations[id]).filter(Boolean).map((l) => [l.lat, l.lng] as [number, number]);
-          const diversion = lang === 'hi' ? r.diversion_hi : r.diversion_en;
+          const diversion = isDeva(lang) ? r.diversion_hi : r.diversion_en;
           const stops = r.path.map((id) => locations[id]).filter(Boolean);
           return (
             <li key={r.id} className="card">
               <button type="button" className="w-full p-4 flex items-center gap-3 text-left min-h-[64px]" aria-expanded={expanded} onClick={() => setOpen(expanded ? null : r.id)}>
                 <Route size={22} className="text-muted shrink-0" aria-hidden />
-                <span className="flex-1 font-semibold text-[1.05rem]">{lang === 'hi' ? r.name_hi : r.name_en}</span>
+                <span className="flex-1 font-semibold text-[1.05rem]">{isDeva(lang) ? r.name_hi : r.name_en}</span>
                 <RoadBadge status={r.status} />
                 <ChevronDown size={18} aria-hidden className={`shrink-0 ${expanded ? 'rotate-180' : ''}`} />
               </button>

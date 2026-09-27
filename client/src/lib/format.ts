@@ -1,6 +1,10 @@
 import type { LocationSnap } from '../api/types';
 
-const locale = (lang: string) => (lang === 'hi' ? 'hi-IN' : 'en-IN');
+/** Hindi and Nepali are both written in Devanagari; server-side content (alerts, place and road names, checklists)
+ * exists in English and Hindi, so Nepali readers get the Hindi version. */
+export const isDeva = (lang: string) => lang === 'hi' || lang === 'ne';
+// Nepali with Latin digits (as commonly written in Sikkim), Nepali month names.
+const locale = (lang: string) => (lang === 'hi' ? 'hi-IN' : lang === 'ne' ? 'ne-IN-u-nu-latn' : 'en-IN');
 
 /** Clock time in IST, e.g. "4:05 pm". */
 export const timeIST = (iso: string | null | undefined, lang: string) =>
@@ -15,8 +19,8 @@ export const pct = (v: number | null | undefined) => (v == null ? '–' : `${Mat
 
 export const placeName = (l: Pick<LocationSnap, 'name_en' | 'name_hi'> | { location_en: string; location_hi: string } | undefined, lang: string) => {
   if (!l) return '';
-  if ('name_en' in l) return lang === 'hi' ? l.name_hi : l.name_en;
-  return lang === 'hi' ? l.location_hi : l.location_en;
+  if ('name_en' in l) return isDeva(lang) ? l.name_hi : l.name_en;
+  return isDeva(lang) ? l.location_hi : l.location_en;
 };
 
 /** Seconds since an ISO time (never negative). */

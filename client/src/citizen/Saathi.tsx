@@ -43,7 +43,8 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
   const { list } = useRiskStream();
   const { viewingId, homeId } = useCitizen();
   const [isOpen, setOpen] = useState(false);
-  const [lang, setLang] = useState<Lang>(i18n.language === 'hi' ? 'hi' : 'en');
+  // Saathi answers in English or Hindi; with the interface in Nepali it starts in Hindi (same script).
+  const [lang, setLang] = useState<Lang>(i18n.language === 'hi' || i18n.language === 'ne' ? 'hi' : 'en');
   const [placeId, setPlaceId] = useState<string | null>(null);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [busy, setBusy] = useState(false);

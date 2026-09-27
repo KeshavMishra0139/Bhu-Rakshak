@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import type { Level, LocationSnap, Report, Resource, Road, SeismicData } from '../../api/types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { BASEMAPS, WATCH_BOUNDS, MAP_CENTER, MAP_MIN_ZOOM, basemapNativeZoom, basemapOverlays, basemapUrl, type Basemap } from '../../lib/mapConfig';
-import { dateTimeIST, placeName } from '../../lib/format';
+import { dateTimeIST, placeName, isDeva } from '../../lib/format';
 
 /** Pin label per level: tick for calm, dot to watch, exclamation for danger. */
 export const PIN_LABEL: Record<Level, string> = { low: '✓', moderate: '•', high: '!', critical: '!!' };
@@ -139,7 +139,7 @@ export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, on
       ))}
       {layers.roads && roads.map((r) => (
         <Polyline key={`r-${r.id}-${r.status}`} positions={pathOf(r)} pathOptions={{ color: ROAD_COLOR[r.status], weight: 6, opacity: 0.85 }}>
-          <Tooltip sticky>{lang === 'hi' ? r.name_hi : r.name_en}: {t(`roads.st_${r.status}`)}</Tooltip>
+          <Tooltip sticky>{isDeva(lang) ? r.name_hi : r.name_en}: {t(`roads.st_${r.status}`)}</Tooltip>
         </Polyline>
       ))}
       {layers.reports && reports.map((r) => (
@@ -193,7 +193,7 @@ export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, on
       <PanTo target={active ? [active.lat, active.lng] : null} tick={focusTick} />
       <ClickHandler onClick={onMapClick} />
       <AutoResize />
-      <ZoomControl position="bottomright" />
+      <ZoomControl position="bottomright" zoomInTitle={t('map.zoom_in')} zoomOutTitle={t('map.zoom_out')} />
       <ScaleControl position="bottomright" imperial={false} />
     </MapContainer>
   );

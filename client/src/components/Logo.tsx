@@ -13,7 +13,7 @@ export function Logo({ onDark = false, compact = false }: { onDark?: boolean; co
       {!compact && (
         <span className="leading-tight">
           <span className={`block font-bold text-[1.05rem] ${onDark ? 'text-white' : 'text-ink'}`}>{t('app.name')}</span>
-          <span className={`block text-xs ${onDark ? 'text-on-brand/70' : 'text-muted'}`} lang={i18n.language === 'hi' ? 'en' : 'hi'}>{t('app.name_local')}</span>
+          <span className={`block text-xs ${onDark ? 'text-on-brand/70' : 'text-muted'}`} lang={i18n.language === 'en' ? 'hi' : 'en'}>{t('app.name_local')}</span>
         </span>
       )}
     </span>

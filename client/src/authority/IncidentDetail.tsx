@@ -6,7 +6,7 @@ import type { Incident, Resource, Sop, Stage } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
 import { useStreamEvent } from '../live/RiskStreamProvider';
 import { RiskBadge } from '../components/RiskBadge';
-import { dateTimeIST, placeName } from '../lib/format';
+import { dateTimeIST, placeName, isDeva } from '../lib/format';
 import { useAuthority } from './AuthorityContext';
 
 export const STAGES: Stage[] = ['detected', 'under_verification', 'verified', 'alert_issued', 'response_underway', 'resolved', 'closed'];
@@ -122,7 +122,7 @@ export function IncidentDetail({ id, onClose }: { id: string; onClose?: () => vo
                     className={`w-full text-left flex items-start gap-2.5 rounded-lg px-2 py-2 ${allowed ? 'hover:bg-surface-2' : 'opacity-60 cursor-not-allowed'}`} aria-pressed={done}>
                     <Icon size={20} className={done ? 'text-risk-low shrink-0' : 'text-muted shrink-0'} aria-hidden />
                     <span className="flex-1">
-                      <span className={done ? 'line-through text-muted' : ''}>{lang === 'hi' ? s.text_hi : s.text_en}</span>
+                      <span className={done ? 'line-through text-muted' : ''}>{isDeva(lang) ? s.text_hi : s.text_en}</span>
                       <span className="block text-xs text-muted">{t('incidents.sop_roles', { roles: s.roles.map((r) => t(`roles.${r}`)).join(', ') })}</span>
                       {tick && <span className="block label-mono">{tick.actor} · {dateTimeIST(tick.at, lang)}</span>}
                     </span>
@@ -163,7 +163,7 @@ export function IncidentDetail({ id, onClose }: { id: string; onClose?: () => vo
         <section>
           <h4 className="font-bold">{t('incidents.alerts')}</h4>
           <ul className="mt-1 text-sm space-y-1">
-            {inc.alerts!.map((a) => <li key={a.id}>{lang === 'hi' ? a.title_hi : a.title_en} <span className="label-mono">{dateTimeIST(a.created_at, lang)}</span>{a.cancelled_at && ` · ${t('alertsx.cancelled')}`}</li>)}
+            {inc.alerts!.map((a) => <li key={a.id}>{isDeva(lang) ? a.title_hi : a.title_en} <span className="label-mono">{dateTimeIST(a.created_at, lang)}</span>{a.cancelled_at && ` · ${t('alertsx.cancelled')}`}</li>)}
           </ul>
         </section>
       )}

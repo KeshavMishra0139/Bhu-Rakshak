@@ -8,7 +8,7 @@ import { useAuth } from '../auth/AuthProvider';
 import { useRiskStream } from '../live/RiskStreamProvider';
 import { RiskBadge } from '../components/RiskBadge';
 import { useToasts } from '../components/Toasts';
-import { dateTimeIST, placeName } from '../lib/format';
+import { dateTimeIST, placeName, isDeva } from '../lib/format';
 import { useLive } from './useLive';
 
 type Draft = { target_type: string; target_id: string; severity: Level; kind: 'warning' | 'all_clear'; title_en: string; title_hi: string; body_en: string; body_hi: string };
@@ -54,7 +54,7 @@ export default function AlertsPage() {
   }
 
   const targets = f.target_type === 'location' ? [...list].sort((a, b) => placeName(a, lang).localeCompare(placeName(b, lang))).map((l) => ({ id: l.id, name: placeName(l, lang) }))
-    : f.target_type === 'corridor' ? corridors.map((c) => ({ id: c.id, name: lang === 'hi' ? c.name_hi : c.name_en }))
+    : f.target_type === 'corridor' ? corridors.map((c) => ({ id: c.id, name: isDeva(lang) ? c.name_hi : c.name_en }))
       : DISTRICTS.map((d) => ({ id: d, name: t(`districts.${d}`) }));
   const set = (k: keyof Draft) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
 
@@ -126,12 +126,12 @@ export default function AlertsPage() {
             <li key={a.id} className={`card p-4 ${a.cancelled_at ? 'opacity-60' : ''}`}>
               <div className="flex flex-wrap items-center gap-2">
                 {a.kind === 'all_clear' ? <span className="rounded-pill bg-risk-low text-white px-2.5 py-0.5 text-xs font-semibold">{t('alertsx.kind_all_clear')}</span> : <RiskBadge level={a.severity} size="sm" />}
-                <span className="text-sm font-semibold">{lang === 'hi' ? a.target_name_hi : a.target_name_en}</span>
+                <span className="text-sm font-semibold">{isDeva(lang) ? a.target_name_hi : a.target_name_en}</span>
                 {a.cancelled_at && <span className="text-sm font-semibold">{t('alertsx.cancelled')}</span>}
                 <span className="label-mono ml-auto">{dateTimeIST(a.created_at, lang)}</span>
               </div>
-              <p className="mt-1.5 font-bold">{lang === 'hi' ? a.title_hi : a.title_en}</p>
-              <p className="text-sm text-muted">{lang === 'hi' ? a.body_hi : a.body_en}</p>
+              <p className="mt-1.5 font-bold">{isDeva(lang) ? a.title_hi : a.title_en}</p>
+              <p className="text-sm text-muted">{isDeva(lang) ? a.body_hi : a.body_en}</p>
               {a.created_by && <p className="label-mono mt-1">{t('alertsx.sent_by', { name: a.created_by })}</p>}
               <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
                 <span className="font-semibold">{t('alertsx.acks', { count: a.ack_count || 0 })}</span>

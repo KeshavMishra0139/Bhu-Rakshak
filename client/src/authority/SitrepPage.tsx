@@ -6,7 +6,7 @@ import { api } from '../api/client';
 import type { Level } from '../api/types';
 import { RiskBadge } from '../components/RiskBadge';
 import { Logo } from '../components/Logo';
-import { dateTimeIST, placeName } from '../lib/format';
+import { dateTimeIST, placeName, isDeva } from '../lib/format';
 import { driverLabel } from '../lib/factors';
 import { LEVELS } from '../lib/risk';
 import { withPane } from '../lib/viewAs';
@@ -56,9 +56,9 @@ export default function SitrepPage() {
           <H>{t('sitrep.incidents')}</H>
           {s.incidents.length ? <ul className="list-disc pl-5">{s.incidents.map((i) => <li key={i.id}>{i.title} ({placeName(i, lang)}): {t(`stage.${i.stage}`)}</li>)}</ul> : none}
           <H>{t('sitrep.alerts')}</H>
-          {s.alerts_today.length ? <ul className="list-disc pl-5">{s.alerts_today.map((a) => <li key={a.id}>{dateTimeIST(a.created_at, lang)}: {lang === 'hi' ? a.title_hi : a.title_en}{a.cancelled_at ? ` (${t('alertsx.cancelled')})` : ''}</li>)}</ul> : none}
+          {s.alerts_today.length ? <ul className="list-disc pl-5">{s.alerts_today.map((a) => <li key={a.id}>{dateTimeIST(a.created_at, lang)}: {isDeva(lang) ? a.title_hi : a.title_en}{a.cancelled_at ? ` (${t('alertsx.cancelled')})` : ''}</li>)}</ul> : none}
           <H>{t('sitrep.roads')}</H>
-          {s.roads_not_open.length ? <ul className="list-disc pl-5">{s.roads_not_open.map((r) => <li key={r.id}>{lang === 'hi' ? r.name_hi : r.name_en}: {t(`roads.st_${r.status}`)}{r.eta_clear_hours != null ? `, ${t('roads.eta', { count: r.eta_clear_hours })}` : ''}</li>)}</ul> : none}
+          {s.roads_not_open.length ? <ul className="list-disc pl-5">{s.roads_not_open.map((r) => <li key={r.id}>{isDeva(lang) ? r.name_hi : r.name_en}: {t(`roads.st_${r.status}`)}{r.eta_clear_hours != null ? `, ${t('roads.eta', { count: r.eta_clear_hours })}` : ''}</li>)}</ul> : none}
           <H>{t('sitrep.resources')}</H>
           <ul className="grid grid-cols-2 gap-1 text-sm">{s.resources.map((r) => <li key={`${r.type}${r.status}`}>{t(`resources.ty_${r.type}`)}: {r.n} {t(`resources.st_${r.status}`)}</li>)}</ul>
           <H>{t('sitrep.reports')}</H>

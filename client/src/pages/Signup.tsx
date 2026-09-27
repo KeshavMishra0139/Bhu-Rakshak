@@ -39,7 +39,7 @@ export default function Signup() {
   const { me, signupCitizen, signupAuthority } = useAuth();
   const { list } = useRiskStream();
   const [tab, setTab] = useState<Tab>('citizen');
-  const [f, setF] = useState<Record<string, string>>({ language: i18n.language === 'hi' ? 'hi' : 'en' });
+  const [f, setF] = useState<Record<string, string>>({ language: ['hi', 'ne'].includes(i18n.language) ? i18n.language : 'en' });
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -165,6 +165,7 @@ export default function Signup() {
                 <select id="lang" className="input" value={f.language} onChange={set('language')}>
                   <option value="en">English</option>
                   <option value="hi" lang="hi">हिन्दी</option>
+                  <option value="ne" lang="ne">नेपाली</option>
                 </select>
               </Field>
 

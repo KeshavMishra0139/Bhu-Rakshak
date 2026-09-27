@@ -3,7 +3,7 @@
 // Maps are free Esri satellite and OpenStreetMap tiles; the in-person view is Google Street View (embed, no key).
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Activity, MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Crosshair, Maximize2, Minimize2, Satellite, ChevronUp, ChevronDown } from 'lucide-react';
+import { Activity, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Crosshair, Maximize2, Minimize2, Satellite, ChevronDown, PanelTopClose, Search, Info, X } from 'lucide-react';
 import type { AlertItem, Level, LocationSnap, Report, Resource, Road, SeismicData } from '../../api/types';
 import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream } from '../../live/RiskStreamProvider';
@@ -12,6 +12,7 @@ import { useAuthority } from '../AuthorityContext';
 import { WatchMap, levelAt, quakeColor, type LayerKey, type SearchPin } from './WatchMap';
 import { MapSearch } from './MapSearch';
 import { MapTypePicker } from './MapTypePicker';
+import { MapIconButton, MapPopover, LayerSwitch } from './MapControls';
 import { DetailDrawer } from './DetailDrawer';
 import { InPersonView, type ViewTarget } from './InPersonView';
 import { streetViewLink, isPreview, type Basemap } from '../../lib/mapConfig';
@@ -78,6 +79,8 @@ export default function MapPage() {
   const toggleMin = () => setMapMin((v) => { const n = !v; try { localStorage.setItem('br.mapMin', n ? '1' : '0'); } catch { /* private mode */ } return n; });
   const highCount = list.filter((l) => { const lv = levelAt(l, horizon); return lv === 'high' || lv === 'critical'; }).length;
 
+  const [searchOpen, setSearchOpen] = useState(false);
+
   // Fullscreen for the map area.
   const mapArea = useRef<HTMLDivElement>(null);
   const [isFull, setIsFull] = useState(false);
@@ -120,86 +123,100 @@ export default function MapPage() {
               </div>
             )}
 
-            {/* Top overlays, stacked so they wrap instead of overlapping on narrow maps */}
-            <div className={`pointer-events-none absolute inset-x-3 top-3 z-[1100] flex flex-col gap-2 ${showingStreet ? 'items-end' : 'items-start'}`}>
-              <div className={`flex w-full flex-wrap items-start gap-2 ${showingStreet ? 'justify-end' : 'justify-between'}`}>
-                <div role="radiogroup" aria-label={t('map.view_mode')} className="pointer-events-auto flex rounded-xl border border-white/80 bg-white/95 p-0.5 shadow-sm backdrop-blur">
-                  {(['map', 'street'] as const).map((m) => (
-                    <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => switchMode(m)} className={`${SEG} ${mode === m ? SEG_ON : SEG_OFF}`}>
-                      {m === 'map' ? <MapIcon size={13} aria-hidden /> : <PersonStanding size={13} aria-hidden />}
-                      {m === 'map' ? t('map.mode_map') : t('map.in_person')}
-                    </button>
-                  ))}
-                </div>
-                <div className="pointer-events-auto flex items-center gap-2">
-                  {!showingStreet && <MapTypePicker value={basemap} onChange={setBasemap} />}
-                  {!isFull && (
-                    <button type="button" onClick={toggleMin} aria-expanded aria-label={t('map.minimise')} title={t('map.minimise')}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/80 bg-white/95 text-[#315542] shadow-sm transition hover:bg-[#e8f3ed]">
-                      <ChevronUp size={16} aria-hidden />
-                    </button>
-                  )}
-                  <button type="button" onClick={toggleFull} aria-label={isFull ? t('map.exit_fullscreen') : t('map.fullscreen')} title={isFull ? t('map.exit_fullscreen') : t('map.fullscreen')}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/80 bg-white/95 text-[#315542] shadow-sm hover:bg-[#e8f3ed]">
-                    {isFull ? <Minimize2 size={16} aria-hidden /> : <Maximize2 size={16} aria-hidden />}
-                  </button>
-                </div>
-              </div>
-
-              <MapSearch locations={list} onPickStation={pickStation} onPickPlace={pickPlace} />
-
-              {mode === 'street' && (
-                <p role="status" className={`pointer-events-auto flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg bg-[#15241c]/90 px-3 py-1.5 text-[11px] text-[#d7efd8] shadow ${showingStreet ? 'max-w-[62%] justify-end text-right' : 'max-w-full'}`}>
-                  {!viewPoint ? t('map.in_person_hint') : (
-                    <>
-                      <span className="truncate font-bold">{viewPoint.label}</span>
-                      <button type="button" onClick={() => setViewPoint(null)} className="inline-flex items-center gap-1 font-bold hover:underline">
-                        <Crosshair size={12} aria-hidden />{t('map.in_person_pick')}
-                      </button>
-                      <a className="inline-flex items-center gap-1 font-bold hover:underline" href={streetViewLink(viewPoint.lat, viewPoint.lng)} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink size={12} aria-hidden />{t('map.in_person_open')}
-                      </a>
-                      <span className="basis-full text-[10px] text-[#91a297]">{t('map.in_person_tip')}</span>
-                    </>
-                  )}
-                </p>
-              )}
-
-              {!showingStreet && (
+            {/* Controls are icons (with tooltips) so the map stays clear: view mode + search on the left, a tool
+                column on the right. Layers and the legend open as small panels. In street view everything sits on the
+                right so Google's own address box stays visible. */}
+            {(() => {
+              const viewAndSearch = (
                 <>
-                  <div className="pointer-events-auto flex items-center gap-2 rounded-xl border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-bold text-[#315542] shadow-sm backdrop-blur">
-                    <MapPinned size={13} aria-hidden /> {t('map.watch_title')}
+                  <div className="flex items-center gap-2">
+                    <div role="radiogroup" aria-label={t('map.view_mode')} className="pointer-events-auto flex rounded-xl border border-white/80 bg-white/95 p-0.5 shadow-sm backdrop-blur">
+                      {(['map', 'street'] as const).map((m) => {
+                        const label = m === 'map' ? t('map.mode_map') : t('map.in_person');
+                        return (
+                          <button key={m} type="button" role="radio" aria-checked={mode === m} aria-label={label} title={label} onClick={() => switchMode(m)}
+                            className={`${SEG} !px-2.5 ${mode === m ? SEG_ON : SEG_OFF}`}>
+                            {m === 'map' ? <MapIcon size={15} aria-hidden /> : <PersonStanding size={15} aria-hidden />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {!searchOpen && (
+                      <MapIconButton label={t('map.search_label')} onClick={() => setSearchOpen(true)}><Search size={16} aria-hidden /></MapIconButton>
+                    )}
                   </div>
-                  <div className="pointer-events-auto flex flex-wrap items-center gap-2 max-w-full" role="group" aria-label={t('map.layers')}>
-                    <span className="map-legend"><Layers size={12} aria-hidden /> {t('map.layers')}</span>
-                    {layerKeys.map((k) => (
-                      <button key={k} type="button" aria-pressed={layers[k]} onClick={() => setLayers((x) => ({ ...x, [k]: !x[k] }))}
-                        className={`map-legend ${layers[k] ? '!bg-[#2a5d43] !text-[#d7efd8] !border-[#2a5d43]' : ''}`}>
-                        {t(`map.layer_${k}`)}
-                      </button>
-                    ))}
+                  {searchOpen && (
+                    <div className="pop-enter origin-top-left pointer-events-auto flex w-[min(340px,100%)] items-start gap-1.5">
+                      <div className="min-w-0 flex-1">
+                        <MapSearch autoFocus locations={list}
+                          onPickStation={(id) => { setSearchOpen(false); pickStation(id); }}
+                          onPickPlace={(pin) => { setSearchOpen(false); pickPlace(pin); }} />
+                      </div>
+                      <MapIconButton label={t('common.close')} onClick={() => setSearchOpen(false)}><X size={16} aria-hidden /></MapIconButton>
+                    </div>
+                  )}
+                  {mode === 'street' && (
+                    <p role="status" className={`pointer-events-auto flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg bg-[#15241c]/90 px-3 py-1.5 text-[11px] text-[#d7efd8] shadow ${showingStreet ? 'max-w-[260px] justify-end text-right' : 'max-w-full'}`}>
+                      {!viewPoint ? t('map.in_person_hint') : (
+                        <>
+                          <span className="truncate font-bold">{viewPoint.label}</span>
+                          <button type="button" onClick={() => setViewPoint(null)} className="inline-flex items-center gap-1 font-bold hover:underline">
+                            <Crosshair size={12} aria-hidden />{t('map.in_person_pick')}
+                          </button>
+                          <a className="inline-flex items-center gap-1 font-bold hover:underline" href={streetViewLink(viewPoint.lat, viewPoint.lng)} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink size={12} aria-hidden />{t('map.in_person_open')}
+                          </a>
+                        </>
+                      )}
+                    </p>
+                  )}
+                </>
+              );
+              return (
+                <>
+                  {!showingStreet && (
+                    <div className="pointer-events-none absolute left-3 top-3 z-[1100] flex max-w-[calc(100%-4.5rem)] flex-col items-start gap-2">{viewAndSearch}</div>
+                  )}
+                  <div className="pointer-events-none absolute right-3 top-3 z-[1100] flex flex-col items-end gap-2">
+                    {showingStreet && <div className="flex flex-col items-end gap-2">{viewAndSearch}</div>}
+                    {!showingStreet && <div className="pointer-events-auto"><MapTypePicker iconOnly value={basemap} onChange={setBasemap} /></div>}
+                    {!showingStreet && (
+                      <MapPopover label={t('map.layers')} icon={<Layers size={16} aria-hidden />} badge={layerKeys.filter((k) => layers[k]).length}>
+                        {layerKeys.map((k) => (
+                          <LayerSwitch key={k} label={t(`map.layer_${k}`)} on={layers[k]} onToggle={() => setLayers((x) => ({ ...x, [k]: !x[k] }))} />
+                        ))}
+                      </MapPopover>
+                    )}
+                    {!showingStreet && (
+                      <MapPopover label={t('map.legend')} icon={<Info size={16} aria-hidden />}>
+                        <ul className="space-y-1.5 text-[13px]">
+                          {LEVELS.map((lv) => (
+                            <li key={lv} className="flex items-center gap-2"><span className={`h-2.5 w-2.5 rounded-full ${DOT[lv]}`} aria-hidden />{t(`levels.${lv}`)}</li>
+                          ))}
+                        </ul>
+                        {layers.seismic && seismic.data && (
+                          <div className="mt-3 border-t border-[#e3ece4] pt-2 text-[13px]" title={seismic.data.feed?.message || undefined}>
+                            <p className="mb-1.5 text-[11px] font-bold text-[#7a8d80]">{t('map.layer_seismic')}</p>
+                            <ul className="space-y-1.5">
+                              {[[12, 'legend_24h'], [100, 'legend_7d'], [400, 'legend_30d']].map(([h, k]) => (
+                                <li key={k} className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full" style={{ background: quakeColor(h as number) }} aria-hidden />{t(`seismic.${k}`)}</li>
+                              ))}
+                              <li className="flex items-center gap-2"><span className="seismo-station !inline-block scale-75" aria-hidden />{t('seismic.legend_station')}</li>
+                            </ul>
+                          </div>
+                        )}
+                      </MapPopover>
+                    )}
+                    {!isFull && (
+                      <MapIconButton label={t('map.minimise')} onClick={toggleMin} expanded><PanelTopClose size={16} aria-hidden /></MapIconButton>
+                    )}
+                    <MapIconButton label={isFull ? t('map.exit_fullscreen') : t('map.fullscreen')} onClick={toggleFull}>
+                      {isFull ? <Minimize2 size={16} aria-hidden /> : <Maximize2 size={16} aria-hidden />}
+                    </MapIconButton>
                   </div>
                 </>
-              )}
-            </div>
-
-            {!showingStreet && (
-              <>
-                <div className="absolute bottom-6 left-4 z-[1000] flex flex-wrap gap-2 max-w-[70%]">
-                  {LEVELS.map((lv) => (
-                    <span key={lv} className="map-legend"><span className={`h-2 w-2 rounded-full ${DOT[lv]}`} aria-hidden /> {t(`levels.${lv}`)}</span>
-                  ))}
-                  {layers.seismic && seismic.data && (
-                    <span className="map-legend" title={seismic.data.feed?.message || undefined}>
-                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: quakeColor(12) }} aria-hidden />{t('seismic.legend_24h')}
-                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: quakeColor(100) }} aria-hidden />{t('seismic.legend_7d')}
-                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: quakeColor(400) }} aria-hidden />{t('seismic.legend_30d')}
-                      <span className="seismo-station !inline-block scale-75" aria-hidden />{t('seismic.legend_station')}
-                    </span>
-                  )}
-                </div>
-              </>
-            )}
+              );
+            })()}
           </div>
 
           {/* Live risk stations */}

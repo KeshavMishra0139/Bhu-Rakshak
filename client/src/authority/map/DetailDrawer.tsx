@@ -11,7 +11,7 @@ import { UpdatedAgo } from '../../components/UpdatedAgo';
 import { ImdPanel } from '../../components/ImdPanel';
 import { SeismicPanel } from '../../components/SeismicPanel';
 import { MlPanel } from '../../components/MlPanel';
-import { dateTimeIST, num, pct, placeName, timeIST } from '../../lib/format';
+import { dateTimeIST, num, pct, placeName, timeIST, isDeva } from '../../lib/format';
 import { isPreview } from '../../lib/mapConfig';
 import { driverLabel, factorLabel, factorMeta, notConnectedFactors } from '../../lib/factors';
 import { TREND_ICON, levelVar, riskConfig } from '../../lib/risk';
@@ -75,7 +75,7 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
 
   async function createIncident() {
     try {
-      const x = await api.post<{ incident: Incident }>('/incidents', { location_id: id, level: r?.level || 'moderate', title: `${lang === 'hi' ? live.name_hi : live.name_en}: ${t(`levels.${r?.level || 'moderate'}`)}` });
+      const x = await api.post<{ incident: Incident }>('/incidents', { location_id: id, level: r?.level || 'moderate', title: `${isDeva(lang) ? live.name_hi : live.name_en}: ${t(`levels.${r?.level || 'moderate'}`)}` });
       setTab('response');
       setOpenInc(x.incident.id);
       load();
@@ -248,7 +248,7 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
                 {levelSops.length > 0 && (
                   <section>
                     <h3 className="font-bold">{t('drawer.sop_for', { level: t(`levels.${r!.level}`) })}</h3>
-                    <ul className="mt-1 list-disc pl-5 text-sm space-y-1">{levelSops.map((s) => <li key={s.key}>{lang === 'hi' ? s.text_hi : s.text_en}</li>)}</ul>
+                    <ul className="mt-1 list-disc pl-5 text-sm space-y-1">{levelSops.map((s) => <li key={s.key}>{isDeva(lang) ? s.text_hi : s.text_en}</li>)}</ul>
                   </section>
                 )}
                 <section>

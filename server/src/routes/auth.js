@@ -84,7 +84,7 @@ r.post('/signup/citizen', rateLimit({ bucket: 'signup', max: 10, windowMs: 10 * 
   q.run(`INSERT INTO users(id, name, email, phone, password_hash, role, status, home_location_id, home_village, language, theme, created_at, updated_at)
          VALUES (:id, :name, :email, :phone, :hash, 'citizen', 'active', :home, :village, :lang, :theme, :now, :now)`,
   { id, name, email, phone, hash: await hashPassword(b.password), home, village: str(b.home_village, 80) || null,
-    lang: b.language === 'hi' ? 'hi' : 'en', theme: ['light', 'dark', 'system'].includes(b.theme) ? b.theme : 'system', now });
+    lang: ['hi', 'ne'].includes(b.language) ? b.language : 'en', theme: ['light', 'dark', 'system'].includes(b.theme) ? b.theme : 'system', now });
   const u = q.one('SELECT * FROM users WHERE id = :id', { id });
   audit({ userId: id, performedBy: email || phone }, 'auth.signup_citizen', 'user', id);
   setSessionCookie(res, sessionPayload(u));
@@ -112,7 +112,7 @@ r.post('/signup/authority', rateLimit({ bucket: 'signup', max: 10, windowMs: 10 
            language, theme, created_at, updated_at)
          VALUES (:id, :name, :email, :hash, 'authority', :sub, 'pending', :badge, :dept, :district, :doc, :lang, 'system', :now, :now)`,
   { id, name, email, hash: await hashPassword(b.password), sub: b.sub_role, badge: str(b.badge_id, 40), dept: str(b.department, 120),
-    district: b.district, doc: docPath, lang: b.language === 'hi' ? 'hi' : 'en', now });
+    district: b.district, doc: docPath, lang: ['hi', 'ne'].includes(b.language) ? b.language : 'en', now });
   const u = q.one('SELECT * FROM users WHERE id = :id', { id });
   audit({ userId: id, performedBy: email }, 'auth.signup_authority', 'user', id, { sub_role: b.sub_role, district: b.district });
   setSessionCookie(res, sessionPayload(u));

@@ -11,7 +11,8 @@ import type { SearchPin } from './WatchMap';
 type Place = { name: string; detail: string; lat: number; lng: number };
 type Option = { kind: 'station'; loc: LocationSnap } | { kind: 'place'; place: Place };
 
-export function MapSearch({ locations, onPickStation, onPickPlace }: {
+export function MapSearch({ locations, onPickStation, onPickPlace, autoFocus = false }: {
+  autoFocus?: boolean;
   locations: LocationSnap[];
   onPickStation: (id: string) => void;
   onPickPlace: (pin: SearchPin) => void;
@@ -77,7 +78,7 @@ export function MapSearch({ locations, onPickStation, onPickPlace }: {
         <Search size={16} className="shrink-0 text-[#476350]" aria-hidden />
         <input type="search" role="combobox" aria-expanded={showList} aria-controls={listId} aria-autocomplete="list"
           aria-activedescendant={showList && options[active] ? optId(active) : undefined} aria-label={t('map.search_label')}
-          placeholder={t('map.search_placeholder')} value={q} onChange={(e) => { setQ(e.target.value); setOpen(true); }} onFocus={() => setOpen(true)} onKeyDown={onKey}
+          autoFocus={autoFocus} placeholder={t('map.search_placeholder')} value={q} onChange={(e) => { setQ(e.target.value); setOpen(true); }} onFocus={() => setOpen(true)} onKeyDown={onKey}
           className="min-h-[40px] w-full bg-transparent text-[13px] font-semibold text-[#1d2b24] placeholder:text-[#7a8d80] outline-none [&::-webkit-search-cancel-button]:hidden" />
         {state === 'loading' && <Loader2 size={15} className="shrink-0 animate-spin text-[#476350]" aria-hidden />}
         {q && (

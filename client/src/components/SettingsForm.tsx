@@ -151,7 +151,7 @@ export function SettingsForm({ variant }: { variant: 'citizen' | 'authority' }) 
           <fieldset>
             <legend className="field-label">{t('lang.label')}</legend>
             <div className="flex gap-2">
-              {(['en', 'hi'] as Lang[]).map((l) => (
+              {(['en', 'hi', 'ne'] as Lang[]).map((l) => (
                 <button key={l} type="button" lang={l} aria-pressed={lang === l}
                   className={lang === l ? 'btn-primary flex-1' : 'btn-secondary flex-1'}
                   onClick={() => { setLanguage(l); api.put('/settings', { language: l }).catch(() => {}); }}>

@@ -11,7 +11,7 @@ import { useSaathi } from './Saathi';
 import { RiskBadge } from '../components/RiskBadge';
 import { UpdatedAgo } from '../components/UpdatedAgo';
 import { ImdPanel } from '../components/ImdPanel';
-import { placeName, timeIST } from '../lib/format';
+import { placeName, timeIST, isDeva } from '../lib/format';
 import { isPreview } from '../lib/mapConfig';
 import { driverPlain } from '../lib/factors';
 import { LEVEL_ICON, TREND_ICON, levelVar } from '../lib/risk';
@@ -74,7 +74,7 @@ export default function CitizenHome() {
     setMe(await api.get<Me>('/auth/me'));
   }
 
-  const road = loc?.road?.split(' / ')[0] || (lang === 'hi' ? 'मुख्य सड़क' : 'the main road');
+  const road = loc?.road?.split(' / ')[0] || (lang === 'hi' ? 'मुख्य सड़क' : lang === 'ne' ? 'मुख्य सडक' : 'the main road');
   // "Avoid travel after {time}": the rainiest hour in the next 12 h, if meaningful rain is expected.
   const peak = useMemo(() => {
     const next = forecast?.hourly_rain.slice(0, 12) || [];
@@ -85,7 +85,7 @@ export default function CitizenHome() {
     ? (peak ? t('citizen.s_moderate', { road, time: timeIST(peak, lang) }) : t('citizen.s_moderate_notime', { road }))
     : t(`citizen.s_${r.level}`, { road });
   const why = (r?.drivers || []).slice(0, 2).map((d) => driverPlain(d.key, lang));
-  const whyLine = why.length ? `${t('citizen.why')}: ${why.join(lang === 'hi' ? ' और ' : ' and ')}.` : '';
+  const whyLine = why.length ? `${t('citizen.why')}: ${why.join(lang === 'hi' ? ' और ' : lang === 'ne' ? ' र ' : ' and ')}.` : '';
   const Icon = r ? LEVEL_ICON[r.level] : null;
   const Trend = r ? TREND_ICON[r.trend] : null;
   const nearRoads = roads.filter((x) => viewingId && x.path.includes(viewingId));
@@ -204,7 +204,7 @@ export default function CitizenHome() {
               {nearRoads.length === 0 && <li className="py-2 text-muted">{t('roads.none_near')}</li>}
               {nearRoads.map((x) => (
                 <li key={x.id} className="py-3 flex items-center gap-3">
-                  <span className="flex-1 font-semibold">{lang === 'hi' ? x.name_hi : x.name_en}</span>
+                  <span className="flex-1 font-semibold">{isDeva(lang) ? x.name_hi : x.name_en}</span>
                   <RoadBadge status={x.status} />
                 </li>
               ))}

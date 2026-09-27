@@ -45,7 +45,7 @@ export function sanitizeViewAs(v) {
     sub_role: v.role === 'authority' ? v.sub_role : null,
     district: v.role === 'authority' ? (typeof v.district === 'string' ? v.district.slice(0, 40) : 'All') : null,
     home_location_id: v.role === 'citizen' ? (home || 'mangan') : null,
-    language: ['en', 'hi'].includes(v.language) ? v.language : null,
+    language: ['en', 'hi', 'ne'].includes(v.language) ? v.language : null,
   };
 }
 
