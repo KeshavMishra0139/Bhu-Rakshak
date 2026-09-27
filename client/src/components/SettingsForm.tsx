@@ -26,13 +26,14 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 function Toggle({ id, label, checked, onChange, hint }: { id: string; label: string; checked: boolean; onChange: (v: boolean) => void; hint?: string }) {
   return (
     <div className="flex items-start justify-between gap-4">
-      <label htmlFor={id} className="font-medium">
+      <label htmlFor={id} className="min-w-0 font-medium">
         {label}
         {hint && <span className="block text-sm font-normal text-muted">{hint}</span>}
       </label>
       <button id={id} type="button" role="switch" aria-checked={checked} onClick={() => onChange(!checked)}
-        className={`relative h-8 w-14 shrink-0 rounded-pill transition-colors ${checked ? 'bg-brand' : 'bg-line'}`}>
-        <span className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-7' : 'translate-x-1'}`} />
+        className={`relative h-8 w-14 shrink-0 rounded-pill transition-colors duration-200 ${checked ? 'bg-brand' : 'bg-line'}`}>
+        {/* Knob anchored to the left edge (buttons centre their content otherwise), then slid across. */}
+        <span aria-hidden className={`absolute left-0 top-1 h-6 w-6 rounded-full bg-white shadow transition-transform duration-200 ${checked ? 'translate-x-7' : 'translate-x-1'}`} />
       </button>
     </div>
   );
@@ -147,13 +148,13 @@ export function SettingsForm({ variant }: { variant: 'citizen' | 'authority' }) 
       </Section>
 
       <Section title={t('settings.appearance')}>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <fieldset>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <fieldset className="sm:col-span-2">
             <legend className="field-label">{t('lang.label')}</legend>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {(['en', 'hi', 'ne'] as Lang[]).map((l) => (
                 <button key={l} type="button" lang={l} aria-pressed={lang === l}
-                  className={lang === l ? 'btn-primary flex-1' : 'btn-secondary flex-1'}
+                  className={`${lang === l ? 'btn-primary' : 'btn-secondary'} min-w-[7rem] flex-1`}
                   onClick={() => { setLanguage(l); api.put('/settings', { language: l }).catch(() => {}); }}>
                   {t(`lang.${l}`)}
                 </button>
@@ -195,8 +196,8 @@ export function SettingsForm({ variant }: { variant: 'citizen' | 'authority' }) 
                   onKeyUp={() => savePrefs({ alarm_volume: prefs.alarm_volume })} />
               </div>
               <div className="flex flex-wrap gap-2">
-                <button type="button" className="btn-secondary" onClick={() => testAlarm('high')}><Volume2 size={18} aria-hidden />{t('settings.test_high')}</button>
-                <button type="button" className="btn-secondary" onClick={() => testAlarm('critical')}><Volume2 size={18} aria-hidden />{t('settings.test_critical')}</button>
+                <button type="button" className="btn-secondary min-w-[10rem] flex-1" onClick={() => testAlarm('high')}><Volume2 size={18} aria-hidden />{t('settings.test_high')}</button>
+                <button type="button" className="btn-secondary min-w-[10rem] flex-1" onClick={() => testAlarm('critical')}><Volume2 size={18} aria-hidden />{t('settings.test_critical')}</button>
                 {testing && <button type="button" className="btn-ghost" onClick={() => { stopAlarm(); setTesting(false); }}><Square size={16} aria-hidden />{t('settings.stop_test')}</button>}
               </div>
               <Toggle id="p-vib" label={t('settings.vibration')} checked={prefs.vibration} onChange={(v) => savePrefs({ vibration: v })} />

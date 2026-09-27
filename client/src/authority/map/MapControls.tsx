@@ -50,7 +50,7 @@ export function LayerSwitch({ label, on, onToggle }: { label: string; on: boolea
       className="flex w-full items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-left text-[13px] font-semibold hover:bg-[#f3f7f1]">
       <span>{label}</span>
       <span className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${on ? 'bg-[#2d765b]' : 'bg-[#cfdccf]'}`} aria-hidden>
-        <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200 ${on ? 'translate-x-4' : 'translate-x-0.5'}`} />
+        <span className={`absolute left-0 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200 ${on ? 'translate-x-4' : 'translate-x-0.5'}`} />
       </span>
     </button>
   );
