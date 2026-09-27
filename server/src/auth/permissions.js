@@ -16,6 +16,7 @@ export const CAPABILITIES = {
   'incidents.respond': ['developer', ...AUTH('rescue', 'district_officer', 'sdma')],  // deploy status, verified incidents
   'resources.deploy': ['developer', ...AUTH('rescue', 'district_officer', 'sdma')],
   'reports.verify': ['developer', ...AUTH('district_officer', 'sdma', 'police', 'bro')],
+  'landslides.record': ['developer', ...AUTH('district_officer', 'sdma', 'police', 'bro')], // confirmed-landslide record (model ground truth)
   'reports.submit': ['citizen', 'developer', ...ALL_AUTHORITY],
   'sitrep.generate': ['admin', 'developer', ...ALL_AUTHORITY],
   'audit.read': ['admin', 'developer', ...AUTH('district_officer', 'sdma')],

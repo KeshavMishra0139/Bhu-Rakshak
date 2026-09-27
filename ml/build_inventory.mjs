@@ -3,6 +3,7 @@
 // Sources:
 //   • NASA Global Landslide Catalog (GLC, news-based, 2007–2017+): data.nasa.gov "global-landslide-catalog-export"
 //   • ml/data/manual_events.csv: recent events checked by hand against news reports (source URL on every row)
+//   • ml/data/recorded_events.csv: confirmed landslides recorded by officers on the website (via retrain.mjs)
 // Output: ml/data/inventory.csv
 import fs from 'node:fs';
 import path from 'node:path';
@@ -47,7 +48,10 @@ for (const o of glc) {
 const manual = parseCsv(fs.readFileSync(path.join(DATA, 'manual_events.csv'), 'utf8'))
   .map((m) => ({ ...m, lat: +m.lat, lng: +m.lng, accuracy_km: +m.accuracy_km, category: 'landslide', size: '', fatalities: '' }));
 
-const all = [...events, ...manual].sort((a, b) => a.date.localeCompare(b.date));
+// Confirmed landslides recorded on the website (exported by retrain.mjs), if any.
+const recFile = path.join(DATA, 'recorded_events.csv');
+const recorded = fs.existsSync(recFile) ? parseCsv(fs.readFileSync(recFile, 'utf8')).map((m) => ({ ...m, lat: +m.lat, lng: +m.lng, accuracy_km: +m.accuracy_km, category: 'landslide', size: '', fatalities: '' })) : [];
+const all = [...events, ...manual, ...recorded].sort((a, b) => a.date.localeCompare(b.date));
 writeCsv(path.join(DATA, 'inventory.csv'), all, ['event_id', 'date', 'lat', 'lng', 'accuracy_km', 'place', 'state', 'category', 'trigger', 'size', 'fatalities', 'source']);
 
 // Every reported landslide in a wider box — any country, any location accuracy, plus the manual events.
@@ -56,12 +60,12 @@ writeCsv(path.join(DATA, 'inventory.csv'), all, ['event_id', 'date', 'lat', 'lng
 const WIDE = { minLat: 19.5, maxLat: 32, minLng: 85, maxLng: 100 };
 const reported = glc.map((o) => ({ event_id: `glc-${o.event_id}`, date: usDate(o.event_date), lat: +o.latitude, lng: +o.longitude, country: o.country_code, accuracy: o.location_accuracy }))
   .filter((e) => e.date && e.lat >= WIDE.minLat && e.lat <= WIDE.maxLat && e.lng >= WIDE.minLng && e.lng <= WIDE.maxLng);
-for (const m of manual) reported.push({ event_id: m.event_id, date: m.date, lat: m.lat, lng: m.lng, country: 'IN', accuracy: `${m.accuracy_km}km` });
+for (const m of [...manual, ...recorded]) reported.push({ event_id: m.event_id, date: m.date, lat: m.lat, lng: m.lng, country: 'IN', accuracy: `${m.accuracy_km}km` });
 writeCsv(path.join(DATA, 'all_reported.csv'), reported, ['event_id', 'date', 'lat', 'lng', 'country', 'accuracy']);
 console.log(`all_reported: ${reported.length} reported landslides in the wider box (for excluding non-landslide samples)`);
 
 const byState = all.reduce((m, e) => ((m[e.state || '?'] = (m[e.state || '?'] || 0) + 1), m), {});
 const years = all.map((e) => e.date.slice(0, 4));
-console.log(`inventory: ${all.length} landslides (${events.length} NASA GLC + ${manual.length} manual), ${years[0]}–${years[years.length - 1]}`);
+console.log(`inventory: ${all.length} landslides (${events.length} NASA GLC + ${manual.length} manual + ${recorded.length} recorded on the website), ${years[0]}–${years[years.length - 1]}`);
 console.log('by state:', JSON.stringify(byState));
 console.log('dropped from GLC:', JSON.stringify(dropped));

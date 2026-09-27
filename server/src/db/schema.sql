@@ -329,7 +329,7 @@ CREATE TABLE IF NOT EXISTS seismic_cache (
   fetched_at    TEXT NOT NULL
 );
 
--- EXPERIMENTAL model's daily predictions (ml/models/landslide-live-v1.json). One row per place, day predicted, and
+-- EXPERIMENTAL model's daily predictions (ml/models/landslide-live.json). One row per place, day predicted, and
 -- day the prediction was issued, so predictions made BEFORE an event can be checked against it later.
 CREATE TABLE IF NOT EXISTS ml_predictions (
   location_id   TEXT NOT NULL,
@@ -342,3 +342,24 @@ CREATE TABLE IF NOT EXISTS ml_predictions (
   computed_at   TEXT NOT NULL,
   PRIMARY KEY (location_id, for_date, issued_on)
 );
+
+-- Confirmed landslides recorded by officers (directly, or promoted from a verified report / an incident).
+-- The ground truth the experimental model is judged against (scorecard) and retrained on (ml/retrain.mjs).
+-- Never deleted: a mistaken record is retracted (kept, with who and why).
+CREATE TABLE IF NOT EXISTS landslide_record (
+  id             TEXT PRIMARY KEY,
+  date           TEXT NOT NULL,      -- IST day of the landslide
+  lat            REAL NOT NULL,
+  lng            REAL NOT NULL,
+  accuracy_km    REAL NOT NULL,      -- how precisely the spot is known
+  location_id    TEXT,               -- nearest monitored place
+  source         TEXT NOT NULL,      -- 'officer' | 'report' | 'incident'
+  source_id      TEXT,               -- report or incident id
+  notes          TEXT,
+  recorded_by    TEXT NOT NULL,
+  recorded_at    TEXT NOT NULL,
+  retracted_at   TEXT,
+  retracted_by   TEXT,
+  retract_reason TEXT
+);
+CREATE UNIQUE INDEX IF NOT EXISTS landslide_record_source ON landslide_record(source, source_id) WHERE source_id IS NOT NULL;

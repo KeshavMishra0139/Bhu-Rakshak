@@ -231,7 +231,15 @@
     "invalid_speed": "That speed isn't available.",
     "invalid_role": "That role isn't valid.",
     "invalid_sop": "That action isn't in the checklist.",
-    "payload_too_large": "The file is too large."
+    "payload_too_large": "The file is too large.",
+    "report_not_verified": "Verify the report first.",
+    "already_recorded": "Already in the landslide record.",
+    "possible_duplicate": "A landslide is already recorded close to this place and date.",
+    "invalid_date": "Choose a date that is not in the future.",
+    "invalid_place": "That place is outside the region.",
+    "missing_place": "Choose a place.",
+    "reason_required": "Give a reason.",
+    "already_retracted": "Already retracted."
   },
   "nav": {
     "map": "Map",
@@ -967,6 +975,29 @@
     "not_alerts": "It does not trigger alerts — use it alongside the main risk score.",
     "version": "Model {{v}}",
     "updated": "updated {{time}}",
-    "log": "Prediction log (CSV)"
+    "log": "Prediction log (CSV)",
+    "track_none": "Track record: no predictions logged yet.",
+    "track_title": "Track record since {{from}}:",
+    "track_events": "warned a day ahead for {{ahead}} of {{withAhead}} recorded landslides ({{day}} of {{n}} on the day or the day before);",
+    "track_no_events": "no confirmed landslides recorded near a monitored place yet;",
+    "track_false": "Elevated on {{pct}}% of quiet place-days ({{n}}).",
+    "record_title": "Confirmed landslides here",
+    "record_add": "Record a landslide",
+    "record_date": "Date of the landslide",
+    "record_notes": "What happened (optional)",
+    "record_notes_hint": "e.g. slide blocked NH-10 near the bridge",
+    "record_save": "Save to the record",
+    "record_help": "Only confirmed landslides. The model is judged against — and retrained on — this record. Mistakes can be retracted, not deleted.",
+    "record_none": "No confirmed landslides recorded here.",
+    "retract": "Retract",
+    "retract_reason": "Why is this record wrong? (kept in the audit log)",
+    "retracted": "Retracted: {{why}}",
+    "dup_confirm": "A landslide is already recorded within 2 km and 1 day. Record this one as a separate landslide?",
+    "src_officer": "officer",
+    "src_report": "field report",
+    "src_incident": "incident",
+    "record_from_report": "Add to landslide record",
+    "record_from_incident": "Record as confirmed landslide",
+    "recorded": "In landslide record"
   }
 }

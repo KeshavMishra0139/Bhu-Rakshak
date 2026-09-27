@@ -1,7 +1,7 @@
 // EXPERIMENTAL landslide model — a second opinion for officers, logged daily. It never raises alerts or citizen
 // warnings (the baseline engine keeps doing that).
 //
-// The model (ml/models/landslide-live-v1.json) was trained on 180 news-reported landslides (NASA GLC + hand-checked
+// The model (ml/models/landslide-live.json) was trained on 180 news-reported landslides (NASA GLC + hand-checked
 // 2026 reports) with bias checks; see ml/models/live_model.md for how well it does (and doesn't) work.
 // Every 3 hours: one batched Open-Meteo request (31 past days + today + tomorrow) → the same 26 factors as in
 // training (ml/live_features.mjs, verified against real training rows in server/test/mlModel.test.js) → score for
@@ -17,7 +17,7 @@ import { seismicData } from '../ingest/seismic.js';
 import { liveFeatures } from '../../../ml/live_features.mjs';
 import { predictProba } from '../../../ml/gbdt.mjs';
 
-const MODEL_FILE = path.join(REPO_ROOT, 'ml/models/landslide-live-v1.json');
+const MODEL_FILE = path.join(REPO_ROOT, 'ml/models/landslide-live.json');
 const PLACES_FILE = path.join(REPO_ROOT, 'ml/models/live_locations.json');
 const REFRESH_MIN = 180;
 const IST_MS = 5.5 * 3600000;
@@ -26,10 +26,17 @@ let model = null;
 let places = null;
 let latest = { computed_at: null, predictions: {} };
 
+let loadedMtime = 0;
+/** Loads the model; reloads it when ml/retrain.mjs --promote replaces the file (checked at most once a minute). */
+let lastCheck = 0;
 export function loadModel() {
-  if (!model) {
+  if (model && Date.now() - lastCheck < 60000) return model;
+  lastCheck = Date.now();
+  const mtime = fs.statSync(MODEL_FILE).mtimeMs;
+  if (!model || mtime !== loadedMtime) {
     model = JSON.parse(fs.readFileSync(MODEL_FILE, 'utf8'));
     places = JSON.parse(fs.readFileSync(PLACES_FILE, 'utf8')).locations;
+    loadedMtime = mtime;
   }
   return model;
 }

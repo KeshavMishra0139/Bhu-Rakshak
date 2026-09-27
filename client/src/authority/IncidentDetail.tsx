@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CheckSquare, Square, UserCheck, Megaphone, MapPin, X } from 'lucide-react';
+import { CheckSquare, Square, UserCheck, Megaphone, MapPin, X, Mountain } from 'lucide-react';
 import { api, errorKey } from '../api/client';
 import type { Incident, Resource, Sop, Stage } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
@@ -34,6 +34,14 @@ export function IncidentDetail({ id, onClose }: { id: string; onClose?: () => vo
   useEffect(() => { if (can('resources.deploy')) api.get<{ resources: Resource[] }>('/resources').then((d) => setResources(d.resources)).catch(() => {}); }, [can, inc?.resources?.length]);
   useStreamEvent('incident_updated', (e) => { if (e.id === id) load(); });
 
+  const [recorded, setRecorded] = useState(false);
+  async function recordLandslide() {
+    setErr(null);
+    try { await api.post('/ml/landslides', { incident_id: id }); setRecorded(true); } catch (e) {
+      const k = errorKey(e);
+      if (k === 'errors.already_recorded') setRecorded(true); else setErr(k);
+    }
+  }
   async function act<T>(fn: () => Promise<T>) {
     setErr(null);
     try { const r = await fn() as unknown as { incident?: Incident }; if (r?.incident) setInc(r.incident); } catch (e) { setErr(errorKey(e)); }
@@ -93,6 +101,7 @@ export function IncidentDetail({ id, onClose }: { id: string; onClose?: () => vo
       <div className="flex flex-wrap gap-2">
         <button type="button" className="btn-secondary !min-h-[38px] py-1.5 text-sm" onClick={() => openOnMap(inc.location_id)}><MapPin size={16} aria-hidden />{t('inbox.open_on_map')}</button>
         {isLead && <button type="button" className="btn-secondary !min-h-[38px] py-1.5 text-sm" onClick={() => draftAlert({ locationId: inc.location_id, severity: inc.level === 'low' ? 'moderate' : inc.level, incidentId: inc.id })}><Megaphone size={16} aria-hidden />{t('drawer.draft_alert')}</button>}
+        {can('landslides.record') && <button type="button" className="btn-secondary !min-h-[38px] py-1.5 text-sm" disabled={recorded} onClick={recordLandslide}><Mountain size={16} aria-hidden />{recorded ? t('ml.recorded') : t('ml.record_from_incident')}</button>}
       </div>
       {err && <p className="field-error" role="alert">{t(err)}</p>}
 

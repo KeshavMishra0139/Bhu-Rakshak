@@ -1,5 +1,7 @@
 // Train the model the website runs ("live model").
-//   node ml/train_live.mjs   → ml/models/landslide-live-v1.json, ml/models/live_model.md
+//   node ml/train_live.mjs              → ml/models/landslide-live.json (the model the website runs), live_model.md
+//   node ml/train_live.mjs --candidate  → ml/models/landslide-live-candidate.json, live_model_candidate.md
+//                                          (next version; retrain.mjs compares it with the live one before promoting)
 //
 // Differences from train.mjs, all forced by what the website can actually get every day:
 //   • No NASA POWER rain (published 2–3 days late) and no soil-moisture layers (the live forecast feed measures
@@ -17,6 +19,10 @@ import { rocAuc, atThreshold } from './metrics.mjs';
 const selected = JSON.parse(fs.readFileSync(path.join(ML_ROOT, 'models', 'selected_features.json'), 'utf8')).features;
 export const LIVE_FEATURES = selected.filter((f) => !f.startsWith('power_') && !f.startsWith('sm_'));
 const BAGS = 7;
+const CANDIDATE = process.argv.includes('--candidate');
+const LIVE_FILE = path.join(ML_ROOT, 'models', 'landslide-live.json');
+const currentVersion = fs.existsSync(LIVE_FILE) ? JSON.parse(fs.readFileSync(LIVE_FILE, 'utf8')).version : 'live-v0';
+const VERSION = CANDIDATE ? `live-v${Number(currentVersion.replace(/\D/g, '') || 0) + 1}` : currentVersion === 'live-v0' ? 'live-v1' : currentVersion;
 const CONFIGS = [
   { maxDepth: 2, minLeaf: 20, learningRate: 0.03, colSample: 0.7 },
   { maxDepth: 2, minLeaf: 10, learningRate: 0.05, colSample: 0.8 },
@@ -71,7 +77,7 @@ const normal = rows.filter((r) => r.sample_type === 'same_place_other_date').map
 const opsThreshold = normal[Math.floor(normal.length * 0.9)];
 const r3 = (x) => Object.fromEntries(Object.entries(x).map(([k, v]) => [k, typeof v === 'number' ? +v.toFixed(3) : v]));
 const card = {
-  name: 'bhu-rakshak-landslide-live', version: 'live-v1', created_at: new Date().toISOString(),
+  name: 'bhu-rakshak-landslide-live', version: VERSION, created_at: new Date().toISOString(),
   features: LIVE_FEATURES, ops_threshold: +opsThreshold.toFixed(4),
   meaning: 'Relative landslide-likelihood score for one place and one day (trained ~1 landslide : 3 non-landslides) — not a real-world probability. "Elevated" = above the level reached on ~10% of ordinary monsoon days.',
   status: 'EXPERIMENTAL — second opinion for officers only; does not trigger alerts.',
@@ -81,9 +87,9 @@ const card = {
   config: final.cfg, trees_per_model: final.nTrees,
   models: final.models.map((m) => ({ kind: m.kind, base: m.base, learningRate: m.learningRate, trees: m.trees })),
 };
-fs.writeFileSync(path.join(ML_ROOT, 'models', 'landslide-live-v1.json'), JSON.stringify(card));
+fs.writeFileSync(path.join(ML_ROOT, 'models', CANDIDATE ? 'landslide-live-candidate.json' : 'landslide-live.json'), JSON.stringify(card));
 const pct = (v) => `${(v * 100).toFixed(0)}%`;
-fs.writeFileSync(path.join(ML_ROOT, 'models', 'live_model.md'), `# Live model (runs on the website)
+fs.writeFileSync(path.join(ML_ROOT, 'models', CANDIDATE ? 'live_model_candidate.md' : 'live_model.md'), `# ${CANDIDATE ? 'Candidate' : 'Live'} model ${VERSION}${CANDIDATE ? ' (not live until promoted)' : ' (runs on the website)'}
 
 Factors (${LIVE_FEATURES.length}): ${LIVE_FEATURES.map((f) => `\`${f}\``).join(', ')}.
 Left out because the website can't get them the same way every day: NASA POWER rain (2–3 days late) and
@@ -97,4 +103,4 @@ soil-moisture layers (different depths in the live feed). 7 models averaged.
 Year-by-year backtest 2012–2016 (${live.test_landslides} test landslides), each year trained only on earlier years.
 "Elevated" threshold: ${opsThreshold.toFixed(3)} (reached on ~10% of ordinary monsoon days in the training data).
 `);
-console.log(`saved live model: ${LIVE_FEATURES.length} factors, ${BAGS} models × ${final.nTrees} trees, elevated ≥ ${opsThreshold.toFixed(3)}`);
+console.log(`saved ${CANDIDATE ? 'candidate' : 'live'} model ${VERSION}: ${LIVE_FEATURES.length} factors, ${BAGS} models × ${final.nTrees} trees, elevated ≥ ${opsThreshold.toFixed(3)}`);

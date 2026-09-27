@@ -6,6 +6,7 @@ import { FlaskConical, Download } from 'lucide-react';
 import { api } from '../api/client';
 import type { MlLatest, MlDay } from '../api/types';
 import { dateTimeIST } from '../lib/format';
+import { MlScorecardLine, LandslideRecordBox } from './MlRecord';
 
 // One shared fetch for all drawers; refreshed every 10 minutes (the server recomputes every 3 hours).
 let cache: { at: number; data: MlLatest | null; p?: Promise<MlLatest | null> } = { at: 0, data: null };
@@ -64,6 +65,7 @@ export function MlPanel({ locationId }: { locationId: string }) {
           )}
         </>
       ) : <p className="text-sm text-muted">{t('ml.no_data')}</p>}
+      <MlScorecardLine />
       <p className="text-xs text-muted">
         {t('ml.accuracy', { caught: Math.round(ev.caught * 100), fa: Math.round(ev.false_alarms * 100), right: Math.round(ev.warnings_right * 100) })}
         {' '}{t('ml.not_alerts')}
@@ -72,6 +74,7 @@ export function MlPanel({ locationId }: { locationId: string }) {
         <span>{t('ml.version', { v: data.model.version })}{data.computed_at ? ` · ${t('ml.updated', { time: dateTimeIST(data.computed_at, i18n.language) })}` : ''}</span>
         <a href="/api/ml/log.csv" className="inline-flex items-center gap-1 underline"><Download size={12} aria-hidden />{t('ml.log')}</a>
       </p>
+      <LandslideRecordBox locationId={locationId} />
     </section>
   );
 }

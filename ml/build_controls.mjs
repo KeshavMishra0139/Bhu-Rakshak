@@ -16,8 +16,11 @@ import { weather, power, terrain, quakeCatalogue, shaking, COLUMNS, round3 } fro
 
 const inventory = parseCsv(fs.readFileSync(path.join(DATA, 'inventory.csv'), 'utf8')).map((e) => ({ ...e, lat: +e.lat, lng: +e.lng, accuracy_km: +e.accuracy_km }));
 const reported = parseCsv(fs.readFileSync(path.join(DATA, 'all_reported.csv'), 'utf8')).map((e) => ({ ...e, lat: +e.lat, lng: +e.lng }));
-const rand = rng(4242);
+// Same seeding rule as build_dataset.mjs: website-recorded landslides ('rec-…') get their own seed.
+const globalRand = rng(4242);
+const seedOf = (id) => [...id].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) >>> 0, 7);
 async function control(e) {
+  const rand = e.event_id.startsWith('rec-') ? rng(seedOf(e.event_id)) : globalRand;
   // Major roads within ~45 km (same road classes as dist_road_m), from the cached OSM tiles.
   const { roads } = await roadsRiversNear(e, 0.42);
   if (!roads.length) return { reason: 'no major roads within 45 km' };

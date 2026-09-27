@@ -129,7 +129,7 @@ Rimbi's recurring failures from one slope point to ground-movement monitoring.
 
 ```bash
 node ml/check_shift.mjs          # live rain feed vs training rain       → models/data_shift.md
-node ml/train_live.mjs           # model the website runs (26 factors, 7 models averaged) → models/landslide-live-v1.json
+node ml/train_live.mjs           # model the website runs (26 factors, 7 models averaged) → models/landslide-live.json
 node ml/prepare_live.mjs         # terrain + normal rain per monitored place → models/live_locations.json
 node ml/make_parity_fixture.mjs  # real training rows for the server's parity test
 ```
@@ -143,3 +143,22 @@ node ml/make_parity_fixture.mjs  # real training rows for the server's parity te
   can be judged against landslides that happen later.
 - Left out of the live model: NASA POWER rain (2–3 days late) and soil-moisture layers (different depths live).
   The live rain feed matches ERA5 closely (see `models/data_shift.md`).
+
+## 7. Ground truth, scorecard and retraining
+
+- **Confirmed-landslide record** (server table `landslide_record`): officers with `landslides.record` add a landslide
+  from the place drawer ("Record a landslide"), or promote a *verified* field report (Reports page) or an incident.
+  Duplicates (same source, or within 2 km and 1 day) are refused unless confirmed. Mistakes are **retracted with a
+  reason, never deleted**; both actions go to the audit log. Export: `/api/ml/landslides.csv`.
+- **Scorecard** (`/api/ml/scorecard`, shown in the drawer): the logged predictions against that record. A warning
+  counts as "a day ahead" only if the Elevated prediction was issued before the landslide day. False alarms =
+  Elevated on quiet place-days (no recorded landslide within 15 km and ±2 days).
+- **Retraining**:
+
+```bash
+node ml/retrain.mjs              # export record → rebuild (cached) → bias checks → candidate model + comparison
+node ml/retrain.mjs --promote    # make the candidate live (refused if its backtest AUC is > 0.01 worse; --force overrides)
+```
+
+  Website-recorded landslides get their own random seed, so adding records never reshuffles existing samples.
+  Promoted models are archived in `ml/models/archive/`; the server reloads the new model within a minute.

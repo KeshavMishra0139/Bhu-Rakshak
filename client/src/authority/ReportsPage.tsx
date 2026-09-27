@@ -25,6 +25,13 @@ export default function ReportsPage() {
   const { data, reload } = useLive<{ reports: Report[] }>(`/reports${filter ? `?status=${filter}` : ''}`, ['report_updated']);
   const limit = riskConfig.management.unverifiedReportWarningMinutes;
 
+  const [recorded, setRecorded] = useState<Record<string, boolean>>({});
+  async function recordLandslide(r: Report) {
+    try { await api.post('/ml/landslides', { report_id: r.id }); setRecorded((x) => ({ ...x, [r.id]: true })); } catch (e) {
+      const k = errorKey(e);
+      if (k === 'errors.already_recorded') setRecorded((x) => ({ ...x, [r.id]: true })); else setErr(k);
+    }
+  }
   async function setStatus(r: Report, status: string) {
     try { await api.post(`/reports/${r.id}/status`, { status, create_incident: status === 'verified' && !!withIncident[r.id] }); reload(); } catch (e) { setErr(errorKey(e)); }
   }
@@ -73,6 +80,9 @@ export default function ReportsPage() {
                   </>
                 )}
                 {can('reports.verify') && r.status === 'verified' && <button type="button" className="btn-secondary !min-h-[36px] py-1 text-sm" onClick={() => setStatus(r, 'resolved')}>{t('reports.resolve')}</button>}
+                {can('landslides.record') && (r.status === 'verified' || r.status === 'resolved') && (
+                  <button type="button" className="btn-secondary !min-h-[36px] py-1 text-sm" disabled={recorded[r.id]} onClick={() => recordLandslide(r)}>{recorded[r.id] ? t('ml.recorded') : t('ml.record_from_report')}</button>
+                )}
               </div>
             </li>
           );

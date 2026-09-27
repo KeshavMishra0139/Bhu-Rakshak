@@ -38,6 +38,18 @@ export interface MlLatest {
   computed_at: string | null;
   predictions: Record<string, { today?: MlDay; tomorrow?: MlDay }>;
 }
+/** A confirmed landslide recorded by officers (ground truth for the experimental model). */
+export interface LandslideRecord {
+  id: string; date: string; lat: number; lng: number; accuracy_km: number; location_id: string | null;
+  source: 'officer' | 'report' | 'incident'; source_id: string | null; notes: string | null;
+  recorded_by: string; recorded_at: string; retracted_at: string | null; retracted_by: string | null; retract_reason: string | null;
+}
+export interface MlScorecard {
+  coverage: { from: string; to: string; days: number; place_days: number } | null;
+  events_recorded: number; events_scored: number; events_outside_area?: number;
+  warned_ahead?: number; events_with_ahead_prediction?: number; warned_on_day_or_before?: number;
+  quiet_place_days?: number; quiet_elevated?: number; false_alarm_rate?: number | null;
+}
 export interface ForecastPoint { h: number; score: number; level: Level }
 
 export interface Risk {

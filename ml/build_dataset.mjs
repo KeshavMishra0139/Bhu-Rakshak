@@ -21,7 +21,11 @@ import { weather, power, terrain, quakeCatalogue, shaking, COLUMNS } from './fea
 const TODAY = new Date().toISOString().slice(0, 10);
 const inventory = parseCsv(fs.readFileSync(path.join(DATA, 'inventory.csv'), 'utf8'))
   .map((e) => ({ ...e, lat: +e.lat, lng: +e.lng, accuracy_km: +e.accuracy_km }));
-const rand = rng(2026);
+// Seeded randomness. Landslides recorded on the website (ids 'rec-…') get their own seed, so adding new records
+// never reshuffles the samples of the existing ones (their data stays cached and comparable across retrains).
+const globalRand = rng(2026);
+const seedOf = (id) => [...id].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) >>> 0, 7);
+let rand = globalRand;
 
 // ---------- 1. Samples ----------
 /** Is there a reported landslide within `km` and `days` of this point/date? */
@@ -53,6 +57,7 @@ function nearbyPlace(e) {
 
 const samples = [];
 for (const e of inventory) {
+  rand = e.event_id.startsWith('rec-') ? rng(seedOf(e.event_id)) : globalRand;
   const base = { event_id: e.event_id, state: e.state, accuracy_km: e.accuracy_km };
   samples.push({ ...base, label: 1, sample_type: 'event', date: e.date, lat: e.lat, lng: e.lng });
   for (let i = 0; i < 2; i++) {
