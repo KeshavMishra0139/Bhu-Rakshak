@@ -3,7 +3,7 @@
 // Maps are free Esri satellite and OpenStreetMap tiles; the in-person view is Google Street View (embed, no key).
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Activity, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Crosshair, Maximize2, Minimize2, Satellite, ChevronDown, PanelTopClose, Search, Info, X } from 'lucide-react';
+import { Activity, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Crosshair, Maximize2, Minimize2, Satellite, ChevronDown, PanelTopClose, Search, Info, X, Mountain } from 'lucide-react';
 import type { AlertItem, Level, LocationSnap, Report, Resource, Road, SeismicData } from '../../api/types';
 import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream } from '../../live/RiskStreamProvider';
@@ -16,6 +16,7 @@ import { MapIconButton, MapPopover, LayerSwitch } from './MapControls';
 import { DetailDrawer } from './DetailDrawer';
 import { InPersonView, type ViewTarget } from './InPersonView';
 import { streetViewLink, isPreview, type Basemap } from '../../lib/mapConfig';
+import { RiskMix } from '../../components/RiskMix';
 
 const MiniMap = lazy(() => import('../../components/MiniMap'));
 import { LEVELS, riskConfig } from '../../lib/risk';
@@ -253,8 +254,9 @@ export default function MapPage() {
                       <span className="flex items-center gap-1.5 text-xs font-bold text-[#f4f7f3]"><span className="truncate">{placeName(l, lang)}</span>
                         {isPreview(l) && <span className="shrink-0 rounded bg-[#a27ad6]/25 px-1 py-px text-[9px] font-bold uppercase tracking-wide text-[#d9c6ff]" title={t('preview.tip')}>{t('preview.badge')}</span>}</span>
                       <span className="mt-1 block text-[10px] text-[#85998b]">
-                        {t(`districts.${l.district}`)} · {live ? t('map.rain_live') : t('map.refreshing')}
+                        {t(`districts.${l.district}`)} · {live ? t('map.data_live') : t('map.refreshing')}
                       </span>
+                      <span className="mt-1.5 block max-w-[180px]"><RiskMix drivers={l.risk?.drivers} onDark /></span>
                       {noAlert && <span className="mt-1 flex items-center gap-1 text-[10px] font-bold text-[#ff9c9c]"><AlertTriangle size={11} aria-hidden />{t('map.critical_no_alert')}</span>}
                     </span>
                     <span className="text-right">
@@ -271,6 +273,7 @@ export default function MapPage() {
               <div className="flex items-center gap-2"><CloudRain size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_rain')}</div>
               <div className="mt-1 flex items-center gap-2"><CloudLightning size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_imd')}</div>
               <div className="mt-1 flex items-center gap-2"><Activity size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_seismic')}</div>
+              <div className="mt-1 flex items-center gap-2"><Mountain size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_terrain')}</div>
               <div className="mt-1 flex items-center gap-2"><Satellite size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_maps')}</div>
             </div>
           </aside>

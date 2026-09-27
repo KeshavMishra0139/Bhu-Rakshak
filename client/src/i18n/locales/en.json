@@ -483,7 +483,7 @@
     "stat_refresh": "Last data refresh",
     "how_title": "How it works",
     "predict": "Predict",
-    "predict_d": "Rain, soil moisture and slope conditions become a live risk score for every monitored place.",
+    "predict_d": "Rain, soil moisture, slope, rock type, earthquake shaking and past landslides combine into a live risk score for every monitored place.",
     "visualize": "Visualize",
     "visualize_d": "Officials see every corridor on one map, ranked by who and what is at stake.",
     "verify": "Verify",
@@ -575,7 +575,9 @@
     "minimised_high_one": "{{count}} place High or Critical",
     "minimised_high_other": "{{count}} places High or Critical",
     "zoom_in": "Zoom in",
-    "zoom_out": "Zoom out"
+    "zoom_out": "Zoom out",
+    "data_live": "live data",
+    "src_terrain": "Terrain: NASA SRTM slope · OSM rivers & roads · NASA landslide record"
   },
   "drawer": {
     "overview": "Overview",
@@ -1021,5 +1023,19 @@
     "badge": "NER preview",
     "tip": "Outside Sikkim/Darjeeling: filled automatically from public data; rock type and exposure not verified.",
     "note": "Terrain, roads, rivers, vegetation and past landslides here were filled automatically from public data (SRTM, OpenStreetMap, MODIS, NASA landslide catalogue). Rock type, fault distance and people/facilities at risk are not verified yet — treat the risk level as indicative. Weather, earthquakes and the AI model run exactly as for Sikkim."
+  },
+  "mix": {
+    "title": "What's driving the risk",
+    "rain": "Rain",
+    "ground": "Wet ground",
+    "terrain": "Slope & terrain",
+    "quake": "Earthquakes",
+    "watching": "Watching",
+    "w_rain": "Rainfall",
+    "w_ground": "Soil moisture",
+    "w_terrain": "Slope & rock",
+    "w_quake": "Earthquakes",
+    "w_rivers": "Rivers & roads",
+    "w_history": "Past landslides"
   }
 }

@@ -9,6 +9,7 @@ import { LiveIndicator } from '../components/LiveIndicator';
 import { Contours } from '../components/Contours';
 import { useUpdatedLabel } from '../components/UpdatedAgo';
 import { timeIST } from '../lib/format';
+import { WatchStrip } from '../components/RiskMix';
 
 const LandingMap = lazy(() => import('../components/LandingMap'));
 const STEPS = [['predict', CloudRain], ['visualize', Map], ['verify', BadgeCheck], ['warn', Siren]] as const;
@@ -48,6 +49,7 @@ export default function Landing() {
                 <div><dt className="text-sm text-on-brand/70">{t('landing.stat_watches')}</dt><dd className="text-3xl font-bold text-white tabular-nums">{list.length ? watches : '–'}</dd></div>
                 <div><dt className="text-sm text-on-brand/70">{t('landing.stat_refresh')}</dt><dd className="text-3xl font-bold text-white tabular-nums">{weatherAt ? timeIST(weatherAt, i18n.language) : '–'}</dd></div>
               </dl>
+              <div className="mt-6"><WatchStrip onDark /></div>
             </div>
             <div className="relative isolate">
               <div className="h-[380px] lg:h-[460px] rounded-2xl overflow-hidden border border-white/15 shadow-2xl">

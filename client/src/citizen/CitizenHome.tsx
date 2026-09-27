@@ -18,6 +18,7 @@ import { LEVEL_ICON, TREND_ICON, levelVar } from '../lib/risk';
 import { canSpeak, speak, stopSpeaking } from '../lib/audio';
 import { withPane } from '../lib/viewAs';
 import { RoadBadge } from './RoadBadge';
+import { WatchStrip } from '../components/RiskMix';
 
 type Forecast = { hourly_rain: { time: string; hour_ist: number; rain_mm: number }[]; best_travel: { start: string; end: string; rain_mm: number } | null };
 
@@ -143,6 +144,7 @@ export default function CitizenHome() {
                   {Trend && <span className="rounded-pill border border-line px-3 py-1 text-sm font-semibold inline-flex items-center gap-1"><Trend size={15} aria-hidden />{t(`trend.${r.trend}`)}</span>}
                   <UpdatedAgo at={r.updated_at} />
                 </div>
+                <div className="mt-3"><WatchStrip compact /></div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {canSpeak() && (
                     <button type="button" className="btn-secondary" onClick={listen} aria-pressed={speaking}>

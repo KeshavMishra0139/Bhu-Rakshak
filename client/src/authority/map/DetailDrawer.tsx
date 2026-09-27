@@ -17,6 +17,7 @@ import { driverLabel, factorLabel, factorMeta, notConnectedFactors } from '../..
 import { TREND_ICON, levelVar, riskConfig } from '../../lib/risk';
 import { IncidentDetail } from '../IncidentDetail';
 import { useAuthority } from '../AuthorityContext';
+import { RiskMix } from '../../components/RiskMix';
 
 type Detail = {
   location: LocationSnap & { field_verified_at: string | null };
@@ -137,6 +138,10 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
             <ImdPanel imd={c.imd as ImdSummary | null} />
             <SeismicPanel seismic={c.seismic as SeismicSummary | null} />
             <MlPanel locationId={id} />
+            <section>
+              <h3 className="font-bold mb-2">{t('mix.title')}</h3>
+              <RiskMix drivers={r.drivers} labelled />
+            </section>
             <section>
               <h3 className="font-bold mb-2">{t('drawer.drivers')}</h3>
               <ul className="space-y-2">
