@@ -88,7 +88,7 @@ export function MapSearch({ locations, onPickStation, onPickPlace }: {
 
       {showList && (
         <ul id={listId} role="listbox" aria-label={t('map.search_label')}
-          className="absolute left-0 right-0 top-[calc(100%+6px)] max-h-[320px] overflow-y-auto rounded-xl border border-[#d9e5da] bg-white py-1 text-[13px] text-[#1d2b24] shadow-xl">
+          className="pop-enter origin-top absolute left-0 right-0 top-[calc(100%+6px)] max-h-[320px] overflow-y-auto rounded-xl border border-[#d9e5da] bg-white py-1 text-[13px] text-[#1d2b24] shadow-xl">
           {stations.length > 0 && <li role="presentation" className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#7a8d80]">{t('map.search_stations')}</li>}
           {options.map((o, i) => (
             <Fragment key={o.kind === 'station' ? `s-${o.loc.id}` : `p-${o.place.lat},${o.place.lng}`}>

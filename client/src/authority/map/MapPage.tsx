@@ -3,7 +3,7 @@
 // Maps are free Esri satellite and OpenStreetMap tiles; the in-person view is Google Street View (embed, no key).
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Activity, MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Crosshair, Maximize2, Minimize2, Satellite } from 'lucide-react';
+import { Activity, MapPinned, CloudRain, CloudLightning, AlertTriangle, Layers, PersonStanding, Map as MapIcon, ExternalLink, Crosshair, Maximize2, Minimize2, Satellite, ChevronUp, ChevronDown } from 'lucide-react';
 import type { AlertItem, Level, LocationSnap, Report, Resource, Road, SeismicData } from '../../api/types';
 import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream } from '../../live/RiskStreamProvider';
@@ -73,6 +73,11 @@ export default function MapPage() {
   // Entering in-person view starts at the searched place, else the selected station, else asks for a spot.
   const switchMode = (m: 'map' | 'street') => { setMode(m); setViewPoint(m === 'street' ? (searchPin || (selected ? pointFor(selected) : null)) : null); };
 
+  // Minimise: fold the map away so the station list gets the whole console (remembered on this device).
+  const [mapMin, setMapMin] = useState(() => { try { return localStorage.getItem('br.mapMin') === '1'; } catch { return false; } });
+  const toggleMin = () => setMapMin((v) => { const n = !v; try { localStorage.setItem('br.mapMin', n ? '1' : '0'); } catch { /* private mode */ } return n; });
+  const highCount = list.filter((l) => { const lv = levelAt(l, horizon); return lv === 'high' || lv === 'critical'; }).length;
+
   // Fullscreen for the map area.
   const mapArea = useRef<HTMLDivElement>(null);
   const [isFull, setIsFull] = useState(false);
@@ -86,9 +91,20 @@ export default function MapPage() {
   return (
     <div className="relative flex h-full min-h-0">
       <div className="flex-1 min-w-0 p-3 max-md:p-0 overflow-y-auto">
-        <div className="map-console lg:h-full">
+        <div className={`map-console lg:h-full ${mapMin ? 'map-min' : ''}`}>
+          {mapMin && (
+            <div className="fade-enter flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-[#15241c] px-4 py-3 text-[#d7efd8]">
+              <p className="inline-flex items-center gap-2 text-sm font-semibold">
+                <MapIcon size={16} aria-hidden />{t('map.minimised')}
+                <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${highCount ? 'bg-[#71372f] text-[#ffb4a4]' : 'bg-[#2d6143] text-[#b4e1b9]'}`}>{t('map.minimised_high', { count: highCount })}</span>
+              </p>
+              <button type="button" onClick={toggleMin} aria-expanded={false} className="inline-flex items-center gap-1.5 rounded-xl bg-white/95 px-3 py-1.5 text-xs font-bold text-[#315542] shadow-sm transition hover:bg-[#e8f3ed]">
+                <ChevronDown size={15} aria-hidden />{t('map.show_map')}
+              </button>
+            </div>
+          )}
           {/* Map (and in-person view in the same area) */}
-          <div ref={mapArea} className="relative isolate min-h-[440px] overflow-hidden bg-[#dcebdc]">
+          <div ref={mapArea} aria-hidden={mapMin || undefined} className={`map-fold relative isolate overflow-hidden bg-[#dcebdc] ${mapMin ? 'map-folded' : 'min-h-[440px]'}`}>
             <WatchMap basemap={basemap} onMapClick={mode === 'street' ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId}
               onSelect={focusStation} focusTick={focusTick} layers={layers} corridorColors={corridorColors}
               roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} seismic={seismic.data} searchPin={searchPin} />
@@ -117,6 +133,12 @@ export default function MapPage() {
                 </div>
                 <div className="pointer-events-auto flex items-center gap-2">
                   {!showingStreet && <MapTypePicker value={basemap} onChange={setBasemap} />}
+                  {!isFull && (
+                    <button type="button" onClick={toggleMin} aria-expanded aria-label={t('map.minimise')} title={t('map.minimise')}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/80 bg-white/95 text-[#315542] shadow-sm transition hover:bg-[#e8f3ed]">
+                      <ChevronUp size={16} aria-hidden />
+                    </button>
+                  )}
                   <button type="button" onClick={toggleFull} aria-label={isFull ? t('map.exit_fullscreen') : t('map.fullscreen')} title={isFull ? t('map.exit_fullscreen') : t('map.fullscreen')}
                     className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/80 bg-white/95 text-[#315542] shadow-sm hover:bg-[#e8f3ed]">
                     {isFull ? <Minimize2 size={16} aria-hidden /> : <Maximize2 size={16} aria-hidden />}
@@ -200,7 +222,7 @@ export default function MapPage() {
             </div>
             {horizon > 0 && <p className="mt-1 text-[10px] text-[#91a297]" role="status">{t('map.forecast_note', { h: horizon })}</p>}
 
-            <div className="mt-3 overflow-y-auto pr-1 max-lg:max-h-[420px] lg:flex-1 lg:min-h-0">
+            <div className={`mt-3 overflow-y-auto pr-1 lg:flex-1 lg:min-h-0 ${mapMin ? 'stagger grid gap-x-6 sm:grid-cols-2 xl:grid-cols-3 content-start' : 'max-lg:max-h-[420px]'}`}>
               {list.map((l) => {
                 const lv = levelAt(l, horizon);
                 if (!lv) return null;
@@ -240,7 +262,7 @@ export default function MapPage() {
 
       {/* Right detail drawer */}
       {selectedId && (
-        <div className="w-[400px] max-w-full shrink-0 bg-surface border-l border-line z-[650] max-lg:absolute max-lg:inset-y-0 max-lg:right-0 max-lg:shadow-2xl" lang={lang}>
+        <div key={selectedId} className="drawer-enter w-[400px] max-w-full shrink-0 bg-surface border-l border-line z-[650] max-lg:absolute max-lg:inset-y-0 max-lg:right-0 max-lg:shadow-2xl" lang={lang}>
           <DetailDrawer id={selectedId} onClose={() => select(null)} />
         </div>
       )}

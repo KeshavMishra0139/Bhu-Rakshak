@@ -566,7 +566,12 @@
     "search_credit": "जगह खोज © OpenStreetMap योगदानकर्ता",
     "inset_label": "छोटा नक्शा: सड़क दृश्य को वहाँ ले जाने के लिए क्लिक करें",
     "inset_hint": "सड़क दृश्य वहाँ ले जाने के लिए इस नक्शे पर क्लिक करें",
-    "layer_seismic": "भूकंप और सेंसर"
+    "layer_seismic": "भूकंप और सेंसर",
+    "minimise": "नक्शा छोटा करें",
+    "minimised": "नक्शा छोटा किया गया",
+    "show_map": "नक्शा दिखाएँ",
+    "minimised_high_one": "{{count}} जगह ऊँचा या गंभीर",
+    "minimised_high_other": "{{count}} जगहें ऊँचा या गंभीर"
   },
   "drawer": {
     "overview": "सारांश",

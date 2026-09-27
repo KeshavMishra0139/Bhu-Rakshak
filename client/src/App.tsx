@@ -7,6 +7,7 @@ import { RequireRole } from './auth/RequireRole';
 import { RiskStreamProvider } from './live/RiskStreamProvider';
 import { ToastProvider } from './components/Toasts';
 import { IS_PANE } from './lib/viewAs';
+import { AppLoader } from './components/AppLoader';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -26,13 +27,7 @@ function SkipLink() {
 }
 
 function Skeleton() {
-  const { t } = useTranslation();
-  return (
-    <div className="p-6 space-y-3" role="status" aria-label={t('common.loading')}>
-      <div className="h-10 w-1/3 rounded bg-surface-2 animate-pulse" />
-      <div className="h-40 rounded bg-surface-2 animate-pulse" />
-    </div>
-  );
+  return <AppLoader />;
 }
 
 /** Developer bar on top of everything, only for a real developer session and never inside split-view panes. */

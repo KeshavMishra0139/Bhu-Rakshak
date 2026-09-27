@@ -30,7 +30,7 @@ export function MapTypePicker({ value, onChange }: { value: Basemap['id']; onCha
         <ChevronDown size={13} aria-hidden className={open ? 'rotate-180' : ''} />
       </button>
       {open && (
-        <div className="absolute right-0 top-[calc(100%+6px)] w-[292px] rounded-2xl border border-[#d9e5da] bg-white p-3 shadow-xl">
+        <div className="pop-enter absolute right-0 top-[calc(100%+6px)] w-[292px] rounded-2xl border border-[#d9e5da] bg-white p-3 shadow-xl">
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#7a8d80]">{t('map.map_type')}</p>
           <div role="radiogroup" aria-label={t('map.map_type')} className="grid grid-cols-3 gap-2">
             {BASEMAPS.map((b) => {

@@ -566,7 +566,12 @@
     "search_credit": "Place search © OpenStreetMap contributors",
     "inset_label": "Small map: click to move the street view",
     "inset_hint": "Click this map to move the street view there",
-    "layer_seismic": "Earthquakes & sensors"
+    "layer_seismic": "Earthquakes & sensors",
+    "minimise": "Minimise map",
+    "minimised": "Map minimised",
+    "show_map": "Show map",
+    "minimised_high_one": "{{count}} place High or Critical",
+    "minimised_high_other": "{{count}} places High or Critical"
   },
   "drawer": {
     "overview": "Overview",

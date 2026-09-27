@@ -26,7 +26,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((x) => {
           const Icon = x.level ? LEVEL_ICON[x.level] : null;
           return (
-            <div key={x.id} className="card shadow-lg flex items-start gap-3 p-3.5 border-l-4" style={{ borderLeftColor: x.level ? levelVar(x.level) : undefined }}>
+            <div key={x.id} className="toast-enter card shadow-lg flex items-start gap-3 p-3.5 border-l-4" style={{ borderLeftColor: x.level ? levelVar(x.level) : undefined }}>
               {Icon && <Icon size={20} style={{ color: levelVar(x.level!) }} aria-hidden className="mt-0.5 shrink-0" />}
               <p className="flex-1 text-[0.95rem] font-semibold">{x.text}</p>
               <button type="button" onClick={() => dismiss(x.id)} className="text-muted hover:text-ink p-1" aria-label={t('common.close')}>

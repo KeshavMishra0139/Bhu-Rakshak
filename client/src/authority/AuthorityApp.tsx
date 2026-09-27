@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { NavLink, Route, Routes, Link, useNavigate } from 'react-router-dom';
+import { PageTransition } from '../components/PageTransition';
 import { useTranslation } from 'react-i18next';
 import { Map, Inbox, ClipboardList, Megaphone, FileWarning, Route as RouteIcon, Truck, Wrench, ScrollText, Activity, FileText, UserRound, LogOut, Settings } from 'lucide-react';
 import { api } from '../api/client';
@@ -45,7 +46,7 @@ function Popover({ label, icon, children, align = 'right' }: { label: string; ic
       <button type="button" className="btn-ghost px-3" aria-expanded={open} aria-haspopup="true" onClick={() => setOpen((v) => !v)}>
         {icon}<span className="hidden xl:inline">{label}</span>
       </button>
-      {open && <div className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-full mt-1 z-[1000] w-[340px] max-w-[92vw] card shadow-2xl p-4`} onClick={(e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false); }}>{children}</div>}
+      {open && <div className={`pop-enter absolute ${align === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'} top-full mt-1 z-[1000] w-[340px] max-w-[92vw] card shadow-2xl p-4`} onClick={(e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false); }}>{children}</div>}
     </div>
   );
 }
@@ -132,7 +133,7 @@ function Shell({ children }: { children: ReactNode }) {
           </Popover>
         </div>
       </header>
-      <main id="main" className="flex-1 min-h-0 overflow-auto relative">{children}</main>
+      <main id="main" className="flex-1 min-h-0 overflow-auto relative"><PageTransition>{children}</PageTransition></main>
     </div>
   );
 }

@@ -18,13 +18,25 @@
           var dark = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
           document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
           var l = localStorage.getItem('br.lang');
-          if (l === 'hi') document.documentElement.setAttribute('lang', 'hi');
+          if (l === 'hi' || l === 'ne') document.documentElement.setAttribute('lang', l);
         } catch (e) {}
       })();
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:system-ui,sans-serif">
+        <svg width="56" height="56" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#0B2A33"/><path class="pre-ridge" d="M4 24 L12 12 L17 18 L21 13 L28 24" fill="none" stroke="#7CC4CF" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path class="pre-base" d="M7 27 H25" stroke="#E8B64A" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <div style="font-weight:700;letter-spacing:.02em;color:#0f5e6e">Bhu-Rakshak · भू-रक्षक</div>
+      </div>
+      <style>
+        .pre-ridge{stroke-dasharray:60;animation:pre-draw 1.4s cubic-bezier(.65,0,.35,1) infinite alternate}
+        .pre-base{stroke-dasharray:20;animation:pre-draw 1.4s cubic-bezier(.65,0,.35,1) .25s infinite alternate}
+        @keyframes pre-draw{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+        [data-theme='dark'] #root > div{background:#0a151a}
+        @media (prefers-reduced-motion: reduce){.pre-ridge,.pre-base{animation:none}}
+      </style>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

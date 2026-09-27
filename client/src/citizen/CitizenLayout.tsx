@@ -10,6 +10,7 @@ import { useRiskStream } from '../live/RiskStreamProvider';
 import { audioUnlocked, onAudioState, unlockAudio } from '../lib/audio';
 import { dateTimeIST } from '../lib/format';
 import { withPane } from '../lib/viewAs';
+import { PageTransition } from '../components/PageTransition';
 
 const NAV = [
   { to: '/citizen', key: 'citizen.home', Icon: Home, end: true },
@@ -66,7 +67,7 @@ export function CitizenLayout({ children }: { children: ReactNode }) {
         </p>
       )}
       <SoundPrompt />
-      <main id="main" className="mx-auto max-w-[1100px] px-4 py-5">{children}</main>
+      <main id="main" className="mx-auto max-w-[1100px] px-4 py-5"><PageTransition className="">{children}</PageTransition></main>
 
       {/* Sticky SOS: always one tap from emergency services. */}
       <a href="tel:112" className="fixed z-30 right-4 bottom-24 md:bottom-6 btn bg-risk-critical text-white shadow-lg rounded-pill px-5" aria-label={t('citizen.call_112')}>
