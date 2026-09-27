@@ -15,6 +15,7 @@
     "tickMaxSeconds": 30,
     "openMeteoRefreshMinutes": 30,
     "imdRefreshMinutes": 30,
+    "simulatedVariation": false,
     "episodeEveryMinutes": [8, 15],
     "episodeDurationMinutes": [4, 8],
     "speedOptions": [1, 2, 5]

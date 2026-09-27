@@ -1,6 +1,7 @@
-// Builds the live feature vector for a location: real cached Open-Meteo features as the anchor,
-// plus smooth, bounded variation (mean-reverting drift, diurnal cycle, rain-driven soil wetting,
-// occasional short convective cells) and the Storm scenario overlay.
+// Builds the live feature vector for a location: real cached Open-Meteo features, plus the Storm scenario overlay
+// when an officer runs one. Optional simulated variation (mean-reverting drift, diurnal cycle, rain-driven soil
+// wetting, occasional short convective cells) is OFF by default (risk.json live.simulatedVariation): it made the
+// demo map feel alive but produced warnings that were not backed by real data.
 // Used by both providers, so the model provider sees the same inputs the simulator does.
 import { q } from '../db/index.js';
 import { riskConfig } from '../config/shared.js';
@@ -16,6 +17,10 @@ const ramps = new Map();     // corridorId -> 0..1 storm ramp
 let episode = null;          // { locationId, until, boost }
 let nextEpisodeAt = 0;
 let lastRampMs = 0;
+
+/** Made-up variation on top of real data, for demos only. */
+export const simulationOn = () => riskConfig.live.simulatedVariation === true;
+const NEUTRAL = Object.freeze({ rainMul: 1, satOff: 0, wetting: 0 });
 
 // Gaussian via Box-Muller, bounded.
 const gauss = () => {
@@ -50,7 +55,8 @@ export function advanceRamps(nowMs) {
     ramps.set(id, target > cur ? Math.min(1, cur + step) : Math.max(0, cur - step * 0.6));
   }
   // Occasional short convective cell somewhere wet (makes the map feel alive without a storm).
-  if (!c.paused && nowMs >= nextEpisodeAt) {
+  if (!simulationOn()) episode = null;
+  else if (!c.paused && nowMs >= nextEpisodeAt) {
     const every = riskConfig.live.episodeEveryMinutes || [8, 15];
     const dur = riskConfig.live.episodeDurationMinutes || [4, 8];
     if (nextEpisodeAt) {
@@ -70,7 +76,7 @@ function overlay(base, loc, nowMs, d, horizonH = 0) {
   const c = getControls();
   const f = { ...base };
   const hod = istHourOfDay(nowMs + horizonH * 3600000);
-  const diurnal = 1 + 0.18 * Math.sin(((hod - 11) / 24) * 2 * Math.PI); // afternoon/evening peak
+  const diurnal = simulationOn() ? 1 + 0.18 * Math.sin(((hod - 11) / 24) * 2 * Math.PI) : 1; // afternoon/evening peak
   const decay = horizonH ? Math.exp(-horizonH / 8) : 1; // live noise matters less far ahead
   const rainMul = 1 + (d.rainMul * diurnal - 1) * decay;
   f.rain_intensity = round(f.rain_intensity * rainMul, 2);
@@ -133,7 +139,7 @@ export function liveInputsFor(loc, nowMs) {
   if (!w?.hourly) return null;
   const i = hourIndex(w.hourly, nowMs);
   const base = featuresAt(w.hourly, i);
-  const d = stepDrift(loc.id, nowMs, base.rain_intensity);
+  const d = simulationOn() ? stepDrift(loc.id, nowMs, base.rain_intensity) : NEUTRAL;
   // Official IMD rain severity for the district (null when IMD has nothing current → engine uses the model forecast).
   // Plus recent earthquake shaking at the slope (NCS / USGS), fading over the following days.
   const withImd = (f, h) => ({
