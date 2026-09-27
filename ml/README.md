@@ -5,12 +5,17 @@ earthquakes)** and **where the ground is prone to failing (slope, relief, shape,
 not a rainfall model.
 
 ```bash
-node ml/build_inventory.mjs   # landslide inventory  → ml/data/inventory.csv
-node ml/build_dataset.mjs     # factors per sample   → ml/data/dataset.csv  (~40 min first time; cached after)
-node ml/clean.mjs             # checks + removals    → ml/data/clean.csv, cleaning_report.json
-node ml/train.mjs             # train + test years   → ml/models/landslide-gbdt-v1.json, report.md
-node ml/replay.mjs            # past seasons, daily  → ml/models/replay.md
-node ml/audit_sources.mjs 25  # spot-check source links → ml/data/source_audit.json
+node ml/build_inventory.mjs      # landslide inventory       → inventory.csv, all_reported.csv
+node ml/build_dataset.mjs        # factors per sample        → dataset.csv   (~40 min first time; cached after)
+# road/river map (once): download Geofabrik north-eastern-zone + eastern-zone .osm.pbf into ml/data/raw, then
+node ml/osm_pbf.mjs ml/data/raw/north-eastern-zone.osm.pbf ml/data/raw/eastern-zone.osm.pbf   # → osm_tiles/
+node ml/build_controls.mjs       # road-matched comparison spots → controls.csv
+node ml/build_extra.mjs          # rain vs normal, river/road distance, vegetation → dataset_plus.csv
+node ml/clean.mjs                # checks + removals         → clean.csv, cleaning_report.json
+node ml/experiments.mjs          # factor comparison + bias checks → models/experiments.md, selected_features.json
+node ml/train.mjs                # final model + test years  → models/landslide-gbdt-v1.json, report.md
+node ml/replay.mjs               # past seasons, day by day  → models/replay.md
+node ml/audit_sources.mjs 25     # spot-check source links   → source_audit.json
 ```
 
 Every download is cached in `ml/data/cache/` (not committed), so a re-run is quick and a failed run resumes.
@@ -40,6 +45,17 @@ successor (NASA COOLR) and the **GSI national landslide inventory (Bhukosh / NLS
 Sampling is seeded (reproducible). "No landslide reported" is not proof none happened, so treat label 0 as
 "probably no landslide". When evaluating, split by **year** (train on older years, test on newer) so the model is
 never tested on days it has seen.
+
+## 2b. Bias safeguards
+
+| Risk | What we found | What we do |
+|---|---|---|
+| News reports landslides that hit roads | Distance to a road ALONE separated landslides from random nearby spots with AUC 0.88 | Random spots removed; each landslide gets a **road-matched** spot (same date, 8–40 km away, same distance from a major road). Road distance is never a factor. |
+| Past-landslide counts | Come from the same news reports and grow with calendar time (a hidden date signal) | Never used as a factor (shown only as a bias check) |
+| Border contamination | 9 "no landslide" samples were near landslides reported across the border / in dropped records | Removed: no non-landslide sample within 10 km / 7 days of ANY of the 929 reported landslides in the wider area |
+| Mixed weather products | 2 rows used the forecast archive (different soil depths) | ERA5 reanalysis for every row |
+| Regional imbalance | Nagaland/West Bengal have more records than Sikkim | Results reported per region, plus a "new area" test (train without a region, test on it) |
+| Testing on seen data | — | Always test on later years than training; month and location are never factors |
 
 ## 3. Data dictionary
 
@@ -78,6 +94,16 @@ Dates are Indian Standard Time days. `d0` = the sample date, `d1` = the day befo
 `weather_source` (`open-meteo-era5`, or `open-meteo-forecast-archive` for the last few days before ERA5 is published),
 `weather_grid_lat/lng` (centre of the weather cell used).
 
+### Extra factors (build_extra.mjs)
+| Column | Source | Meaning |
+|---|---|---|
+| `clim_month_mm_day`, `clim_annual_mm_day` | NASA POWER climatology | Long-term normal rain for this place (and month) |
+| `rain_3d_vs_normal`, `_7d_`, `_30d_` | derived | How many times wetter than normal for this place and month |
+| `dist_major_river_m` | OpenStreetMap (Geofabrik) | Distance to the nearest river (capped 3 km) |
+| `dist_road_m` | OpenStreetMap (Geofabrik) | Distance to the nearest major road — **bias check only, never a model factor** |
+| `ndvi_before` | MODIS MOD13Q1 (ORNL DAAC) | Vegetation greenness, 16-day composite ending ≥ 18 days before the date |
+| `past_landslides_5km`, `_15km` | our inventory, strictly earlier | **Bias check only, never a model factor** |
+
 ## 4. Important factors not yet included (and how to add them)
 
 | Factor | Why it matters | Source | Blocker |
@@ -85,8 +111,9 @@ Dates are Indian Standard Time days. `d0` = the sample date, `d1` = the day befo
 | Satellite rain (GPM IMERG, 30-min, ~10 km) | Observed rain, catches storms the models smooth out | NASA GES DISC | Needs a free NASA Earthdata account → put a token in `.env` as `EARTHDATA_TOKEN` |
 | IMD gridded rain (0.25°, rain-gauge based) | Official Indian observed rain back to 1901 | imdpune.gov.in | Site not reachable from the build machine |
 | Rock type / geology, faults | Weak rock (phyllite, schist) fails far more often | GSI Bhukosh | Site not reachable from the build machine |
-| Land cover / vegetation (NDVI) | Roots hold soil; bare or cut slopes fail more | ESA WorldCover, Sentinel-2 | Raster processing — next step |
-| Distance to roads and rivers | Road cuts and river erosion undercut slopes | OpenStreetMap (Overpass) | Slow to query at scale — next step |
+| Land cover (ESA WorldCover 10 m) | Vegetation type, not just greenness | AWS open data (Cloud-Optimised GeoTIFF) | Raster reader — next step |
+| Soil texture (clay, sand, density) | Clay-rich soils lose strength when wet | SoilGrids (ISRIC) REST API | Works, but rate limit ≈ 2.5 h for all locations |
+| Precise landslide outlines | The "where" problem: news locations are town-level | GSI national inventory (Bhukosh) | Not reachable from the build machine |
 | Ground movement (InSAR) | Catches slowly creeping slopes like Rimbi's before they fail | Sentinel-1 (ESA), NISAR | Heavy processing — later |
 | On-slope sensors (rain gauge, piezometer, tilt) | Local, real-time truth | To be installed | Hardware |
 

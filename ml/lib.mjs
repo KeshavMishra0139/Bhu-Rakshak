@@ -14,7 +14,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Polite pacing per host. Open-Meteo's free tier allows ~600 weighted calls/minute, and a 31-day hourly request
 // counts as several calls, so keep well under it.
-const PACE_MS = { 'open-meteo.com': 1100, 'power.larc.nasa.gov': 400 };
+const PACE_MS = { 'open-meteo.com': 1100, 'power.larc.nasa.gov': 400, 'overpass-api.de': 1500, 'overpass.kumi.systems': 2000, 'maps.mail.ru': 2000, 'modis.ornl.gov': 300 };
 const nextSlot = new Map();
 async function pace(url) {
   const host = new URL(url).hostname;
@@ -27,7 +27,7 @@ async function pace(url) {
 }
 
 /** GET a URL as JSON (or text), cached by URL. Retries on 429/5xx/network errors with backoff. */
-export async function getCached(url, { json = true, tries = 7, timeoutMs = 60000 } = {}) {
+export async function getCached(url, { json = true, tries = 7, timeoutMs = 60000, cacheIf = () => true } = {}) {
   fs.mkdirSync(CACHE, { recursive: true });
   const file = path.join(CACHE, crypto.createHash('sha1').update(url).digest('hex') + (json ? '.json' : '.txt'));
   if (fs.existsSync(file)) {
@@ -52,7 +52,7 @@ export async function getCached(url, { json = true, tries = 7, timeoutMs = 60000
         err.permanent = true;
         throw err;
       }
-      if (json) JSON.parse(t); // only cache valid JSON
+      if (json && !cacheIf(JSON.parse(t))) return JSON.parse(t); // valid but incomplete (e.g. data not published yet): don't cache
       fs.writeFileSync(file, t);
       return json ? JSON.parse(t) : t;
     } catch (e) {

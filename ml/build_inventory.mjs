@@ -50,6 +50,16 @@ const manual = parseCsv(fs.readFileSync(path.join(DATA, 'manual_events.csv'), 'u
 const all = [...events, ...manual].sort((a, b) => a.date.localeCompare(b.date));
 writeCsv(path.join(DATA, 'inventory.csv'), all, ['event_id', 'date', 'lat', 'lng', 'accuracy_km', 'place', 'state', 'category', 'trigger', 'size', 'fatalities', 'source']);
 
+// Every reported landslide in a wider box — any country, any location accuracy, plus the manual events.
+// Not used for training; only to keep non-landslide samples away from ANY reported landslide (e.g. across the
+// border in Bhutan/Nepal/Bangladesh/Myanmar, or one we dropped for an imprecise location).
+const WIDE = { minLat: 19.5, maxLat: 32, minLng: 85, maxLng: 100 };
+const reported = glc.map((o) => ({ event_id: `glc-${o.event_id}`, date: usDate(o.event_date), lat: +o.latitude, lng: +o.longitude, country: o.country_code, accuracy: o.location_accuracy }))
+  .filter((e) => e.date && e.lat >= WIDE.minLat && e.lat <= WIDE.maxLat && e.lng >= WIDE.minLng && e.lng <= WIDE.maxLng);
+for (const m of manual) reported.push({ event_id: m.event_id, date: m.date, lat: m.lat, lng: m.lng, country: 'IN', accuracy: `${m.accuracy_km}km` });
+writeCsv(path.join(DATA, 'all_reported.csv'), reported, ['event_id', 'date', 'lat', 'lng', 'country', 'accuracy']);
+console.log(`all_reported: ${reported.length} reported landslides in the wider box (for excluding non-landslide samples)`);
+
 const byState = all.reduce((m, e) => ((m[e.state || '?'] = (m[e.state || '?'] || 0) + 1), m), {});
 const years = all.map((e) => e.date.slice(0, 4));
 console.log(`inventory: ${all.length} landslides (${events.length} NASA GLC + ${manual.length} manual), ${years[0]}–${years[years.length - 1]}`);

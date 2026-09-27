@@ -13,3 +13,4 @@ dev.cmd
 ml/data/raw/
 ml/data/cache/
 ml/data/*.out
+ml/data/osm_tiles/

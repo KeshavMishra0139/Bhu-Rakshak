@@ -15,6 +15,9 @@
 //                           the model must learn to tell hill slopes apart, not hills from plains.
 //   8. Exact duplicates   — identical place + date rows are kept once.
 //   9. Orphans            — non-landslide rows whose landslide was removed are dropped with it.
+//  10. Border / dropped   — non-landslide rows near ANY reported landslide (other countries, imprecise records).
+//  11. Mixed sources      — rows not on the ERA5 reanalysis (different soil-moisture depths) are dropped.
+//  12. Random spots       — set aside (road-biased); road-matched spots are used instead.
 import fs from 'node:fs';
 import path from 'node:path';
 import { DATA, parseCsv, writeCsv, distanceKm, dayDiff } from './lib.mjs';
@@ -26,10 +29,12 @@ const NATURAL_TRIGGERS = new Set(['downpour', 'rain', 'continuous_rain', 'monsoo
 const inventory = parseCsv(fs.readFileSync(path.join(DATA, 'inventory.csv'), 'utf8'))
   .map((e) => ({ ...e, lat: +e.lat, lng: +e.lng, accuracy_km: +e.accuracy_km }));
 const num = (v) => (v === '' || v == null ? null : Number(v));
-const rows = parseCsv(fs.readFileSync(path.join(DATA, 'dataset.csv'), 'utf8'))
-  .map((r) => Object.fromEntries(Object.entries(r).map(([k, v]) => [k, ['sample_type', 'event_id', 'date', 'state', 'weather_source'].includes(k) ? v : num(v)])));
+// Uses dataset_plus.csv (with the extra factors from build_extra.mjs) when it exists.
+const INPUT = fs.existsSync(path.join(DATA, 'dataset_plus.csv')) ? 'dataset_plus.csv' : 'dataset.csv';
+const rows = parseCsv(fs.readFileSync(path.join(DATA, INPUT), 'utf8'))
+  .map((r) => Object.fromEntries(Object.entries(r).map(([k, v]) => [k, ['sample_type', 'event_id', 'date', 'state', 'weather_source', 'ndvi_date'].includes(k) ? v : num(v)])));
 
-const report = { input: { events: inventory.length, rows: rows.length }, removed: {}, examples: {} };
+const report = { input: { file: INPUT, events: inventory.length, rows: rows.length }, removed: {}, examples: {} };
 const drop = (reason, items, show = (x) => x) => {
   report.removed[reason] = (report.removed[reason] || 0) + items.length;
   report.examples[reason] = [...(report.examples[reason] || []), ...items.slice(0, 5).map(show)].slice(0, 5);
@@ -84,6 +89,7 @@ const RANGES = {
   max_1h_48h: [0, 300], power_rain_d0: [0, 1000], power_rain_30d: [0, 6000],
   sm_top: [0, 0.8], sm_mid: [0, 0.8], sm_deep: [0, 0.8], tmax_d0: [-50, 50], tmin_d0: [-60, 45], snowfall_7d: [0, 1000],
   elev_m: [-10, 8900], slope_deg: [0, 90], relief_1km: [0, 3000], quake_max_mmi_30d: [1, 12],
+  ndvi_before: [-0.2, 1], dist_major_river_m: [0, 3000], dist_road_m: [0, 3000], rain_30d_vs_normal: [0, 30], clim_month_mm_day: [0, 60],
 };
 const bad = clean.filter((r) => Object.entries(RANGES).some(([c, [lo, hi]]) => r[c] != null && (r[c] < lo || r[c] > hi)));
 drop('out_of_physical_range', bad, (r) => `${r.event_id} ${Object.entries(RANGES).filter(([c, [lo, hi]]) => r[c] != null && (r[c] < lo || r[c] > hi)).map(([c]) => `${c}=${r[c]}`).join(',')}`);
@@ -111,8 +117,29 @@ const ambiguous = clean.filter((r) => r.label === 0 && keptEvents.some((e) => Ma
 drop('non_landslide_too_close_to_a_landslide', ambiguous, (r) => `${r.event_id} ${r.sample_type} ${r.date}`);
 clean = clean.filter((r) => !ambiguous.includes(r));
 
-// ---- Output ----
+// 10. Negatives near ANY reported landslide — including across the border (Bhutan, Nepal, Bangladesh, Myanmar)
+//     and records we dropped for an imprecise location. "No landslide" must mean no landslide anyone reported.
+const reported = parseCsv(fs.readFileSync(path.join(DATA, 'all_reported.csv'), 'utf8')).map((e) => ({ ...e, lat: +e.lat, lng: +e.lng }));
+const contaminated = clean.filter((r) => r.label === 0 && reported.some((e) => Math.abs(dayDiff(e.date, r.date)) <= 7 && distanceKm(e, r) <= 10));
+drop('non_landslide_near_any_reported_landslide (any country/record)', contaminated, (r) => `${r.event_id} ${r.sample_type} ${r.date}`);
+clean = clean.filter((r) => !contaminated.includes(r));
+
+// 11. One weather product for everyone: rows still on the forecast archive (ERA5 not yet published) are dropped,
+//     because their soil-moisture layers are measured at different depths.
+const mixed = clean.filter((r) => r.weather_source && r.weather_source !== 'open-meteo-era5');
+drop('not_on_era5_reanalysis', mixed, (r) => `${r.event_id} ${r.sample_type} ${r.date} ${r.weather_source}`);
+clean = clean.filter((r) => !mixed.includes(r));
+
+// 12. Random nearby spots are set aside. The bias check (experiments.mjs) showed that distance to a road ALONE
+//     separates landslides from random spots almost perfectly — news reports landslides that hit roads. They are
+//     replaced by road-matched spots (build_controls.mjs) and kept only in bias_check_random_spots.csv.
 const cols = Object.keys(rows[0]);
+const randomSpots = clean.filter((r) => r.sample_type === 'nearby_place_same_date');
+writeCsv(path.join(DATA, 'bias_check_random_spots.csv'), randomSpots, cols);
+drop('random_nearby_spot (road-biased; kept only for the bias check)', randomSpots, (r) => `${r.event_id} ${r.date}`);
+clean = clean.filter((r) => r.sample_type !== 'nearby_place_same_date');
+
+// ---- Output ----
 writeCsv(path.join(DATA, 'clean.csv'), clean, cols);
 const pos = clean.filter((r) => r.label === 1);
 report.output = {

@@ -12,13 +12,21 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { DATA, ML_ROOT, parseCsv, rng } from './lib.mjs';
 import { trainGBDT, predictProba } from './gbdt.mjs';
+import { rocAuc, avgPrecision, atThreshold, brier, pickThreshold } from './metrics.mjs';
 
-const GROUPS = {
-  rain: ['rain_d0', 'rain_d1', 'rain_3d', 'rain_7d', 'rain_15d', 'rain_30d', 'api_30d', 'max_1h_48h', 'rainy_days_7d', 'power_rain_d0', 'power_rain_3d', 'power_rain_7d', 'power_rain_30d'],
+const ALL_GROUPS = {
+  rain: ['rain_d0', 'rain_d1', 'rain_3d', 'rain_7d', 'rain_15d', 'rain_30d', 'api_30d', 'max_1h_48h', 'rainy_days_7d', 'power_rain_d0', 'power_rain_3d', 'power_rain_7d', 'power_rain_30d',
+    'clim_month_mm_day', 'clim_annual_mm_day', 'rain_3d_vs_normal', 'rain_7d_vs_normal', 'rain_30d_vs_normal'],
   soil_temperature_snow: ['sm_top', 'sm_mid', 'sm_deep', 'tmax_d0', 'tmin_d0', 'snowfall_7d'],
   earthquakes: ['quake_max_mmi_30d', 'quake_count_300km_30d', 'quake_max_mag_300km_30d'],
   terrain: ['elev_m', 'slope_deg', 'northness', 'eastness', 'curvature', 'relief_1km'],
+  river: ['dist_major_river_m'],
+  vegetation: ['ndvi_before'],
 };
+// The factor set picked by the bias-checked year-by-year backtest (experiments.mjs); v1 factors if not run yet.
+const selectedFile = path.join(ML_ROOT, 'models', 'selected_features.json');
+const SELECTED = fs.existsSync(selectedFile) ? JSON.parse(fs.readFileSync(selectedFile, 'utf8')).features : ['rain', 'soil_temperature_snow', 'earthquakes', 'terrain'].flatMap((g) => ALL_GROUPS[g]).filter((f) => !f.includes('clim') && !f.includes('normal'));
+const GROUPS = Object.fromEntries(Object.entries(ALL_GROUPS).map(([g, fs2]) => [g, fs2.filter((f) => SELECTED.includes(f))]).filter(([, v]) => v.length));
 const ALL = Object.values(GROUPS).flat();
 
 const csvText = fs.readFileSync(path.join(DATA, 'clean.csv'), 'utf8');
@@ -41,43 +49,6 @@ const val = train.filter((r) => eventDate.get(r.event_id) >= valFrom);
 
 const X = (set, feats) => set.map((r) => feats.map((f) => r[f]));
 const Y = (set) => set.map((r) => r.label);
-
-// ---------- Metrics ----------
-function rocAuc(y, p) {
-  const pairs = y.map((v, i) => [p[i], v]).sort((a, b) => a[0] - b[0]);
-  let rank = 0; let sumPos = 0; let nPos = 0;
-  for (let i = 0; i < pairs.length;) {
-    let j = i; while (j < pairs.length && pairs[j][0] === pairs[i][0]) j++;
-    const avg = (i + j + 1) / 2;
-    for (let k = i; k < j; k++) if (pairs[k][1] === 1) { sumPos += avg; nPos++; }
-    rank = j; i = j;
-  }
-  const nNeg = pairs.length - nPos;
-  return (sumPos - (nPos * (nPos + 1)) / 2) / (nPos * nNeg);
-}
-function avgPrecision(y, p) {
-  const o = y.map((v, i) => [p[i], v]).sort((a, b) => b[0] - a[0]);
-  const P = y.reduce((a, b) => a + b, 0);
-  let tp = 0; let ap = 0;
-  o.forEach(([, v], i) => { if (v) { tp++; ap += tp / (i + 1); } });
-  return ap / P;
-}
-function atThreshold(y, p, t) {
-  let tp = 0; let fp = 0; let tn = 0; let fn = 0;
-  y.forEach((v, i) => { const hit = p[i] >= t; if (hit && v) tp++; else if (hit) fp++; else if (v) fn++; else tn++; });
-  const precision = tp / (tp + fp || 1); const recall = tp / (tp + fn || 1);
-  return { tp, fp, tn, fn, precision, recall, f1: (2 * precision * recall) / (precision + recall || 1), false_alarm_rate: fp / (fp + tn || 1), accuracy: (tp + tn) / y.length };
-}
-const brier = (y, p) => y.reduce((a, v, i) => a + (p[i] - v) ** 2, 0) / y.length;
-/** Threshold chosen on validation data: the one with the best F1, but never letting recall fall below 0.7. */
-function pickThreshold(y, p) {
-  let best = { t: 0.5, f1: -1 };
-  for (let t = 0.05; t <= 0.95; t += 0.01) {
-    const m = atThreshold(y, p, t);
-    if (m.recall >= 0.7 && m.f1 > best.f1) best = { t: +t.toFixed(2), f1: m.f1 };
-  }
-  return best.t;
-}
 
 // ---------- Train one model on a feature set, evaluate on test ----------
 // Candidate settings, from cautious to flexible. Chosen by VALIDATION AUC only — the test years are never used to choose.
@@ -110,7 +81,7 @@ function run(name, feats) {
     name, feats, model, threshold, pt, opsThreshold, config: best.cfg, valAuc: best.auc,
     metrics: {
       roc_auc: rocAuc(y, pt), pr_auc: avgPrecision(y, pt), brier: brier(y, pt),
-      when_auc: sub('same_place_other_date'), where_auc: sub('nearby_place_same_date'),
+      when_auc: sub('same_place_other_date'), where_auc: sub('nearby_place_same_date'), where_road_auc: sub('roadside_same_date'),
       at_threshold: atThreshold(y, pt, threshold), at_ops_threshold: atThreshold(y, pt, opsThreshold), trees: model.trees.length,
     },
   };
@@ -142,7 +113,7 @@ console.log(`rows ${rows.length} · train ${fit.length} + validation ${val.lengt
 const full = run('Full model (rain + soil/temperature/snow + earthquakes + terrain)', ALL);
 const rainOnly = run('Rain only', GROUPS.rain);
 const terrainOnly = run('Terrain only', GROUPS.terrain);
-const noTerrain = run('Everything except terrain', [...GROUPS.rain, ...GROUPS.soil_temperature_snow, ...GROUPS.earthquakes]);
+const noTerrain = run('Everything except terrain', ALL.filter((f) => !(GROUPS.terrain || []).includes(f)));
 const logistic = runLogistic(ALL);
 
 // ---------- Permutation importance by factor group (full model, test set) ----------
@@ -186,21 +157,23 @@ fs.writeFileSync(path.join(models, 'landslide-gbdt-v1.json'), JSON.stringify({
 // ---------- Report ----------
 const pct = (v) => `${(v * 100).toFixed(0)}%`;
 const f3 = (v) => (v == null || Number.isNaN(v) ? '–' : v.toFixed(3));
-const line = (x) => `| ${x.name} | ${f3(x.metrics.roc_auc)} | ${f3(x.metrics.pr_auc)} | ${x.metrics.when_auc != null ? f3(x.metrics.when_auc) : '–'} | ${x.metrics.where_auc != null ? f3(x.metrics.where_auc) : '–'} | ${pct(x.metrics.at_threshold.recall)} | ${pct(x.metrics.at_threshold.precision)} | ${pct(x.metrics.at_threshold.false_alarm_rate)} |`;
+const line = (x) => `| ${x.name} | ${f3(x.metrics.roc_auc)} | ${f3(x.metrics.pr_auc)} | ${x.metrics.when_auc != null ? f3(x.metrics.when_auc) : '–'} | ${x.metrics.where_road_auc != null ? f3(x.metrics.where_road_auc) : '–'} | ${pct(x.metrics.at_threshold.recall)} | ${pct(x.metrics.at_threshold.precision)} | ${pct(x.metrics.at_threshold.false_alarm_rate)} |`;
 const c = full.metrics.at_threshold;
 const md = `# Landslide model v1 — evaluation report
+
+Factors: ${ALL.length} (${Object.keys(GROUPS).join(', ')}), chosen by the bias-checked backtest in experiments.md.
 
 Generated ${new Date().toISOString().slice(0, 10)} from \`ml/data/clean.csv\` (${rows.length} rows: ${rows.filter((x) => x.label).length} landslides, ${rows.filter((x) => !x.label).length} non-landslides).
 
 **Test set = landslides from ${testFrom} onward (${test.length} rows), never seen in training.** Train/validation used earlier years.
 
-| Model | ROC AUC | PR AUC | "When" AUC | "Where" AUC | Landslides caught | Warnings that were right | False-alarm rate |
+| Model | ROC AUC | PR AUC | "When" AUC | "Where" AUC (road-matched) | Landslides caught | Warnings that were right | False-alarm rate |
 |---|---|---|---|---|---|---|---|
 ${[full, rainOnly, terrainOnly, noTerrain].map(line).join('\n')}
 | ${logistic.name} | ${f3(logistic.metrics.roc_auc)} | ${f3(logistic.metrics.pr_auc)} | – | – | ${pct(logistic.metrics.at_threshold.recall)} | ${pct(logistic.metrics.at_threshold.precision)} | ${pct(logistic.metrics.at_threshold.false_alarm_rate)} |
 
 - **ROC AUC**: 0.5 = coin toss, 1.0 = perfect ranking of landslide vs non-landslide.
-- **"When" AUC**: same place, landslide day vs another day. **"Where" AUC**: same day, landslide spot vs a spot 8–40 km away.
+- **"When" AUC**: same place, landslide day vs another day. **"Where" AUC**: same day, landslide spot vs a road-matched spot 8–40 km away (same distance from a major road, so equally likely to be reported in the news).
 - Threshold (${full.threshold}) was chosen on the validation years (best F1 with at least 70% of landslides caught), then applied unchanged to the test years.
 
 ## Full model on the test years
@@ -225,7 +198,7 @@ ${rimbi.length ? rimbi.map((x) => `- ${x.row.date} ${x.row.sample_type}: full mo
 - The inventory is news-based (NASA GLC): remote landslides are under-reported, and "no landslide reported" is not proof none happened.
 - Non-landslide samples were drawn ~3 per landslide, so the score is a relative likelihood, not a real-world probability.
 - Rain comes from 10–50 km weather cells (ERA5, NASA POWER); local cloudbursts are smoothed out.
-- Missing factors: geology/rock type, land cover, distance to roads and rivers, observed satellite rain (IMERG), ground movement (InSAR).
+- Missing factors: geology/rock type, land cover, soil texture, observed satellite rain (IMERG), ground movement (InSAR). Road distance is deliberately not used (news-coverage bias).
 - The test set is small, so the numbers have wide uncertainty (roughly ±0.05 AUC).
 `;
 fs.writeFileSync(path.join(models, 'report.md'), md);

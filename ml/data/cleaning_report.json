@@ -1,15 +1,19 @@
 {
   "input": {
+    "file": "dataset_plus.csv",
     "events": 365,
-    "rows": 1460
+    "rows": 1825
   },
   "removed": {
-    "rows_of_removed_events (incl. their non-landslide rows)": 740,
+    "rows_of_removed_events (incl. their non-landslide rows)": 925,
     "missing_core_values": 0,
     "out_of_physical_range": 0,
-    "non_landslide_on_flat_ground": 21,
+    "non_landslide_on_flat_ground": 44,
     "duplicate_place_and_date": 1,
-    "non_landslide_too_close_to_a_landslide": 9
+    "non_landslide_too_close_to_a_landslide": 9,
+    "non_landslide_near_any_reported_landslide (any country/record)": 9,
+    "not_on_era5_reanalysis": 0,
+    "random_nearby_spot (road-biased; kept only for the bias check)": 143
   },
   "examples": {
     "rows_of_removed_events (incl. their non-landslide rows)": [
@@ -37,6 +41,21 @@
       "glc-3986 nearby_place_same_date 2011-09-25",
       "glc-6967 nearby_place_same_date 2015-06-13",
       "glc-6969 nearby_place_same_date 2015-06-16"
+    ],
+    "non_landslide_near_any_reported_landslide (any country/record)": [
+      "glc-260 nearby_place_same_date 2007-09-11",
+      "glc-1088 nearby_place_same_date 2009-08-16",
+      "glc-1756 nearby_place_same_date 2010-04-17",
+      "glc-4411 nearby_place_same_date 2012-06-14",
+      "glc-7021 nearby_place_same_date 2015-06-27"
+    ],
+    "not_on_era5_reanalysis": [],
+    "random_nearby_spot (road-biased; kept only for the bias check)": [
+      "glc-57 2007-04-11",
+      "glc-211 2007-08-26",
+      "glc-231 2007-09-05",
+      "glc-313 2007-10-16",
+      "glc-614 2008-06-29"
     ]
   },
   "removed_events": {
@@ -60,13 +79,13 @@
     "glc-3617 2011-06-17 Pankhabari and Rohini routes in Kurseong → duplicate_report (of glc-3621)"
   ],
   "output": {
-    "rows": 689,
+    "rows": 694,
     "landslides": 180,
-    "non_landslides": 509,
+    "non_landslides": 514,
     "by_type": {
       "event": 180,
-      "same_place_other_date": 359,
-      "nearby_place_same_date": 150
+      "same_place_other_date": 357,
+      "roadside_same_date": 157
     },
     "years": "2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2026",
     "by_state": {

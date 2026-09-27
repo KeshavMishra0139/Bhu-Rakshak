@@ -29,11 +29,14 @@ const num = (v) => (v === '' || v == null ? null : Number(v));
 // ---------- Daily factors for a whole season at one place ----------
 async function seasonFactors(p, from, to) {
   const start = addDays(from, -31);
-  const today = new Date().toISOString().slice(0, 10);
-  const recent = dayDiff(today, to) < 7;
-  const soil = recent ? ['soil_moisture_3_to_9cm', 'soil_moisture_9_to_27cm', 'soil_moisture_27_to_81cm'] : ['soil_moisture_0_to_7cm', 'soil_moisture_7_to_28cm', 'soil_moisture_28_to_100cm'];
-  const params = { latitude: p.lat, longitude: p.lng, start_date: start, end_date: to, daily: 'precipitation_sum,snowfall_sum,temperature_2m_max,temperature_2m_min', hourly: ['precipitation', ...soil].join(','), timezone: 'Asia/Kolkata' };
-  const w = await getCached(recent ? `https://api.open-meteo.com/v1/forecast?${q(params)}` : `https://archive-api.open-meteo.com/v1/archive?${q(params)}`);
+  // Same rule as features.mjs: ERA5 reanalysis whenever it covers the season; forecast archive only if not yet.
+  const ERA5_SOIL = ['soil_moisture_0_to_7cm', 'soil_moisture_7_to_28cm', 'soil_moisture_28_to_100cm'];
+  const FC_SOIL = ['soil_moisture_3_to_9cm', 'soil_moisture_9_to_27cm', 'soil_moisture_27_to_81cm'];
+  const params = (soil) => ({ latitude: p.lat, longitude: p.lng, start_date: start, end_date: to, daily: 'precipitation_sum,snowfall_sum,temperature_2m_max,temperature_2m_min', hourly: ['precipitation', ...soil].join(','), timezone: 'Asia/Kolkata' });
+  const complete = (x) => x.daily?.precipitation_sum?.at(-1) != null && x.hourly?.[ERA5_SOIL[0]]?.at(-1) != null;
+  let w = await getCached(`https://archive-api.open-meteo.com/v1/archive?${q(params(ERA5_SOIL))}`, { cacheIf: complete });
+  let soil = ERA5_SOIL;
+  if (!complete(w)) { w = await getCached(`https://api.open-meteo.com/v1/forecast?${q(params(FC_SOIL))}`); soil = FC_SOIL; }
   const pw = await getCached(`https://power.larc.nasa.gov/api/temporal/daily/point?${q({ parameters: 'PRECTOTCORR', community: 'AG', longitude: p.lng, latitude: p.lat, start: start.replace(/-/g, ''), end: to.replace(/-/g, ''), format: 'JSON' })}`);
   const pv = Object.values(pw.properties.parameter.PRECTOTCORR).map((x) => (x < 0 ? null : x));
   const t = await terrainAt(p.lat, p.lng);

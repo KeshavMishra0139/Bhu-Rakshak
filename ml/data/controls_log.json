@@ -1,0 +1,13 @@
+{
+  "built_at": "2026-09-27T08:23:31.134Z",
+  "summary": {
+    "matched": 365,
+    "of": 365,
+    "median_road_distance_m": {
+      "landslides": 88,
+      "matched_spots": 58
+    },
+    "failures": 0
+  },
+  "failures": []
+}
