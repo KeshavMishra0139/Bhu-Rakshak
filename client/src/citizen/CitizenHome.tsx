@@ -12,6 +12,7 @@ import { RiskBadge } from '../components/RiskBadge';
 import { UpdatedAgo } from '../components/UpdatedAgo';
 import { ImdPanel } from '../components/ImdPanel';
 import { placeName, timeIST } from '../lib/format';
+import { isPreview } from '../lib/mapConfig';
 import { driverPlain } from '../lib/factors';
 import { LEVEL_ICON, TREND_ICON, levelVar } from '../lib/risk';
 import { canSpeak, speak, stopSpeaking } from '../lib/audio';
@@ -105,7 +106,7 @@ export default function CitizenHome() {
           <label htmlFor="place" className="field-label">{t('citizen.showing')}</label>
           <select id="place" className="input text-lg font-semibold" value={viewingId || ''} onChange={(e) => setViewingId(e.target.value)}>
             <option value="" disabled>{t('citizen.pick_place')}</option>
-            {places.map((l) => <option key={l.id} value={l.id}>{placeName(l, lang)}, {t(`districts.${l.district}`)}</option>)}
+            {places.map((l) => <option key={l.id} value={l.id}>{placeName(l, lang)}, {t(`districts.${l.district}`)}{isPreview(l) ? ` · ${t('preview.badge')}` : ''}</option>)}
           </select>
         </div>
         <button type="button" className="btn-secondary" onClick={locate} disabled={gps === 'busy'}>

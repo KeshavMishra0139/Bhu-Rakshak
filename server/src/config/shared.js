@@ -15,4 +15,9 @@ export const seedData = {
   exposure: readJson(path.join(dataDir, 'exposure.json')),
   operations: readJson(path.join(dataDir, 'operations.json')),
   imdDistricts: readJson(path.join(dataDir, 'imd_districts.json')),
+  // NER preview places (outside Sikkim/Darjeeling), filled automatically: ml/prepare_ner_preview.mjs
+  nerPreview: fs.existsSync(path.join(dataDir, 'ner_preview.json')) ? readJson(path.join(dataDir, 'ner_preview.json')) : null,
 };
+
+/** Corridor id of the NER preview places (the client shows a "Preview" badge for it). */
+export const PREVIEW_CORRIDOR = 'ner_preview';

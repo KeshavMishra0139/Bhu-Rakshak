@@ -118,7 +118,15 @@
     "South Sikkim": "South Sikkim",
     "Kalimpong": "Kalimpong",
     "Darjeeling": "Darjeeling",
-    "All": "All districts"
+    "All": "All districts",
+    "Kamrup Metropolitan": "Kamrup Metropolitan (Assam)",
+    "Dima Hasao": "Dima Hasao (Assam)",
+    "East Khasi Hills": "East Khasi Hills (Meghalaya)",
+    "Kohima": "Kohima (Nagaland)",
+    "Noney": "Noney (Manipur)",
+    "Aizawl": "Aizawl (Mizoram)",
+    "Papum Pare": "Papum Pare (Arunachal Pradesh)",
+    "Tawang": "Tawang (Arunachal Pradesh)"
   },
   "auth": {
     "login_title": "Sign in",
@@ -518,7 +526,7 @@
     "show_panel": "Show location list",
     "hide_panel": "Hide location list",
     "watch_title": "Sikkim & Darjeeling corridor watch map",
-    "region": "Sikkim · Darjeeling hills",
+    "region": "Sikkim · Darjeeling hills · NER preview",
     "stations": "Live risk stations",
     "online": "{{count}} online",
     "rain_live": "rainfall live",
@@ -551,7 +559,7 @@
     "search_clear": "Clear search",
     "search_stations": "Monitored stations",
     "search_places": "Other places",
-    "search_none": "No matching places in Sikkim or the Darjeeling hills.",
+    "search_none": "No matching places in Sikkim, the Darjeeling hills or the North East.",
     "search_more": "Type at least 3 letters to search all places.",
     "search_unavailable": "Place search is unavailable right now. Monitored stations still work.",
     "search_loading": "Searching places…",
@@ -999,5 +1007,10 @@
     "record_from_report": "Add to landslide record",
     "record_from_incident": "Record as confirmed landslide",
     "recorded": "In landslide record"
+  },
+  "preview": {
+    "badge": "NER preview",
+    "tip": "Outside Sikkim/Darjeeling: filled automatically from public data; rock type and exposure not verified.",
+    "note": "Terrain, roads, rivers, vegetation and past landslides here were filled automatically from public data (SRTM, OpenStreetMap, MODIS, NASA landslide catalogue). Rock type, fault distance and people/facilities at risk are not verified yet — treat the risk level as indicative. Weather, earthquakes and the AI model run exactly as for Sikkim."
   }
 }

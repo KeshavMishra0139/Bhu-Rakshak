@@ -7,7 +7,10 @@ import { ML_ROOT, getCached } from './lib.mjs';
 import { terrainAt } from './dem.mjs';
 
 const REPO = path.resolve(ML_ROOT, '..');
-const { locations } = JSON.parse(fs.readFileSync(path.join(REPO, 'server/src/data/locations.json'), 'utf8'));
+const { locations: core } = JSON.parse(fs.readFileSync(path.join(REPO, 'server/src/data/locations.json'), 'utf8'));
+const previewFile = path.join(REPO, 'server/src/data/ner_preview.json');
+const preview = fs.existsSync(previewFile) ? JSON.parse(fs.readFileSync(previewFile, 'utf8')).places.map((p) => p.location) : [];
+const locations = [...core, ...preview];
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 const q = (o) => new URLSearchParams(o).toString();
 const out = {};

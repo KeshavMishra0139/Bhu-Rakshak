@@ -14,8 +14,10 @@ import { setFeed } from './openMeteo.js';
 export const NCS_URL = 'https://riseq.seismo.gov.in/riseq/earthquake';
 export const USGS_URL = 'https://earthquake.usgs.gov/fdsnws/event/1/query';
 const UA = 'Bhu-Rakshak/0.1 (SIH 2026 landslide early warning prototype)';
-const REGION = { lat: 27.3, lng: 88.5 }; // Sikkim + Darjeeling hills
-export const RADIUS_KM = 500;
+const REGION = { lat: 27.3, lng: 88.5 }; // Sikkim + Darjeeling hills (sensor-network summary)
+// Earthquakes are kept for the whole North East (incl. the NER preview places), centred on the region's middle.
+const COVER = { lat: 26.0, lng: 92.3 };
+export const RADIUS_KM = 800;
 export const WINDOW_DAYS = 30;
 const IST_MS = 5.5 * 3600000;
 const DAY_MS = 86400000;
@@ -95,7 +97,7 @@ export function parseUsgs(body) {
 
 /** NCS first; add USGS events NCS doesn't have (same quake = within 90 s and 80 km). Region + time window only. */
 export function mergeQuakes(ncs, usgs, nowMs = Date.now()) {
-  const keep = (e) => distanceKm(REGION, e) <= RADIUS_KM && nowMs - new Date(e.time).getTime() <= WINDOW_DAYS * DAY_MS;
+  const keep = (e) => distanceKm(COVER, e) <= RADIUS_KM && nowMs - new Date(e.time).getTime() <= WINDOW_DAYS * DAY_MS;
   const out = ncs.filter(keep);
   for (const u of usgs.filter(keep)) {
     const dup = out.some((n) => Math.abs(new Date(n.time) - new Date(u.time)) < 90000 && distanceKm(n, u) < 80);
@@ -181,7 +183,7 @@ async function get(url, fetchImpl, timeoutMs, accept) {
 
 export async function refreshSeismic({ fetchImpl = globalThis.fetch, timeoutMs = 25000, nowMs = Date.now() } = {}) {
   const start = new Date(nowMs - WINDOW_DAYS * DAY_MS).toISOString().slice(0, 10);
-  const usgsUrl = `${USGS_URL}?${new URLSearchParams({ format: 'geojson', latitude: REGION.lat, longitude: REGION.lng, maxradiuskm: RADIUS_KM, minmagnitude: '2.5', starttime: start, orderby: 'time' })}`;
+  const usgsUrl = `${USGS_URL}?${new URLSearchParams({ format: 'geojson', latitude: COVER.lat, longitude: COVER.lng, maxradiuskm: RADIUS_KM, minmagnitude: '2.5', starttime: start, orderby: 'time' })}`;
   const [ncsR, usgsR] = await Promise.allSettled([
     get(NCS_URL, fetchImpl, timeoutMs, 'text/html').then(parseNcsPage),
     get(usgsUrl, fetchImpl, timeoutMs, 'application/json').then((t) => parseUsgs(safeJson(t, {}))),

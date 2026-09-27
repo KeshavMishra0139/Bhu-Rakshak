@@ -1,0 +1,353 @@
+{
+  "_comment": "NER PREVIEW. Filled automatically from public data (sources below); values under \"unverified\" are neutral defaults, not measurements.",
+  "corridor": {
+    "id": "ner_preview",
+    "name_en": "NER preview (outside Sikkim)",
+    "name_hi": "पूर्वोत्तर प्रीव्यू (सिक्किम के बाहर)",
+    "color": "#a27ad6"
+  },
+  "sources": {
+    "coordinates": "Town centre from OpenStreetMap Nominatim; monitoring point = steepest ~100 m cell within 2 km of it that is within 100 m of a major road (OpenStreetMap), because landslides hit hillside roads, not flat town centres",
+    "terrain": "AWS Terrain Tiles (NASA SRTM ~30 m): slope/aspect/curvature over ~100 m",
+    "roads_rivers": "OpenStreetMap (Geofabrik North-Eastern/Eastern zone extracts)",
+    "landslide_history": "NASA Global Landslide Catalog, reports within 10 km",
+    "ndvi": "MODIS MOD13Q1 250 m (ORNL DAAC), latest 16-day composite",
+    "road_cutting": "derived: major road within 50 m on a slope over 15°"
+  },
+  "unverified": [
+    "lithology (rock type) → neutral weakness 0.5",
+    "fault distance → 3.5 km (median of the 17 checked places)",
+    "population, facilities, bridges, critical infrastructure → empty (exposure not assessed)",
+    "land cover"
+  ],
+  "places": [
+    {
+      "location": {
+        "id": "guwahati",
+        "name_en": "Guwahati (Kharghuli hills)",
+        "name_hi": "गुवाहाटी (खारघुली पहाड़ियाँ)",
+        "district": "Kamrup Metropolitan",
+        "state": "Assam",
+        "corridor": "ner_preview",
+        "lat": 26.1964,
+        "lng": 91.7695,
+        "road": null,
+        "town_centre": [
+          26.1949,
+          91.7635
+        ]
+      },
+      "static": {
+        "slope_deg": 18,
+        "aspect_deg": 336,
+        "elevation_m": 99,
+        "curvature": -0.04,
+        "lithology_class": "unverified",
+        "fault_distance_km": 3.5,
+        "ndvi": 0.641,
+        "land_cover": "unverified",
+        "dist_road_m": 96,
+        "dist_river_m": 1595,
+        "river": null,
+        "road_cutting": 0,
+        "landslide_history_count": 32,
+        "last_event_date": "2017-07-10"
+      },
+      "exposure": {
+        "population": null,
+        "roads": [],
+        "bridges": [],
+        "facilities": [],
+        "critical_infra": [],
+        "tourist_zone": 0
+      }
+    },
+    {
+      "location": {
+        "id": "haflong",
+        "name_en": "Haflong",
+        "name_hi": "हाफलोंग",
+        "district": "Dima Hasao",
+        "state": "Assam",
+        "corridor": "ner_preview",
+        "lat": 25.169,
+        "lng": 93.0206,
+        "road": null,
+        "town_centre": [
+          25.1645,
+          93.0176
+        ]
+      },
+      "static": {
+        "slope_deg": 29,
+        "aspect_deg": 79,
+        "elevation_m": 601,
+        "curvature": -0.2,
+        "lithology_class": "unverified",
+        "fault_distance_km": 3.5,
+        "ndvi": 0.777,
+        "land_cover": "unverified",
+        "dist_road_m": 43,
+        "dist_river_m": 858,
+        "river": null,
+        "road_cutting": 1,
+        "landslide_history_count": 6,
+        "last_event_date": "2017-06-04"
+      },
+      "exposure": {
+        "population": null,
+        "roads": [],
+        "bridges": [],
+        "facilities": [],
+        "critical_infra": [],
+        "tourist_zone": 0
+      }
+    },
+    {
+      "location": {
+        "id": "shillong",
+        "name_en": "Shillong",
+        "name_hi": "शिलांग",
+        "district": "East Khasi Hills",
+        "state": "Meghalaya",
+        "corridor": "ner_preview",
+        "lat": 25.576,
+        "lng": 91.8963,
+        "road": null,
+        "town_centre": [
+          25.576,
+          91.8828
+        ]
+      },
+      "static": {
+        "slope_deg": 15,
+        "aspect_deg": 336,
+        "elevation_m": 1503,
+        "curvature": 0.41,
+        "lithology_class": "unverified",
+        "fault_distance_km": 3.5,
+        "ndvi": 0.533,
+        "land_cover": "unverified",
+        "dist_road_m": 85,
+        "dist_river_m": 340,
+        "river": null,
+        "road_cutting": 0,
+        "landslide_history_count": 5,
+        "last_event_date": "2017-02-15"
+      },
+      "exposure": {
+        "population": null,
+        "roads": [],
+        "bridges": [],
+        "facilities": [],
+        "critical_infra": [],
+        "tourist_zone": 0
+      }
+    },
+    {
+      "location": {
+        "id": "kohima",
+        "name_en": "Kohima",
+        "name_hi": "कोहिमा",
+        "district": "Kohima",
+        "state": "Nagaland",
+        "corridor": "ner_preview",
+        "lat": 25.6589,
+        "lng": 94.0824,
+        "road": null,
+        "town_centre": [
+          25.6619,
+          94.1019
+        ]
+      },
+      "static": {
+        "slope_deg": 30,
+        "aspect_deg": 74,
+        "elevation_m": 1553,
+        "curvature": 0.07,
+        "lithology_class": "unverified",
+        "fault_distance_km": 3.5,
+        "ndvi": 0.41,
+        "land_cover": "unverified",
+        "dist_road_m": 80,
+        "dist_river_m": 133,
+        "river": null,
+        "road_cutting": 0,
+        "landslide_history_count": 22,
+        "last_event_date": "2017-07-12"
+      },
+      "exposure": {
+        "population": null,
+        "roads": [],
+        "bridges": [],
+        "facilities": [],
+        "critical_infra": [],
+        "tourist_zone": 0
+      }
+    },
+    {
+      "location": {
+        "id": "noney",
+        "name_en": "Tupul (Noney)",
+        "name_hi": "तुपुल (नोनी)",
+        "district": "Noney",
+        "state": "Manipur",
+        "corridor": "ner_preview",
+        "lat": 24.7912,
+        "lng": 93.6586,
+        "road": null,
+        "town_centre": [
+          24.7822,
+          93.6631
+        ]
+      },
+      "static": {
+        "slope_deg": 32,
+        "aspect_deg": 29,
+        "elevation_m": 509,
+        "curvature": -0.03,
+        "lithology_class": "unverified",
+        "fault_distance_km": 3.5,
+        "ndvi": 0.79,
+        "land_cover": "unverified",
+        "dist_road_m": 97,
+        "dist_river_m": 150,
+        "river": null,
+        "road_cutting": 0,
+        "landslide_history_count": 2,
+        "last_event_date": "2017-03-30"
+      },
+      "exposure": {
+        "population": null,
+        "roads": [],
+        "bridges": [],
+        "facilities": [],
+        "critical_infra": [],
+        "tourist_zone": 0
+      }
+    },
+    {
+      "location": {
+        "id": "aizawl",
+        "name_en": "Aizawl",
+        "name_hi": "आइज़ोल",
+        "district": "Aizawl",
+        "state": "Mizoram",
+        "corridor": "ner_preview",
+        "lat": 23.7428,
+        "lng": 92.7075,
+        "road": null,
+        "town_centre": [
+          23.7278,
+          92.718
+        ]
+      },
+      "static": {
+        "slope_deg": 36,
+        "aspect_deg": 53,
+        "elevation_m": 834,
+        "curvature": 0.04,
+        "lithology_class": "unverified",
+        "fault_distance_km": 3.5,
+        "ndvi": 0.827,
+        "land_cover": "unverified",
+        "dist_road_m": 45,
+        "dist_river_m": 5000,
+        "river": null,
+        "road_cutting": 1,
+        "landslide_history_count": 16,
+        "last_event_date": "2017-06-10"
+      },
+      "exposure": {
+        "population": null,
+        "roads": [],
+        "bridges": [],
+        "facilities": [],
+        "critical_infra": [],
+        "tourist_zone": 0
+      }
+    },
+    {
+      "location": {
+        "id": "itanagar",
+        "name_en": "Itanagar",
+        "name_hi": "ईटानगर",
+        "district": "Papum Pare",
+        "state": "Arunachal Pradesh",
+        "corridor": "ner_preview",
+        "lat": 27.1025,
+        "lng": 93.6402,
+        "road": null,
+        "town_centre": [
+          27.098,
+          93.6237
+        ]
+      },
+      "static": {
+        "slope_deg": 23,
+        "aspect_deg": 18,
+        "elevation_m": 438,
+        "curvature": 0.36,
+        "lithology_class": "unverified",
+        "fault_distance_km": 3.5,
+        "ndvi": 0.613,
+        "land_cover": "unverified",
+        "dist_road_m": 46,
+        "dist_river_m": 2797,
+        "river": null,
+        "road_cutting": 1,
+        "landslide_history_count": 15,
+        "last_event_date": "2017-07-09"
+      },
+      "exposure": {
+        "population": null,
+        "roads": [],
+        "bridges": [],
+        "facilities": [],
+        "critical_infra": [],
+        "tourist_zone": 0
+      }
+    },
+    {
+      "location": {
+        "id": "tawang",
+        "name_en": "Tawang",
+        "name_hi": "तवांग",
+        "district": "Tawang",
+        "state": "Arunachal Pradesh",
+        "corridor": "ner_preview",
+        "lat": 27.5894,
+        "lng": 91.8577,
+        "road": null,
+        "town_centre": [
+          27.5879,
+          91.8637
+        ]
+      },
+      "static": {
+        "slope_deg": 36,
+        "aspect_deg": 274,
+        "elevation_m": 2950,
+        "curvature": 1.83,
+        "lithology_class": "unverified",
+        "fault_distance_km": 3.5,
+        "ndvi": 0.627,
+        "land_cover": "unverified",
+        "dist_road_m": 92,
+        "dist_river_m": 4475,
+        "river": null,
+        "road_cutting": 0,
+        "landslide_history_count": 4,
+        "last_event_date": "2017-07-11"
+      },
+      "exposure": {
+        "population": null,
+        "roads": [],
+        "bridges": [],
+        "facilities": [],
+        "critical_infra": [],
+        "tourist_zone": 0
+      }
+    }
+  ]
+}

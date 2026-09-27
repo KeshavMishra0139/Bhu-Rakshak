@@ -12,6 +12,7 @@ import { ImdPanel } from '../../components/ImdPanel';
 import { SeismicPanel } from '../../components/SeismicPanel';
 import { MlPanel } from '../../components/MlPanel';
 import { dateTimeIST, num, pct, placeName, timeIST } from '../../lib/format';
+import { isPreview } from '../../lib/mapConfig';
 import { driverLabel, factorLabel, factorMeta, notConnectedFactors } from '../../lib/factors';
 import { TREND_ICON, levelVar, riskConfig } from '../../lib/risk';
 import { IncidentDetail } from '../IncidentDetail';
@@ -97,6 +98,11 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
               {live.field_verified_at && <BadgeCheck size={18} className="text-brand" aria-label={t('map.field_verified')} />}
             </h2>
             <p className="text-sm text-muted">{t(`districts.${live.district}`)}{live.road ? ` · ${live.road}` : ''}</p>
+            {isPreview(live) && (
+              <p className="mt-2 rounded-md border border-[#a27ad6]/50 bg-[#a27ad6]/10 p-2 text-xs">
+                <span className="font-bold uppercase tracking-wide">{t('preview.badge')}</span> · {t('preview.note')}
+              </p>
+            )}
           </div>
           <button type="button" onClick={onClose} className="p-2 -m-1 text-muted hover:text-ink" aria-label={t('drawer.close')}><X size={20} aria-hidden /></button>
         </div>

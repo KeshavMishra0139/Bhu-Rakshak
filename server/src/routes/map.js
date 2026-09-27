@@ -15,7 +15,7 @@ const r = Router();
 // Nominatim's free service allows at most 1 request per second from an identified application and asks
 // callers to cache results, so every search goes through here: signed-in users only, cached, and throttled.
 export const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
-const GEOCODE_VIEWBOX = '87.6,28.3,89.25,26.45'; // Sikkim, Darjeeling and Kalimpong (matches the map bounds)
+const GEOCODE_VIEWBOX = '87.6,29.6,97.5,21.9'; // Sikkim, Darjeeling/Kalimpong and the rest of the North East (matches the map bounds)
 const geocodeCache = new Map(); // query -> { at, results }
 const GEOCODE_TTL_MS = 24 * 3600000;
 let nextGeocodeAt = 0;

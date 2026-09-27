@@ -140,3 +140,14 @@ test('scorecard: warnings count only if issued before the landslide; false alarm
   assert.equal(s.quiet_elevated, 1);
   assert.equal(s.false_alarm_rate, 0.25);
 });
+
+test('NER preview places: added once to any database, marked as automatic data, scored by the model', async () => {
+  const { syncPreviewPlaces } = await import('../src/db/seed.js');
+  const n = q.one("SELECT COUNT(*) AS n FROM locations WHERE corridor_id = 'ner_preview'").n;
+  assert.equal(n, 8, 'seeding adds the 8 preview places');
+  assert.equal(syncPreviewPlaces(), 0, 'running again adds nothing');
+  assert.equal(q.one("SELECT COUNT(*) AS n FROM static_layers s JOIN locations l ON l.id = s.location_id WHERE l.corridor_id = 'ner_preview' AND s.source = 'auto_preview'").n, 8);
+  assert.equal(q.one("SELECT COUNT(*) AS n FROM static_layers WHERE source = 'static_seed'").n, 17, 'hand-checked Sikkim/Darjeeling data untouched');
+  const places = JSON.parse(fs.readFileSync(path.join(here, '../../ml/models/live_locations.json'), 'utf8')).locations;
+  for (const id of ['guwahati', 'shillong', 'kohima', 'noney', 'aizawl', 'itanagar', 'tawang', 'haflong']) assert.ok(places[id], `${id} has model inputs`);
+});

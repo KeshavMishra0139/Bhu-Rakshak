@@ -152,11 +152,44 @@ export function resetDemoData() {
   });
 }
 
+/**
+ * NER preview places (server/src/data/ner_preview.json): inserted into any database that doesn't have them yet —
+ * a new one or the running site's — without touching existing rows. Their terrain/exposure rows are marked
+ * source = 'auto_preview' so they are never mistaken for the hand-checked Sikkim/Darjeeling data.
+ */
+export function syncPreviewPlaces() {
+  const np = seedData.nerPreview;
+  if (!np) return 0;
+  let added = 0;
+  tx(() => {
+    q.run('INSERT OR IGNORE INTO corridors(id, name_en, name_hi, color) VALUES (:id, :en, :hi, :color)', { id: np.corridor.id, en: np.corridor.name_en, hi: np.corridor.name_hi, color: np.corridor.color });
+    for (const { location: l, static: st, exposure: e } of np.places) {
+      if (q.one('SELECT id FROM locations WHERE id = :id', { id: l.id })) continue;
+      q.run(`INSERT INTO locations(id, name_en, name_hi, district, corridor_id, lat, lng, road)
+             VALUES (:id, :en, :hi, :district, :corridor, :lat, :lng, :road)`,
+      { id: l.id, en: l.name_en, hi: l.name_hi, district: l.district, corridor: l.corridor, lat: l.lat, lng: l.lng, road: l.road });
+      q.run(`INSERT INTO static_layers(location_id, slope_deg, aspect_deg, elevation_m, curvature, lithology_class, fault_distance_km, ndvi,
+               land_cover, dist_road_m, dist_river_m, river, road_cutting, landslide_history_count, last_event_date, source)
+             VALUES (:id, :slope, :aspect, :elev, :curv, :lith, :fault, :ndvi, :lc, :droad, :driver, :river, :cut, :hist, :last, 'auto_preview')`,
+      { id: l.id, slope: st.slope_deg, aspect: st.aspect_deg, elev: st.elevation_m, curv: st.curvature, lith: st.lithology_class, fault: st.fault_distance_km,
+        ndvi: st.ndvi, lc: st.land_cover, droad: st.dist_road_m, driver: st.dist_river_m, river: st.river, cut: st.road_cutting, hist: st.landslide_history_count, last: st.last_event_date });
+      q.run(`INSERT INTO exposure(location_id, population, roads_json, bridges_json, facilities_json, critical_infra_json, tourist_zone, exposure_score, source)
+             VALUES (:id, :pop, :roads, :bridges, :fac, :infra, :tz, :score, 'auto_preview')`,
+      { id: l.id, pop: e.population, roads: JSON.stringify(e.roads), bridges: JSON.stringify(e.bridges), fac: JSON.stringify(e.facilities),
+        infra: JSON.stringify(e.critical_infra), tz: e.tourist_zone, score: exposureScore({ ...e, population: e.population || 0 }) });
+      added++;
+    }
+  });
+  return added;
+}
+
 export function seedIfEmpty() {
   openDb();
   const n = q.one('SELECT COUNT(*) AS n FROM locations').n;
-  if (n === 0) { seedAll(); return true; }
+  if (n === 0) { seedAll(); syncPreviewPlaces(); return true; }
   seedDeveloper();
+  const added = syncPreviewPlaces();
+  if (added && process.env.NODE_ENV !== 'test') console.log(`[db] added ${added} NER preview places`);
   return false;
 }
 

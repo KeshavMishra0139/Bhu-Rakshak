@@ -14,7 +14,7 @@ import { MapSearch } from './MapSearch';
 import { MapTypePicker } from './MapTypePicker';
 import { DetailDrawer } from './DetailDrawer';
 import { InPersonView, type ViewTarget } from './InPersonView';
-import { streetViewLink, type Basemap } from '../../lib/mapConfig';
+import { streetViewLink, isPreview, type Basemap } from '../../lib/mapConfig';
 
 const MiniMap = lazy(() => import('../../components/MiniMap'));
 import { LEVELS, riskConfig } from '../../lib/risk';
@@ -211,7 +211,8 @@ export default function MapPage() {
                   <button key={l.id} type="button" onClick={() => focusStation(l.id)} aria-pressed={selectedId === l.id}
                     className={`map-table-row ${selectedId === l.id ? 'active' : ''}`}>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-xs font-bold text-[#f4f7f3]">{placeName(l, lang)}</span>
+                      <span className="flex items-center gap-1.5 text-xs font-bold text-[#f4f7f3]"><span className="truncate">{placeName(l, lang)}</span>
+                        {isPreview(l) && <span className="shrink-0 rounded bg-[#a27ad6]/25 px-1 py-px text-[9px] font-bold uppercase tracking-wide text-[#d9c6ff]" title={t('preview.tip')}>{t('preview.badge')}</span>}</span>
                       <span className="mt-1 block text-[10px] text-[#85998b]">
                         {t(`districts.${l.district}`)} · {live ? t('map.rain_live') : t('map.refreshing')}
                       </span>

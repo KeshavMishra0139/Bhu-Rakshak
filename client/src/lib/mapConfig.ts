@@ -92,7 +92,11 @@ export const MAP_CENTER: [number, number] = [27.33, 88.5];
  * so the tight region box above would block all panning on wide screens at the default zoom. This box is loose
  * enough for normal screens at zoom 9 while still keeping officers near Sikkim.
  */
-export const WATCH_BOUNDS: [[number, number], [number, number]] = [[24.5, 85.0], [30.0, 92.0]];
+export const WATCH_BOUNDS: [[number, number], [number, number]] = [[21.5, 85.0], [30.0, 97.8]]; // whole North East (incl. NER preview places)
+
+/** NER preview places (outside Sikkim/Darjeeling): filled automatically, rock type and exposure not verified. */
+export const PREVIEW_CORRIDOR = 'ner_preview';
+export const isPreview = (l: { corridor_id?: string } | null | undefined) => l?.corridor_id === PREVIEW_CORRIDOR;
 export const MAP_MIN_ZOOM = 8;
 export const OFFICIAL_BOUNDARY_URL = '/geo/india_boundary.geojson';
 
