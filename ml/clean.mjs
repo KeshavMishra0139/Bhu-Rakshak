@@ -23,6 +23,10 @@ import path from 'node:path';
 import { DATA, parseCsv, writeCsv, distanceKm, dayDiff } from './lib.mjs';
 
 const MAX_ACCURACY_KM = 5;
+// --keep-coarse: also keep landslides located only to 10–25 km (for the weather-only "when" model, where a
+// 10–25 km location is as fine as the weather grid). Writes clean_all.csv / cleaning_report_all.json instead.
+const KEEP_COARSE = process.argv.includes('--keep-coarse');
+const OUT_SUFFIX = KEEP_COARSE ? '_all' : '';
 const FLAT = { slope: 3, relief: 30 }; // "flat" = slope < 3° AND < 30 m height range within ~1 km
 const NATURAL_TRIGGERS = new Set(['downpour', 'rain', 'continuous_rain', 'monsoon', 'tropical_cyclone', 'flooding', 'snowfall_snowmelt', 'earthquake', 'freeze_thaw', 'unknown', '']);
 
@@ -55,7 +59,7 @@ for (const e of byPrecision) {
 // 2. Non-natural cause.
 for (const e of inventory) if (!NATURAL_TRIGGERS.has(e.trigger || '')) removeEvent(e, `non_natural_trigger:${e.trigger}`);
 // 3. Imprecise location.
-for (const e of inventory) if (e.accuracy_km > MAX_ACCURACY_KM) removeEvent(e, 'location_accuracy_over_5km');
+if (!KEEP_COARSE) for (const e of inventory) if (e.accuracy_km > MAX_ACCURACY_KM) removeEvent(e, 'location_accuracy_over_5km');
 
 // 6. Implausible place (needs terrain from the event row).
 for (const r of rows.filter((x) => x.sample_type === 'event')) {
@@ -135,12 +139,12 @@ clean = clean.filter((r) => !mixed.includes(r));
 //     replaced by road-matched spots (build_controls.mjs) and kept only in bias_check_random_spots.csv.
 const cols = Object.keys(rows[0]);
 const randomSpots = clean.filter((r) => r.sample_type === 'nearby_place_same_date');
-writeCsv(path.join(DATA, 'bias_check_random_spots.csv'), randomSpots, cols);
+if (!KEEP_COARSE) writeCsv(path.join(DATA, 'bias_check_random_spots.csv'), randomSpots, cols);
 drop('random_nearby_spot (road-biased; kept only for the bias check)', randomSpots, (r) => `${r.event_id} ${r.date}`);
 clean = clean.filter((r) => r.sample_type !== 'nearby_place_same_date');
 
 // ---- Output ----
-writeCsv(path.join(DATA, 'clean.csv'), clean, cols);
+writeCsv(path.join(DATA, `clean${OUT_SUFFIX}.csv`), clean, cols);
 const pos = clean.filter((r) => r.label === 1);
 report.output = {
   rows: clean.length, landslides: pos.length, non_landslides: clean.length - pos.length,
@@ -148,5 +152,5 @@ report.output = {
   years: [...new Set(pos.map((r) => r.date.slice(0, 4)))].sort().join(','),
   by_state: pos.reduce((m, r) => ((m[r.state || '?'] = (m[r.state || '?'] || 0) + 1), m), {}),
 };
-fs.writeFileSync(path.join(DATA, 'cleaning_report.json'), JSON.stringify(report, null, 2));
+fs.writeFileSync(path.join(DATA, `cleaning_report${OUT_SUFFIX}.json`), JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ removed_events: report.removed_events, removed_rows: report.removed, output: report.output }, null, 2));

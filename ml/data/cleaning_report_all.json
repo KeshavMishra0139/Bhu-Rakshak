@@ -1,0 +1,103 @@
+{
+  "input": {
+    "file": "dataset_plus.csv",
+    "events": 365,
+    "rows": 1825
+  },
+  "removed": {
+    "rows_of_removed_events (incl. their non-landslide rows)": 245,
+    "missing_core_values": 0,
+    "out_of_physical_range": 0,
+    "non_landslide_on_flat_ground": 69,
+    "duplicate_place_and_date": 1,
+    "non_landslide_too_close_to_a_landslide": 17,
+    "non_landslide_near_any_reported_landslide (any country/record)": 14,
+    "not_on_era5_reanalysis": 0,
+    "random_nearby_spot (road-biased; kept only for the bias check)": 250
+  },
+  "examples": {
+    "rows_of_removed_events (incl. their non-landslide rows)": [
+      "glc-93 event",
+      "glc-93 same_place_other_date",
+      "glc-93 same_place_other_date",
+      "glc-93 nearby_place_same_date",
+      "glc-221 event"
+    ],
+    "missing_core_values": [],
+    "out_of_physical_range": [],
+    "non_landslide_on_flat_ground": [
+      "nearby_place_same_date 26.315,91.553 slope 0.296 relief 15",
+      "nearby_place_same_date 26.684,88.109 slope 0.797 relief 20",
+      "nearby_place_same_date 26.553,88.128 slope 0.14 relief 10",
+      "nearby_place_same_date 26.695,88.147 slope 1.683 relief 25",
+      "nearby_place_same_date 26.718,88.599 slope 0.42 relief 10"
+    ],
+    "duplicate_place_and_date": [
+      "glc-7033 same_place_other_date 2024-06-14"
+    ],
+    "non_landslide_too_close_to_a_landslide": [
+      "glc-260 nearby_place_same_date 2007-09-11",
+      "glc-264 nearby_place_same_date 2007-09-13",
+      "glc-692 nearby_place_same_date 2008-08-07",
+      "glc-1107 nearby_place_same_date 2009-08-20",
+      "glc-2345 nearby_place_same_date 2010-08-27"
+    ],
+    "non_landslide_near_any_reported_landslide (any country/record)": [
+      "glc-241 nearby_place_same_date 2007-09-07",
+      "glc-255 nearby_place_same_date 2007-09-10",
+      "glc-1088 nearby_place_same_date 2009-08-16",
+      "glc-1756 nearby_place_same_date 2010-04-17",
+      "glc-3683 nearby_place_same_date 2011-07-01"
+    ],
+    "not_on_era5_reanalysis": [],
+    "random_nearby_spot (road-biased; kept only for the bias check)": [
+      "glc-57 2007-04-11",
+      "glc-94 2007-06-15",
+      "glc-126 2007-07-16",
+      "glc-142 2007-07-27",
+      "glc-147 2007-07-30"
+    ]
+  },
+  "removed_events": {
+    "duplicate_report": 31,
+    "non_natural_trigger:mining": 2,
+    "event_on_flat_ground (likely geocoding error)": 16
+  },
+  "removed_event_examples": [
+    "glc-6112 2014-06-28 Kharghuli Hills, Assam → duplicate_report (of glc-6110)",
+    "glc-1770 2010-04-20 Kharghuli, Guwahati, Assam → duplicate_report (of glc-1771)",
+    "glc-2422 2010-09-13 Hunthar Veng, Mizoram → duplicate_report (of glc-2421)",
+    "glc-2423 2010-09-13 road to Kanan Veng from Hunthar Veng, Mizoram → duplicate_report (of glc-2421)",
+    "glc-2420 2010-09-13 Tuikual 'C', Aizawl, Mizoram → duplicate_report (of glc-2421)",
+    "glc-2587 2010-10-10 Lower Chandmari area, PWD department, Kohima, Manipur → duplicate_report (of glc-2579)",
+    "glc-6970 2015-06-16 Akonggre → duplicate_report (of glc-6969)",
+    "glc-9334 2016-05-18 Bilaipur, Hailakandi district, Assam, India → duplicate_report (of glc-9335)",
+    "rimbi-2026-08-14 2026-08-14 Rimbi (Singlitam slope) → duplicate_report (of rimbi-2026-08-13)",
+    "glc-1093 2009-08-16 Phagutar near Mahanadi, 12km from Kurseong, Siliguri district, Darjeeling → duplicate_report (of glc-1088)",
+    "glc-1755 2010-04-17 Natl. Highway 31-A at Pani House(?), Gangtok → duplicate_report (of glc-1756)",
+    "glc-3617 2011-06-17 Pankhabari and Rohini routes in Kurseong → duplicate_report (of glc-3621)"
+  ],
+  "output": {
+    "rows": 1229,
+    "landslides": 316,
+    "non_landslides": 913,
+    "by_type": {
+      "event": 316,
+      "same_place_other_date": 629,
+      "roadside_same_date": 284
+    },
+    "years": "2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2026",
+    "by_state": {
+      "?": 14,
+      "West Bengal": 58,
+      "Sikkim": 28,
+      "Assam": 48,
+      "Meghalaya": 19,
+      "Mizoram": 20,
+      "Manipur": 42,
+      "Nagaland": 59,
+      "Arunachal Pradesh": 26,
+      "Tripura": 2
+    }
+  }
+}

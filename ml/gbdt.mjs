@@ -17,10 +17,15 @@ function thresholds(X, j, bins) {
   return [...out];
 }
 
-function buildTree(X, g, h, idx, feats, cuts, depth, p) {
+// Monotone constraints (p.monotone[j] = +1: score may only rise with feature j, −1: only fall, 0: free) follow
+// XGBoost's approach: a constrained split must order its children correctly, and each subtree's leaf values are
+// bounded by the midpoint of that split so deeper splits can't undo the ordering.
+const clampV = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+function buildTree(X, g, h, idx, feats, cuts, depth, p, lo = -Infinity, hi = Infinity) {
   let G = 0; let H = 0;
   for (const i of idx) { G += g[i]; H += h[i]; }
-  const leaf = { value: -G / (H + p.lambda) };
+  const leaf = { value: clampV(-G / (H + p.lambda), lo, hi) };
   if (depth >= p.maxDepth || idx.length < 2 * p.minLeaf) return leaf;
   const parentScore = (G * G) / (H + p.lambda);
   let best = null;
@@ -41,7 +46,11 @@ function buildTree(X, g, h, idx, feats, cuts, depth, p) {
         const GR = G - GL; const HR = H - HL; const NR = idx.length - NL;
         if (NL < p.minLeaf || NR < p.minLeaf || HL < p.minChildWeight || HR < p.minChildWeight) continue;
         const gain = (GL * GL) / (HL + p.lambda) + (GR * GR) / (HR + p.lambda) - parentScore;
-        if (gain > p.minGain && (!best || gain > best.gain)) best = { j, t, missLeft, gain };
+        if (!(gain > p.minGain && (!best || gain > best.gain))) continue;
+        const mono = p.monotone?.[j] || 0;
+        const wl = clampV(-GL / (HL + p.lambda), lo, hi); const wr = clampV(-GR / (HR + p.lambda), lo, hi);
+        if (mono && mono * (wr - wl) < 0) continue;
+        best = { j, t, missLeft, gain, mono, mid: (wl + wr) / 2 };
       }
     }
   }
@@ -54,8 +63,8 @@ function buildTree(X, g, h, idx, feats, cuts, depth, p) {
   }
   return {
     f: best.j, t: best.t, m: best.missLeft ? 1 : 0, gain: best.gain,
-    l: buildTree(X, g, h, L, feats, cuts, depth + 1, p),
-    r: buildTree(X, g, h, R, feats, cuts, depth + 1, p),
+    l: buildTree(X, g, h, L, feats, cuts, depth + 1, p, lo, best.mono > 0 ? Math.min(hi, best.mid) : best.mono < 0 ? Math.max(lo, best.mid) : hi),
+    r: buildTree(X, g, h, R, feats, cuts, depth + 1, p, best.mono > 0 ? Math.max(lo, best.mid) : best.mono < 0 ? Math.min(hi, best.mid) : lo, hi),
   };
 }
 
