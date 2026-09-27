@@ -1,0 +1,232 @@
+{
+  "summary": {
+    "checked": 25,
+    "page_still_online": 14,
+    "online_and_mentions_landslide": 10,
+    "online_and_mentions_place": 10,
+    "dead_or_unreachable": 11
+  },
+  "results": [
+    {
+      "event_id": "glc-130",
+      "date": "2007-07-19",
+      "place": "Guwahati",
+      "source": "http://www.saharasamay.com/samayhtml/articles.aspx?newsid=80536",
+      "http": 404,
+      "mentions_landslide": false,
+      "mentions_place": false
+    },
+    {
+      "event_id": "glc-7264",
+      "date": "2015-07-22",
+      "place": "22 kms to 30 kms between Sangkungmai and Willong",
+      "source": "http://www.thesangaiexpress.com/page/items/54212/massive-landslide-along-maram-peren-road-downpour-creates-havoc-in-different-parts",
+      "http": 404,
+      "mentions_landslide": false,
+      "mentions_place": false
+    },
+    {
+      "event_id": "glc-1993",
+      "date": "2010-06-16",
+      "place": "Kurseong sub-division, Road between Kurseong and New Jalpaiguri",
+      "source": "http://sify.com/news/landslide-disrupts-supply-lines-between-siliguri-darjeeling-news-national-kgqtabgbdjc.html",
+      "http": null,
+      "error": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "event_id": "glc-147",
+      "date": "2007-07-30",
+      "place": "Lawngtlai",
+      "source": "https://www-secure.ifrc.org/dmis/prepare/view_report.asp?ReportID=2987",
+      "http": null,
+      "error": "CERT_HAS_EXPIRED"
+    },
+    {
+      "event_id": "glc-6967",
+      "date": "2015-06-13",
+      "place": "Darjeeling Heritage Railway, Darjeeling",
+      "source": "http://www.aninews.in/videogallery9/38760-landslide-hits-toy-train-services-in-west-bengal.html",
+      "http": 404,
+      "mentions_landslide": false,
+      "mentions_place": false
+    },
+    {
+      "event_id": "glc-5421",
+      "date": "2013-08-30",
+      "place": "Yakshu, Nagaland",
+      "source": "http://www.nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDA0NDY0Nw%3D%3D-jp8K0A7ZhsM%3D",
+      "http": 404,
+      "mentions_landslide": false,
+      "mentions_place": true
+    },
+    {
+      "event_id": "glc-1093",
+      "date": "2009-08-16",
+      "place": "Phagutar near Mahanadi, 12km from Kurseong, Siliguri district, Darjeeling",
+      "source": "http://beacononline.wordpress.com/2009/08/17/darjeeling-hills-landslides-kill-6-in-hills-darjeeling-cut-off-for-nine-hours/",
+      "http": 200,
+      "mentions_landslide": false,
+      "mentions_place": false
+    },
+    {
+      "event_id": "glc-2296",
+      "date": "2010-08-20",
+      "place": "many locations around Namchi, Sikkim",
+      "source": "http://thehimalayanbeacon.com/magazine/2010/08/21/sikkim-landslides-heavy-toll-2-gpus-completely-cut/",
+      "http": 200,
+      "mentions_landslide": false,
+      "mentions_place": false
+    },
+    {
+      "event_id": "glc-4394",
+      "date": "2012-06-07",
+      "place": "Rolep, South Sikkim( Mapping to Rhenock 12 miles from Rolep)",
+      "source": "http://www.telegraphindia.com/1120608/jsp/siliguri/story_15584321.jsp#.UN_I7eSx_K0com",
+      "http": 200,
+      "mentions_landslide": true,
+      "mentions_place": true
+    },
+    {
+      "event_id": "glc-1934",
+      "date": "2010-06-03",
+      "place": "Rongpur village under Bhairabhnagar panchayat in Karimganj district",
+      "source": "http://www.telegraphindia.com/1100605/jsp/northeast/story_12529386.jsp",
+      "http": 200,
+      "mentions_landslide": true,
+      "mentions_place": true
+    },
+    {
+      "event_id": "glc-2253",
+      "date": "2010-08-15",
+      "place": "Chingai-Kuingai(Quingai) route (16 kms), Chingai subdivision, Ukhrul district, M",
+      "source": "http://www.e-pao.net/GP.asp?src=28..210810.aug10",
+      "http": 200,
+      "mentions_landslide": true,
+      "mentions_place": true
+    },
+    {
+      "event_id": "glc-9074",
+      "date": "2016-07-20",
+      "place": "Rimbik, Darjeeling, West Bengal state, India",
+      "source": "http://indianexpress.com/videos/news-video/darjeeling-landslide-takes-three-lives/",
+      "http": 200,
+      "mentions_landslide": true,
+      "mentions_place": true
+    },
+    {
+      "event_id": "glc-2163",
+      "date": "2010-07-29",
+      "place": "Maram area in Senapati district, National Highway 39",
+      "source": "http://www.assamtribune.com/scripts/detailsnew.asp?id=jul3110/oth05",
+      "http": 404,
+      "mentions_landslide": false,
+      "mentions_place": false
+    },
+    {
+      "event_id": "glc-3643",
+      "date": "2011-06-23",
+      "place": "Villages surrounding the West Sikkim district of",
+      "source": "http://www.assamtribune.com/scripts/detailsnew.asp?id=jun2511/oth05",
+      "http": 404,
+      "mentions_landslide": false,
+      "mentions_place": false
+    },
+    {
+      "event_id": "glc-6971",
+      "date": "2015-06-09",
+      "place": "Itanagar, Arunachal Pradesh",
+      "source": "http://www.firstpost.com/india/two-dead-2-injured-landslide-arunachal-pradesh-school-remain-shut-heavy-rainfall-alert-2287954.html",
+      "http": 200,
+      "mentions_landslide": true,
+      "mentions_place": true
+    },
+    {
+      "event_id": "glc-7590",
+      "date": "2015-08-19",
+      "place": "Tongseng",
+      "source": "http://www.ibtimes.co.in/meghalaya-massive-landslide-east-jaintia-hills-flash-floods-shillong-hit-normal-life-643439",
+      "http": 200,
+      "mentions_landslide": true,
+      "mentions_place": true
+    },
+    {
+      "event_id": "glc-6287",
+      "date": "2014-09-22",
+      "place": "Dhirenpara",
+      "source": "http://www.assamtribune.com/scripts/detailsnew.asp?id=sep2414/at051",
+      "http": 404,
+      "mentions_landslide": false,
+      "mentions_place": false
+    },
+    {
+      "event_id": "glc-4859",
+      "date": "2013-05-11",
+      "place": "Sarania Hills, North Guwahati, Guwahati, Assam,",
+      "source": "http://articles.timesofindia.indiatimes.com/2013-05-12/guwahati/39203561_1_artificial-floods-guwahati-municipal-corporation-gs-road",
+      "http": null,
+      "error": "ENOTFOUND"
+    },
+    {
+      "event_id": "glc-6214",
+      "date": "2014-10-05",
+      "place": "Jorabat-Umiam route",
+      "source": "http://www.telegraphindia.com/1141007/jsp/frontpage/story_18900562.jsp#.VDVSk_ldV8E",
+      "http": 200,
+      "mentions_landslide": true,
+      "mentions_place": false
+    },
+    {
+      "event_id": "glc-6106",
+      "date": "2014-06-26",
+      "place": "Narakasur",
+      "source": "http://twocircles.net/2014jun27/8_killed_assam_landslides_electrocution.html#.U70ydPldU1L",
+      "http": 200,
+      "mentions_landslide": true,
+      "mentions_place": true
+    },
+    {
+      "event_id": "glc-8930",
+      "date": "2016-07-11",
+      "place": "North Point Colony, Akuluto, Nagaland, India",
+      "source": "https://issuu.com/nagalandpost90/docs/july_13__2016",
+      "http": 200,
+      "mentions_landslide": false,
+      "mentions_place": true
+    },
+    {
+      "event_id": "glc-4411",
+      "date": "2012-06-14",
+      "place": "Tathangchen, Gangtok, Sikkim",
+      "source": "http://isikkim.com/2012-06-sikkim-landslide-at-tathangchen-poses-threat-to-residents-15-5/",
+      "http": 200,
+      "mentions_landslide": true,
+      "mentions_place": true
+    },
+    {
+      "event_id": "glc-218",
+      "date": "2007-08-29",
+      "place": "Ghayabari-Tindharia on National Highway 55, near Darjeeling hills",
+      "source": "http://www.thestatesman.net/page.arcview.php?clid=10&id=195422&usrsess=1",
+      "http": 200,
+      "mentions_landslide": false,
+      "mentions_place": false
+    },
+    {
+      "event_id": "glc-1929",
+      "date": "2010-05-31",
+      "place": "North Sikkiim Highway, periphery of Gangtok, Sikkim East district",
+      "source": "http://sify.com/news/500-tourists-stranded-in-Sikkim-due-to-landslides-news-National-kgca4ibdgfd.html",
+      "http": null,
+      "error": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "event_id": "glc-9587",
+      "date": "2016-10-12",
+      "place": "between Siliguri and Sevak",
+      "source": "http://www.business-standard.com/article/pti-stories/rains-landslips-affect-life-in-north-bengal-116101201035_1.html",
+      "http": 200,
+      "mentions_landslide": true,
+      "mentions_place": true
+    }
+  ]
+}

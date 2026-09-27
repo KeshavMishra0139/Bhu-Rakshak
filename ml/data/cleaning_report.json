@@ -1,0 +1,85 @@
+{
+  "input": {
+    "events": 365,
+    "rows": 1460
+  },
+  "removed": {
+    "rows_of_removed_events (incl. their non-landslide rows)": 740,
+    "missing_core_values": 0,
+    "out_of_physical_range": 0,
+    "non_landslide_on_flat_ground": 21,
+    "duplicate_place_and_date": 1,
+    "non_landslide_too_close_to_a_landslide": 9
+  },
+  "examples": {
+    "rows_of_removed_events (incl. their non-landslide rows)": [
+      "glc-93 event",
+      "glc-93 same_place_other_date",
+      "glc-93 same_place_other_date",
+      "glc-93 nearby_place_same_date",
+      "glc-94 event"
+    ],
+    "missing_core_values": [],
+    "out_of_physical_range": [],
+    "non_landslide_on_flat_ground": [
+      "nearby_place_same_date 26.695,88.147 slope 1.683 relief 25",
+      "nearby_place_same_date 26.297,91.667 slope 0.394 relief 6",
+      "nearby_place_same_date 26.958,94.051 slope 0.496 relief 8",
+      "nearby_place_same_date 26.768,88.447 slope 0.221 relief 26",
+      "nearby_place_same_date 26.69,88.389 slope 0.699 relief 13"
+    ],
+    "duplicate_place_and_date": [
+      "glc-7033 same_place_other_date 2024-06-14"
+    ],
+    "non_landslide_too_close_to_a_landslide": [
+      "glc-2345 nearby_place_same_date 2010-08-27",
+      "glc-3637 nearby_place_same_date 2011-06-21",
+      "glc-3986 nearby_place_same_date 2011-09-25",
+      "glc-6967 nearby_place_same_date 2015-06-13",
+      "glc-6969 nearby_place_same_date 2015-06-16"
+    ]
+  },
+  "removed_events": {
+    "duplicate_report": 31,
+    "non_natural_trigger:mining": 2,
+    "location_accuracy_over_5km": 140,
+    "event_on_flat_ground (likely geocoding error)": 12
+  },
+  "removed_event_examples": [
+    "glc-6112 2014-06-28 Kharghuli Hills, Assam → duplicate_report (of glc-6110)",
+    "glc-1770 2010-04-20 Kharghuli, Guwahati, Assam → duplicate_report (of glc-1771)",
+    "glc-2422 2010-09-13 Hunthar Veng, Mizoram → duplicate_report (of glc-2421)",
+    "glc-2423 2010-09-13 road to Kanan Veng from Hunthar Veng, Mizoram → duplicate_report (of glc-2421)",
+    "glc-2420 2010-09-13 Tuikual 'C', Aizawl, Mizoram → duplicate_report (of glc-2421)",
+    "glc-2587 2010-10-10 Lower Chandmari area, PWD department, Kohima, Manipur → duplicate_report (of glc-2579)",
+    "glc-6970 2015-06-16 Akonggre → duplicate_report (of glc-6969)",
+    "glc-9334 2016-05-18 Bilaipur, Hailakandi district, Assam, India → duplicate_report (of glc-9335)",
+    "rimbi-2026-08-14 2026-08-14 Rimbi (Singlitam slope) → duplicate_report (of rimbi-2026-08-13)",
+    "glc-1093 2009-08-16 Phagutar near Mahanadi, 12km from Kurseong, Siliguri district, Darjeeling → duplicate_report (of glc-1088)",
+    "glc-1755 2010-04-17 Natl. Highway 31-A at Pani House(?), Gangtok → duplicate_report (of glc-1756)",
+    "glc-3617 2011-06-17 Pankhabari and Rohini routes in Kurseong → duplicate_report (of glc-3621)"
+  ],
+  "output": {
+    "rows": 689,
+    "landslides": 180,
+    "non_landslides": 509,
+    "by_type": {
+      "event": 180,
+      "same_place_other_date": 359,
+      "nearby_place_same_date": 150
+    },
+    "years": "2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2026",
+    "by_state": {
+      "?": 5,
+      "Manipur": 18,
+      "West Bengal": 36,
+      "Nagaland": 36,
+      "Arunachal Pradesh": 17,
+      "Sikkim": 16,
+      "Mizoram": 11,
+      "Assam": 27,
+      "Tripura": 2,
+      "Meghalaya": 12
+    }
+  }
+}

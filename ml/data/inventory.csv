@@ -1,0 +1,366 @@
+event_id,date,lat,lng,accuracy_km,place,state,category,trigger,size,fatalities,source
+glc-57,2007-04-11,27.4459,88.6193,5,"Sikkim, 13 km north of Gangtok",,landslide,downpour,medium,,http://news.webindia123.com/news/ar_showdetails.asp?id=704100915&cat=&n_date=20070410
+glc-93,2007-06-13,26.7324,88.4089,25,"Indira Bypass, Amdo Golai",West Bengal,landslide,rain,small,,http://www.liveleak.com/view?i=6f2_1188615914&c=1
+glc-94,2007-06-15,26.8096,88.526,25,National Highway 31A at Sevoke,West Bengal,landslide,rain,medium,,http://www.kalimpong.info/2007/06/15/landslide-hits-highway-raging-river-threatens-to-wreak-havoc/
+glc-126,2007-07-16,27.1499,88.38,25,Bardang near Singtam,Sikkim,mudslide,rain,medium,,http://www.thestatesman.net/page.news.php?clid=10&theme=&usrsess=1&id=162949
+glc-130,2007-07-19,26.1699,91.7986,25,Guwahati,Assam,landslide,rain,medium,6,http://www.saharasamay.com/samayhtml/articles.aspx?newsid=80536
+glc-142,2007-07-27,25.5212,90.232,10,Tura,Meghalaya,rock_fall,rain,large,8,http://telegraphindia.com/1070728/asp/frontpage/story_8116912.asp
+glc-147,2007-07-30,22.533,92.899,25,Lawngtlai,Mizoram,landslide,downpour,medium,,https://www-secure.ifrc.org/dmis/prepare/view_report.asp?ReportID=2987
+glc-148,2007-07-30,22.479,92.967,25,Saiha,Mizoram,landslide,downpour,medium,,https://www-secure.ifrc.org/dmis/prepare/view_report.asp?ReportID=2987
+glc-151,2007-08-02,26.8905,88.2789,25,Kurseong,West Bengal,mudslide,rain,medium,3,http://www.thestatesman.net/page.news.php?clid=1&theme=&usrsess=1&id=164902
+glc-210,2007-08-25,27.0713,88.4308,25,"Hattisurey in Kalimpong, on National Highway 31A",West Bengal,landslide,rain,medium,,http://www.hindu.com/thehindu/holnus/004200708261441.htm
+glc-211,2007-08-26,24.9667,93.55,5,Tamenglong,Manipur,mudslide,continuous_rain,medium,1,http://www.kanglaonline.com/index.php?template=headline&newsid=39058&typeid=1
+glc-218,2007-08-29,27.0096,88.2548,10,"Ghayabari-Tindharia on National Highway 55, near Darjeeling hills",West Bengal,landslide,rain,medium,,http://www.thestatesman.net/page.arcview.php?clid=10&id=195422&usrsess=1
+glc-221,2007-08-31,22.6461,88.3403,10,between Bally Halt and Rajchandrapur stations in Kolkata,West Bengal,landslide,rain,medium,,http://cities.expressindia.com/fullstory.php?newsid=254038
+glc-220,2007-08-31,25.1333,93.9667,25,"Velnal village, Tamei sub-division and Toribari village (3 kilometer toward Tame",Manipur,landslide,rain,medium,,http://www.kanglaonline.com/index.php?template=headline&newsid=39138&typeid=2
+glc-231,2007-09-05,27.06826195,88.28121204,5,Darjeeling Hills (Lebong - 10 km from Darjeeling,West Bengal,landslide,rain,medium,15,The hindu.com
+glc-241,2007-09-07,27.201,88.4883,25,"National Highway 31A between Rangpo and Tarkhola, in East Sikkim",,landslide,rain,large,,http://www.thestatesman.net/page.news.php?clid=10&id=169368&usrsess=1
+glc-242,2007-09-07,26.8833,88.2833,25,"Darjeeling Hills, multiple villages in area (Kurseong, Kalimpong, Bhalukopa, Kuk",West Bengal,landslide,rain,medium,,http://www.hindu.com/thehindu/holnus/001200709072070.htm
+glc-252,2007-09-09,25.4993,94.1192,25,"Mao in Manipur, Phipema and Chunikhudima in Nagaland",Nagaland,landslide,rain,medium,,http://www.kanglaonline.com/index.php?template=headline&newsid=39229&typeid=2
+glc-256,2007-09-10,27.3425,88.6236,10,Rhodong village near Rhey in East Sikkim,Sikkim,landslide,rain,medium,,http://www.telegraphindia.com/1070911/asp/siliguri/story_8300563.asp
+glc-255,2007-09-10,24.2451,94.0691,25,Wamkhu village along the Tengnoupal-Joupi road in Chandel district,Manipur,landslide,rain,medium,,http://www.e-pao.net/GP.asp?src=Snipp7..120907.sep07
+glc-260,2007-09-11,27.2084,88.4909,5,"National Highway 31A, between Singtam and Rangpo",,debris_flow,rain,medium,,http://www.thestatesman.net/page.news.php?clid=10&theme=&usrsess=1&id=169578
+glc-264,2007-09-13,26.1833,91.8,10,Guwahati,Assam,landslide,rain,medium,,http://www.saharasamay.com/samayhtml/articles.aspx?newsid=84791
+glc-313,2007-10-16,25.7055,94.0132,5,"NH-39 at Piphema,  6 km towards Dimapur from Kohima in Nagaland",Nagaland,landslide,rain,large,,http://www.kanglaonline.com/index.php?template=headline&newsid=39638&typeid=2
+glc-322,2007-10-21,24.75,93.4333,25,National Highway 53 at Nungba in Tamenglong district of Manipur,Assam,landslide,rain,medium,,http://hmar.net/?p=1870
+glc-585,2008-06-14,27.0998,93.6287,25,"Itanagar-Naharlagun, Arunachal Pradesh",Arunachal Pradesh,landslide,rain,large,21,http://ukpress.google.com/article/ALeqM5iM8gWKcS4OLf66hwzNMnaybAaZYA
+glc-587,2008-06-15,27.2298,94.0989,25,"Lakhimpur district, Bihpuria, Assam",Assam,landslide,downpour,medium,17,http://www.telegraphindia.com/1080616/jsp/northeast/story_9416169.jsp
+glc-594,2008-06-19,24.9336,93.8275,25,"Namkaoluang village, Tamenglong-Sangrung (Khongsang) road, NH-53, Manipur",Manipur,mudslide,monsoon,medium,,http://www.kanglaonline.com/index.php?template=headline&newsid=42473&typeid=2
+glc-595,2008-06-20,26.885,88.2778,25,Kurseong sub division,West Bengal,landslide,rain,medium,,http://www.thestatesman.net/page.news.php?clid=10&id=209560&usrsess=1
+glc-614,2008-06-29,26.89,88.28,5,"Kurseong sub division, Mamring",West Bengal,landslide,unknown,medium,,http://savethehills.blogspot.com/2008/06/preliminary-report-on-mamring-kurseong.html
+glc-620,2008-06-30,27.0771,88.482,5,Kalimpong,West Bengal,landslide,downpour,medium,,http://www.dailyindia.com/show/255019.php/Landslides-block-Himalayan-road-cuts-Sikkim-from-India
+glc-692,2008-08-07,25.705,94.04,10,"National Highway-39, Dimapur-Imphal road and another under Kiphire district of N",Nagaland,landslide,downpour,medium,,http://www.kanglaonline.com/index.php?template=headline&newsid=43094&typeid=1
+glc-755,2008-08-28,27.337,88.609,25,"Ranka, Sikkim and Louing road",Sikkim,landslide,downpour,medium,,http://beacononline.wordpress.com/2008/08/31/landslide-victims-being-compensated/
+glc-760,2008-08-29,25.67,94.1066,25,"Kohima, Nagaland",Nagaland,complex,downpour,medium,,http://www.kanglaonline.com/index.php?template=headline&newsid=43189&typeid=1
+glc-1032,2009-05-26,27.0095,88.2592,5,"Rangiabong (Jorbungalow), Darjeeling, West Bengal",West Bengal,landslide,tropical_cyclone,medium,6,http://www.headlinesindia.com/natural-disasters/flood/darjeeling-landslide-toll-reaches-27-12747.html
+glc-1031,2009-05-26,26.8836,88.2791,5,"Kurseong, Darjeeling, West Bengal",West Bengal,landslide,tropical_cyclone,medium,7,http://www.headlinesindia.com/natural-disasters/flood/darjeeling-landslide-toll-reaches-27-12747.html
+glc-1030,2009-05-26,27.04357147,88.26522126,25,"Darjeeling Sadar, Darjeeling West Bengal",West Bengal,landslide,tropical_cyclone,medium,14,http://www.headlinesindia.com/natural-disasters/flood/darjeeling-landslide-toll-reaches-27-12747.html
+glc-1037,2009-06-17,26.89,88.47,5,"Sevoke, 20km from Siliguri, North Eastern, India (Highway NH31A:Coronation Bridg",West Bengal,mudslide,downpour,medium,0,http://www.telegraphindia.com/1090618/jsp/siliguri/story_11126449.jsp
+glc-1061,2009-07-01,27.478,88.527,1,"4th Mile, Lower Mangshila in North Sikkim",,landslide,downpour,medium,0,https://www.telegraphindia.com/1090707/jsp/siliguri/story_11202557.jsp
+glc-1050,2009-07-03,26.87324244,88.29184021,10,Darjeeling (between Tin Dharia and Rongtong),West Bengal,landslide,rain,medium,0,http://beacononline.wordpress.com/2009/09/20/darjeeling-hills-toytrain-joyride-hit-by-fresh-landslides-in-darjeeling/
+glc-1055,2009-07-22,26.8826,88.2788,10,"Kerseong, West Bengal",West Bengal,landslide,downpour,medium,0,https://www.oneindia.com/2009/07/23/darjeelingtoy-trainsuspended.html
+glc-1054,2009-07-22,26.8572,88.3143,10,"Gayabari,  West Bengal",West Bengal,landslide,downpour,medium,0,https://www.oneindia.com/2009/07/23/darjeelingtoy-trainsuspended.html
+glc-1056,2009-07-22,27.04,88.264,10,"Darjeeling, West Bengal",West Bengal,landslide,downpour,medium,0,http://blog.taragana.com/n/darjeeling-toy-train-suspended-118172/
+glc-1084,2009-08-12,27.7,92.8,5,"Upper Subansiri District, Arunanchal Pradesh",Arunachal Pradesh,landslide,downpour,medium,0,http://timesofindia.indiatimes.com/news/city/guwahati/Landslides-snap-road-links-in-Arunachal-district/articleshow/4916000.cms
+glc-1094,2009-08-16,27.15977181,88.63411246,0.5,"Katare village, 80 km from Kalimpong",West Bengal,landslide,downpour,medium,1,https://www.telegraphindia.com/1090817/jsp/siliguri/story_11368309.jsp
+glc-1091,2009-08-16,27.02459801,88.43849551,25,"Kalimpong, Darjeeling, West Bengal",West Bengal,landslide,downpour,medium,2,http://www.thaindian.com/newsportal/uncategorized/seven-die-in-west-bengal-landslides-lead_100233301.html
+glc-1089,2009-08-16,26.7914,88.363,10,"Gourishankar tea estate premises, Darjeeling, West Bengal",West Bengal,landslide,downpour,medium,4,http://news4u.co.in/?tag=darjeeling
+glc-1092,2009-08-16,26.74452462,88.40011959,5,near the Rohini-Sirubari road,West Bengal,landslide,downpour,medium,1,http://bengalnewz.blogspot.com/2009/08/top-bengal-news-of-moment_16.html
+glc-1088,2009-08-16,26.8867642,88.28044714,5,"Kerseong, Sub-division, Siliguri district, West Bengal",West Bengal,landslide,downpour,medium,5,http://hamaraphotos.com/news/national/massive-landslide-kills-at-least-five-people-in-siliguri.html
+glc-1090,2009-08-16,26.9599,88.268,5,"Malutar tea estate, Darjeeling, West Bengal",West Bengal,landslide,downpour,medium,2,http://beacononline.wordpress.com/2009/08/16/darjeeling-hills-five-killed-in-landslides-highway-blocked/
+glc-1093,2009-08-16,26.88211522,88.3195318,5,"Phagutar near Mahanadi, 12km from Kurseong, Siliguri district, Darjeeling",West Bengal,landslide,downpour,medium,1,http://beacononline.wordpress.com/2009/08/17/darjeeling-hills-landslides-kill-6-in-hills-darjeeling-cut-off-for-nine-hours/
+glc-1102,2009-08-19,27.2644,88.1365,10,"Sombaria, West Sikkim",,landslide,downpour,medium,2,http://beacononline.wordpress.com/2009/08/21/sikkim-landslides-disturb-power-lines-link-roads/
+glc-1109,2009-08-20,25.5215,93.1645,25,Lumding-Badarpur section in North Cachar Hills district,Assam,landslide,downpour,medium,0,http://www.prokerala.com/news/articles/a75292.html
+glc-1112,2009-08-20,27.1761,88.5287,25,"NH31A, Mile 27 near Rambi",Sikkim,mudslide,downpour,medium,0,http://beacononline.wordpress.com/2009/08/25/kalimpong-highway-doom-for-hill-economy/
+glc-1108,2009-08-20,24.9925,93.5,10,"Tamei, Tamenglong district on Imphal-Tamenglong (IT) road",Assam,landslide,downpour,medium,0,http://www.kanglaonline.com/index.php?template=headline&newsid=48686&typeid=2
+glc-1111,2009-08-20,27.1344,88.4575,5,"Melli Chalisey, Sikkim",West Bengal,landslide,downpour,medium,0,http://beacononline.wordpress.com/2009/08/21/sikkim-landslides-disturb-power-lines-link-roads/
+glc-1107,2009-08-20,27.0736,88.4779,25,"Geetkolbong, Kalimpong sub-division, Darjeeling, West Bengal",West Bengal,landslide,continuous_rain,medium,1,http://beacononline.wordpress.com/2009/08/21/darjeeling-hillssikkim-landslides-claim-five-in-hills/
+glc-1110,2009-08-20,26.88405686,88.28087032,10,"Kurseong, Darjeeling, West Bengal",West Bengal,landslide,continuous_rain,medium,,thestatesman
+glc-1106,2009-08-20,26.8992,88.1667,1,"(Okai Tea Garden) Mirik, Darjeeling, West Bengal",West Bengal,landslide,continuous_rain,medium,2,http://beacononline.wordpress.com/2009/08/21/darjeeling-hillssikkim-landslides-claim-five-in-hills/
+glc-1125,2009-08-26,27.3746,88.7648,25,"17th Mile towards Tsomgo Lake, near Kyongsala, Sikkim",Sikkim,landslide,rain,medium,,http://beacononline.wordpress.com/2009/08/28/sikkim-landslides-at-17th-mile-%E2%80%93-the-bane-of-tourism/
+glc-1127,2009-08-27,25.1718,93.123,10,between Mahur and Phaiding railway stations on Barail hills (Mahur and Barail hi,Assam,landslide,downpour,medium,,http://www.prokerala.com/news/articles/a75292.html
+glc-1168,2009-09-17,27.1954,88.6115,5,"4th Mile on road between Rongli, Rhenock and Rangpo in East Sikkim.",Sikkim,landslide,rain,medium,,http://sikkimnews.blogspot.com/2009/09/landslides-at-4th-mile-disrupts-traffic.html
+glc-1222,2009-10-05,23.73478778,92.72124394,5,"Chhinga Veng, Aizawl",Mizoram,landslide,downpour,medium,3,http://www.ptinews.com/news/316483_Three-killed--ten-injured-in-Mizoram-landslide
+glc-1596,2010-03-27,24.7339,93.9161,5,"LangthAbal Khoupum, Imphal, Manipur",Manipur,mudslide,downpour,medium,0,http://news.oneindia.in/2010/03/29/rainsstorm-cause-havoc-inmanipur.html
+glc-1611,2010-04-01,25.1553,93.028,25,"Paglanala village, Dholai Block, near Dwarbandh locality of the district, Cachar",Assam,landslide,downpour,medium,3,http://en.apa.az/news.php?id=119178
+glc-1613,2010-04-02,27.8997,93.3497,1,"Koloriang, Kuring Kumey district, Arunachal Pradesh",Arunachal Pradesh,mudslide,downpour,large,12,http://english.peopledaily.com.cn/90001/90777/90852/6938742.html
+glc-1755,2010-04-17,27.3341,88.6083,5,"Natl. Highway 31-A at Pani House(?), Gangtok",Sikkim,landslide,downpour,small,0,http://voiceofsikkim.com/2010/04/18/rains-trigger-major-landslide-at-pani-house/
+glc-1756,2010-04-17,27.322,88.6087,1,"Nam Nang, Gangtok",Sikkim,landslide,downpour,small,0,http://voiceofsikkim.com/2010/04/18/rains-trigger-major-landslide-at-pani-house/
+glc-1771,2010-04-20,26.1978,91.7665,0.5,"Raj Bhavan Guwahati, Assam",Assam,landslide,downpour,medium,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=apr2110/at06
+glc-1770,2010-04-20,26.1965,91.763,1,"Kharghuli, Guwahati, Assam",Assam,landslide,downpour,medium,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=apr2110/at06
+glc-1776,2010-04-21,25.3612,92.2845,25,Shillong-Jowai(Jwai)-Badarpur National Highway(NH 44) at Sunapur village in Jain,Meghalaya,landslide,downpour,medium,0,http://hmar.in/news/landslide-blocks-nh-44-for-12-hours
+glc-1857,2010-05-11,25.3433,92.2897,25,"National highway 44 at Sunapur and Tongseng in Jaintia Hills district, eastern M",Meghalaya,landslide,downpour,medium,0,http://www.prokerala.com/news/articles/a135422.html
+glc-1929,2010-05-31,27.3543,88.6428,5,"North Sikkiim Highway, periphery of Gangtok, Sikkim East district",Sikkim,landslide,downpour,medium,0,http://sify.com/news/500-tourists-stranded-in-Sikkim-due-to-landslides-news-National-kgca4ibdgfd.html
+glc-1935,2010-06-03,23.8986,91.7599,5,"atharamura hills, Highway 44, Tripura",Tripura,landslide,downpour,medium,0,http://www.telegraphindia.com/1100605/jsp/northeast/story_12529386.jsp
+glc-1934,2010-06-03,24.6005,92.3814,25,Rongpur village under Bhairabhnagar panchayat in Karimganj district,Assam,landslide,downpour,medium,2,http://www.telegraphindia.com/1100605/jsp/northeast/story_12529386.jsp
+glc-1963,2010-06-11,26.944,88.4441,10,"near Sevok(Sevoke), Highway 31A to Sikkimand Kalimpong, Hatisura(?), Darjeeling",West Bengal,landslide,downpour,medium,0,http://news.oneindia.in/2010/06/12/sikkimcut-off-from-west-bengal-due-to-massivelandslide.html
+glc-1986,2010-06-15,26.3335,94.5512,1,"Fazl Ali College, Mokokchung, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.morungexpress.com/local/50451.html
+glc-1987,2010-06-15,25.2269,93.1658,25,"rails between Mahur and Wadringdisa(?), Assam",Assam,landslide,downpour,medium,0,http://www.ptinews.com/news/721800_Landslides--blockade-hit-trains-services-in-NC-Hills
+glc-1993,2010-06-16,26.8073,88.3162,10,"Kurseong sub-division, Road between Kurseong and New Jalpaiguri",West Bengal,landslide,downpour,medium,0,http://sify.com/news/landslide-disrupts-supply-lines-between-siliguri-darjeeling-news-national-kgqtabgbdjc.html
+glc-1995,2010-06-16,27.0765,88.4808,10,Tripi (Tirpai?) road of Upper Gumfa area in Kalimpong,West Bengal,landslide,rain,medium,3,http://www.indiavision.com/news/article/national/67832/1/print/
+glc-1994,2010-06-16,25.0633,92.8025,25,"rails between Jatinga and Longrangjao(?), Assam",Assam,landslide,downpour,medium,0,http://www.ptinews.com/news/721800_Landslides--blockade-hit-trains-services-in-NC-Hills
+glc-1996,2010-06-17,26.4333,94.8833,25,"Shayoung Ward(?), Longleng, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.morungexpress.com/local/50546.html
+glc-2025,2010-06-28,25.5728,91.885,5,"Police CID complex(?), Shillong, Meghalaya",Meghalaya,landslide,downpour,medium,1,http://www.hindustantimes.com/Girl-dies-in-landslide-flash-flood-wrecks-havoc-in-Meghalaya/Article1-564450.aspx
+glc-2034,2010-07-04,26.8712,88.3052,0.5,"Toy Train rails between Siliguri and Darjeeling, West Bengal",West Bengal,landslide,rain,medium,0,http://news.oneindia.in/2010/07/04/landslidedisrupts-toy-train-services-in-darjeelingdisappo.html
+glc-2045,2010-07-06,26.2363,94.8133,5,"Tuensang, Nagaland",Nagaland,mudslide,monsoon,medium,0,http://www.morungexpress.com/local/51540.html
+glc-2044,2010-07-06,25.8877,94.7861,5,"Kiphire,  Nagaland",Nagaland,mudslide,monsoon,medium,0,http://www.morungexpress.com/local/51540.html
+glc-2042,2010-07-06,26.0093,94.5238,5,"Zunheboto, Nagaland",Nagaland,mudslide,monsoon,medium,0,http://www.morungexpress.com/local/51540.html
+glc-2043,2010-07-06,26.7225,95.0281,5,"Mon, Nagaland",Nagaland,mudslide,monsoon,medium,0,http://www.morungexpress.com/local/51540.html
+glc-2098,2010-07-19,26.7215,95.0283,5,"Jahjon ward(?), Mon town, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.nagalandpost.com/ShowStory.aspx?npoststoryiden=UzEwMjg4MDU%3D-2pMJ7cwWh98%3D
+glc-2106,2010-07-20,26.8716,94.9921,25,"road to Oting near Longlam village, 13 km from Tizit subdivision, Mon district, ",Nagaland,landslide,downpour,medium,0,http://www.nagalandpost.com/ShowStory.aspx?npoststoryiden=UzEwMjg5OTY%3D-LvoR7D2GhjI%3D
+glc-2113,2010-07-21,27.3773,88.559,25,"Singtam-Mangan rd, Sikkim",Sikkim,landslide,downpour,medium,0,http://www.kuenselonline.com/modules.php?name=News&file=article&sid=16186
+glc-2140,2010-07-25,25.0477,92.801,25,"road between Halfong and Redzol(?) or Silchar, Assam",Assam,landslide,downpour,medium,0,http://www.telegraphindia.com/1100727/jsp/northeast/story_12728199.jsp
+glc-2164,2010-07-29,25.3098633,94.48214677,25,"Chingai-Kuingai(Quingai) route (16 kms), Chingai subdivision, Ukhrul district, M",Manipur,landslide,downpour,medium,0,http://www.e-pao.net/GP.asp?src=28..210810.aug10
+glc-2166,2010-07-29,24.9786,93.5027,10,"Highway 53 at Tupul, Tamenglong district",Assam,landslide,downpour,medium,0,"http://www.portal.gsi.gov.in/portal/page?_pageid=127,875814&_dad=portal&_schema=PORTAL"
+glc-2163,2010-07-29,25.4196,94.1054,5,"Maram area in Senapati district, National Highway 39",Nagaland,landslide,downpour,medium,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=jul3110/oth05
+glc-2182,2010-07-31,24.9356,93.8443,25,Dimapur-Imphal highway (NH 39) near Manipur,Manipur,landslide,rain,medium,0,http://www.youtube.com/watch?v=jHTtW2WaJGw
+glc-2201,2010-08-05,27.0366,88.263,5,"Darjeeling district, West Bengal, Toy Train route",West Bengal,landslide,downpour,medium,0,http://www.indiavision.com/news/article/national/88496/
+glc-2214,2010-08-06,27.0375,88.2627,25,Dārjiling : The traffic along the National Highway 55 was disrupted on Friday fo,West Bengal,landslide,downpour,medium,0,http://buzzg.com/news/heavy-rainfall-triggers-landslide-blocks-traffic-on-nh-55.html
+glc-2205,2010-08-06,23.7365,92.7146,1,"Dawrpui Vengthar cemetary, Aizwal, Mizoram",Mizoram,landslide,downpour,medium,0,"http://www.portal.gsi.gov.in/portal/page?_pageid=127,875814&_dad=portal&_schema=PORTAL"
+glc-2243,2010-08-13,25.70223725,94.04619681,5,"NH-39 near Kohima Municipality Council(KMC) dumping ground, between Zubza(Sechu)",Nagaland,landslide,downpour,medium,0,http://www.e-pao.net/GP.asp?src=21..210810.aug10
+glc-2249,2010-08-14,26.0814,94.803,25,"Kiphire-Tuensang rd, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.morungexpress.com/frontpage/53726.html
+glc-2248,2010-08-14,26.222,94.9152,25,"Noklak-Tuensang road, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.morungexpress.com/frontpage/53726.html
+glc-2247,2010-08-14,26.148,94.8422,10,"Tuensang-Shamatore(Sampurre) rd, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.morungexpress.com/frontpage/53726.html
+glc-2253,2010-08-15,25.31006064,94.48265093,25,"Chingai-Kuingai(Quingai) route (16 kms), Chingai subdivision, Ukhrul district, M",Manipur,landslide,downpour,medium,0,http://www.e-pao.net/GP.asp?src=28..210810.aug10
+glc-2261,2010-08-17,26.9435,88.4445,10,"Hatisur(?), Sevok(Sevoke), Kalimpong sub-division, NH 31A between Siliguri and G",West Bengal,landslide,downpour,medium,0,http://www.indiablooms.com/NewsDetailsPage/newsDetails170810t.php
+glc-2263,2010-08-17,26.2753,94.6654,25,"Dikhu bridge(?), Mokokchung-Tuensang road, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.morungexpress.com/frontpage/53726.html
+glc-2282,2010-08-19,26.1984,94.8158,1,"Tuensang-Kohima rd, 3 km outside Tuensang, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.indiablooms.com/EnvironmentDetailsPage/environmentDetails190810a.php
+glc-2283,2010-08-19,24.8961,93.4957,5,"2 km from Khongsang village(?), road between Tamenglong and Imphal or Nungba, Ma",Manipur,mudslide,downpour,medium,0,http://e-pao.net/GP.asp?src=21..210810.aug10
+glc-2281,2010-08-19,25.61560252,94.11603493,5,"Kisima, Nagaland",Nagaland,landslide,downpour,medium,,http://www.indiablooms.com/EnvironmentDetailsPage/environmentDetails190810a.php
+glc-2279,2010-08-19,26.9722,88.4481,10,"NH 31A at Likhuvir(?), near Teesta Bazar, 42nd Km marker(?), Kalimpong, West Ben",West Bengal,landslide,downpour,medium,0,http://www.newkerala.com/news/fullnews-25771.html
+glc-2296,2010-08-20,27.167,88.3652,10,"many locations around Namchi, Sikkim",Sikkim,complex,downpour,medium,0,http://thehimalayanbeacon.com/magazine/2010/08/21/sikkim-landslides-heavy-toll-2-gpus-completely-cut/
+glc-2304,2010-08-21,25.5718,94.1211,10,"NH 39 at Kigwema(?), between Mao Gate and Kohima, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.e-pao.net/GP.asp?src=21..210810.aug10
+glc-2341,2010-08-26,27.2319,88.497,10,NH-31A at Topakhani tunnel(?) and fruit preservation factory(?) and Chisopani br,,landslide,downpour,medium,0,http://thehimalayanbeacon.com/magazine/2010/08/28/sikkim-landslides-cut-sikkim-link-woman-disappears-swirling-flash-flood/
+glc-2344,2010-08-27,24.7505,93.4221,5,"NH-53 at Nungba police station, Kambirong(?), Manipur",Assam,landslide,downpour,medium,0,http://www.e-pao.net/GP.asp?src=27..280810.aug10
+glc-2343,2010-08-27,25.4786,94.1327,5,"NH-39 at Ekai village(?), 2 km for Tadubi, Manipur",Nagaland,landslide,downpour,medium,0,http://www.e-pao.net/GP.asp?src=27..280810.aug10
+glc-2345,2010-08-27,27.3392,88.6188,5,"Daragaon(?), Gangtok city, Sikkim",Sikkim,landslide,downpour,medium,0,http://www.thehindu.com/news/states/other-states/article600333.ece
+glc-2392,2010-09-04,27.3702,88.7334,10,"17th mile(?), Jawaharlal Nehru Marg hwy, between Gangtok and Nathu La, Sikkim",Sikkim,landslide,downpour,medium,0,http://news.oneindia.in/2010/09/04/strategicroad-link-cut-off-due-to-landslide-insikkim.html
+glc-2415,2010-09-12,25.63961883,94.11112157,25,power lines 5 km from Kohima,Nagaland,landslide,downpour,medium,,http://www.telegraphindia.com/1100916/jsp/northeast/story_12941830.jsp
+glc-2424,2010-09-13,23.591,92.9296,25,"near Tuivawl(?), Aizawl-Champhai rd, Aizawl district, Mizoram",Mizoram,landslide,downpour,medium,0,http://mizoramexpress.com/index.php/2010/09/mizoram-landslides-kill-one-woman/
+glc-2421,2010-09-13,23.75406693,92.74128531,1,"road to Muanna Godown, Zuangtui, Mizoram",Mizoram,landslide,downpour,medium,,http://mizoramexpress.com/index.php/2010/09/mizoram-landslides-kill-one-woman/
+glc-2422,2010-09-13,23.74182634,92.7141905,1,"Hunthar Veng, Mizoram",Mizoram,landslide,downpour,medium,,http://mizoramexpress.com/index.php/2010/09/mizoram-landslides-kill-one-woman/
+glc-2426,2010-09-13,22.7176,92.8416,25,"Hual(Hu) village(?), Lunglei-Lawngtlai rd, Mizoram",Mizoram,landslide,downpour,medium,0,http://mizoramexpress.com/index.php/2010/09/mizoram-landslides-kill-one-woman/
+glc-2423,2010-09-13,23.73504471,92.71060943,1,"road to Kanan Veng from Hunthar Veng, Mizoram",Mizoram,landslide,downpour,medium,,http://mizoramexpress.com/index.php/2010/09/mizoram-landslides-kill-one-woman/
+glc-2425,2010-09-13,23.3439,93.0748,25,"near Tuichang(?) on Tuichang river, Aizawl-Champhai rd, Mizoram",Mizoram,landslide,downpour,medium,0,http://mizoramexpress.com/index.php/2010/09/mizoram-landslides-kill-one-woman/
+glc-2420,2010-09-13,23.72988966,92.71495623,1,"Tuikual 'C', Aizawl, Mizoram",Mizoram,landslide,downpour,medium,1,http://mizoramexpress.com/index.php/2010/09/mizoram-landslides-kill-one-woman/
+glc-2436,2010-09-16,24.3069,93.125,5,"Taithu village, Churanchandpur district, Mizoram, Manipur",Mizoram,landslide,downpour,medium,0,http://mizoramexpress.com/index.php/2010/09/landslide-hits-taithu-village-22-people-escape-death/
+glc-2437,2010-09-16,23.7527,92.694,5,"Aizawl-Lengpui rd 3km from Aizawl, Mizoram, Manipur",Mizoram,landslide,downpour,medium,0,http://mizoramexpress.com/index.php/2010/09/landslide-hits-aizawl-1-house-destroyed/
+glc-2539,2010-10-03,28.3092,95.4149,25,"Mosing village, Upper Siang district, Arunachal Pradesh",Arunachal Pradesh,landslide,downpour,medium,10,"http://www.portal.gsi.gov.in/portal/page?_pageid=127,875814&_dad=portal&_schema=PORTAL"
+glc-2566,2010-10-08,25.4769,94.1351,5,"Sahong, Tabu and Pani village under Tadubi police station of Senapati district, ",Nagaland,mudslide,downpour,medium,0,http://e-pao.net/GP.asp?src=23..111010.oct10
+glc-2567,2010-10-08,25.6633,94.4703,5,"Phek, Manipur",Manipur,complex,downpour,medium,0,http://www.morungexpress.com/local/56264.html
+glc-2570,2010-10-08,24.837,93.9128,5,"Tharon(?) and Langol Tarung villages, Thangmeiband constituency, Imphal, Manipur",Manipur,landslide,downpour,medium,0,http://e-pao.net/GP.asp?src=6..111010.oct10
+glc-2569,2010-10-08,25.2745,94.0212,5,"Bungte Chiru village(?), Senapati district, Manipur",Nagaland,landslide,downpour,medium,0,http://e-pao.net/GP.asp?src=6..111010.oct10
+glc-2568,2010-10-08,24.7679,93.4108,25,"Nungba, Tamenglong, Manipur",Assam,landslide,downpour,medium,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=oct1110/oth05
+glc-2578,2010-10-09,25.3179,94.0462,5,"NH-39 in Karong area, Manipur",Nagaland,landslide,downpour,medium,0,http://www.e-pao.net/GP.asp?src=5..101010.oct10
+glc-2576,2010-10-09,25.4788,94.1399,10,"NH-39 at Tobio village(?), 7 km form Tadubi, Manipur",Nagaland,landslide,downpour,medium,0,http://www.e-pao.net/GP.asp?src=5..101010.oct10
+glc-2579,2010-10-09,25.682,94.1076,1,"Lower Pezielietsie(Tinpati), Kohima, Manipur",Nagaland,landslide,downpour,medium,0,http://www.indianexpress.com/news/Landslides-cut-off-N-E/695456
+glc-2573,2010-10-09,25.1796,93.0083,5,"Haflong, Assam",Assam,mudslide,downpour,medium,1,http://www.dnaindia.com/india/report_one-dead-road-and-rail-communication-disrupted-due-to-rains-in-assam_1450237
+glc-2587,2010-10-10,25.6623,94.1072,1,"Lower Chandmari area, PWD department, Kohima, Manipur",Nagaland,landslide,downpour,medium,0,http://www.morungexpress.com/local/56264.html
+glc-2743,2010-11-22,27.5798729,91.85672387,1,"Tawang Monastery, Arunachal Pradesh",Arunachal Pradesh,landslide,unknown,medium,,http://www.dnaindia.com/india/report_tawang-monastery-faces-danger-due-to-landslides_1472890
+glc-3269,2011-03-22,28.0791,96.5242,10,"road from other districts to Hawai(Tawai?) which is  on Lojit river, near Hayuli",Arunachal Pradesh,landslide,downpour,medium,0,http://articles.timesofindia.indiatimes.com/2011-03-23/guwahati/29178165_1_road-links-rainfall-source
+glc-3525,2011-05-22,25.0672,93.4093,25,"Kaiphundai(?)-Tousem(in Assam) road, Tamenglong district, Manipur",Assam,landslide,downpour,medium,0,http://www.e-pao.net/GP.asp?src=15..240511.may11
+glc-3532,2011-05-24,25.0888,92.8551,10,"Silchar-Haflong rd., at Reko(Rekha )(?), near Harangajao, Barail Hills, Assam",Assam,complex,downpour,medium,0,http://articles.timesofindia.indiatimes.com/2011-05-27/guwahati/29591193_1_dima-hasao-landslide-traffic-movement
+glc-3556,2011-05-31,25.1555,93.8474,25,"Roads between Tamei(Tamma?), Kangpokpi and Chalwa, Manipur",Manipur,landslide,continuous_rain,small,0,http://e-pao.net/GP.asp?src=7..020611.jun11
+glc-3621,2011-06-17,26.88,88.28,5,"St Mary's Hill, 3 km from Kurseong, West Bengal",West Bengal,mudslide,downpour,large,4,http://articles.timesofindia.indiatimes.com/2011-06-18/kolkata/29673649_1_rescue-operations-fire-brigade-mudslide
+glc-3617,2011-06-17,26.84850975,88.26181745,5,Pankhabari and Rohini routes in Kurseong,West Bengal,landslide,continuous_rain,medium,0,http://timesofindia.indiatimes.com/city/kolkata-/Landslides-cut-off-Hills-for-two-hours/articleshow/8907428.cms
+glc-3632,2011-06-20,27.0638,88.4659,5,"Birik on NH31A, Kalimpong",West Bengal,landslide,rain,medium,0,http://www.telegraphindia.com/1110620/jsp/frontpage/story_14134589.jsp
+glc-3633,2011-06-20,26.3186,94.5121,5,Mokokchung,Nagaland,landslide,downpour,medium,0,http://www.morungexpress.com/local/67219.html
+glc-3637,2011-06-21,25.51614662,94.2341227,1,"Lasumi village in Phek district, Kohima",Nagaland,landslide,rain,medium,,https://web.archive.org/web/20110627132314/http://www.morungexpress.com/regional/67365.html
+glc-3643,2011-06-23,27.2879,88.2579,5,Villages surrounding the West Sikkim district of,,landslide,downpour,large,16,http://www.assamtribune.com/scripts/detailsnew.asp?id=jun2511/oth05
+glc-3662,2011-06-28,25.03561729,94.0144205,25,"Ikou-Gangpijang road, near: Ikou, Saikul, and Gangpijang; Imphal India",Manipur,landslide,rain,medium,,http://e-pao.net/GP.asp?src=7..290611.jun11
+glc-3683,2011-07-01,25.8782,94.1739,10,NH-61 between Botsa and Chiechama,Nagaland,landslide,downpour,medium,0,http://www.morungexpress.com/local/69559.html
+glc-3741,2011-07-07,25.4191,94.1079,5,Maram (80 km north of Imphal),Nagaland,landslide,rain,medium,0,http://www.e-pao.net/GP.asp?src=8..080711.jul11
+glc-3760,2011-07-11,25.6703,94.1095,25,"NH-61, 1 km before reaching Botsa",Nagaland,landslide,downpour,medium,0,http://www.morungexpress.com/local/68036.html
+glc-3776,2011-07-15,27.125,93.7145,5,Itanagar/Naharlagur/Nirjuli,Arunachal Pradesh,landslide,downpour,small,0,http://ibnlive.in.com/generalnewsfeed/news/flash-floods-landslides-in-arunachal-pradesh/757817.html
+glc-3789,2011-07-16,27.2743,92.9064,10,Mebua (8 km from Seppa),Arunachal Pradesh,landslide,downpour,medium,0,http://english.samaylive.com/regional-news/others-news/676490549/flash-floods-in-arunachal-pradesh.html
+glc-3794,2011-07-17,26.99195749,88.42280921,5,West Bengal-Sikkim at highway Rambi,Sikkim,landslide,rain,medium,,https://web.archive.org/web/20110722180056/http://www.thehindu.com/news/states/other-states/article2276615.ece
+glc-3806,2011-07-19,27.1032,93.6884,10,"Itanagar (one near Pachali power house, one near Heema Hospital, and one nearRom",Arunachal Pradesh,landslide,downpour,medium,3,http://ibnlive.in.com/generalnewsfeed/news/three-killed-in-landslides/758753.html
+glc-3805,2011-07-19,27.05374234,88.42572376,1,200 meters from Teesta Bridge towards Siliguri,Sikkim,landslide,rain,medium,0,http://www.thehindu.com/news/states/other-states/article2276615.ece
+glc-3813,2011-07-20,27.1141,88.4658,25,National Highway 31A in West Bengal's Darjeeling district,West Bengal,landslide,rain,small,0,http://twocircles.net/2011jul20/landslide_snaps_siligurisikkim_highway_link.html
+glc-3830,2011-07-22,24.3527,94.3429,10,Manipur,Manipur,landslide,downpour,small,0,http://e-pao.net/GP.asp?src=6..270711.jul11
+glc-3860,2011-07-29,25.4192,94.108,10,"Maram, Manipur",Nagaland,landslide,rain,medium,0,http://kanglaonline.com/2011/07/works-minister-visits-landslide-hit-maram-stretch-of-nh2/
+glc-3881,2011-08-05,27.1034,93.6885,5,Itanagar,Arunachal Pradesh,landslide,downpour,medium,0,http://articles.timesofindia.indiatimes.com/2011-08-06/guwahati/29861700_1_water-supply-drinking-water-landslides
+glc-3916,2011-08-13,25.7713,93.8067,10,"Chumukedima, Dimapur",Assam,mudslide,downpour,medium,0,http://www.morungexpress.com/frontpage/69382.html
+glc-3932,2011-08-18,25.83,94.13,0.5,Botsa  and Chiechama,Nagaland,landslide,monsoon,medium,0,thenewsofindia
+glc-3943,2011-08-23,27.13862165,88.22551799,10,"Samathang, Sikkim",,landslide,downpour,medium,5,http://ibnlive.in.com/generalnewsfeed/news/five-killed-in-landslides-in-sikkim/801295.html
+glc-3944,2011-08-25,27.7344,88.633,10,"Hee-Khola, Sikkim",,landslide,downpour,medium,2,http://ibnlive.in.com/generalnewsfeed/news/five-killed-in-landslides-in-sikkim/801295.html
+glc-3965,2011-09-06,24.808,93.117,1,NH 37 at Awang Khul,Assam,landslide,rain,medium,3,http://e-pao.net/GP.asp?src=Snipp8..080911.sep11
+glc-3986,2011-09-25,27.0605,88.255,1,"Singamari, Darhelling, West Bengal",West Bengal,landslide,downpour,medium,0,http://articles.timesofindia.indiatimes.com/2011-09-27/kolkata/30207909_1_magnitude-earthquake-singamari-repair-work
+glc-6782,2011-09-28,26.8545,88.3372,0.5,NH55 at Tindharia,West Bengal,landslide,rain,medium,0,http://www.telegraphindia.com/1150218/jsp/siliguri/story_3972.jsp#.VOUXUPnF98E
+glc-3997,2011-09-30,27.5161,88.5575,10,Mangan : The slide which occurred at Thingchim around 18 kilometers from Mangan ,,landslide,unknown,medium,0,http://isikkim.com/2011-09-landslide-disrupts-gangtok-mangan-highway-again-30-3/
+glc-4241,2012-03-04,25.1604,93.6795,25,Tamei constituency in Tamenlong district,Manipur,landslide,unknown,medium,0,http://articles.timesofindia.indiatimes.com/2012-03-04/guwahati/31120923_1_booths-repoll-polling-stations
+glc-4377,2012-06-02,26.1475,91.7356,5,"Guwahati, Assam",Assam,landslide,downpour,large,,http://ibnlive.in.com/generalnewsfeed/news/barrak-valley-cut-off-due-to-heavy-landslides/1007155.html
+glc-4382,2012-06-03,25.1175,92.8573,5,"between Harangajao and Mailongdisa, Assa,",Assam,landslide,downpour,medium,,http://articles.timesofindia.indiatimes.com/2012-06-04/guwahati/32030359_1_barail-hill-harangajao-landslides
+glc-4385,2012-06-03,27.7167,88.5577,5,"lachen, Sikkim",,landslide,downpour,medium,,http://www.telegraphindia.com/1120605/jsp/siliguri/story_15570407.jsp#.UN9-FOSx_K0
+glc-4384,2012-06-03,25.1775,93.0123,5,"between Haflong and  Bagetar, Assam",Assam,landslide,downpour,medium,,http://articles.timesofindia.indiatimes.com/2012-06-04/guwahati/32030359_1_barail-hill-harangajao-landslides
+glc-4383,2012-06-03,25.3056,93.1265,5,"between Maibang and Daotohaja, Assam",Assam,landslide,downpour,medium,,http://articles.timesofindia.indiatimes.com/2012-06-04/guwahati/32030359_1_barail-hill-harangajao-landslides
+glc-4394,2012-06-07,27.1748,88.6458,25,"Rolep, South Sikkim( Mapping to Rhenock 12 miles from Rolep)",Sikkim,landslide,rain,large,7,http://www.telegraphindia.com/1120608/jsp/siliguri/story_15584321.jsp#.UN_I7eSx_K0com
+glc-4393,2012-06-07,27.7565,88.632,25,"Nathang Maong, Sikkim",,landslide,downpour,large,7,http://www.thehimalayantimes.com/fullNews.php?headline=Landslide+kills+7+Nepali-speaking+people+in+Sikkim&NewsID=335265
+glc-4411,2012-06-14,27.339,88.6065,5,"Tathangchen, Gangtok, Sikkim",Sikkim,landslide,downpour,medium,,http://isikkim.com/2012-06-sikkim-landslide-at-tathangchen-poses-threat-to-residents-15-5/
+glc-4424,2012-06-20,26.149,91.7351,1,"Lalunggaon, Guwahati,  Assam",Assam,landslide,downpour,medium,,http://twocircles.net/2012jun22/landslide_kills_three_assam.html
+glc-4426,2012-06-22,26.1226,91.7162,5,Lalunggaon near Gorchuk area,Assam,landslide,downpour,medium,3,http://thesop.org/story/20120701/woman-killed-in-guwahati-by-landslide.html
+glc-4435,2012-06-25,27.174,95.8011,10,"Tirap , Arunachal Pradesh",Arunachal Pradesh,landslide,downpour,large,,http://articles.timesofindia.indiatimes.com/2012-07-04/guwahati/32536229_1_massive-landslides-landslide-hit-road-blockade
+glc-4434,2012-06-25,26.1049,91.7369,1,"Sonaighuli area near Kahilipara, Guwahati City, Assam",Assam,landslide,downpour,large,1,http://thesop.org/story/20120701/woman-killed-in-guwahati-by-landslide.html
+glc-4446,2012-07-05,28.9986,94.8885,5,"Tuting, Upper Siang , Arunachal Pradesh",Arunachal Pradesh,landslide,downpour,large,,http://articles.timesofindia.indiatimes.com/2012-07-07/guwahati/32577108_1_arunachal-district-landslides-arunachal-pradesh
+glc-6783,2012-07-19,26.8546,88.3373,0.5,Tindharia railway maintenance shed,West Bengal,landslide,monsoon,medium,0,http://blogs.agu.org/landslideblog/2012/07/28/a-landslide-is-rapidly-destroying-a-world-heritage-site-in-india/
+glc-4552,2012-09-14,27.0377,88.3603,5,"Takdah, West Bengal",Sikkim,landslide,downpour,medium,,http://www.telegraphindia.com/1120915/jsp/siliguri/story_15979380.jsp#.UQ8y7h2x-3I
+glc-4556,2012-09-16,27.1675,88.3651,5,"Namchi to Phongla, Namchi to Melli ,Namchi to Sumbuk",Sikkim,landslide,downpour,medium,,http://www.business-standard.com/generalnews/news/landslides-block-several-roads-in-south-sikkim-district/57119/
+glc-4569,2012-09-19,27.8385,88.556,10,"North Skkimm Hwy between, Chungthang and Mangan, North Skimm (9 landslides)",,landslide,downpour,large,20,http://www.hindustantimes.com/india/flash-floods-and-landslides-kill-21-in-sikkim/story-4FYliiSqiH1MnwaoLBIUnO.html
+glc-4571,2012-09-19,27.6558,88.605,10,"Chungthang and Pegong. Houses, between Rangma and Chungthang",,landslide,downpour,large,,http://www.hindustantimes.com/india/flash-floods-and-landslides-kill-21-in-sikkim/story-4FYliiSqiH1MnwaoLBIUnO.html
+glc-4570,2012-09-19,27.8458,95.2253,1,Arunachal Pradesh,Arunachal Pradesh,landslide,downpour,medium,,http://articles.timesofindia.indiatimes.com/2012-09-19/guwahati/33951873_1_landslides-road-communication-water-tank
+glc-4610,2012-11-11,23.7705,92.5217,5,"Dapchhuah, Mamit, Mizoram",Mizoram,landslide,downpour,medium,4,http://www.assamtribune.com/scripts/detailsnew.asp?id=oct1312/oth06
+glc-4757,2013-02-18,28.1193,95.1645,5,"East Siang, Arunachal Pradesh",Arunachal Pradesh,landslide,rain,medium,3,http://articles.timesofindia.indiatimes.com/2013-02-20/guwahati/37199432_1_fire-mishap-east-siang-massive-landslide
+glc-4848,2013-05-08,24.0896,91.4663,5,"Purba Simna, Tripura",Tripura,landslide,rain,medium,1,http://www.upi.com/Top_News/World-News/2013/05/09/Cyclonic-storms-kill-seven-in-India/UPI-39151368107292/
+glc-4859,2013-05-11,26.1771,91.7599,5,"Sarania Hills, North Guwahati, Guwahati, Assam,",Assam,landslide,rain,medium,,http://articles.timesofindia.indiatimes.com/2013-05-12/guwahati/39203561_1_artificial-floods-guwahati-municipal-corporation-gs-road
+glc-4857,2013-05-11,23.7281,92.7175,25,"Laipuitland , Aizawl, Mizoram",Mizoram,landslide,rain,large,15,http://articles.timesofindia.indiatimes.com/2013-05-12/guwahati/39203177_1_young-mizo-association-aizawl-rescue-work
+glc-4860,2013-05-11,26.1016,91.6906,5,"Boragaon, North Guwahati, Guwahati, Assam,",Assam,landslide,rain,medium,,http://articles.timesofindia.indiatimes.com/2013-05-12/guwahati/39203561_1_artificial-floods-guwahati-municipal-corporation-gs-road
+glc-4861,2013-05-12,24.9926,93.4946,25,"Khongsang, Tamenglong, Manipur,",Assam,mudslide,rain,medium,,http://www.e-pao.net/GP.asp?src=23..130513.may13
+glc-4906,2013-06-07,26.0977,94.7499,10,"Helipong-Chessore Road, Nagaland",Nagaland,landslide,unknown,medium,,http://www.nagalandpost.com/channelnews/state/StateNews.aspx?news=TkVXUzEwMDA0NjAwNw%3D%3D-%2FtfIAOw1uMk%3D
+glc-4905,2013-06-07,26.0977,94.7031,25,"Kuthur – Huker Road Via Y Anner, Chessore, Nagaland",Nagaland,landslide,unknown,medium,,http://www.nagalandpost.com/channelnews/state/StateNews.aspx?news=TkVXUzEwMDA0NjAwNw%3D%3D-%2FtfIAOw1uMk%3D
+glc-4908,2013-06-08,27.3721,88.708,25,"15 Km From Gangtok, Himalayans",Sikkim,landslide,downpour,medium,0,http://www.business-standard.com/article/news-ani/tourists-stranded-due-to-landslide-in-gangtok-113060900319_1.html
+glc-4990,2013-06-27,27.3765,88.7628,1,"Near Changu Lake, 15Km Away From Nathu La, On India-China Border In Eastern Sikk",Sikkim,landslide,downpour,medium,0,http://www.indiatvnews.com/news/india/sikkim-landslide-army-rescues-tourists-stranded-near-nathu-la-24315.html
+glc-5006,2013-07-01,26.1147,94.3864,1,"Thillong Village, Doyang Along State Highway 1, Wokha To Merapani Road",Nagaland,landslide,downpour,medium,0,http://www.nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDA0MDQ4MQ%3D%3D-gEvw8J4DIOI%3D
+glc-5005,2013-07-01,26.72,95.029,5,"Walo Ward, Mon Town, Wokha District, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDA0MDQ4MQ%3D%3D-gEvw8J4DIOI%3D
+glc-5084,2013-07-12,25.616,94.1167,10,"National Highway 2 Near Phesama Village Close To Kisama Naha Heritage Site, Kohi",Nagaland,landslide,downpour,medium,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=jul1613/oth06
+glc-5087,2013-07-12,25.6269,94.1139,10,"National Highway 29 Near Phesama Village, Nagaland",Nagaland,landslide,downpour,medium,0,http://www.thehindubusinessline.com/news/states/landslides-disrupt-vehicular-movement-on-nh29/article4912110.ece
+glc-5107,2013-07-15,25.6269,94.1139,10,"National Highway 29 Near Phesama Village, Nagaland",Nagaland,landslide,rain,medium,0,http://articles.timesofindia.indiatimes.com/2013-07-15/guwahati/40589516_1_southern-angami-youth-organization-jessami-tadubi
+glc-5250,2013-08-01,27.8837,93.0515,10,"Polo River At Polosang, Arunachal Pradesh",Arunachal Pradesh,mudslide,rain,medium,,http://www.thehindubusinessline.com/news/states/landslide-blocks-polo-river-in-arunachal-pradesh/article4996075.ece
+glc-5271,2013-08-04,26.284,94.5808,5,"Nanga, Nagaland",Nagaland,landslide,continuous_rain,medium,,http://www.nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDA0MjY4Nw%3D%3D-bSp8jh3okxw%3D
+glc-5268,2013-08-04,26.0137,94.5163,25,"Zunheboto, Nagaland",Nagaland,landslide,continuous_rain,medium,,http://www.morungexpress.com/local/101605.html
+glc-5273,2013-08-04,26.1807,94.5497,5,"Zhekuto, Nagaland",Nagaland,landslide,monsoon,medium,,http://www.nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDA0MjY4Nw%3D%3D-bSp8jh3okxw%3D
+glc-5272,2013-08-04,26.2083,94.5438,1,"Longsa, Nagaland",Nagaland,landslide,monsoon,medium,,http://www.nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDA0MjY4Nw%3D%3D-bSp8jh3okxw%3D
+glc-5274,2013-08-04,26.0838,94.564,25,"Suruhuto Town, Nagaland",Nagaland,landslide,rain,medium,,http://www.nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDA0MjY4Nw%3D%3D-bSp8jh3okxw%3D
+glc-5275,2013-08-04,26.1498,94.6055,10,"Suruhuto Town, Nagaland",Nagaland,landslide,monsoon,medium,,http://www.nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDA0MjY4Nw%3D%3D-bSp8jh3okxw%3D
+glc-5312,2013-08-11,26.7103,94.693,10,Kangtsung Village,Assam,landslide,downpour,very_large,0,http://www.nagalandpost.com/channelnews/State/StateNews.aspx?news=TkVXUzEwMDA0MzQ3OQ%3D%3D-qmeQz2DKZMo%3D
+glc-5427,2013-08-15,25.3833,94.1884,5,"Koide Government High School, Senapati, Manipur",Nagaland,landslide,downpour,medium,,http://e-pao.net/GP.asp?src=Snipp8..230813.aug13
+glc-5338,2013-08-16,26.8727,94.9275,25,"Longlem, Nagaland",Assam,landslide,rain,medium,,http://www.nagalandpost.com/channelnews/state/StateNews.aspx?news=TkVXUzEwMDA0NDE4MQ%3D%3D-6hneqQH1frg%3D
+glc-5337,2013-08-16,26.4205,94.9731,5,"Yakshu, Nagaland",Nagaland,landslide,rain,medium,,http://www.morungexpress.com/local/103875.html
+glc-5336,2013-08-16,26.3897,94.9439,10,"Tobu, Nagaland",Nagaland,landslide,rain,medium,,http://www.morungexpress.com/local/103875.html
+glc-5343,2013-08-17,24.7625,93.4341,10,The Imphal-Jiribam Section Of Nh-37 In Tamenglong District,Assam,landslide,continuous_rain,medium,,http://www.nagalandpost.com/ChannelNews/Regional/RegionalNews.aspx?news=TkVXUzEwMDA0MzUxNQ%3D%3D-zy3k3F6024s%3D
+glc-5421,2013-08-30,26.4205,94.9731,5,"Yakshu, Nagaland",Nagaland,mudslide,unknown,medium,,http://www.nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDA0NDY0Nw%3D%3D-jp8K0A7ZhsM%3D
+glc-5431,2013-09-01,24.9829,93.5063,5,"Tamenglong, Manipur",Assam,mudslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=24..050913.sep13
+glc-5430,2013-09-01,24.9037,93.487,25,"Tamenglong- Khongsang Road, Manipur",Manipur,mudslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=24..050913.sep13
+glc-5441,2013-09-02,28.611,94.9829,5,"Gosang Village Under Jengging Circle, Arunachal Pradesh",Arunachal Pradesh,landslide,downpour,large,,http://articles.timesofindia.indiatimes.com/2013-09-08/guwahati/41872983_1_flood-situation-arunachal-pradesh-landslides
+glc-5476,2013-09-07,27.3736,88.7323,25,14 Milestone Of J N Marg Near Kyangnosola (East Sikkim),Sikkim,landslide,rain,medium,0,http://articles.timesofindia.indiatimes.com/2013-09-10/india/41936154_1_east-and-north-sikkim-chungthang-gangtok
+glc-5533,2013-09-16,27.0599,88.4674,5,"Kalimpong, West Bengal",West Bengal,landslide,downpour,small,1,http://sciencythoughts.blogspot.com/2013/09/man-killed-in-darjeeling-landslide.html
+glc-5552,2013-09-24,25.0985,94.3619,5,"Ukhrul, Manipur",Manipur,landslide,unknown,medium,,http://www.morungexpress.com/regional/104056.html
+glc-5575,2013-10-05,25.8266,94.1497,5,"Chiechama, Nagaland",Nagaland,mudslide,continuous_rain,medium,0,http://www.business-standard.com/article/current-affairs/mudslides-block-nh-2-in-nagaland-113100700032_1.html
+glc-5582,2013-10-06,26.1309,91.8383,5,"Batahguli, Guwahati, Assam",Assam,landslide,downpour,medium,1,http://articles.timesofindia.indiatimes.com/2013-10-07/guwahati/42793381_1_anil-nagar-heavy-rain-nabin-nagar
+glc-5584,2013-10-06,26.1665,91.7049,5,"Nilachal Hill, Guwahati, Assam",Assam,landslide,downpour,medium,0,http://articles.timesofindia.indiatimes.com/2013-10-07/guwahati/42793381_1_anil-nagar-heavy-rain-nabin-nagar
+glc-5603,2013-10-13,25.426,94.6024,5,"Tusom, Manipur",Manipur,mudslide,downpour,medium,0,http://www.indiatvnews.com/news/india/people-in-manipur-evacuate-due-to-landslides-volcanic-eruption-fear-baseless-29544.html
+glc-6015,2014-05-08,27.9032,96.174,1,Lohit District of Arunachal Pradesh,Arunachal Pradesh,mudslide,rain,medium,0,http://www.business-standard.com/article/pti-stories/communication-to-tezu-snapped-due-to-landslide-114051000401_1.html
+glc-6016,2014-05-09,24.8669,92.3576,1,"Satgarakul Village, Karimganj, Assam State",Assam,landslide,rain,small,7,http://sciencythoughts.blogspot.com/2014/05/seven-members-of-one-family-killed-by.html
+glc-6106,2014-06-26,26.1407,91.7645,5,Narakasur,Assam,landslide,continuous_rain,small,3,http://twocircles.net/2014jun27/8_killed_assam_landslides_electrocution.html#.U70ydPldU1L
+glc-6107,2014-06-26,26.1844,91.7896,5,Bamunimaidam,Assam,landslide,continuous_rain,small,1,http://twocircles.net/2014jun27/8_killed_assam_landslides_electrocution.html#.U70ydPldU1L
+glc-6110,2014-06-27,26.1619,91.7697,0.5,"Bhangagarh, Assam",Assam,landslide,rain,small,3,http://www.assamtimes.org/node/11181
+glc-6112,2014-06-28,26.1964,91.7652,0.5,"Kharghuli Hills, Assam",Assam,landslide,rain,medium,0,http://www.assamtimes.org/node/11181
+glc-6143,2014-07-14,23.7327,92.7463,5,"Zembabawk, Aizawl",Mizoram,landslide,downpour,medium,1,http://www.business-standard.com/article/pti-stories/rescue-operations-for-woman-swept-away-by-landslide-continue-114071500831_1.html
+glc-6146,2014-07-15,27.059,88.4694,1,"Kalimpong, West Bengal",West Bengal,landslide,rain,small,0,http://www.business-standard.com/article/news-ians/sikkim-s-nh31-a-lifeline-closed-for-repairs-114071501335_1.html
+glc-6513,2014-08-14,23.0137,91.7174,5,Sabroom,Tripura,mudslide,downpour,medium,3,http://www.newindianexpress.com/nation/Landslide-Kills-Three-in-Tripura/2014/08/15/article2381042.ece
+glc-6200,2014-08-17,27.0869,93.6086,10,Arunachal Pradesh/Itanagar,Arunachal Pradesh,landslide,downpour,large,0,http://news.oneindia.in/india/flood-landslides-in-arunachal-pradesh-1504142.html
+glc-6331,2014-09-08,25.9466,94.6279,25,Kiphire-Seyochung road near Yangzitong village,Nagaland,mudslide,unknown,medium,0,http://www.nagalandpost.com/channelnews/State/StateNews.aspx?news=TkVXUzEwMDA2Njg2NQ%3D%3D
+glc-6291,2014-09-21,25.7354,90.3852,25,National Highway 51,Meghalaya,landslide,continuous_rain,large,0,http://indianexpress.com/article/india/india-others/pregnant-woman-among-nine-killed-in-shillong-landslide/
+glc-6288,2014-09-22,26.1985,91.7998,5,Noonmati,Assam,landslide,rain,small,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=sep2414/at051
+glc-6283,2014-09-22,26.1314,91.7548,1,Dakhingaon,Assam,landslide,rain,small,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=sep2414/at051
+glc-6286,2014-09-22,26.1044,91.7082,5,Garchuk,Assam,landslide,rain,small,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=sep2414/at051
+glc-6284,2014-09-22,26.1324,91.8342,5,Batahghuli,Assam,landslide,rain,small,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=sep2414/at051
+glc-6287,2014-09-22,26.1295,91.7056,5,Dhirenpara,Assam,landslide,rain,small,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=sep2414/at051
+glc-6285,2014-09-22,26.159,91.8178,5,VIP Road,Assam,landslide,rain,small,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=sep2414/at051
+glc-6282,2014-09-22,26.1097,91.7747,5,Lalmati,Assam,landslide,rain,small,1,http://www.assamtribune.com/scripts/detailsnew.asp?id=sep2414/at051
+glc-6289,2014-09-22,26.1001,91.6849,5,Pamohi,Assam,landslide,rain,small,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=sep2414/at051
+glc-6292,2014-09-23,25.7238,89.9032,5,Hatsingimari,Assam,landslide,continuous_rain,small,1,http://www.deccanherald.com/content/432481/landslide-guwahati-shillong-highway.html
+glc-6290,2014-09-23,25.5772,91.8666,5,Mawbah under Mawprem area,Meghalaya,landslide,continuous_rain,small,8,http://zeenews.india.com/news/north-east/eight-die-of-landslide-in-east-khasi-hills_1474744.html
+glc-6222,2014-10-01,27.1249,93.7706,5,Karsingsa block point,Arunachal Pradesh,landslide,unknown,small,5,http://www.assamtribune.com/scripts/detailsnew.asp?id=oct0214/oth052
+glc-6214,2014-10-05,25.9702,91.8587,5,Jorabat-Umiam route,Meghalaya,landslide,rain,medium,1,http://www.telegraphindia.com/1141007/jsp/frontpage/story_18900562.jsp#.VDVSk_ldV8E
+glc-6775,2015-02-14,26.1468,91.6469,5,Kailashpur hill,Assam,landslide,mining,small,1,http://www.telegraphindia.com/1150215/jsp/frontpage/story_3475.jsp#.VONkky5HWUk
+glc-6786,2015-02-19,24.6108,92.562,5,Hailākāndi : Two labourers died while another was injured in a landslide in Assa,Assam,landslide,mining,medium,2,http://www.business-standard.com/article/pti-stories/two-labourers-killed-in-landslide-115022000437_1.html
+glc-7591,2015-03-19,25.0318,92.4584,5,Ratacherra,Assam,landslide,rain,small,0,http://www.ibtimes.co.in/meghalaya-massive-landslide-east-jaintia-hills-flash-floods-shillong-hit-normal-life-643439
+glc-7031,2015-05-24,27.6163,88.6586,1,"Bop, Sikkim",Sikkim,landslide,unknown,medium,0,http://www.theolympian.com/2015/05/27/3746897/rhododendron-explorers-from-south.html
+glc-6971,2015-06-09,27.0987,93.816,5,"Itanagar, Arunachal Pradesh",Arunachal Pradesh,landslide,continuous_rain,medium,2,http://www.firstpost.com/india/two-dead-2-injured-landslide-arunachal-pradesh-school-remain-shut-heavy-rainfall-alert-2287954.html
+glc-6968,2015-06-13,25.463,92.2121,5,Ratacherra village along the NH-44 connecting to Barak Valley in Assam and Tripu,Meghalaya,landslide,continuous_rain,medium,4,http://www.newkerala.com/news/2015/fullnews-73439.html
+glc-6967,2015-06-13,27.0165,88.2476,1,"Darjeeling Heritage Railway, Darjeeling",West Bengal,landslide,downpour,medium,0,http://www.aninews.in/videogallery9/38760-landslide-hits-toy-train-services-in-west-bengal.html
+glc-6969,2015-06-16,25.5114,90.215,1,"Nakham Bazaar, Tura, Meghalaya",Meghalaya,landslide,downpour,medium,4,http://www.theshillongtimes.com/2015/06/17/entire-family-among-5-dead-in-tura-landslides/
+glc-6970,2015-06-16,25.5084,90.2191,1,Akonggre,Meghalaya,rock_fall,downpour,small,1,http://www.theshillongtimes.com/2015/06/17/entire-family-among-5-dead-in-tura-landslides/
+glc-6945,2015-06-19,25.16,93.686,1,"amei to Kangpokpi via Imphal road, 0.5 km from Tamei, Tamenglang District",Manipur,landslide,monsoon,medium,0,http://e-pao.net/GP.asp?src=34..200615.jun15
+glc-6990,2015-06-24,26.0319,94.5466,5,"New Land (""""New Colony"""")",Nagaland,landslide,continuous_rain,medium,0,http://www.nagalandpost.com/channelnews/state/StateNews.aspx?news=TkVXUzEwMDA4MjI0OA%3D%3D
+glc-7021,2015-06-27,27.0076,88.251,1,"Old Monastery Road, Ghum",West Bengal,landslide,downpour,medium,1,http://timesofindia.indiatimes.com/city/kolkata/Landslides-claim-1-life-block-Hills-road-in-Darjeeling/articleshow/47858393.cms
+glc-7033,2015-06-29,27.0161,88.2478,1,NH-55 at Merry Villa,West Bengal,landslide,downpour,medium,0,http://timesofindia.indiatimes.com/city/kolkata/Landslide-halts-joy-ride-in-Darjeeling/articleshow/47887813.cms
+glc-7035,2015-06-30,25.4243,88.2746,1,Mahindra,West Bengal,landslide,downpour,medium,3,http://www.ibtimes.co.in/west-bengal-landslide-kills-20-darjeeling-district-637669
+glc-7034,2015-06-30,27.0875,88.6556,1,"Lava, Kalimpong",West Bengal,landslide,downpour,medium,1,http://timesofindia.indiatimes.com/india/Darjeeling-landslides-kill-20/articleshow/47891729.cms
+glc-7363,2015-06-30,26.8843,88.1835,25,"Limbu Dhura, Tingling",West Bengal,landslide,downpour,medium,19,http://www.thestatesman.com/news/bengal/the-case-of-the-missing-8/79105.html
+glc-7040,2015-07-01,26.9978,88.167,1,Sukhiapokhari,West Bengal,landslide,downpour,medium,1,http://www.hindustantimes.com/india-news/at-least-30-killed-houses-swept-away-in-darjeeling-landslides/article1-1364708.aspx
+glc-7037,2015-07-01,26.8811,88.2779,5,Kurseong,West Bengal,landslide,downpour,medium,0,http://timesofindia.indiatimes.com/india/Darjeeling-landslides-kill-20/articleshow/47891729.cms
+glc-7038,2015-07-01,26.8781,88.2807,10,"Khahare Khola, Kurseong",West Bengal,landslide,downpour,medium,0,http://timesofindia.indiatimes.com/india/Darjeeling-landslides-kill-20/articleshow/47891729.cmshttp://timesofindia.indiatimes.com/india/Darjeeling-landslides-kill-20/articleshow/47891729.cms
+glc-7039,2015-07-01,27.0678,88.456,1,8 mile in Kalimpong,West Bengal,landslide,downpour,medium,0,http://indiatoday.intoday.in/story/darjeeling-landslides-heavy-rains-west-bengal/1/448268.html
+glc-7036,2015-07-01,26.8352,88.1881,5,"Mahendra village, Thana Line, Tingling Garden village in Mirik",West Bengal,landslide,downpour,large,42,"The Hindu, Bharat Press"
+glc-7076,2015-07-04,26.9282,88.4553,1,near Kalijhora,West Bengal,landslide,unknown,small,0,http://economictimes.indiatimes.com/news/politics-and-nation/another-landslip-occurs-in-darjeeling-even-as-people-return-home-from-relief-shelters/articleshow/47945060.cms
+glc-7138,2015-07-07,27.0816,88.4397,5,"NH-10, Sepi Jhora, Kalimpong",Sikkim,landslide,continuous_rain,small,0,http://indianexpress.com/article/cities/kolkata/farmer-killed-fresh-landslide-in-kurseong/
+glc-7139,2015-07-07,26.8826,88.2806,5,Kurseong,West Bengal,landslide,continuous_rain,medium,1,http://indianexpress.com/article/cities/kolkata/farmer-killed-fresh-landslide-in-kurseong/
+glc-7214,2015-07-15,27.36,93.0385,5,Type-IV Colony of Seppa in East Kameng,Arunachal Pradesh,landslide,monsoon,medium,3,http://www.ndtv.com/andhra-pradesh-news/3-killed-in-landslide-in-arunachal-pradesh-781829
+glc-7263,2015-07-22,25.4477,94.0489,1,"15 kms from Maram, National Highway-102/A (Maram Peren road)",Manipur,landslide,continuous_rain,medium,0,http://www.thesangaiexpress.com/page/items/54212/massive-landslide-along-maram-peren-road-downpour-creates-havoc-in-different-parts
+glc-7264,2015-07-22,25.4538,93.9827,5,22 kms to 30 kms between Sangkungmai and Willong,Manipur,landslide,continuous_rain,medium,0,http://www.thesangaiexpress.com/page/items/54212/massive-landslide-along-maram-peren-road-downpour-creates-havoc-in-different-parts
+glc-7253,2015-07-22,24.7979,92.9974,5,Lakhipur,Assam,landslide,continuous_rain,medium,5,http://www.assamtimes.org/node/14309
+glc-7265,2015-07-22,25.5007,93.9854,5,Willong-Yangkhullen stretch,Manipur,landslide,continuous_rain,medium,0,http://www.thesangaiexpress.com/page/items/54212/massive-landslide-along-maram-peren-road-downpour-creates-havoc-in-different-parts
+glc-7266,2015-07-22,25.5098,93.8794,10,Yangkhullen-Tamphung road till Nagaland border,Manipur,landslide,continuous_rain,medium,0,http://www.thesangaiexpress.com/page/items/54212/massive-landslide-along-maram-peren-road-downpour-creates-havoc-in-different-parts
+glc-7267,2015-07-22,25.3908,94.0926,10,NH-2 between Senapati and Mao,Manipur,landslide,continuous_rain,small,0,http://www.thesangaiexpress.com/page/items/54212/massive-landslide-along-maram-peren-road-downpour-creates-havoc-in-different-parts
+glc-7276,2015-07-25,26.1062,91.8717,5,"Dispur : According to report, a huge hillock slipped into the house after heavy ",Assam,landslide,continuous_rain,medium,2,http://www.assamtalks.com/2-killed-in-jorabat-landslide.html
+glc-7364,2015-07-31,24.819,94.3551,10,Phungyar road,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=22..010815.aug15
+glc-7372,2015-07-31,25.0634,94.3415,10,Naga Gate along the Ukhrul-Imphal route,Manipur,mudslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=22..020815.aug15
+glc-7370,2015-08-01,24.1419,94.1078,5,between Moltuk to New Songjang village,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=21..020815.aug15
+glc-7385,2015-08-01,24.004,93.9815,10,"Holenjang, Chandel district",Manipur,landslide,continuous_rain,medium,0,http://indiatoday.intoday.in/story/landslide-in-manipur-near-myanmar-border-kills-21/1/455645.html
+glc-7369,2015-08-01,24.1988,94.1016,10,between Chalong and Paraolon,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=21..020815.aug15
+glc-7383,2015-08-01,23.899,94.1434,5,"Tuitung village, Khengjoi",Manipur,landslide,rain,medium,0,http://www.hindustantimes.com/india/20-dead-several-houses-swept-away-in-manipur-landslide/story-KoP6OouFBWhqxSdcnLrXJN.html
+glc-7373,2015-08-01,24.9111,94.4759,10,between Maku village and Kamjong sub division,Manipur,landslide,continuous_rain,medium,,http://e-pao.net/GP.asp?src=22..020815.aug15
+glc-7389,2015-08-01,24.4072,94.0644,5,between Bongyang and Lokchao along the Imphal-Moreh highway,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=1..020815.aug15
+glc-7388,2015-08-01,24.416,94.0984,5,Senam,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=1..020815.aug15
+glc-7374,2015-08-01,25.1122,94.3591,10,Ukhrul town Circular road from Rayotang to Viewland Zone II,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=22..020815.aug15
+glc-7390,2015-08-01,24.4265,94.1913,25,between Tengnoupal-Sita junction and Tengnoupal Power Sub-Station,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=1..020815.aug15
+glc-7384,2015-08-01,23.9278,94.0906,5,"Wayang, Khengjoi",Manipur,landslide,rain,medium,0,http://www.hindustantimes.com/india/20-dead-several-houses-swept-away-in-manipur-landslide/story-KoP6OouFBWhqxSdcnLrXJN.html
+glc-7375,2015-08-01,25.1941,94.4481,25,Ukhrul NH 201-Jessami road,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=22..020815.aug15
+glc-7910,2015-08-01,24.3481,94.1146,10,Chandel,Manipur,landslide,unknown,medium,0,http://e-pao.net/GP.asp?src=30..300815.aug15
+glc-7409,2015-08-02,25.72,94.6219,10,Meluri Sub-Division in Phek District of Nagaland,Nagaland,landslide,continuous_rain,medium,0,http://www.ibnlive.com/news/india/incessant-rains-trigger-landslide-and-mud-slips-in-nagaland-1029674.html
+glc-7666,2015-08-11,25.1019,93.3729,5,Tousem,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=26..120815.aug15
+glc-7664,2015-08-11,24.7459,93.4251,10,Nungba,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=26..120815.aug15
+glc-7665,2015-08-11,24.7016,93.5291,5,Khoupum,Manipur,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=26..120815.aug15
+glc-7660,2015-08-12,25.6237,94.1136,5,Phesama village,Nagaland,mudslide,continuous_rain,medium,0,http://www.nagalandpost.com/channelnews/State/StateNews.aspx?news=TkVXUzEwMDA4NDc2Mg%3D%3D
+glc-7335,2015-08-18,25.5145,90.2023,1,Tura Civil Hospital,Meghalaya,landslide,continuous_rain,medium,0,http://www.theshillongtimes.com/2015/08/20/child-washed-away-in-tura/
+glc-7701,2015-08-19,25.6278,94.1051,5,Phesama,Nagaland,landslide,continuous_rain,medium,0,http://nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDA4NTE4Nw%3D%3D
+glc-7589,2015-08-19,25.2568,92.3825,25,National Highway 44,Meghalaya,landslide,rain,medium,0,http://www.ibtimes.co.in/meghalaya-massive-landslide-east-jaintia-hills-flash-floods-shillong-hit-normal-life-643439
+glc-7590,2015-08-19,25.1416,92.3807,5,Tongseng,Meghalaya,landslide,rain,small,0,http://www.ibtimes.co.in/meghalaya-massive-landslide-east-jaintia-hills-flash-floods-shillong-hit-normal-life-643439
+glc-7706,2015-08-19,25.0728,92.3636,5,National Highway at Kuliang,Meghalaya,landslide,rain,medium,0,http://www.assamtimes.org/node/14622
+glc-7336,2015-08-19,25.2193,90.5549,10,NH-62 at Sibbari,Meghalaya,landslide,continuous_rain,medium,0,http://www.theshillongtimes.com/2015/08/20/child-washed-away-in-tura/
+glc-7727,2015-08-20,25.6263,94.1057,5,between Phesama and Kuima in Nagaland,Nagaland,landslide,continuous_rain,medium,0,http://e-pao.net/GP.asp?src=11..220815.aug15
+glc-7728,2015-08-22,26.1028,91.8806,5,Natonal Highway in Jorabat area,Assam,landslide,continuous_rain,medium,0,http://www.assamtimes.org/node/14643
+glc-7780,2015-08-26,23.3572,92.7878,5,Sailam village,Mizoram,landslide,continuous_rain,medium,1,http://indianexpress.com/article/india/india-others/several-houses-swept-away-in-mudslide-in-the-mizoram-town-of-phullen/
+glc-7778,2015-08-26,23.8447,93.0514,10,Phullen’s main road,Mizoram,mudslide,continuous_rain,medium,0,http://indianexpress.com/article/india/india-others/several-houses-swept-away-in-mudslide-in-the-mizoram-town-of-phullen/
+glc-7836,2015-08-27,24.042,92.6724,10,"National Highway 54, at Kawnpui town",Mizoram,landslide,downpour,medium,0,http://indianexpress.com/article/india/india-others/mizoram-aizawl-houses-swept-away-graves-damaged-by-rain-and-landslide/
+glc-7837,2015-08-27,23.7269,92.7265,5,three graveyards within Aizawl,Mizoram,landslide,downpour,medium,0,http://indianexpress.com/article/india/india-others/mizoram-aizawl-houses-swept-away-graves-damaged-by-rain-and-landslide/
+glc-7972,2015-08-28,23.4495,92.8112,25,"Mizoram, India",Mizoram,landslide,downpour,large,0,http://indianexpress.com/article/india/india-others/mizorams-power-lifeline-on-shaky-ground-after-landslip/
+glc-7933,2015-09-01,26.1868,91.6739,1,Maligaon,Assam,rock_fall,rain,medium,2,http://www.assamtimes.org/node/14780
+glc-7923,2015-09-01,26.49349035,91.72137514,10,Amingaon,Assam,landslide,rain,medium,2,http://www.newindianexpress.com/nation/Woman-Child-Killed-in-Assam-Landslide/2015/09/01/article3005012.ece
+glc-7956,2015-09-05,26.048,91.8695,1,Byrnihat,Meghalaya,landslide,unknown,medium,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=sep0615/city053
+glc-8012,2015-09-06,25.9703,91.8584,1,"Umling, Meghalaya 793102, India",Meghalaya,landslide,unknown,medium,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=sep0815/oth058
+glc-8224,2015-09-14,23.7313,92.7187,5,"Aizawl, Mizoram, India",Mizoram,landslide,downpour,medium,0,http://thenortheasttoday.com/landslides-damage-houses-graves-in-aizawl/
+glc-8223,2015-09-14,23.7348,92.7187,5,"Aizawl, Mizoram, India",Mizoram,landslide,downpour,large,0,http://thenortheasttoday.com/landslides-damage-houses-graves-in-aizawl/
+glc-8339,2015-09-23,26.1666,91.7042,1,Kamakhya Temple,Assam,landslide,continuous_rain,medium,0,http://www.assamtimes.org/node/15150
+glc-8366,2015-09-23,25.583,91.893,5,"Shillong, Meghalaya, India",Meghalaya,landslide,downpour,medium,2,http://www.northeasttoday.in/two-women-buried-alive-in-shillong-landslide/
+glc-9215,2016-01-14,27.1758,88.5294,1,NH10 in Rangpo,West Bengal,rock_fall,unknown,medium,1,http://www.hindustantimes.com/india/several-feared-buried-under-landslide-near-bengal-sikkim-border/story-1f7Ni6EagU54nghtFD9otO.html
+glc-9405,2016-04-19,26.7223,95.0243,1,"Techahan Ward, Mon, Nagaland, India",Nagaland,landslide,continuous_rain,medium,0,http://www.assamtribune.com/scripts/detailsnew.asp?id=may0216/oth058
+glc-7655,2016-04-22,27.5799,91.8569,5,"Tawang, Arunachal Pradesh",Arunachal Pradesh,landslide,continuous_rain,medium,17,http://zeenews.india.com/news/north-east/landslide-in-tawang-area-of-arunachal-pradesh-watch-video_1878690.html
+glc-9404,2016-05-01,28.0822,96.5316,1,"Hayuliang, Anjaw district,Arunachal Pradesh, India",Arunachal Pradesh,landslide,downpour,medium,0,http://www.business-standard.com/article/pti-stories/landslides-in-arunachal-district-no-loss-of-life-116050200846_1.html
+glc-9335,2016-05-18,24.5202,92.7239,1,"Bilaipur, Hailakandi district, Assam, India",Assam,landslide,continuous_rain,unknown,2,http://indianexpress.com/article/india/india-news-india/at-least-10-killed-in-landslides-in-assam-rescue-operations-underway-2806810/
+glc-9338,2016-05-18,24.4638,92.4943,10,"Sonachirra, Karimganj district, Assam, India",Assam,landslide,continuous_rain,medium,5,http://indianexpress.com/article/india/india-news-india/at-least-10-killed-in-landslides-in-assam-rescue-operations-underway-2806810/
+glc-9334,2016-05-18,24.5204,92.7264,1,"Bilaipur, Hailakandi district, Assam, India",Assam,landslide,continuous_rain,unknown,2,http://indianexpress.com/article/india/india-news-india/at-least-10-killed-in-landslides-in-assam-rescue-operations-underway-2806810/
+glc-9336,2016-05-18,24.5308,92.5121,1,"Ramchandi , Hailakandi District, Assam, India",Assam,landslide,continuous_rain,small,1,http://indianexpress.com/article/india/india-news-india/at-least-10-killed-in-landslides-in-assam-rescue-operations-underway-2806810/
+glc-9168,2016-06-12,27.6438,93.871,10,"NH 13 10 kilometers from Old Ziro, Arunachal Pradesh, India",Arunachal Pradesh,landslide,downpour,medium,0,http://www.arunachaltimes.in/landslide-blocks-ziro-tamen-road/
+glc-9142,2016-06-14,26.3185,94.5247,1,"lower Majakong Ward, Mokokchung, Nagaland, India",Nagaland,landslide,continuous_rain,medium,0,http://www.nagalandpost.com/channelnews/state/StateNews.aspx?news=TkVXUzEwMDA5ODM4NA%3D%3D
+glc-8222,2016-06-22,26.1961,91.7825,5,"Piyali Phukan Nagar, Guwahati, India",Assam,mudslide,downpour,medium,1,http://www.nyoooz.com/guwahati/515423/woman-killed-in-wall-collapse-after-landslide-in-guwahati
+glc-8237,2016-07-01,27.0136,92.6351,1,"Old Inspection Bungalow, Bhalukpong town, West Kameng, Arunachal Pradesh, India",Arunachal Pradesh,landslide,downpour,large,5,http://www.thehindu.com/news/national/many-killed-in-arunachal-landslip/article8798739.ece
+glc-8900,2016-07-07,25.0118,94.3136,25,"Imphal-Ukhrul sector of National Highway 102, Manipur, India",Manipur,landslide,monsoon,large,0,http://www.easternmirrornagaland.com/landslide-hampers-nh-102-traffic-restored/
+glc-8901,2016-07-10,25.7902,94.1318,25,"National Highway 2, near Kohima, Nagaland, India",Nagaland,landslide,downpour,medium,0,http://www.business-standard.com/article/news-ians/landslide-blocks-nh2-disrupting-traffic-to-and-from-manipur-116071000262_1.html
+glc-8930,2016-07-11,26.1699,94.4922,1,"North Point Colony, Akuluto, Nagaland, India",Nagaland,landslide,unknown,large,0,https://issuu.com/nagalandpost90/docs/july_13__2016
+glc-8995,2016-07-14,26.1963,91.8074,5,"Noonmati Nijarapar area of the city, Guwahati, Assam, India",Assam,landslide,monsoon,small,1,http://indianexpress.com/article/india/india-news-india/separate-landslides-kill-two-in-assam-2913748/
+glc-8996,2016-07-14,26.1768,91.7702,1,"Pub Sarania hill, South Sarania, Guwahati, Assam, India",Assam,landslide,monsoon,small,1,http://indianexpress.com/article/india/india-news-india/separate-landslides-kill-two-in-assam-2913748/
+glc-9010,2016-07-16,27.3034,93.804,5,"Hoj-Potin Highway, Arunachal Pradesh, India",Arunachal Pradesh,mudslide,downpour,medium,1,http://www.arunachaltimes.in/man-washed-away-by-mudslide/
+glc-9051,2016-07-19,26.09748244,91.8744337,25,"12th Mile area at Jorabat, Meghalaya, India",Meghalaya,landslide,unknown,medium,0,http://www.nelive.in/assam/news/woman-injured-landslide
+glc-9124,2016-07-19,25.203,90.5573,5,"Rongthragittim Songittal village, near Sibbari, South Garo Hills District, Megha",Meghalaya,translational_slide,continuous_rain,large,0,http://www.business-standard.com/article/news-ani/over-hundred-homes-displaced-due-to-landslide-in-meghalaya-116072100406_1.html
+glc-9074,2016-07-20,27.1176,88.1069,1,"Rimbik, Darjeeling, West Bengal state, India",West Bengal,landslide,downpour,large,3,http://indianexpress.com/videos/news-video/darjeeling-landslide-takes-three-lives/
+glc-9122,2016-07-20,26.1966,91.802,5,"Noonmati, Guwahati, Assam, India",Assam,landslide,rain,medium,0,http://timesofindia.indiatimes.com/city/guwahati/Landslide-toll-touches-6-as-woman-buried-alive-in-Guwahati/articleshow/53314082.cms
+glc-9138,2016-07-21,26.9015,88.4719,1,"NH 10 between Coronation Bridge and Sevoke Kalibari, West Bengal, India",West Bengal,landslide,rain,medium,0,http://ilovesiliguri.com/nh10-closed-landslide-between-coronation-bridge-and-sevoke-kalibari-today-morning/
+glc-9186,2016-07-25,25.48,94.1383,1,"Imphal-Dimapur road  in Tadubi, Senapati district, Manipur, India",Manipur,landslide,continuous_rain,medium,0,http://www.e-pao.net/GP.asp?src=Snipp1..260716.jul16
+glc-9220,2016-07-26,27.1027,88.1218,1,"Finchaytaar, Lodhoma, Darjeeling, India",West Bengal,landslide,downpour,unknown,0,http://ilovesiliguri.com/landslides-last-night-threatens-6-more-homes-at-finchaytaar-lodhoma-in-darjeeling/
+glc-9219,2016-07-26,26.0101,94.5282,5,"Zunheboto, Nagaland, India",Nagaland,landslide,downpour,medium,0,http://www.nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDEwMDE5MQ%3D%3D
+glc-9251,2016-07-28,25.8702,94.7844,1,"Government Middle School (GMS) Kiphire station “B”, Kiphire, Nagaland, India",Nagaland,landslide,downpour,medium,0,http://nagalandpost.com/ChannelNews/State/StateNews.aspx?news=TkVXUzEwMDEwMDI0Mw%3D%3D
+glc-9232,2016-07-28,23.5397,93.3783,1,"Ngur, near Mizoram-Myanmar border, India",Mizoram,landslide,continuous_rain,medium,2,http://www.business-standard.com/article/pti-stories/two-killed-in-mizoram-landslide-116072900324_1.html
+glc-9252,2016-07-28,27.5748,91.8644,5,"Dolma Lhakang complex, Lumla, Tawang,  Arunachal Pradesh, India",Arunachal Pradesh,landslide,monsoon,medium,0,http://www.arunachaltimes.in/monsoon-fury-continues-to-pound-tawang/
+glc-9464,2016-08-05,27.5754,91.9754,5,Babrang village under Jang circle in Tawang district,Arunachal Pradesh,landslide,downpour,medium,0,http://www.business-standard.com/article/pti-stories/three-injured-houses-collapse-in-landslide-in-arunachal-116080700399_1.html
+glc-9603,2016-10-12,26.8861,88.1704,10,Mirik,West Bengal,landslide,downpour,medium,0,http://indianexpress.com/article/india/india-news-india/west-bengal-rains-landslips-affect-life-in-north-of-state-3079833/
+glc-9587,2016-10-12,26.8692,88.4695,25,between Siliguri and Sevak,West Bengal,landslide,downpour,medium,0,http://www.business-standard.com/article/pti-stories/rains-landslips-affect-life-in-north-bengal-116101201035_1.html
+glc-9604,2016-10-12,27.2676,88.2891,10,Legship,Sikkim,landslide,continuous_rain,medium,0,http://indianexpress.com/article/india/india-news-india/west-bengal-rains-landslips-affect-life-in-north-of-state-3079833/
+glc-9618,2016-10-15,26.9343,88.4486,1,Kalijhora,West Bengal,rock_fall,downpour,small,0,http://www.thehindu.com/news/national/other-states/life-remains-hit-in-darjeeling-hills/article9222389.ece
+glc-9617,2016-10-15,26.888,88.2796,5,Zero near Kurseong,West Bengal,landslide,unknown,medium,0,http://www.ndtv.com/cities/darjeelings-toy-train-service-suspended-due-to-landslides-1474442
+glc-9620,2016-10-15,27.172,88.5292,5,Rangpo,Sikkim,landslide,downpour,medium,0,http://www.thehindu.com/news/national/other-states/life-remains-hit-in-darjeeling-hills/article9222389.ece
+glc-9619,2016-10-15,27.1695,88.3664,5,Namchi,Sikkim,landslide,rain,medium,0,http://www.thehindu.com/news/national/other-states/life-remains-hit-in-darjeeling-hills/article9222389.ece
+rimbi-2026-08-13,2026-08-13,27.3148,88.1859,1,Rimbi (Singlitam slope),Sikkim,landslide,rain,,,https://thenewsmill.com/2026/09/heavy-rainfall-triggers-landslide-damages-over-32-houses-in-sikkims-rimbi-village/
+rimbi-2026-08-14,2026-08-14,27.3148,88.1859,1,Rimbi (Singlitam slope),Sikkim,landslide,rain,,,https://thenewsmill.com/2026/09/heavy-rainfall-triggers-landslide-damages-over-32-houses-in-sikkims-rimbi-village/
+rimbi-2026-09-24,2026-09-24,27.3148,88.1859,1,Rimbi (Singlitam slope),Sikkim,landslide,rain,,,https://thenewsmill.com/2026/09/major-landslide-damages-homes-in-sikkims-rimbi-village-no-casualties/

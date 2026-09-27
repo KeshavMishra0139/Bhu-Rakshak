@@ -8,3 +8,8 @@ server/uploads/*
 .DS_Store
 tools/
 dev.cmd
+
+# ML dataset build: raw downloads and API cache (rebuildable)
+ml/data/raw/
+ml/data/cache/
+ml/data/*.out

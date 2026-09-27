@@ -1,0 +1,80 @@
+[
+  {
+    "place": "Kurseong (Darjeeling hills)",
+    "season": "2015-05-01 → 2015-10-31",
+    "trained_on": "347 rows (110 landslides) before 2015",
+    "landslide_days": [
+      "2015-06-27",
+      "2015-06-30",
+      "2015-07-01",
+      "2015-07-07"
+    ],
+    "warned_landslide_days": [
+      "2015-06-27",
+      "2015-06-30",
+      "2015-07-01",
+      "2015-07-07"
+    ],
+    "warning_days": 101,
+    "days": 184,
+    "season_rank": 0.7732240437158471,
+    "false_alarm_days": 89,
+    "quiet_days": 170
+  },
+  {
+    "place": "Kalimpong",
+    "season": "2015-05-01 → 2015-10-31",
+    "trained_on": "347 rows (110 landslides) before 2015",
+    "landslide_days": [
+      "2015-07-01",
+      "2015-07-04",
+      "2015-07-07"
+    ],
+    "warned_landslide_days": [
+      "2015-07-01",
+      "2015-07-04",
+      "2015-07-07"
+    ],
+    "warning_days": 66,
+    "days": 184,
+    "season_rank": 0.912568306010929,
+    "false_alarm_days": 56,
+    "quiet_days": 173
+  },
+  {
+    "place": "Kurseong (Darjeeling hills)",
+    "season": "2016-05-01 → 2016-10-31",
+    "trained_on": "441 rows (152 landslides) before 2016",
+    "landslide_days": [
+      "2016-10-12",
+      "2016-10-15"
+    ],
+    "warned_landslide_days": [
+      "2016-10-12",
+      "2016-10-15"
+    ],
+    "warning_days": 123,
+    "days": 184,
+    "season_rank": 0.6256830601092896,
+    "false_alarm_days": 117,
+    "quiet_days": 176
+  },
+  {
+    "place": "Rimbi (West Sikkim)",
+    "season": "2026-07-28 → 2026-09-25",
+    "trained_on": "666 rows (178 landslides) before 2026",
+    "landslide_days": [
+      "2026-08-13",
+      "2026-08-14",
+      "2026-09-24"
+    ],
+    "warned_landslide_days": [
+      "2026-09-24"
+    ],
+    "warning_days": 14,
+    "days": 60,
+    "season_rank": 0.5084745762711864,
+    "false_alarm_days": 13,
+    "quiet_days": 50
+  }
+]

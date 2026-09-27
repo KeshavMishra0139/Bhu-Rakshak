@@ -1,0 +1,4 @@
+event_id,date,lat,lng,accuracy_km,place,state,trigger,source
+rimbi-2026-08-13,2026-08-13,27.3148,88.1859,1,Rimbi (Singlitam slope),Sikkim,rain,https://thenewsmill.com/2026/09/heavy-rainfall-triggers-landslide-damages-over-32-houses-in-sikkims-rimbi-village/
+rimbi-2026-08-14,2026-08-14,27.3148,88.1859,1,Rimbi (Singlitam slope),Sikkim,rain,https://thenewsmill.com/2026/09/heavy-rainfall-triggers-landslide-damages-over-32-houses-in-sikkims-rimbi-village/
+rimbi-2026-09-24,2026-09-24,27.3148,88.1859,1,Rimbi (Singlitam slope),Sikkim,rain,https://thenewsmill.com/2026/09/major-landslide-damages-homes-in-sikkims-rimbi-village-no-casualties/
