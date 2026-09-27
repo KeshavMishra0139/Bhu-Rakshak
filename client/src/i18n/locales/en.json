@@ -446,7 +446,8 @@
     "none_yet": "None yet",
     "phase_note": "User approvals, the audit log and SOP editing arrive in the admin build phase.",
     "feed_imd": "IMD warnings",
-    "status_not_configured": "Not configured"
+    "status_not_configured": "Not configured",
+    "feed_ml_model": "AI model (experimental)"
   },
   "notfound": {
     "title": "Page not found",
@@ -952,5 +953,20 @@
     "legend_7d": "7 days",
     "legend_30d": "30 days",
     "legend_station": "Seismograph"
+  },
+  "ml": {
+    "title": "AI model (second opinion)",
+    "experimental": "Experimental",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "elevated": "Elevated",
+    "normal": "Normal",
+    "inputs": "Rain, last 3 days: {{rain3}} mm ({{ratio}}× normal) · heaviest hour in 48 h: {{hour}} mm · strongest recent shaking: {{mmi}} (MMI)",
+    "no_data": "No prediction for this place yet.",
+    "accuracy": "Tested on 2012–2016 landslides it never saw: caught {{caught}}% of landslides with warnings on {{fa}}% of ordinary days; {{right}}% of its warnings were right. It cannot yet tell which slope will fail.",
+    "not_alerts": "It does not trigger alerts — use it alongside the main risk score.",
+    "version": "Model {{v}}",
+    "updated": "updated {{time}}",
+    "log": "Prediction log (CSV)"
   }
 }

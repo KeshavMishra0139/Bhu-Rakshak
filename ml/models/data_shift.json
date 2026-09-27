@@ -1,0 +1,177 @@
+{
+  "start": "2026-07-03",
+  "end": "2026-09-21",
+  "rows": [
+    {
+      "id": "sevoke",
+      "name": "Sevoke",
+      "days": 56,
+      "era5_mm": 613.4,
+      "forecast_mm": 542.6999999999999,
+      "ratio": 0.884740789044669,
+      "corr_daily": 0.8693968731632646,
+      "corr_3day": 0.8835231646834685
+    },
+    {
+      "id": "melli",
+      "name": "Melli",
+      "days": 56,
+      "era5_mm": 637.9,
+      "forecast_mm": 622.1999999999999,
+      "ratio": 0.975387991848252,
+      "corr_daily": 0.9903151950409617,
+      "corr_3day": 0.9923686425398265
+    },
+    {
+      "id": "rangpo",
+      "name": "Rangpo",
+      "days": 56,
+      "era5_mm": 759.1000000000003,
+      "forecast_mm": 746.0000000000001,
+      "ratio": 0.982742721644052,
+      "corr_daily": 0.9881739014085225,
+      "corr_3day": 0.9938006137960502
+    },
+    {
+      "id": "singtam",
+      "name": "Singtam",
+      "days": 56,
+      "era5_mm": 1137.5,
+      "forecast_mm": 1116.6,
+      "ratio": 0.9816263736263735,
+      "corr_daily": 0.9899737823215647,
+      "corr_3day": 0.9949702916248733
+    },
+    {
+      "id": "gangtok",
+      "name": "Gangtok",
+      "days": 56,
+      "era5_mm": 748.7,
+      "forecast_mm": 787.5000000000001,
+      "ratio": 1.05182316014425,
+      "corr_daily": 0.9349982150877547,
+      "corr_3day": 0.9553221032255538
+    },
+    {
+      "id": "nathula_rd",
+      "name": "Nathula road (Tsomgo)",
+      "days": 56,
+      "era5_mm": 1383.4,
+      "forecast_mm": 1394,
+      "ratio": 1.0076622813358391,
+      "corr_daily": 0.9979729012707999,
+      "corr_3day": 0.999022397631533
+    },
+    {
+      "id": "mangan",
+      "name": "Mangan",
+      "days": 56,
+      "era5_mm": 1699.4000000000005,
+      "forecast_mm": 1685.2000000000005,
+      "ratio": 0.9916441096857714,
+      "corr_daily": 0.9988819743276156,
+      "corr_3day": 0.9992805818472046
+    },
+    {
+      "id": "chungthang",
+      "name": "Chungthang",
+      "days": 56,
+      "era5_mm": 702.4000000000001,
+      "forecast_mm": 668.5000000000001,
+      "ratio": 0.951736902050114,
+      "corr_daily": 0.9690035089339671,
+      "corr_3day": 0.975191052223565
+    },
+    {
+      "id": "lachung",
+      "name": "Lachung",
+      "days": 56,
+      "era5_mm": 676.3000000000001,
+      "forecast_mm": 657.1,
+      "ratio": 0.9716102321454975,
+      "corr_daily": 0.961797556860271,
+      "corr_3day": 0.9895168118631736
+    },
+    {
+      "id": "lachen",
+      "name": "Lachen",
+      "days": 56,
+      "era5_mm": 269.5,
+      "forecast_mm": 299.8,
+      "ratio": 1.1124304267161411,
+      "corr_daily": 0.9279445194643112,
+      "corr_3day": 0.928460150516782
+    },
+    {
+      "id": "namchi",
+      "name": "Namchi",
+      "days": 56,
+      "era5_mm": 1221.3999999999996,
+      "forecast_mm": 1178.3999999999996,
+      "ratio": 0.964794498116915,
+      "corr_daily": 0.9669317205711991,
+      "corr_3day": 0.9709788910720101
+    },
+    {
+      "id": "jorethang",
+      "name": "Jorethang",
+      "days": 56,
+      "era5_mm": 791,
+      "forecast_mm": 774.8,
+      "ratio": 0.979519595448799,
+      "corr_daily": 0.995347727392937,
+      "corr_3day": 0.9965972394385366
+    },
+    {
+      "id": "gyalshing",
+      "name": "Gyalshing",
+      "days": 56,
+      "era5_mm": 579.7000000000002,
+      "forecast_mm": 556,
+      "ratio": 0.9591167845437293,
+      "corr_daily": 0.9790965380346496,
+      "corr_3day": 0.9850374818043673
+    },
+    {
+      "id": "pelling",
+      "name": "Pelling",
+      "days": 56,
+      "era5_mm": 623.6,
+      "forecast_mm": 620,
+      "ratio": 0.9942270686337396,
+      "corr_daily": 0.9997754872976606,
+      "corr_3day": 0.9998313514316961
+    },
+    {
+      "id": "kalimpong",
+      "name": "Kalimpong",
+      "days": 56,
+      "era5_mm": 688,
+      "forecast_mm": 662.1999999999998,
+      "ratio": 0.9624999999999997,
+      "corr_daily": 0.9456883375029808,
+      "corr_3day": 0.9701716745980402
+    },
+    {
+      "id": "darjeeling",
+      "name": "Darjeeling",
+      "days": 56,
+      "era5_mm": 472.90000000000015,
+      "forecast_mm": 466.9000000000002,
+      "ratio": 0.9873123281877777,
+      "corr_daily": 0.9985623801614911,
+      "corr_3day": 0.9981589636614197
+    },
+    {
+      "id": "kurseong",
+      "name": "Kurseong",
+      "days": 56,
+      "era5_mm": 549.4,
+      "forecast_mm": 517.0999999999999,
+      "ratio": 0.9412085911903894,
+      "corr_daily": 0.9398651101673017,
+      "corr_3day": 0.9351389059701019
+    }
+  ],
+  "median_ratio": 0.979519595448799
+}

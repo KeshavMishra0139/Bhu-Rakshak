@@ -124,3 +124,22 @@ Replaying Aug–Sep 2026 at Rimbi (`server/scripts/backtest-rimbi.js`): the Open
 NASA POWER showed 8.8 and 6.8 mm. Both are ~10–50 km weather cells and miss local downpours — which is why the
 model needs observed rain (IMERG, IMD, gauges) and non-rain factors (terrain, geology, ground movement), and why
 Rimbi's recurring failures from one slope point to ground-movement monitoring.
+
+## 6. Live model on the website (experimental)
+
+```bash
+node ml/check_shift.mjs          # live rain feed vs training rain       → models/data_shift.md
+node ml/train_live.mjs           # model the website runs (26 factors, 7 models averaged) → models/landslide-live-v1.json
+node ml/prepare_live.mjs         # terrain + normal rain per monitored place → models/live_locations.json
+node ml/make_parity_fixture.mjs  # real training rows for the server's parity test
+```
+
+- The server (`server/src/prediction/mlModel.js`) scores every monitored place for **today and tomorrow** every
+  3 hours, using `ml/live_features.mjs` — the same formulas as training (`server/test/mlModel.test.js` checks this
+  against real training rows).
+- Officers see it in each place's drawer as **"AI model (second opinion)", labelled Experimental** with its measured
+  accuracy. It **never triggers alerts or citizen warnings**; citizens can't see it.
+- Every prediction is logged (`ml_predictions` table; download: `/api/ml/log.csv`) with the day it was issued, so it
+  can be judged against landslides that happen later.
+- Left out of the live model: NASA POWER rain (2–3 days late) and soil-moisture layers (different depths live).
+  The live rain feed matches ERA5 closely (see `models/data_shift.md`).

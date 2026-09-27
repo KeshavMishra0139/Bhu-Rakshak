@@ -32,6 +32,7 @@ r.get('/health', (req, res) => {
       prediction: { status: feeds.prediction?.status || 'ok', last_update: riskService.lastTickAt, message: feeds.prediction?.status === 'degraded' ? feeds.prediction.message : null },
       seismic: { status: feeds.seismic?.status || 'not_connected', last_success: feeds.seismic?.last_success, message: feeds.seismic?.message },
       sensors: { status: feeds.sensors?.status || 'not_connected', last_success: feeds.sensors?.last_success, message: feeds.sensors?.message },
+      ml_model: { status: feeds.ml_model?.status || 'not_configured', last_success: feeds.ml_model?.last_success, message: feeds.ml_model?.message },
     },
     active_users: activeUserCount(),
     live_connections: activeClientCount(),

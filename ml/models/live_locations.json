@@ -1,0 +1,468 @@
+{
+  "built_at": "2026-09-27T09:07:56.413Z",
+  "sources": [
+    "AWS Terrain Tiles (SRTM)",
+    "NASA POWER climatology"
+  ],
+  "locations": {
+    "sevoke": {
+      "lat": 26.905,
+      "lng": 88.475,
+      "terrain": {
+        "elev_m": 269,
+        "slope_deg": 29.518,
+        "northness": -0.371,
+        "eastness": -0.928,
+        "curvature": 0.603,
+        "relief_1km": 365
+      },
+      "clim_month_mm_day": [
+        0.18,
+        0.47,
+        1.1,
+        2.61,
+        5.35,
+        8.99,
+        14.36,
+        10.97,
+        8.78,
+        2.66,
+        0.15,
+        0.09
+      ],
+      "clim_annual_mm_day": 4.67
+    },
+    "melli": {
+      "lat": 27.09,
+      "lng": 88.45,
+      "terrain": {
+        "elev_m": 448,
+        "slope_deg": 29.775,
+        "northness": -0.64,
+        "eastness": 0.768,
+        "curvature": -0.192,
+        "relief_1km": 528
+      },
+      "clim_month_mm_day": [
+        0.18,
+        0.47,
+        1.1,
+        2.61,
+        5.35,
+        8.99,
+        14.36,
+        10.97,
+        8.78,
+        2.66,
+        0.15,
+        0.09
+      ],
+      "clim_annual_mm_day": 4.67
+    },
+    "rangpo": {
+      "lat": 27.176,
+      "lng": 88.531,
+      "terrain": {
+        "elev_m": 353,
+        "slope_deg": 13.55,
+        "northness": -0.997,
+        "eastness": 0.081,
+        "curvature": 0.577,
+        "relief_1km": 210
+      },
+      "clim_month_mm_day": [
+        0.18,
+        0.47,
+        1.1,
+        2.61,
+        5.35,
+        8.99,
+        14.36,
+        10.97,
+        8.78,
+        2.66,
+        0.15,
+        0.09
+      ],
+      "clim_annual_mm_day": 4.67
+    },
+    "singtam": {
+      "lat": 27.234,
+      "lng": 88.497,
+      "terrain": {
+        "elev_m": 449,
+        "slope_deg": 27.492,
+        "northness": -0.983,
+        "eastness": 0.186,
+        "curvature": -0.106,
+        "relief_1km": 434
+      },
+      "clim_month_mm_day": [
+        0.18,
+        0.47,
+        1.1,
+        2.61,
+        5.35,
+        8.99,
+        14.36,
+        10.97,
+        8.78,
+        2.66,
+        0.15,
+        0.09
+      ],
+      "clim_annual_mm_day": 4.67
+    },
+    "gangtok": {
+      "lat": 27.33,
+      "lng": 88.612,
+      "terrain": {
+        "elev_m": 1631,
+        "slope_deg": 13.487,
+        "northness": 0.322,
+        "eastness": -0.947,
+        "curvature": 0.183,
+        "relief_1km": 411
+      },
+      "clim_month_mm_day": [
+        0.16,
+        0.42,
+        0.96,
+        1.89,
+        3.57,
+        5.4,
+        9.15,
+        7.27,
+        5.11,
+        1.55,
+        0.1,
+        0.09
+      ],
+      "clim_annual_mm_day": 2.99
+    },
+    "nathula_rd": {
+      "lat": 27.374,
+      "lng": 88.763,
+      "terrain": {
+        "elev_m": 3742,
+        "slope_deg": 1.024,
+        "northness": 0,
+        "eastness": 0,
+        "curvature": -0.145,
+        "relief_1km": 238
+      },
+      "clim_month_mm_day": [
+        0.16,
+        0.42,
+        0.96,
+        1.89,
+        3.57,
+        5.4,
+        9.15,
+        7.27,
+        5.11,
+        1.55,
+        0.1,
+        0.09
+      ],
+      "clim_annual_mm_day": 2.99
+    },
+    "mangan": {
+      "lat": 27.509,
+      "lng": 88.533,
+      "terrain": {
+        "elev_m": 957,
+        "slope_deg": 32.654,
+        "northness": 0.518,
+        "eastness": -0.855,
+        "curvature": 0.068,
+        "relief_1km": 542
+      },
+      "clim_month_mm_day": [
+        0.16,
+        0.42,
+        0.96,
+        1.89,
+        3.57,
+        5.4,
+        9.15,
+        7.27,
+        5.11,
+        1.55,
+        0.1,
+        0.09
+      ],
+      "clim_annual_mm_day": 2.99
+    },
+    "chungthang": {
+      "lat": 27.603,
+      "lng": 88.646,
+      "terrain": {
+        "elev_m": 1589,
+        "slope_deg": 5.862,
+        "northness": -0.719,
+        "eastness": -0.695,
+        "curvature": 0.242,
+        "relief_1km": 499
+      },
+      "clim_month_mm_day": [
+        0.16,
+        0.42,
+        0.96,
+        1.89,
+        3.57,
+        5.4,
+        9.15,
+        7.27,
+        5.11,
+        1.55,
+        0.1,
+        0.09
+      ],
+      "clim_annual_mm_day": 2.99
+    },
+    "lachung": {
+      "lat": 27.689,
+      "lng": 88.744,
+      "terrain": {
+        "elev_m": 2614,
+        "slope_deg": 6.713,
+        "northness": 0.607,
+        "eastness": -0.795,
+        "curvature": -0.407,
+        "relief_1km": 467
+      },
+      "clim_month_mm_day": [
+        0.16,
+        0.42,
+        0.96,
+        1.89,
+        3.57,
+        5.4,
+        9.15,
+        7.27,
+        5.11,
+        1.55,
+        0.1,
+        0.09
+      ],
+      "clim_annual_mm_day": 2.99
+    },
+    "lachen": {
+      "lat": 27.717,
+      "lng": 88.556,
+      "terrain": {
+        "elev_m": 2741,
+        "slope_deg": 28.016,
+        "northness": -0.225,
+        "eastness": 0.974,
+        "curvature": 0.078,
+        "relief_1km": 574
+      },
+      "clim_month_mm_day": [
+        0.16,
+        0.42,
+        0.96,
+        1.89,
+        3.57,
+        5.4,
+        9.15,
+        7.27,
+        5.11,
+        1.55,
+        0.1,
+        0.09
+      ],
+      "clim_annual_mm_day": 2.99
+    },
+    "namchi": {
+      "lat": 27.166,
+      "lng": 88.364,
+      "terrain": {
+        "elev_m": 1437,
+        "slope_deg": 15.023,
+        "northness": -0.918,
+        "eastness": 0.397,
+        "curvature": -0.394,
+        "relief_1km": 362
+      },
+      "clim_month_mm_day": [
+        0.18,
+        0.47,
+        1.1,
+        2.61,
+        5.35,
+        8.99,
+        14.36,
+        10.97,
+        8.78,
+        2.66,
+        0.15,
+        0.09
+      ],
+      "clim_annual_mm_day": 4.67
+    },
+    "jorethang": {
+      "lat": 27.128,
+      "lng": 88.282,
+      "terrain": {
+        "elev_m": 311,
+        "slope_deg": 7.721,
+        "northness": 0.949,
+        "eastness": 0.316,
+        "curvature": -0.307,
+        "relief_1km": 277
+      },
+      "clim_month_mm_day": [
+        0.18,
+        0.47,
+        1.1,
+        2.61,
+        5.35,
+        8.99,
+        14.36,
+        10.97,
+        8.78,
+        2.66,
+        0.15,
+        0.09
+      ],
+      "clim_annual_mm_day": 4.67
+    },
+    "gyalshing": {
+      "lat": 27.289,
+      "lng": 88.258,
+      "terrain": {
+        "elev_m": 1527,
+        "slope_deg": 15.492,
+        "northness": -0.907,
+        "eastness": 0.42,
+        "curvature": 0.568,
+        "relief_1km": 569
+      },
+      "clim_month_mm_day": [
+        0.16,
+        0.42,
+        0.96,
+        1.89,
+        3.57,
+        5.4,
+        9.15,
+        7.27,
+        5.11,
+        1.55,
+        0.1,
+        0.09
+      ],
+      "clim_annual_mm_day": 2.99
+    },
+    "pelling": {
+      "lat": 27.3,
+      "lng": 88.236,
+      "terrain": {
+        "elev_m": 1913,
+        "slope_deg": 17.577,
+        "northness": -0.999,
+        "eastness": -0.039,
+        "curvature": -0.029,
+        "relief_1km": 406
+      },
+      "clim_month_mm_day": [
+        0.17,
+        0.4,
+        0.83,
+        1.69,
+        3.48,
+        5.32,
+        9.44,
+        7.51,
+        5.35,
+        1.48,
+        0.09,
+        0.09
+      ],
+      "clim_annual_mm_day": 3.01
+    },
+    "kalimpong": {
+      "lat": 27.06,
+      "lng": 88.47,
+      "terrain": {
+        "elev_m": 1167,
+        "slope_deg": 16.819,
+        "northness": -0.235,
+        "eastness": 0.972,
+        "curvature": -0.038,
+        "relief_1km": 296
+      },
+      "clim_month_mm_day": [
+        0.18,
+        0.47,
+        1.1,
+        2.61,
+        5.35,
+        8.99,
+        14.36,
+        10.97,
+        8.78,
+        2.66,
+        0.15,
+        0.09
+      ],
+      "clim_annual_mm_day": 4.67
+    },
+    "darjeeling": {
+      "lat": 27.041,
+      "lng": 88.266,
+      "terrain": {
+        "elev_m": 2120,
+        "slope_deg": 16.476,
+        "northness": 0.331,
+        "eastness": -0.944,
+        "curvature": 0.096,
+        "relief_1km": 290
+      },
+      "clim_month_mm_day": [
+        0.18,
+        0.47,
+        1.1,
+        2.61,
+        5.35,
+        8.99,
+        14.36,
+        10.97,
+        8.78,
+        2.66,
+        0.15,
+        0.09
+      ],
+      "clim_annual_mm_day": 4.67
+    },
+    "kurseong": {
+      "lat": 26.881,
+      "lng": 88.277,
+      "terrain": {
+        "elev_m": 1489,
+        "slope_deg": 14.728,
+        "northness": 0.023,
+        "eastness": -1,
+        "curvature": -0.048,
+        "relief_1km": 392
+      },
+      "clim_month_mm_day": [
+        0.18,
+        0.47,
+        1.1,
+        2.61,
+        5.35,
+        8.99,
+        14.36,
+        10.97,
+        8.78,
+        2.66,
+        0.15,
+        0.09
+      ],
+      "clim_annual_mm_day": 4.67
+    }
+  }
+}

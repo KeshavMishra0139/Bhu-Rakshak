@@ -328,3 +328,17 @@ CREATE TABLE IF NOT EXISTS seismic_cache (
   data_json     TEXT NOT NULL,      -- normalised list (see ingest/seismic.js)
   fetched_at    TEXT NOT NULL
 );
+
+-- EXPERIMENTAL model's daily predictions (ml/models/landslide-live-v1.json). One row per place, day predicted, and
+-- day the prediction was issued, so predictions made BEFORE an event can be checked against it later.
+CREATE TABLE IF NOT EXISTS ml_predictions (
+  location_id   TEXT NOT NULL,
+  for_date      TEXT NOT NULL,      -- IST day being predicted
+  issued_on     TEXT NOT NULL,      -- IST day the prediction was made
+  score         REAL NOT NULL,      -- relative likelihood (not a probability)
+  elevated      INTEGER NOT NULL,   -- 1 if above the "elevated" threshold
+  model_version TEXT NOT NULL,
+  features_json TEXT NOT NULL,      -- the model's inputs, for audit
+  computed_at   TEXT NOT NULL,
+  PRIMARY KEY (location_id, for_date, issued_on)
+);

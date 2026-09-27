@@ -25,6 +25,19 @@ export interface SeismicSummary {
 export interface Quake { id: string; source: 'NCS' | 'USGS'; time: string; mag: number; depth_km: number; lat: number; lng: number; place: string | null; mmi_region: number; age_hours: number }
 export interface SeismoStation { code: string; name: string; state: string | null; lat: number; lng: number }
 export interface SeismicData { quakes: Quake[]; stations: SeismoStation[]; fetched_at: string | null; feed: { status: string; message: string | null } | null }
+/** EXPERIMENTAL model (officers only; never drives alerts). */
+export interface MlDay {
+  date: string; score: number; elevated: boolean;
+  inputs: { rain_d0: number; rain_3d: number; rain_7d: number; rain_30d: number; rain_3d_vs_normal: number | null; max_1h_48h: number; quake_max_mmi_30d: number };
+}
+export interface MlLatest {
+  model: {
+    version: string; created_at: string; status: string; meaning: string; elevated_threshold: number;
+    evaluation: { auc: number; when: number; where: number; caught: number; false_alarms: number; warnings_right: number; test_landslides: number };
+  };
+  computed_at: string | null;
+  predictions: Record<string, { today?: MlDay; tomorrow?: MlDay }>;
+}
 export interface ForecastPoint { h: number; score: number; level: Level }
 
 export interface Risk {
