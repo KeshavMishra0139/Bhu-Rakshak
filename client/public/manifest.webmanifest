@@ -1,0 +1,19 @@
+{
+  "name": "Bhu-Rakshak · landslide early warning",
+  "short_name": "Bhu-Rakshak",
+  "description": "Landslide early warning for Sikkim, the Darjeeling hills and North-East India.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0B2A33",
+  "theme_color": "#0B2A33",
+  "lang": "en",
+  "categories": ["weather", "utilities", "navigation"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

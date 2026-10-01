@@ -60,7 +60,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     devLogin: async (email, password, access_code) => apply(await api.post<Me>('/dev/login', { email, password, access_code })),
     signupCitizen: async (body) => apply(await api.post<Me>('/auth/signup/citizen', body)),
     signupAuthority: async (body) => apply(await api.post<Me>('/auth/signup/authority', body)),
-    logout: async () => { try { await api.post('/auth/logout'); } finally { setMeState(null); } },
+    // Signing out also drops this device's saved offline snapshot of the live data.
+    logout: async () => { try { await api.post('/auth/logout'); } finally { try { localStorage.removeItem('br.snapshot.v1'); } catch { /* private mode */ } setMeState(null); } },
     setMe: (m) => { apply(m); },
     can: (cap) => !!me?.capabilities.includes(cap),
     savePrefs: (patch) => { if (me) api.put('/settings', patch).catch(() => { /* preference sync is best effort */ }); },

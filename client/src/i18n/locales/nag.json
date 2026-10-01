@@ -268,5 +268,14 @@
     "n_4": "Olop bijuli tufan",
     "n_9": "Majot bijuli tufan",
     "n_14": "Bisi bijuli tufan"
+  },
+  "offline": {
+    "banner": "Offline — {{time}} laga data dikhai ase",
+    "banner_nodata": "Offline — etu device te etiya bhi kunu data rakha nai",
+    "sub": "Khotra level aru map etu device pora shesh te pai thaka data ase. Online hoile nijor pora update hobo. Khotra te 112 te phone koribi.",
+    "reconnecting": "Aru connect hoi ase… {{time}} laga shesh update dikhai ase",
+    "reconnecting_nodata": "Aru connect hoi ase…",
+    "install": "App install koribi",
+    "install_tip": "Bhu-Rakshak etu device te install koribi: app nisina khulibo aru shesh data loi kene offline bhi cholibo."
   }
 }

@@ -190,13 +190,18 @@ export function RiskStreamProvider({ children }: { children: ReactNode }) {
     return () => { set.delete(fn as (p: unknown) => void); };
   }, []);
 
-  // Persist a light snapshot (throttled) for offline fallback.
+  // Persist a light snapshot (throttled) for offline fallback — soon after fresh data arrives, and again when the tab
+  // is hidden or closed, so even a short visit on a patchy connection leaves the last-known picture on the device.
   useEffect(() => {
     if (!Object.keys(locations).length || status !== 'live') return;
-    const id = setTimeout(() => {
+    const save = () => {
       try { localStorage.setItem(CACHE_KEY, JSON.stringify({ locations, corridors, at: lastUpdateAt || new Date().toISOString() })); } catch { /* quota */ }
-    }, 5000);
-    return () => clearTimeout(id);
+    };
+    const id = setTimeout(save, 1500);
+    const onHide = () => { if (document.visibilityState === 'hidden') save(); };
+    window.addEventListener('pagehide', save);
+    document.addEventListener('visibilitychange', onHide);
+    return () => { clearTimeout(id); window.removeEventListener('pagehide', save); document.removeEventListener('visibilitychange', onHide); };
   }, [locations, corridors, lastUpdateAt, status]);
 
   const list = useMemo(

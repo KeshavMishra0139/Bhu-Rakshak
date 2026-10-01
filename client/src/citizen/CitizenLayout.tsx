@@ -1,16 +1,15 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Home, Route, Bell, Megaphone, UserRound, Phone, Volume2, WifiOff, Map as MapIcon } from 'lucide-react';
+import { Home, Route, Bell, Megaphone, UserRound, Phone, Volume2, Map as MapIcon } from 'lucide-react';
 import { Logo } from '../components/Logo';
 import { LiveIndicator } from '../components/LiveIndicator';
 import { LanguageToggle } from '../components/LanguageToggle';
 import { ThemeToggle } from '../components/ThemeToggle';
-import { useRiskStream } from '../live/RiskStreamProvider';
 import { audioUnlocked, onAudioState, unlockAudio } from '../lib/audio';
-import { dateTimeIST } from '../lib/format';
 import { withPane } from '../lib/viewAs';
 import { PageTransition } from '../components/PageTransition';
+import { OfflineBanner, InstallButton } from '../components/OfflineBanner';
 
 const NAV = [
   { to: '/citizen', key: 'citizen.home', Icon: Home, end: true },
@@ -44,8 +43,7 @@ function SoundPrompt() {
 }
 
 export function CitizenLayout({ children }: { children: ReactNode }) {
-  const { t, i18n } = useTranslation();
-  const { status, lastUpdateAt } = useRiskStream();
+  const { t } = useTranslation();
   const linkCls = ({ isActive }: { isActive: boolean }) =>
     `px-3 py-2 rounded-lg font-semibold ${isActive ? 'bg-brand/12 text-brand' : 'text-muted hover:text-ink'}`;
   return (
@@ -57,16 +55,13 @@ export function CitizenLayout({ children }: { children: ReactNode }) {
             {NAV.map((n) => <NavLink key={n.to} to={withPane(n.to)} end={n.end} className={linkCls}>{t(n.key)}</NavLink>)}
           </nav>
           <div className="flex-1" />
+          <InstallButton />
           <span className="hidden sm:inline"><LiveIndicator /></span>
           <LanguageToggle />
           <span className="hidden md:inline"><ThemeToggle /></span>
         </div>
       </header>
-      {status !== 'live' && lastUpdateAt && (
-        <p className="mx-auto max-w-[1100px] px-4 pt-3 text-sm text-muted inline-flex items-center gap-2 w-full" role="status">
-          <WifiOff size={16} aria-hidden /> {t('citizen.offline_note', { time: dateTimeIST(lastUpdateAt, i18n.language) })}
-        </p>
-      )}
+      <div className="mx-auto max-w-[1100px] px-4 empty:hidden [&>*]:mt-3"><OfflineBanner /></div>
       <SoundPrompt />
       <main id="main" className="mx-auto max-w-[1100px] px-4 py-5"><PageTransition className="">{children}</PageTransition></main>
 

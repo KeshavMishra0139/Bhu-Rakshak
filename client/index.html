@@ -6,6 +6,12 @@
     <meta name="description" content="Bhu-Rakshak — landslide early warning for Sikkim, the Darjeeling hills and North-East India." />
     <meta name="theme-color" content="#0B2A33" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Installable app. use-credentials: the private-preview password cookie must reach the manifest too. -->
+    <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Bhu-Rakshak" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -18,7 +24,7 @@
           var dark = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
           document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
           var l = localStorage.getItem('br.lang');
-          if (l === 'hi' || l === 'ne') document.documentElement.setAttribute('lang', l);
+          if (['hi', 'ne', 'as', 'lus', 'nag'].indexOf(l) >= 0) document.documentElement.setAttribute('lang', l);
         } catch (e) {}
       })();
     </script>

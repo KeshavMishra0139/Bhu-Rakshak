@@ -268,5 +268,14 @@
     "n_4": "Khawpui ri tlem",
     "n_9": "Khawpui ri laihawl",
     "n_14": "Khawpui ri nasa"
+  },
+  "offline": {
+    "banner": "Offline — {{time}} data a lang",
+    "banner_nodata": "Offline — he device-ah data dahkhawm a la awm lo",
+    "sub": "Hlauhawmna level leh map hi he device-in a dawn hnuhnung ber a ni. Online i nih leh chuan amah ngei in a update ang. Harsatna huna 112-ah call rawh.",
+    "reconnecting": "A inzawm leh mek… {{time}} update hnuhnung ber a lang",
+    "reconnecting_nodata": "A inzawm leh mek…",
+    "install": "App install rawh",
+    "install_tip": "Bhu-Rakshak he device-ah install rawh: app angin a inhawng a, data hnuhnung ber nen offline-in a hman theih."
   }
 }

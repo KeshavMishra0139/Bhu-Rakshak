@@ -29,6 +29,7 @@ const CorridorCheckPage = lazy(() => import('../citizen/CorridorCheckPage'));
 import ResourcesPage from './ResourcesPage';
 import AuditPage from './AuditPage';
 import SitrepPage from './SitrepPage';
+import { OfflineBanner } from '../components/OfflineBanner';
 
 function Popover({ label, icon, children, align = 'right' }: { label: string; icon: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false);
@@ -134,6 +135,7 @@ function Shell({ children }: { children: ReactNode }) {
           </Popover>
         </div>
       </header>
+      <div className="px-3 empty:hidden [&>*]:mt-2"><OfflineBanner /></div>
       <main id="main" className="flex-1 min-h-0 overflow-auto relative"><PageTransition>{children}</PageTransition></main>
     </div>
   );

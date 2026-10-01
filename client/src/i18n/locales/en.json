@@ -1247,5 +1247,14 @@
     "sample_banner": "Sample data — replace",
     "sample_note": "Sample data — placeholder shapes, not real observations. Replace with real data files.",
     "legend_hide": "Hide legend"
+  },
+  "offline": {
+    "banner": "Offline — showing data from {{time}}",
+    "banner_nodata": "Offline — no saved data on this device yet",
+    "sub": "Risk levels and the map are the last ones this device received. They update by themselves when you are back online. In danger, call 112.",
+    "reconnecting": "Reconnecting… showing the last update from {{time}}",
+    "reconnecting_nodata": "Reconnecting…",
+    "install": "Install app",
+    "install_tip": "Install Bhu-Rakshak on this device: it opens like an app and works offline with the last data."
   }
 }
