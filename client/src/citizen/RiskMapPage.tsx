@@ -11,6 +11,7 @@ import { WatchMap, PIN_LABEL, type LayerKey } from '../authority/map/WatchMap';
 import { MapPopover } from '../authority/map/MapControls';
 import { MapTypePicker } from '../authority/map/MapTypePicker';
 import { WhyCard } from '../components/WhyCard';
+import { ImpactSection } from '../components/ImpactSection';
 import { BottomSheet } from '../components/BottomSheet';
 import { RiskBadge } from '../components/RiskBadge';
 import { LEVELS, LEVEL_RANK } from '../lib/risk';
@@ -88,7 +89,7 @@ export default function RiskMapPage() {
 
         {/* Desktop: the Why card beside the map, then the other places, highest risk first. */}
         <aside className="hidden lg:block lg:h-[calc(100dvh-11rem)] lg:min-h-[520px] overflow-y-auto pr-1 space-y-4" aria-label={t('why.title')}>
-          {wide && loc && <div key={loc.id} className="drawer-enter"><WhyCard loc={loc} onClose={() => setSelected(null)} /></div>}
+          {wide && loc && <div key={loc.id} className="drawer-enter"><WhyCard loc={loc} onClose={() => setSelected(null)}><ImpactSection loc={loc} /></WhyCard></div>}
           <PlaceList ranked={ranked} selected={selected} onPick={(id) => pick(id, true)} lang={lang} />
         </aside>
       </div>
@@ -98,7 +99,7 @@ export default function RiskMapPage() {
       {!wide && loc && (
         <BottomSheet key={loc.id} label={t('why.title')} onClose={() => setSelected(null)}
           extra={<a href="tel:112" className="inline-flex min-h-[32px] items-center gap-1 rounded-pill bg-risk-critical px-3 text-xs font-bold text-white" aria-label={t('citizen.call_112')}><Phone size={13} aria-hidden />{t('citizen.sos')}</a>}>
-          <WhyCard loc={loc} variant="bare" />
+          <WhyCard loc={loc} variant="bare"><ImpactSection loc={loc} /></WhyCard>
         </BottomSheet>
       )}
     </div>

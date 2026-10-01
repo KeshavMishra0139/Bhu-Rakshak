@@ -19,6 +19,7 @@ import { IncidentDetail } from '../IncidentDetail';
 import { useAuthority } from '../AuthorityContext';
 import { RiskMix } from '../../components/RiskMix';
 import { WhyCard } from '../../components/WhyCard';
+import { ImpactSection } from '../../components/ImpactSection';
 
 type Detail = {
   location: LocationSnap & { field_verified_at: string | null };
@@ -136,7 +137,7 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
             </div>
             <p className="text-sm">{t('drawer.level_since', { time: dateTimeIST(r.level_since, lang) })} · <UpdatedAgo at={r.updated_at} /></p>
             <p className="text-sm font-semibold">{r.time_to_threshold ? t('drawer.next_threshold', { level: t(`levels.${r.time_to_threshold.level}`), hours: r.time_to_threshold.hours }) : t('drawer.no_threshold')}</p>
-            <WhyCard loc={live} variant="embedded" technical />
+            <WhyCard loc={live} variant="embedded" technical><ImpactSection loc={live} technical /></WhyCard>
             <ImdPanel imd={c.imd as ImdSummary | null} />
             <SeismicPanel seismic={c.seismic as SeismicSummary | null} />
             <MlPanel locationId={id} />
