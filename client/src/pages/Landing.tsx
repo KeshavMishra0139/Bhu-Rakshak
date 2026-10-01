@@ -10,6 +10,7 @@ import { Contours } from '../components/Contours';
 import { useUpdatedLabel } from '../components/UpdatedAgo';
 import { timeIST } from '../lib/format';
 import { WatchStrip } from '../components/RiskMix';
+import { ComparisonTable } from '../components/ComparisonTable';
 
 const LandingMap = lazy(() => import('../components/LandingMap'));
 const STEPS = [['predict', CloudRain], ['visualize', Map], ['verify', BadgeCheck], ['warn', Siren]] as const;
@@ -77,6 +78,7 @@ export default function Landing() {
             ))}
           </ol>
         </section>
+        <ComparisonTable className="mx-auto max-w-7xl px-5 pb-14" />
       </main>
       <footer className="border-t border-line">
         <div className="mx-auto max-w-7xl px-5 py-6 flex flex-wrap items-center justify-between gap-3 text-sm text-muted">

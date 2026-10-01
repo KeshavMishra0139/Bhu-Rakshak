@@ -277,5 +277,15 @@
     "reconnecting_nodata": "Aru connect hoi ase…",
     "install": "App install koribi",
     "install_tip": "Bhu-Rakshak etu device te install koribi: app nisina khulibo aru shesh data loi kene offline bhi cholibo."
+  },
+  "compare": {
+    "title": "Bhu-Rakshak laga tulana",
+    "aspect": "Kotha",
+    "verify": "check koribo lage",
+    "verify_tip": "Kunu jaga pora etiya bhi thik ase koi kene pora nai — dikhabo age te check koribi.",
+    "intro": "GSI aru NDEM sarkar laga asol jaga ase, aru taikhan laga hushiar khobor sob age te. Etu table pora manu khan nimite bona jinis ki dibo pare dikhai, aru amikhan etiya bhi check nokora kotha sob chinh kori ase.",
+    "swipe": "Sob column sabole kinar phale swipe koribi",
+    "sources": "Kotha laga jaga ({{date}} te check korise)",
+    "note": "Table laga kotha English te ase; thik koribole client/src/data/comparison.json bodli koribi."
   }
 }

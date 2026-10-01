@@ -1256,5 +1256,15 @@
     "reconnecting_nodata": "Reconnecting…",
     "install": "Install app",
     "install_tip": "Install Bhu-Rakshak on this device: it opens like an app and works offline with the last data."
+  },
+  "compare": {
+    "title": "How Bhu-Rakshak compares",
+    "aspect": "Aspect",
+    "verify": "to verify",
+    "verify_tip": "Not yet confirmed from a source — check before presenting.",
+    "intro": "GSI and NDEM are the official sources, and their warnings come first. This table shows what a community-facing tool can add, and marks every fact we have not yet confirmed.",
+    "swipe": "Swipe sideways to see all columns",
+    "sources": "Sources (checked {{date}})",
+    "note": "Table text is in English; edit client/src/data/comparison.json to correct or update a cell."
   }
 }

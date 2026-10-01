@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AppHeader } from '../components/AppHeader';
+import { ComparisonTable } from '../components/ComparisonTable';
 
 const STEPS = ['data', 'features', 'model', 'alerts', 'feedback'] as const;
 
@@ -29,6 +30,7 @@ export default function About() {
           <h2 id="status" className="text-xl font-bold">{t('about.status')}</h2>
           <p className="mt-2">{t('about.status_d')}</p>
         </section>
+        <ComparisonTable className="lg:-mx-32" />
         <section aria-labelledby="hindcast" className="card p-5">
           <h2 id="hindcast" className="text-xl font-bold">{t('hindcast.about_title')}</h2>
           <p className="mt-2">{t('hindcast.about_body')}</p>

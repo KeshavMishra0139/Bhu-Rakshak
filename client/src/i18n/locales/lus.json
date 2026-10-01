@@ -277,5 +277,15 @@
     "reconnecting_nodata": "A inzawm leh mek…",
     "install": "App install rawh",
     "install_tip": "Bhu-Rakshak he device-ah install rawh: app angin a inhawng a, data hnuhnung ber nen offline-in a hman theih."
+  },
+  "compare": {
+    "title": "Bhu-Rakshak khaikhinna",
+    "aspect": "Lam",
+    "verify": "finfiah tur",
+    "verify_tip": "Hnar atangin a la finfiah loh — lantir hmain en rawh.",
+    "intro": "GSI leh NDEM hi sorkar hnar dik an ni a, an vaukhanna chu a hmasa ber. He table hian khawtlang tana siam hmanrua hian eng nge a belh theih tih a lantir a, kan la finfiah loh thil zawng zawng a chhinchhiah bawk.",
+    "swipe": "Column zawng zawng en turin a sir lamah swipe rawh",
+    "sources": "Hnarte ({{date}}-a en)",
+    "note": "Table thu hi Sap ṭawngin a ni; siam ṭhat duh chuan client/src/data/comparison.json thlak rawh."
   }
 }

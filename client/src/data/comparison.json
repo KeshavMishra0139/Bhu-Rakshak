@@ -1,0 +1,66 @@
+{
+  "_comment": "Comparison shown on the home and About pages. Facts about GSI and NDEM come from the sources listed below as checked on 2026-10-01; anything we could not confirm is marked [to verify] — check it before presenting. Edit this file to correct or update a cell.",
+  "checked_on": "2026-10-01",
+  "columns": [
+    { "id": "gsi", "name": "GSI landslide forecasts", "sub": "National Landslide Forecasting Centre · Bhusanket portal · Bhooskhalan app" },
+    { "id": "ndem", "name": "NDEM hazard maps", "sub": "National Database for Emergency Management · NRSC / ISRO" },
+    { "id": "br", "name": "Bhu-Rakshak (ByteMatrix)", "sub": "SIH 2026 prototype", "ours": true }
+  ],
+  "rows": [
+    {
+      "id": "status", "label": "What it is",
+      "gsi": "Official landslide forecasts from the Geological Survey of India; the forecasting centre and its portal and app were launched in July 2024.",
+      "ndem": "Official geo-portal for disaster-management officials; login needed (access granted to authorised Central and State officials).",
+      "br": "Student prototype, not an official warning service. Follow official warnings first."
+    },
+    {
+      "id": "coverage", "label": "Coverage",
+      "gsi": "21 districts in 8 states in 2025; operational for Darjeeling and Kalimpong, experimental elsewhere (including Sikkim and Kohima). Nationwide system planned by 2030.",
+      "ndem": "All of India for its portal; landslide early warnings for pilgrimage routes in the north and north-east; past-landslide inventory 2012–2021 for some states.",
+      "br": "25 monitoring points: 17 in Sikkim and the Darjeeling hills, 8 preview points across the North East (some terrain values still defaults)."
+    },
+    {
+      "id": "detail", "label": "Detail level",
+      "gsi": "District bulletins; block-level areas reported for Darjeeling; other districts [to verify].",
+      "ndem": "Landslide hazard zonation maps and route-wise warnings; map scale [to verify].",
+      "br": "One live level per monitoring point; ~2 km road segments in the route checker; buildings, schools, health facilities and roads within 1 km (OpenStreetMap)."
+    },
+    {
+      "id": "frequency", "label": "Update frequency",
+      "gsi": "Daily forecasts through the Bhooskhalan app; season covered (monsoon only?) [to verify].",
+      "ndem": "Route warnings for the current day plus a two-day forecast; hazard maps are static.",
+      "br": "Weather every 30 minutes, risk recalculated every 15–30 seconds, forecast for +6, +12, +24 and +48 hours."
+    },
+    {
+      "id": "languages", "label": "Local languages",
+      "gsi": "[to verify]",
+      "ndem": "English interface [to verify].",
+      "br": "English, Hindi and Nepali; Assamese, Mizo and Nagamese as drafts awaiting native-speaker review."
+    },
+    {
+      "id": "community", "label": "Community input",
+      "gsi": "The app lets stakeholders share and update landslide occurrences; whether any citizen can report [to verify].",
+      "ndem": "Data exchange and chat among officials; no public reporting found [to verify].",
+      "br": "Residents report warning signs (cracks, muddy or new springs, tilting trees or poles, small rockfalls) with photo and location; officers verify; anonymised map layer for everyone."
+    },
+    {
+      "id": "offline", "label": "Offline use",
+      "gsi": "[to verify]",
+      "ndem": "Web portal; needs a connection [to verify].",
+      "br": "Installable app; keeps the last risk data and viewed map tiles on the device and says “Offline — showing data from …”."
+    },
+    {
+      "id": "explain", "label": "Explainability",
+      "gsi": "Forecasts built on rainfall thresholds for each area; how reasons are shown to the public [to verify].",
+      "ndem": "Map layers; no per-place explanation found [to verify].",
+      "br": "“Why” card: time window, confidence and the top three reasons with their share of the score; a public replay of a real landslide shows the method and its limits."
+    }
+  ],
+  "sources": [
+    { "title": "Press Information Bureau — National Landslide Forecasting Centre, Bhusanket portal and Bhooskhalan app launched (July 2024)", "url": "https://www.pib.gov.in/PressReleaseIframePage.aspx?PRID=2034442" },
+    { "title": "Millennium Post — GSI to soon start operational bulletins for Rudraprayag; coverage 21 districts in 8 states (20 July 2025)", "url": "https://www.millenniumpost.in/nation/gsi-to-soon-start-issuing-operational-landslide-early-warning-bulletins-for-rudraprayag-619508" },
+    { "title": "Ministry of Earth Sciences — Mapping of landslide prone areas (August 2025)", "url": "https://www.moes.gov.in/static/uploads/2025/08/d4aabb5c7a226df21f4b5b40d40d432d.pdf" },
+    { "title": "NDEM (NRSC / ISRO) — National Database for Emergency Management", "url": "https://ndem.nrsc.gov.in/" },
+    { "title": "NDEM — Geological disasters (landslide hazard zonation, route early warnings, inventory)", "url": "https://ndem.nrsc.gov.in/geologicaldisasters/index.php" }
+  ]
+}
