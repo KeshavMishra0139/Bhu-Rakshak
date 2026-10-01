@@ -25,7 +25,9 @@ const NAV = [
 function SoundPrompt() {
   const { t } = useTranslation();
   const [on, setOn] = useState(audioUnlocked());
-  const [dismissed, setDismissed] = useState(() => sessionStorage.getItem('br.soundPromptDismissed') === '1');
+  // "Not now" is remembered on the device, so returning visitors see their status first. An alarm still offers
+  // "Tap to enable alarm sound" in its own banner.
+  const [dismissed, setDismissed] = useState(() => { try { return localStorage.getItem('br.soundPromptDismissed') === '1'; } catch { return false; } });
   useEffect(() => onAudioState(setOn), []);
   if (on || dismissed) return null;
   return (
@@ -37,7 +39,7 @@ function SoundPrompt() {
           <p className="text-muted">{t('alarm.enable_body')}</p>
         </div>
         <button type="button" className="btn-primary" onClick={() => unlockAudio()}>{t('alarm.enable')}</button>
-        <button type="button" className="btn-ghost" onClick={() => { sessionStorage.setItem('br.soundPromptDismissed', '1'); setDismissed(true); }}>{t('alarm.later')}</button>
+        <button type="button" className="btn-ghost" onClick={() => { try { localStorage.setItem('br.soundPromptDismissed', '1'); } catch { /* private mode */ } setDismissed(true); }}>{t('alarm.later')}</button>
       </div>
     </div>
   );
