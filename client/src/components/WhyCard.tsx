@@ -69,10 +69,15 @@ export function WhyCard({ loc, variant = 'panel', onClose, technical = false, ch
           </dd>
         </div>
         <div className="rounded-xl bg-surface-2 p-3">
-          <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted"><Gauge size={13} aria-hidden />{t('why.confidence')}</dt>
+          <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted"><Gauge size={13} aria-hidden />{technical ? t('why.confidence') : t('why.sure_title')}</dt>
           <dd className="mt-1">
-            <span className="block text-2xl font-bold tabular-nums leading-none">{Math.round(r.confidence * 100)}%</span>
-            <span className="mt-1 block text-xs font-semibold">{t(`why.conf_${band}`)}</span>
+            {/* Citizens get words ("Fairly sure"); officers keep the percentage. */}
+            {technical ? (
+              <>
+                <span className="block text-2xl font-bold tabular-nums leading-none">{Math.round(r.confidence * 100)}%</span>
+                <span className="mt-1 block text-xs font-semibold">{t(`why.conf_${band}`)}</span>
+              </>
+            ) : <span className="block text-lg font-bold leading-snug">{t(`why.sure_${band}`)}</span>}
             <span className="mt-1.5 block h-1.5 overflow-hidden rounded-full bg-line" aria-hidden>
               <span className="block h-full rounded-full bg-brand transition-[width] duration-700" style={{ width: `${Math.round(r.confidence * 100)}%` }} />
             </span>
@@ -94,11 +99,11 @@ export function WhyCard({ loc, variant = 'panel', onClose, technical = false, ch
                 <span className="min-w-0 flex-1">
                   <span className="block font-semibold leading-snug">{cap(driverPlain(d.key, lang))}</span>
                   {technical && <span className="block text-xs text-muted">{driverLabel(d.key, lang)}</span>}
-                  <span className="mt-1.5 flex items-center gap-2" title={t('why.share_tip')}>
+                  <span className="mt-1.5 flex items-center gap-2" title={technical ? t('why.share_tip') : undefined}>
                     <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-2" aria-hidden>
                       <span className="block h-full rounded-full" style={{ width: `${Math.min(100, d.contribution)}%`, background: g?.color || 'rgb(var(--brand))' }} />
                     </span>
-                    <span className="font-mono text-xs tabular-nums text-muted">{t('why.share', { value: d.contribution })}</span>
+                    {technical && <span className="font-mono text-xs tabular-nums text-muted">{t('why.share', { value: d.contribution })}</span>}
                   </span>
                 </span>
               </li>
@@ -111,7 +116,7 @@ export function WhyCard({ loc, variant = 'panel', onClose, technical = false, ch
 
       <p className="mt-4 flex items-start gap-1.5 text-xs text-muted">
         <Info size={13} className="mt-0.5 shrink-0" aria-hidden />
-        <span>{t('why.basis')}</span>
+        <span>{technical ? t('why.basis') : t('why.basis_plain')}</span>
       </p>
     </>
   );
@@ -141,7 +146,7 @@ export function WhyCard({ loc, variant = 'panel', onClose, technical = false, ch
       <div className={variant === 'bare' ? 'px-1' : 'px-4 pb-4'}>
         {isPreview(loc) && (
           <p className="mb-3 rounded-md border border-[#a27ad6]/50 bg-[#a27ad6]/10 p-2 text-xs">
-            <span className="font-bold uppercase tracking-wide">{t('preview.badge')}</span> · {t('preview.note')}
+            <span className="font-bold uppercase tracking-wide">{technical ? t('preview.badge') : t('preview.badge_plain')}</span> · {technical ? t('preview.note') : t('preview.note_plain')}
           </p>
         )}
         {body}

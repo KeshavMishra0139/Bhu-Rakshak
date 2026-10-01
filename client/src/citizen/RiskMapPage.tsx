@@ -124,7 +124,7 @@ function PlaceList({ ranked, selected, onPick, lang }: { ranked: LocationSnap[];
               className={`flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left hover:bg-surface-2 ${selected === l.id ? 'bg-brand/10' : ''}`}>
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{placeName(l, lang)}</span>
-                <span className="block truncate text-xs text-muted">{t(`districts.${l.district}`)}{isPreview(l) ? ` · ${t('preview.badge')}` : ''}</span>
+                <span className="block truncate text-xs text-muted">{t(`districts.${l.district}`)}{isPreview(l) ? ` · ${t('preview.badge_plain')}` : ''}</span>
               </span>
               {l.risk && <RiskBadge level={l.risk.level} size="sm" />}
               <ChevronRight size={16} className="shrink-0 text-muted" aria-hidden />

@@ -14,6 +14,7 @@ import { ImdPanel } from '../components/ImdPanel';
 import { placeName, timeIST, isDeva } from '../lib/format';
 import { isPreview } from '../lib/mapConfig';
 import { driverPlain } from '../lib/factors';
+import { confidenceBand } from '../lib/why';
 import { LEVEL_ICON, TREND_ICON, levelVar, riskConfig } from '../lib/risk';
 import { canSpeak, speak, stopSpeaking } from '../lib/audio';
 import { useNow } from '../lib/useNow';
@@ -115,7 +116,7 @@ export default function CitizenHome() {
           <label htmlFor="place" className="field-label">{t('citizen.showing')}</label>
           <select id="place" className="input text-lg font-semibold" value={viewingId || ''} onChange={(e) => setViewingId(e.target.value)}>
             <option value="" disabled>{t('citizen.pick_place')}</option>
-            {places.map((l) => <option key={l.id} value={l.id}>{placeName(l, lang)}, {t(`districts.${l.district}`)}{isPreview(l) ? ` · ${t('preview.badge')}` : ''}</option>)}
+            {places.map((l) => <option key={l.id} value={l.id}>{placeName(l, lang)}, {t(`districts.${l.district}`)}{isPreview(l) ? ` · ${t('preview.badge_plain')}` : ''}</option>)}
           </select>
         </div>
         <button type="button" className="btn-secondary" onClick={locate} disabled={gps === 'busy'}>
@@ -159,7 +160,7 @@ export default function CitizenHome() {
                 <p className="text-[1.2rem] mt-1 font-semibold">{sentence}</p>
                 {whyLine && <p className="mt-2 text-[1.05rem]">{whyLine}</p>}
                 <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <span className="rounded-pill border border-line px-3 py-1 text-sm font-semibold">{t('citizen.confidence_chip', { value: Math.round(r.confidence * 100) })}</span>
+                  <span className="rounded-pill border border-line px-3 py-1 text-sm font-semibold">{t(`citizen.sure_${confidenceBand(r.confidence)}`)}</span>
                   {Trend && <span className="rounded-pill border border-line px-3 py-1 text-sm font-semibold inline-flex items-center gap-1"><Trend size={15} aria-hidden />{t(`trend.${r.trend}`)}</span>}
                   <UpdatedAgo at={r.updated_at} />
                 </div>
@@ -190,7 +191,7 @@ export default function CitizenHome() {
                     ))}
                   </dl>
                 )}
-                <ImdPanel imd={r.conditions.imd as ImdSummary | null | undefined} className="mt-4" />
+                <ImdPanel imd={r.conditions.imd as ImdSummary | null | undefined} className="mt-4" plain />
               </div>
               <div className="sm:self-start"><RiskBadge level={r.level} /></div>
             </div>

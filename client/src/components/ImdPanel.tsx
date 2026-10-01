@@ -14,14 +14,15 @@ const CHIP: Record<ImdColor, string> = {
 };
 const DAY_KEYS = ['imd.today', 'imd.tomorrow', 'imd.day3'];
 
-export function ImdPanel({ imd, className = '' }: { imd: ImdSummary | null | undefined; className?: string }) {
+/** `plain`: citizen wording for the title ("Weather department (IMD) warning"). */
+export function ImdPanel({ imd, className = '', plain = false }: { imd: ImdSummary | null | undefined; className?: string; plain?: boolean }) {
   const { t, i18n } = useTranslation();
   if (!imd) return null;
   const lang = i18n.language;
   const colorLabel = (c: ImdColor | null) => (c ? t(`imd.color_${c}`) : t('imd.none'));
   return (
     <section className={`rounded-lg border border-line p-3 space-y-2 ${className}`} aria-labelledby="imd-title">
-      <h3 id="imd-title" className="font-bold inline-flex items-center gap-1.5"><CloudRain size={17} aria-hidden />{t('imd.title')}</h3>
+      <h3 id="imd-title" className="font-bold inline-flex items-center gap-1.5"><CloudRain size={17} aria-hidden />{plain ? t('imd.title_plain') : t('imd.title')}</h3>
       {imd.nowcast && (
         <div className="text-sm">
           <p className="font-semibold">{t('imd.nowcast')}

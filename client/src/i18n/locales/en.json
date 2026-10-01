@@ -414,7 +414,10 @@
     "no_data_title": "We can't get the risk for this place right now",
     "no_data_body": "Please follow instructions from local officials. If you are in danger, call 112.",
     "stale_rain": "Rain data is {{hours}} hours old, so this may not be up to date. Follow instructions from local officials.",
-    "no_live_rain": "Live rain data isn't available right now, so this is based on typical weather. Follow instructions from local officials."
+    "no_live_rain": "Live rain data isn't available right now, so this is based on typical weather. Follow instructions from local officials.",
+    "sure_high": "We're quite sure",
+    "sure_medium": "We're fairly sure",
+    "sure_low": "We're not very sure"
   },
   "authority": {
     "board_title": "Live risk board",
@@ -985,7 +988,8 @@
     "n_15": "Very severe thunderstorm",
     "n_31": "Thunderstorm with hail",
     "n_32": "Severe dust storm",
-    "n_33": "Lightning very likely"
+    "n_33": "Lightning very likely",
+    "title_plain": "Weather department (IMD) warning"
   },
   "seismic": {
     "title": "Earthquakes & ground motion",
@@ -1053,7 +1057,9 @@
   "preview": {
     "badge": "NER preview",
     "tip": "Outside Sikkim/Darjeeling: filled automatically from public data; rock type and exposure not verified.",
-    "note": "Terrain, roads, rivers, vegetation and past landslides here were filled automatically from public data (SRTM, OpenStreetMap, MODIS, NASA landslide catalogue). Rock type, fault distance and people/facilities at risk are not verified yet — treat the risk level as indicative. Weather, earthquakes and the AI model run exactly as for Sikkim."
+    "note": "Terrain, roads, rivers, vegetation and past landslides here were filled automatically from public data (SRTM, OpenStreetMap, MODIS, NASA landslide catalogue). Rock type, fault distance and people/facilities at risk are not verified yet — treat the risk level as indicative. Weather, earthquakes and the AI model run exactly as for Sikkim.",
+    "badge_plain": "Preview area",
+    "note_plain": "Some map data for this area hasn't been checked yet, so treat this level as a rough guide."
   },
   "mix": {
     "title": "What's driving the risk",
@@ -1063,7 +1069,7 @@
     "quake": "Earthquakes",
     "watching": "Watching",
     "w_rain": "Rainfall",
-    "w_ground": "Soil moisture",
+    "w_ground": "Wet ground",
     "w_terrain": "Slope & rock",
     "w_quake": "Earthquakes",
     "w_rivers": "Rivers & roads",
@@ -1091,7 +1097,12 @@
     "win_between": "{{start}} – {{end}}",
     "win_from": "From about {{time}}",
     "win_at": "About {{time}}",
-    "basis": "Rule-based score from live rain, soil moisture, slope, rock type and earthquake data. It is a guide, not a guarantee — always follow official instructions."
+    "basis": "Rule-based score from live rain, soil moisture, slope, rock type and earthquake data. It is a guide, not a guarantee — always follow official instructions.",
+    "sure_title": "How sure we are",
+    "sure_high": "Quite sure",
+    "sure_medium": "Fairly sure",
+    "sure_low": "Not very sure",
+    "basis_plain": "This is a guide based on rain, wet ground, slope and earthquakes, not a guarantee. Always follow official instructions."
   },
   "sheet": {
     "expand": "Show more",
