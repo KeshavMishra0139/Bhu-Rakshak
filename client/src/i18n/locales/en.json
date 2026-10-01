@@ -401,7 +401,16 @@
     "saathi_src_drill": "Practice drill: levels are simulated",
     "saathi_ago_now": "just now",
     "saathi_ago_min": "{{count}} min ago",
-    "saathi_ago_h": "{{count}} h ago"
+    "saathi_ago_h": "{{count}} h ago",
+    "em_title": "Get to safety now",
+    "em_call": "Call 112",
+    "em_call_sub": "Free, 24 hours: police, fire and ambulance",
+    "em_local": "Local disaster help",
+    "em_steps": "Do this now",
+    "em_step1": "Move away from the slope, the river and the road below it, to open, higher ground.",
+    "em_step2": "Do not go back for belongings.",
+    "em_step3": "Warn people near you. If anyone is hurt or trapped, tell 112 exactly where.",
+    "em_back": "Back to chat"
   },
   "authority": {
     "board_title": "Live risk board",

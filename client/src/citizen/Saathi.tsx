@@ -11,6 +11,8 @@ import { useCitizen } from './CitizenContext';
 import { placeName, secondsSince, timeIST } from '../lib/format';
 import { speak, stopSpeaking } from '../lib/audio';
 import { useNow } from '../lib/useNow';
+import { isEmergency } from '../lib/emergency';
+import { EmergencyCard, EMERGENCY_STEPS } from '../components/EmergencyCard';
 
 type Lang = 'en' | 'hi';
 /** What the server says an answer relied on, and how fresh it was (see insights.js basisFor). */
@@ -56,6 +58,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
   const [readAloud, setReadAloud] = useState(false);
   const [listening, setListening] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [emergency, setEmergency] = useState(false);
   const nextId = useRef(1);
   const rec = useRef<SpeechRec | null>(null);
   const fab = useRef<HTMLButtonElement>(null);
@@ -81,6 +84,12 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
     if (busy) return;
     setNotice(null);
     setMsgs((m) => [...m, { id: nextId.current++, role: 'user', text: ask.label }]);
+    // Words of immediate danger: stop the chat and show the emergency screen at once (no network, no place needed).
+    if (ask.intent === 'emergency' || (ask.question && isEmergency(ask.question))) {
+      setEmergency(true);
+      if (readAloud) speak([T('citizen.em_title'), T('citizen.em_call'), ...EMERGENCY_STEPS.map((k) => T(k))].join('. '), lang);
+      return;
+    }
     if (!place) {
       setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: t('citizen.saathi_need_place', { lng: lang }) }]);
       return;
@@ -95,7 +104,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
     } finally {
       setBusy(false);
     }
-  }, [busy, place, lang, readAloud, t]);
+  }, [busy, place, lang, readAloud, t]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const open = useCallback((ask?: Ask) => {
     setOpen(true);
@@ -111,6 +120,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
 
   const close = () => {
     setOpen(false);
+    setEmergency(false);
     rec.current?.stop();
     stopSpeaking();
     setTimeout(() => fab.current?.focus(), 0);
@@ -198,6 +208,12 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
             </select>
           </div>
 
+          {/* Danger: the emergency screen replaces the chat until "Back to chat". */}
+          {emergency ? (
+            <div className="flex-1 overflow-y-auto px-4 py-4">
+              <EmergencyCard district={placeLoc?.district ?? null} T={T} onBack={() => { setEmergency(false); stopSpeaking(); setTimeout(() => input.current?.focus(), 0); }} />
+            </div>
+          ) : (<>
           <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3" role="log" aria-live="polite" aria-relevant="additions" aria-label={T('citizen.saathi_title')}>
             <Bubble role="assistant"><Rich text={greeting} /></Bubble>
             {msgs.map((m, i) => (
@@ -257,6 +273,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
               <Phone size={13} aria-hidden />{T('citizen.saathi_danger')}
             </a>
           </div>
+          </>)}
         </section>
       )}
 

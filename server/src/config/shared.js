@@ -7,6 +7,7 @@ const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 
 export const riskConfig = readJson(path.join(REPO_ROOT, 'shared/config/risk.json'));
 export const factorsConfig = readJson(path.join(REPO_ROOT, 'shared/config/factors.json'));
+export const emergencyConfig = readJson(path.join(REPO_ROOT, 'shared/config/emergency.json'));
 
 const dataDir = path.join(SERVER_ROOT, 'src/data');
 export const seedData = {

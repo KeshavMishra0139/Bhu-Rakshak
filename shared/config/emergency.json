@@ -1,0 +1,21 @@
+{
+  "_comment": "Words and phrases that mean someone may be in immediate danger (English, Hindi, romanised Hindi, Nepali). Saathi checks every message against this list in the browser first (so it works offline) and the server uses it for the 'emergency' intent. Matched case-insensitively as one regular expression. A false alarm only opens the emergency screen, which has a Back to chat button; missing a real emergency is worse. No lookbehind (older phones).",
+  "patterns": [
+    "\\bhelp\\b",
+    "\\bsos\\b",
+    "emergenc",
+    "trapped|\\bstuck\\b|buried|injur|\\bhurt\\b|bleeding|unconscious|ambulance|rescue|save (me|us)\\b|dying",
+    "\\b(i'?m|i am|we'?re|we are|they'?re|they are) in danger\\b",
+    "\\b(hill|hills|hillside|slope|mountain|ground|land|earth|road|house|home|wall|roof|rocks?|stones?|boulders?|mud|debris)\\s+(is |are |has |have )?(falling|fell|sliding|slid|slipping|collapsing|collapsed|moving|coming down|came down|giving way|gave way|caving in|caved in|cracking open)",
+    "\\b(swept away|washed away)\\b",
+    "\\b(landslide|mudslide|rockslide)\\s+(is\\s+|has\\s+)?(happening|now|here|coming|hit|just|struck)",
+    "\\b(there'?s|there is|we had|just had) a (landslide|mudslide|rockslide)\\b(?! risk)",
+    "\\b(water|river|stream) is rising\\b|\\bflash flood",
+    "बचाओ|बचाइए|बचाइये|बचा लो|मदद|फँस|फंस|घायल|आपात|दब गए|दब गया|दब गई|एम्बुलेंस|एंबुलेंस",
+    "पहाड़ी? (गिर|खिसक|टूट)|ज़मीन (खिसक|धँस|धंस)|जमीन (खिसक|धँस|धंस)|मलबा (गिर|आ)|चट्टानें? गिर|पत्थर गिर रहे|भूस्खलन (हो रहा|हो गया|हुआ|आ गया)|घर गिर|दीवार गिर",
+    "^(मैं|हम) खतरे में",
+    "bachao|bachaao|madad|phans gay|fans gay|ghayal|pahad gir|pahaad gir|zameen khisak|jameen khisak|bhuskhalan ho",
+    "बचाउ|बचाऊ|मद्दत|गुहार|च्यापि|पुरियो|पुरिए|घाइते|एम्बुलेन्स|आपतकाल|आपत्काल",
+    "पहिरो (गयो|खस्यो|आयो|झर्यो|जाँदै|खस्दै)|भिर (खस्यो|खस्दै|झर्दै)|ढुङ्गा (खस्दै|झर्दै)|घर (भत्कियो|ढल्यो)"
+  ]
+}

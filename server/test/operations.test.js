@@ -88,6 +88,8 @@ test('assistant recognises safety questions in English and Hindi, danger first',
   assert.equal(intentOf('मदद चाहिए'), 'emergency');
   assert.equal(intentOf('Is it safe to travel today?'), 'travel');
   assert.equal(intentOf('Should I clean the drains?'), 'prepare');
+  for (const s of ['the hill is falling', 'Help', 'rocks are falling on the road', "there's a landslide on NH10", 'पहाड़ गिर रहा है', 'भूस्खलन हो रहा है', 'पहिरो गयो', 'bachao']) assert.equal(intentOf(s), 'emergency', s);
+  for (const s of ['What is the landslide risk?', 'is there a landslide risk today', 'Am I in danger?', 'क्या मैं खतरे में हूँ?', 'पहिरोको जोखिम कति छ?']) assert.notEqual(intentOf(s), 'emergency', s);
   const em = answer({ intent: 'emergency', locationId: 'gangtok', lang: 'en' });
   assert.match(em.text, /\*\*call 112 now\*\*/);
   assert.match(answer({ intent: 'report', locationId: 'gangtok', lang: 'hi' }).text, /रिपोर्ट/);

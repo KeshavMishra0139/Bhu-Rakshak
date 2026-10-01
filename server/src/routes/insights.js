@@ -2,7 +2,7 @@
 import { Router } from 'express';
 import { q } from '../db/index.js';
 import { requireAuth, requireCap, rateLimit } from '../auth/middleware.js';
-import { factorsConfig, riskConfig, PREVIEW_CORRIDOR } from '../config/shared.js';
+import { emergencyConfig, factorsConfig, riskConfig, PREVIEW_CORRIDOR } from '../config/shared.js';
 import { hourIndex, istHourOfDay } from '../ingest/features.js';
 import { getControls } from '../prediction/controls.js';
 import { rampFor } from '../prediction/liveInputs.js';
@@ -41,10 +41,13 @@ const fmtTime = (iso, lang) => new Intl.DateTimeFormat(lang === 'hi' ? 'hi-IN' :
 
 export const INTENTS = ['travel', 'why', 'rain', 'prepare', 'status', 'signs', 'report', 'emergency'];
 
+// Same list the app checks offline before sending (shared/config/emergency.json).
+const EMERGENCY = new RegExp(emergencyConfig.patterns.join('|'), 'i');
+
 // Order matters: danger first, then the more specific topics.
 export function intentOf(text) {
   const s = String(text || '').toLowerCase();
-  if (/emergenc|trapped|stuck|injur|hurt|help me|sos|ambulance|बचाओ|मदद|फँस|फंस|घायल|आपात/.test(s)) return 'emergency';
+  if (EMERGENCY.test(s)) return 'emergency';
   if (/report|inform|tell (the )?(officials|authorit)|रिपोर्ट|सूचना|बताऊँ|बताना/.test(s)) return 'report';
   if (/crack|stone|rock|boulder|tilt|\blean|mud|sign|sound|rumbl|दरार|पत्थर|चट्टान|झुक|मटमैल|संकेत|आवाज़/.test(s)) return 'signs';
   if (/travel|drive|road|go |journey|यात्रा|सड़क|जाना|जाऊँ|रास्ता/.test(s)) return 'travel';
