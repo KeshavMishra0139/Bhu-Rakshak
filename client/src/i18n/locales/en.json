@@ -1037,5 +1037,41 @@
     "w_quake": "Earthquakes",
     "w_rivers": "Rivers & roads",
     "w_history": "Past landslides"
+  },
+  "why": {
+    "title": "Why this risk",
+    "when": "When",
+    "confidence": "Confidence",
+    "conf_high": "High confidence",
+    "conf_medium": "Medium confidence",
+    "conf_low": "Low confidence",
+    "reasons": "Top 3 reasons",
+    "reasons_watch": "Why it stays on watch",
+    "share": "{{value}}% of score",
+    "share_tip": "Share of the risk score from this reason",
+    "win_calm": "No raised risk expected in the next {{to}} h",
+    "win_now": "Now, for the next {{to}} h",
+    "win_now_open": "Now, and for at least the next {{to}} h",
+    "win_now_short": "Now; expected to ease within 6 h",
+    "win_later": "In {{from}}–{{to}} h",
+    "win_later_open": "From {{from}} h, through at least {{to}} h",
+    "win_around": "Around {{h}} h from now",
+    "win_until": "Until about {{time}}",
+    "win_between": "{{start}} – {{end}}",
+    "win_from": "From about {{time}}",
+    "win_at": "About {{time}}",
+    "basis": "Rule-based score from live rain, soil moisture, slope, rock type and earthquake data. It is a guide, not a guarantee — always follow official instructions."
+  },
+  "sheet": {
+    "expand": "Show more",
+    "collapse": "Show less"
+  },
+  "riskmap": {
+    "nav": "Map",
+    "title": "Risk map",
+    "sub": "Tap a place to see why its risk is what it is.",
+    "places": "Places, highest risk first",
+    "tap_pin": "Tap a pin to see why",
+    "legend_note": "The symbol on each pin shows the current level."
   }
 }

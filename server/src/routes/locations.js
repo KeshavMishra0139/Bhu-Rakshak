@@ -6,6 +6,8 @@ import { riskConfig, factorsConfig } from '../config/shared.js';
 import { ah, HttpError, safeJson } from '../lib/util.js';
 
 const r = Router();
+/** Citizens see the top three reasons (the "Why" card); officers see all drivers. */
+const CITIZEN_DRIVERS = 3;
 const CITIZEN_CONDITION_KEYS = ['rain_intensity', 'rain_24h', 'rain_fc_24h', 'rain_fc_48h', 'data_fetched_at', 'imd'];
 
 /** Trim technical detail for people without risk.details (citizens, guests). */
@@ -13,7 +15,7 @@ export function riskForActor(risk, actor) {
   if (!risk) return null;
   if (can(actor, 'risk.details')) return risk;
   const conditions = Object.fromEntries(CITIZEN_CONDITION_KEYS.map((k) => [k, risk.conditions?.[k] ?? null]));
-  return { ...risk, drivers: (risk.drivers || []).slice(0, 2), conditions };
+  return { ...risk, drivers: (risk.drivers || []).slice(0, CITIZEN_DRIVERS), conditions };
 }
 
 export function snapshot(actor) {

@@ -17,6 +17,7 @@ const GROUP_OF: Record<string, MixGroup> = {
   slope: 'terrain', history: 'terrain', lithology: 'terrain', road_cutting: 'terrain', river_proximity: 'terrain', fault: 'terrain', low_vegetation: 'terrain',
   seismic: 'quake',
 };
+export const groupOf = (key: string) => GROUPS.find((g) => g.id === GROUP_OF[key]);
 
 /** Share of the risk (0–100) from each family, from the top drivers. */
 export function mixOf(drivers: Driver[] | undefined) {

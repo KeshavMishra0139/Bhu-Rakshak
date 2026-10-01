@@ -26,16 +26,16 @@ test('polled events follow the same visibility rules as the stream', () => {
   const since = currentSeq();
   bus.emit('road_updated', { id: 'r1', status: 'blocked' });
   bus.emit('incident_updated', { id: 'inc1', location_id: 'mangan' });
-  bus.emit('risk_update', [{ location_id: 'mangan', score: 0.8, level: 'critical', drivers: [{ key: 'a' }, { key: 'b' }, { key: 'c' }], conditions: { rain_24h: 90, sm_0_1: 0.4 } }]);
+  bus.emit('risk_update', [{ location_id: 'mangan', score: 0.8, level: 'critical', drivers: [{ key: 'a' }, { key: 'b' }, { key: 'c' }, { key: 'd' }], conditions: { rain_24h: 90, sm_0_1: 0.4 } }]);
 
   const off = eventsSince(since, officer, officer.userId);
   assert.equal(off.complete, true);
   assert.deepEqual(off.events.map((e) => e.type), ['road_updated', 'incident_updated', 'risk_update']);
-  assert.equal(off.events[2].data[0].drivers.length, 3, 'officers get full risk detail');
+  assert.equal(off.events[2].data[0].drivers.length, 4, 'officers get full risk detail');
 
   const cit = eventsSince(since, citizen, null);
   assert.deepEqual(cit.events.map((e) => e.type), ['road_updated', 'risk_update'], 'citizens do not see incidents');
-  assert.equal(cit.events[1].data[0].drivers.length, 2, 'citizens get the trimmed risk');
+  assert.equal(cit.events[1].data[0].drivers.length, 3, 'citizens get the top three reasons');
   assert.equal(cit.events[1].data[0].conditions.sm_0_1, undefined);
 });
 

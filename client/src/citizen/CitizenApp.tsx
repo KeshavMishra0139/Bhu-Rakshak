@@ -1,4 +1,5 @@
-// Citizen website: five sections with shared layout, alarm and viewed-place state.
+// Citizen website: six sections with shared layout, alarm and viewed-place state.
+import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { CitizenProvider } from './CitizenContext';
@@ -9,6 +10,8 @@ import CitizenRoads from './CitizenRoads';
 import CitizenAlerts from './CitizenAlerts';
 import CitizenReport from './CitizenReport';
 import { SettingsForm } from '../components/SettingsForm';
+
+const RiskMapPage = lazy(() => import('./RiskMapPage'));
 
 function Profile() {
   const { t } = useTranslation();
@@ -27,6 +30,7 @@ export default function CitizenApp() {
       <CitizenLayout>
         <Routes>
           <Route index element={<CitizenHome />} />
+          <Route path="map" element={<Suspense fallback={<div className="h-[60vh] rounded-card bg-surface-2 animate-pulse" />}><RiskMapPage /></Suspense>} />
           <Route path="roads" element={<CitizenRoads />} />
           <Route path="alerts" element={<CitizenAlerts />} />
           <Route path="report" element={<CitizenReport />} />

@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Home, Route, Bell, Megaphone, UserRound, Phone, Volume2, WifiOff } from 'lucide-react';
+import { Home, Route, Bell, Megaphone, UserRound, Phone, Volume2, WifiOff, Map as MapIcon } from 'lucide-react';
 import { Logo } from '../components/Logo';
 import { LiveIndicator } from '../components/LiveIndicator';
 import { LanguageToggle } from '../components/LanguageToggle';
@@ -14,6 +14,7 @@ import { PageTransition } from '../components/PageTransition';
 
 const NAV = [
   { to: '/citizen', key: 'citizen.home', Icon: Home, end: true },
+  { to: '/citizen/map', key: 'riskmap.nav', Icon: MapIcon },
   { to: '/citizen/roads', key: 'citizen.roads_title', Icon: Route },
   { to: '/citizen/alerts', key: 'citizen.alerts_title', Icon: Bell },
   { to: '/citizen/report', key: 'nav.report', Icon: Megaphone },
@@ -74,7 +75,7 @@ export function CitizenLayout({ children }: { children: ReactNode }) {
         <Phone size={20} aria-hidden /> {t('citizen.sos')}
       </a>
 
-      <nav className="md:hidden fixed z-30 bottom-0 inset-x-0 bg-surface border-t border-line grid grid-cols-5" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} aria-label={t('common.menu')}>
+      <nav className="md:hidden fixed z-30 bottom-0 inset-x-0 bg-surface border-t border-line grid grid-cols-6" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} aria-label={t('common.menu')}>
         {NAV.map(({ to, key, Icon, end }) => (
           <NavLink key={to} to={withPane(to)} end={end}
             className={({ isActive }) => `flex flex-col items-center justify-center gap-0.5 min-h-[60px] text-[0.72rem] font-semibold ${isActive ? 'text-brand' : 'text-muted'}`}>

@@ -108,6 +108,9 @@ html[lang='hi'] body, html[lang='ne'] body { @apply font-deva; line-height: 1.65
 .drawer-enter { animation: br-slide-in-right 0.36s var(--ease-out) both; }
 .pop-enter { animation: br-pop 0.18s var(--ease-out) both; transform-origin: top right; }
 .toast-enter { animation: br-slide-in-right 0.32s var(--ease-out) both; }
+@keyframes br-sheet-up { from { opacity: 0.6; transform: translateY(100%); } to { opacity: 1; transform: none; } }
+/* backwards (not both) so the drag transform applies once the sheet has risen. */
+.sheet-enter { animation: br-sheet-up 0.34s var(--ease-out) backwards; }
 /* Children appear one after another (lists, card grids). */
 .stagger > * { animation: br-rise 0.45s var(--ease-out) both; }
 .stagger > *:nth-child(2) { animation-delay: 40ms; }
