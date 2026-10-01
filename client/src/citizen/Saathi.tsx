@@ -25,7 +25,7 @@ type Ask = { question?: string; intent?: string; label: string };
 const CHIP = 'min-h-[40px] rounded-full border border-[#cfe0d2] bg-white px-3.5 py-2 text-left text-[14px] font-semibold text-[#17392b] hover:border-[#2d765b] hover:bg-[#e8f3ed]';
 
 /** Suggested questions, each answered by a fixed intent so the reply is always on topic. */
-export const SAATHI_PROMPTS = ['travel', 'why', 'prepare', 'signs', 'report', 'rain'] as const;
+export const SAATHI_PROMPTS = ['status', 'roads', 'travel', 'why', 'prepare', 'signs', 'report', 'rain'] as const;
 
 const SaathiCtx = createContext<{ open: (ask?: Ask) => void } | null>(null);
 export const useSaathi = () => {

@@ -426,7 +426,9 @@
     "safe_place_go": "Directions",
     "signs_title": "Warning signs to watch for",
     "signs_body": "If you see any of these, move away from the slope first, then report it from a safe place.",
-    "report_it": "Report it"
+    "report_it": "Report it",
+    "q_status": "Am I safe?",
+    "q_roads": "Is my road open?"
   },
   "authority": {
     "board_title": "Live risk board",

@@ -39,7 +39,7 @@ const ROAD = { en: { open: 'open', caution: 'open with caution', restricted: 're
 // IST hour boundaries fall on :30 UTC, so the rounded start prints as a whole IST hour ("7 am").
 const fmtTime = (iso, lang) => new Intl.DateTimeFormat(lang === 'hi' ? 'hi-IN' : 'en-IN', { hour: 'numeric', timeZone: 'Asia/Kolkata' }).format(new Date(iso));
 
-export const INTENTS = ['travel', 'why', 'rain', 'prepare', 'status', 'signs', 'report', 'emergency'];
+export const INTENTS = ['travel', 'roads', 'why', 'rain', 'prepare', 'status', 'signs', 'report', 'emergency'];
 
 // Same list the app checks offline before sending (shared/config/emergency.json).
 const EMERGENCY = new RegExp(emergencyConfig.patterns.join('|'), 'i');
@@ -50,7 +50,9 @@ export function intentOf(text) {
   if (EMERGENCY.test(s)) return 'emergency';
   if (/report|inform|tell (the )?(officials|authorit)|रिपोर्ट|सूचना|बताऊँ|बताना/.test(s)) return 'report';
   if (/crack|stone|rock|boulder|tilt|\blean|mud|sign|sound|rumbl|दरार|पत्थर|चट्टान|झुक|मटमैल|संकेत|आवाज़/.test(s)) return 'signs';
+  if (/\b(road|roads|highway|nh)\b.*\b(open|closed|blocked)\b|(सड़क|रास्ता).*(खुल|बंद)/.test(s)) return 'roads';
   if (/travel|drive|road|go |journey|यात्रा|सड़क|जाना|जाऊँ|रास्ता/.test(s)) return 'travel';
+  if (/\bam i safe|\bare we safe|\bis it safe here|क्या (मैं|हम) सुरक्षित/.test(s)) return 'status';
   if (/why|reason|cause|क्यों|कारण/.test(s)) return 'why';
   if (/\brain|weather|बारिश|मौसम/.test(s)) return 'rain';
   if (/do|prepare|safe|should|ready|kit|bag|clean|drain|करूँ|करें|सुरक्षित|तैयारी/.test(s)) return 'prepare';
@@ -108,7 +110,7 @@ export function answer({ intent, locationId, lang }) {
   // Never guess: without a current record there is no level to state.
   const level = basis.risk_ok ? risk.level : null;
   const why = safeJson(risk?.drivers_json, []).slice(0, 2).map((d) => drivers[d.key]?.[L === 'hi' ? 'plainHi' : 'plainEn']).filter(Boolean);
-  const roads = q.all('SELECT r.name_en, r.name_hi, r.status FROM roads r, json_each(r.path_json) p WHERE p.value = :id', { id: loc.id });
+  const roads = q.all('SELECT r.name_en, r.name_hi, r.status, r.diversion_en, r.diversion_hi FROM roads r, json_each(r.path_json) p WHERE p.value = :id', { id: loc.id });
   const roadLine = roads.map((x) => `${L === 'hi' ? x.name_hi : x.name_en}: ${ROAD[L][x.status]}`).join('; ');
   let rain24 = 0;
   if (hourly) { const i = hourIndex(hourly, now); for (let k = 1; k <= 24; k++) rain24 += hourly.precipitation?.[i + k] || 0; }
@@ -138,6 +140,16 @@ export function answer({ intent, locationId, lang }) {
       if (win && level !== 'critical') { T(`Best time to go: around ${fmtTime(win.start, 'en')}, when the least rain is expected.`, `जाने का सबसे अच्छा समय: लगभग ${fmtTime(win.start, 'hi')}, तब सबसे कम बारिश की उम्मीद है।`); sources.add('forecast'); }
     }
     roadsOut();
+  } else if (intent === 'roads') {
+    // Road status is what officials have entered, not the model: no level is stated here.
+    if (!roads.length) T(`I don't have any monitored roads listed for ${place}. You can check a whole route in the road checker.`, `${place} के लिए कोई निगरानी वाली सड़क सूची में नहीं है। पूरा रास्ता जाँचने के लिए रोड चेकर देखें।`);
+    else {
+      T(`Roads near ${place}: ${roadLine}.`, `${place} के पास की सड़कें: ${roadLine}।`);
+      sources.add('roads');
+      for (const x of roads.filter((y) => !['open', 'cleared'].includes(y.status) && y.diversion_en)) {
+        T(`Diversion for ${x.name_en}: ${x.diversion_en}.`, `${x.name_hi} के लिए दूसरा रास्ता: ${x.diversion_hi || x.diversion_en}।`);
+      }
+    }
   } else if (intent === 'why') {
     if (!level) noData();
     else {
@@ -180,6 +192,9 @@ export function answer({ intent, locationId, lang }) {
   } else if (!level) noData();
   else {
     T(`The landslide risk at ${place} is ${LV.en[level]} right now.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`);
+    // "Am I safe?" also needs what to do.
+    T({ critical: 'Move to a safe place now, away from slopes and the river.', high: 'Avoid travel and stay away from slopes and streams.', moderate: 'Take care: travel in daylight and watch for warning signs.', low: 'No special action is needed now.' }[level],
+      { critical: 'अभी ढलान और नदी से दूर, सुरक्षित जगह पर जाएँ।', high: 'यात्रा से बचें और ढलान व नालों से दूर रहें।', moderate: 'सावधान रहें: दिन में यात्रा करें और चेतावनी संकेतों पर नज़र रखें।', low: 'अभी कोई खास कदम ज़रूरी नहीं।' }[level]);
     if (why.length) T(`Mainly because ${why.join(' and ')}.`, `मुख्य कारण: ${why.join(' और ')}।`);
     stated();
   }
