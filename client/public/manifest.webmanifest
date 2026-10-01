@@ -7,7 +7,7 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0B2A33",
+  "background_color": "#ffffff",
   "theme_color": "#0B2A33",
   "lang": "en",
   "categories": ["weather", "utilities", "navigation"],

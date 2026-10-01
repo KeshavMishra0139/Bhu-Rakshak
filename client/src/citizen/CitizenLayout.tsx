@@ -10,6 +10,7 @@ import { audioUnlocked, onAudioState, unlockAudio } from '../lib/audio';
 import { withPane } from '../lib/viewAs';
 import { PageTransition } from '../components/PageTransition';
 import { OfflineBanner, InstallButton } from '../components/OfflineBanner';
+import { useCitizen } from './CitizenContext';
 
 const NAV = [
   { to: '/citizen', key: 'citizen.home', Icon: Home, end: true },
@@ -44,13 +45,14 @@ function SoundPrompt() {
 
 export function CitizenLayout({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
+  const { active } = useCitizen(); // a High/Critical alarm turns the logo's warning waves red
   const linkCls = ({ isActive }: { isActive: boolean }) =>
     `px-3 py-2 rounded-lg font-semibold ${isActive ? 'bg-brand/12 text-brand' : 'text-muted hover:text-ink'}`;
   return (
     <div className="min-h-screen pb-24 md:pb-10">
       <header className="bg-surface border-b border-line">
         <div className="mx-auto max-w-[1100px] px-4 h-16 flex items-center gap-3">
-          <NavLink to={withPane('/citizen')} aria-label={t('citizen.home')}><Logo /></NavLink>
+          <NavLink to={withPane('/citizen')} aria-label={t('citizen.home')}><Logo alert={!!active && !active.acknowledged} /></NavLink>
           <nav className="hidden md:flex items-center gap-1 ml-4" aria-label={t('common.menu')}>
             {NAV.map((n) => <NavLink key={n.to} to={withPane(n.to)} end={n.end} className={linkCls}>{t(n.key)}</NavLink>)}
           </nav>
