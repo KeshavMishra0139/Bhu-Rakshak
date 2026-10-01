@@ -1,0 +1,10 @@
+{
+  "_comment": "SAMPLE DATA, NOT REAL SHELTERS. These mirror the four placeholder relief shelters in server/src/data/operations.json. Replace with the official list of relief camps / safe assembly points from SDMA and the district administrations (name, lat, lng), then set \"sample\" to false: only then does the app show a Directions button. Entries may give lat/lng, or `near` (a monitored place id) to borrow its position.",
+  "sample": true,
+  "places": [
+    { "id": "sample_rangpo", "name_en": "Sample relief shelter, Rangpo", "name_hi": "नमूना राहत शिविर, रंगपो", "district": "East Sikkim", "near": "rangpo" },
+    { "id": "sample_mangan", "name_en": "Sample relief shelter, Mangan", "name_hi": "नमूना राहत शिविर, मंगन", "district": "North Sikkim", "near": "mangan" },
+    { "id": "sample_namchi", "name_en": "Sample relief shelter, Namchi", "name_hi": "नमूना राहत शिविर, नामची", "district": "South Sikkim", "near": "namchi" },
+    { "id": "sample_kalimpong", "name_en": "Sample relief shelter, Kalimpong", "name_hi": "नमूना राहत शिविर, कालिम्पोंग", "district": "Kalimpong", "near": "kalimpong" }
+  ]
+}

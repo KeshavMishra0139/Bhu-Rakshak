@@ -13,6 +13,7 @@ import { speak, stopSpeaking } from '../lib/audio';
 import { useNow } from '../lib/useNow';
 import { isEmergency } from '../lib/emergency';
 import { EmergencyCard, EMERGENCY_STEPS } from '../components/EmergencyCard';
+import { SafePlace } from '../components/SafePlace';
 
 type Lang = 'en' | 'hi';
 /** What the server says an answer relied on, and how fresh it was (see insights.js basisFor). */
@@ -211,7 +212,9 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
           {/* Danger: the emergency screen replaces the chat until "Back to chat". */}
           {emergency ? (
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              <EmergencyCard district={placeLoc?.district ?? null} T={T} onBack={() => { setEmergency(false); stopSpeaking(); setTimeout(() => input.current?.focus(), 0); }} />
+              <EmergencyCard district={placeLoc?.district ?? null} T={T} onBack={() => { setEmergency(false); stopSpeaking(); setTimeout(() => input.current?.focus(), 0); }}>
+                {placeLoc && <SafePlace from={placeLoc} T={T} lang={lang} tone="saathi" />}
+              </EmergencyCard>
             </div>
           ) : (<>
           <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3" role="log" aria-live="polite" aria-relevant="additions" aria-label={T('citizen.saathi_title')}>

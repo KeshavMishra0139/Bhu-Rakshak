@@ -17,6 +17,7 @@ import { driverPlain } from '../lib/factors';
 import { useWide } from '../lib/useWide';
 import { WhyCard } from '../components/WhyCard';
 import { BottomSheet } from '../components/BottomSheet';
+import { SafePlace } from '../components/SafePlace';
 import { LEVEL_ICON, TREND_ICON, levelVar, riskConfig } from '../lib/risk';
 import { canSpeak, speak, stopSpeaking } from '../lib/audio';
 import { useNow } from '../lib/useNow';
@@ -261,6 +262,7 @@ export default function CitizenHome() {
           <section className="card p-5" aria-labelledby="contacts-title">
             <h2 id="contacts-title" className="text-lg font-bold">{t('citizen.contacts')}</h2>
             <a href="tel:112" className="btn-danger w-full mt-3 text-lg"><Phone size={20} aria-hidden />{t('citizen.call_112')}</a>
+            <div className="mt-3"><SafePlace from={loc} /></div>
             <ul className="mt-3 divide-y divide-line">
               {/* Only contacts officials have entered a number for ("To be configured" means nothing to a citizen). */}
               {localContacts.filter((c) => c.phone && c.phone !== '112').map((c) => (

@@ -418,7 +418,12 @@
     "sure_high": "We're quite sure",
     "sure_medium": "We're fairly sure",
     "sure_low": "We're not very sure",
-    "why_btn": "Why?"
+    "why_btn": "Why?",
+    "safe_place": "Nearest safe place",
+    "safe_place_km": "{{km}} km away",
+    "safe_place_sample": "Sample only, not a real shelter. To be replaced with the official list.",
+    "safe_place_none": "No safe place listed near here yet. Follow instructions from local officials.",
+    "safe_place_go": "Directions"
   },
   "authority": {
     "board_title": "Live risk board",
