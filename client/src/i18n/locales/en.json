@@ -393,7 +393,15 @@
     "q_signs": "What should I do if I see cracks?",
     "q_report": "How do I report something?",
     "q_rain": "How much rain is coming?",
-    "and_sep": " and "
+    "and_sep": " and ",
+    "saathi_src_model": "Source: Bhu-Rakshak risk model, updated {{time}} ({{ago}})",
+    "saathi_src_forced": "Source: level set by officials, updated {{time}} ({{ago}})",
+    "saathi_src_rain": "Rain forecast: Open-Meteo, {{time}}",
+    "saathi_src_roads": "Road status: officials' road list",
+    "saathi_src_drill": "Practice drill: levels are simulated",
+    "saathi_ago_now": "just now",
+    "saathi_ago_min": "{{count}} min ago",
+    "saathi_ago_h": "{{count}} h ago"
   },
   "authority": {
     "board_title": "Live risk board",

@@ -393,7 +393,15 @@
     "q_signs": "दरारें दिखें तो क्या करूँ?",
     "q_report": "रिपोर्ट कैसे करूँ?",
     "q_rain": "कितनी बारिश होने वाली है?",
-    "and_sep": " और "
+    "and_sep": " और ",
+    "saathi_src_model": "स्रोत: भू-रक्षक जोखिम मॉडल, {{time}} पर अपडेट ({{ago}})",
+    "saathi_src_forced": "स्रोत: अधिकारियों द्वारा तय स्तर, {{time}} पर अपडेट ({{ago}})",
+    "saathi_src_rain": "बारिश का पूर्वानुमान: Open-Meteo, {{time}}",
+    "saathi_src_roads": "सड़क की स्थिति: अधिकारियों की सूची",
+    "saathi_src_drill": "अभ्यास (ड्रिल): स्तर असली नहीं हैं",
+    "saathi_ago_now": "अभी",
+    "saathi_ago_min": "{{count}} मिनट पहले",
+    "saathi_ago_h": "{{count}} घंटे पहले"
   },
   "authority": {
     "board_title": "लाइव जोखिम बोर्ड",

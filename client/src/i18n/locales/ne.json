@@ -393,7 +393,15 @@
     "q_signs": "चिरा देखेँ भने के गर्ने?",
     "q_report": "कसरी रिपोर्ट गर्ने?",
     "q_rain": "कति वर्षा आउँदैछ?",
-    "and_sep": " र "
+    "and_sep": " र ",
+    "saathi_src_model": "स्रोत: भू-रक्षक जोखिम मोडेल, {{time}} मा अद्यावधिक ({{ago}})",
+    "saathi_src_forced": "स्रोत: अधिकारीहरूले तोकेको स्तर, {{time}} मा अद्यावधिक ({{ago}})",
+    "saathi_src_rain": "वर्षाको पूर्वानुमान: Open-Meteo, {{time}}",
+    "saathi_src_roads": "सडकको अवस्था: अधिकारीहरूको सूची",
+    "saathi_src_drill": "अभ्यास (ड्रिल): स्तर वास्तविक होइनन्",
+    "saathi_ago_now": "भर्खरै",
+    "saathi_ago_min": "{{count}} मिनेट अघि",
+    "saathi_ago_h": "{{count}} घण्टा अघि"
   },
   "authority": {
     "board_title": "लाइभ जोखिम बोर्ड",

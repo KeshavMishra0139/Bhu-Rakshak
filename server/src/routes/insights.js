@@ -2,8 +2,10 @@
 import { Router } from 'express';
 import { q } from '../db/index.js';
 import { requireAuth, requireCap, rateLimit } from '../auth/middleware.js';
-import { factorsConfig } from '../config/shared.js';
+import { factorsConfig, riskConfig, PREVIEW_CORRIDOR } from '../config/shared.js';
 import { hourIndex, istHourOfDay } from '../ingest/features.js';
+import { getControls } from '../prediction/controls.js';
+import { rampFor } from '../prediction/liveInputs.js';
 import { ah, HttpError, safeJson, round } from '../lib/util.js';
 
 const r = Router();
@@ -65,61 +67,122 @@ function bestWindow(hourly, nowMs) {
   return best;
 }
 
+/**
+ * How far the data behind an answer can be trusted. Saathi only states a risk level when the model's record is recent
+ * and was computed from live weather (not the climatology fallback); rain answers need live, recent weather.
+ * An officer-set level counts as current. A practice drill, a preview area or low confidence is flagged in the answer.
+ */
+export function basisFor(loc, risk, w, nowMs = Date.now()) {
+  const staleMs = riskConfig.live.staleDataHours * 3600000;
+  const old = (iso) => !iso || nowMs - new Date(iso).getTime() > staleMs;
+  const c = getControls();
+  const forced = !!c.forced?.[loc.id];
+  const weatherOk = w?.source === 'open-meteo' && !old(w.fetched_at);
+  const riskOk = !!risk && !old(risk.updated_at) && (weatherOk || forced);
+  return {
+    risk_ok: riskOk,
+    weather_ok: weatherOk,
+    risk_updated_at: risk?.updated_at || null,
+    weather_fetched_at: w?.fetched_at || null,
+    weather_source: w?.source || null,
+    confidence: risk?.confidence ?? null,
+    preview: loc.corridor_id === PREVIEW_CORRIDOR,
+    drill: (c.scenario.active && c.scenario.corridors.includes(loc.corridor_id)) || rampFor(loc.corridor_id) > 0.01,
+    forced,
+  };
+}
+
 export function answer({ intent, locationId, lang }) {
   const L = lang === 'hi' ? 'hi' : 'en';
-  const loc = q.one('SELECT id, name_en, name_hi, road FROM locations WHERE id = :id', { id: locationId });
+  const loc = q.one('SELECT id, name_en, name_hi, road, corridor_id FROM locations WHERE id = :id', { id: locationId });
   if (!loc) throw new HttpError(400, 'invalid_location');
-  const risk = q.one('SELECT level, drivers_json, trend FROM risk_state WHERE location_id = :id', { id: loc.id });
-  const w = q.one('SELECT hourly_json FROM weather_cache WHERE location_id = :id', { id: loc.id });
-  const hourly = safeJson(w?.hourly_json, null);
+  const risk = q.one('SELECT level, confidence, drivers_json, trend, updated_at FROM risk_state WHERE location_id = :id', { id: loc.id });
+  const w = q.one('SELECT hourly_json, fetched_at, source FROM weather_cache WHERE location_id = :id', { id: loc.id });
+  const now = Date.now();
+  const basis = basisFor(loc, risk, w, now);
+  const hourly = basis.weather_ok ? safeJson(w?.hourly_json, null) : null;
   const place = L === 'hi' ? loc.name_hi : loc.name_en;
-  const level = risk?.level || 'low';
+  // Never guess: without a current record there is no level to state.
+  const level = basis.risk_ok ? risk.level : null;
   const why = safeJson(risk?.drivers_json, []).slice(0, 2).map((d) => drivers[d.key]?.[L === 'hi' ? 'plainHi' : 'plainEn']).filter(Boolean);
   const roads = q.all('SELECT r.name_en, r.name_hi, r.status FROM roads r, json_each(r.path_json) p WHERE p.value = :id', { id: loc.id });
   const roadLine = roads.map((x) => `${L === 'hi' ? x.name_hi : x.name_en}: ${ROAD[L][x.status]}`).join('; ');
-  const now = Date.now();
   let rain24 = 0;
   if (hourly) { const i = hourIndex(hourly, now); for (let k = 1; k <= 24; k++) rain24 += hourly.precipitation?.[i + k] || 0; }
   const win = bestWindow(hourly, now);
   const lines = [];
+  const sources = new Set();
   const T = (en, hi) => lines.push(L === 'hi' ? hi : en);
+  const noData = () => T(`I don't have up-to-date risk information for ${place} right now, so I can't say whether it is safe. Please follow instructions from local officials. If you are in danger, **call 112**.`,
+    `अभी मेरे पास ${place} के खतरे की ताज़ा जानकारी नहीं है, इसलिए मैं नहीं बता सकता कि वहाँ सुरक्षित है या नहीं। कृपया स्थानीय अधिकारियों के निर्देश मानें। खतरे में हों तो **112 पर कॉल करें**।`);
+  // Added after any sentence that states a level, so the person knows how much weight to give it.
+  const caveats = () => {
+    if (basis.drill) T('Note: a practice drill is running for this area, so these levels are simulated, not real.', 'ध्यान दें: इस इलाके में अभ्यास (ड्रिल) चल रहा है, इसलिए ये स्तर असली नहीं, अभ्यास के हैं।');
+    if (basis.preview) T('This is a rough guide: some data for this area has not been checked yet. Follow instructions from local officials.', 'यह सिर्फ़ अनुमान है: इस इलाके का कुछ डेटा अभी जाँचा नहीं गया है। स्थानीय अधिकारियों के निर्देश मानें।');
+    else if (basis.confidence != null && basis.confidence < 0.5) T('This is a rough guide: we are not very sure right now. Follow instructions from local officials.', 'यह सिर्फ़ अनुमान है: अभी हम पूरी तरह पक्के नहीं हैं। स्थानीय अधिकारियों के निर्देश मानें।');
+  };
+  const roadsOut = () => { if (roadLine) { T(`Roads: ${roadLine}.`, `सड़कें: ${roadLine}।`); sources.add('roads'); } };
+  const stated = () => { sources.add('risk_model'); caveats(); };
 
   if (intent === 'travel') {
-    if (level === 'critical') T(`Don't travel near ${place} now. Landslide danger is critical.`, `अभी ${place} के पास यात्रा न करें। भूस्खलन का खतरा गंभीर है।`);
-    else if (level === 'high') T(`Avoid travel near ${place} unless it is urgent. The risk is high.`, `ज़रूरी न हो तो ${place} के पास यात्रा न करें। खतरा ज़्यादा है।`);
-    else if (level === 'moderate') T(`You can travel near ${place} with care. Travel in daylight and don't stop under steep slopes.`, `${place} के पास सावधानी से यात्रा कर सकते हैं। दिन में यात्रा करें और खड़ी ढलान के नीचे न रुकें।`);
-    else T(`Travel near ${place} looks fine right now. The landslide risk is low.`, `अभी ${place} के पास यात्रा ठीक लगती है। भूस्खलन का खतरा कम है।`);
-    if (win && level !== 'critical') T(`Best time to go: around ${fmtTime(win.start, 'en')}, when the least rain is expected.`, `जाने का सबसे अच्छा समय: लगभग ${fmtTime(win.start, 'hi')}, तब सबसे कम बारिश की उम्मीद है।`);
-    if (roadLine) T(`Roads: ${roadLine}.`, `सड़कें: ${roadLine}।`);
+    if (!level) noData();
+    else {
+      if (level === 'critical') T(`Don't travel near ${place} now. Landslide danger is critical.`, `अभी ${place} के पास यात्रा न करें। भूस्खलन का खतरा गंभीर है।`);
+      else if (level === 'high') T(`Avoid travel near ${place} unless it is urgent. The risk is high.`, `ज़रूरी न हो तो ${place} के पास यात्रा न करें। खतरा ज़्यादा है।`);
+      else if (level === 'moderate') T(`You can travel near ${place} with care. Travel in daylight and don't stop under steep slopes.`, `${place} के पास सावधानी से यात्रा कर सकते हैं। दिन में यात्रा करें और खड़ी ढलान के नीचे न रुकें।`);
+      else T(`Travel near ${place} looks fine right now. The landslide risk is low.`, `अभी ${place} के पास यात्रा ठीक लगती है। भूस्खलन का खतरा कम है।`);
+      stated();
+      if (win && level !== 'critical') { T(`Best time to go: around ${fmtTime(win.start, 'en')}, when the least rain is expected.`, `जाने का सबसे अच्छा समय: लगभग ${fmtTime(win.start, 'hi')}, तब सबसे कम बारिश की उम्मीद है।`); sources.add('forecast'); }
+    }
+    roadsOut();
   } else if (intent === 'why') {
-    T(`The landslide risk at ${place} is ${LV.en[level]}.`, `${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`);
-    if (why.length) T(`Mainly because ${why.join(' and ')}.`, `मुख्य कारण: ${why.join(' और ')}।`);
+    if (!level) noData();
+    else {
+      T(`The landslide risk at ${place} is ${LV.en[level]}.`, `${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`);
+      if (why.length) T(`Mainly because ${why.join(' and ')}.`, `मुख्य कारण: ${why.join(' और ')}।`);
+      stated();
+    }
   } else if (intent === 'rain') {
-    T(`About ${round(rain24, 0)} mm of rain is expected at ${place} in the next 24 hours.`, `अगले 24 घंटों में ${place} में लगभग ${round(rain24, 0)} मिमी बारिश होने की उम्मीद है।`);
-    if (win) T(`The driest daytime window starts around ${fmtTime(win.start, 'en')}.`, `दिन में सबसे सूखा समय लगभग ${fmtTime(win.start, 'hi')} से शुरू होगा।`);
+    if (!hourly) T(`I don't have up-to-date rain data for ${place} right now. Please follow weather warnings and instructions from local officials.`, `अभी मेरे पास ${place} की बारिश की ताज़ा जानकारी नहीं है। कृपया मौसम चेतावनियाँ और स्थानीय अधिकारियों के निर्देश मानें।`);
+    else {
+      T(`About ${round(rain24, 0)} mm of rain is expected at ${place} in the next 24 hours.`, `अगले 24 घंटों में ${place} में लगभग ${round(rain24, 0)} मिमी बारिश होने की उम्मीद है।`);
+      if (win) T(`The driest daytime window starts around ${fmtTime(win.start, 'en')}.`, `दिन में सबसे सूखा समय लगभग ${fmtTime(win.start, 'hi')} से शुरू होगा।`);
+      sources.add('forecast');
+    }
   } else if (intent === 'prepare') {
-    if (level === 'critical') T('Move to a safe place now, away from slopes and the river. Keep your phone charged and call 112 if you are in danger.', 'अभी सुरक्षित जगह पर जाएँ, ढलान और नदी से दूर। फ़ोन चार्ज रखें और खतरे में हों तो 112 पर कॉल करें।');
-    else if (level === 'high') T('Keep an emergency bag ready (water, torch, medicines, documents). Watch for new cracks, tilting trees or muddy water, and avoid slopes.', 'एक आपात बैग तैयार रखें (पानी, टॉर्च, दवाइयाँ, कागज़ात)। नई दरारें, झुके पेड़ या मटमैला पानी दिखे तो ध्यान दें, और ढलान से दूर रहें।');
-    else T('No special action needed now. Keep drains near your house clear and report any cracks or falling stones in the Report section.', 'अभी कोई खास कदम ज़रूरी नहीं। घर के पास की नालियाँ साफ़ रखें और दरार या गिरते पत्थर दिखें तो रिपोर्ट सेक्शन में बताएँ।');
+    if (!level) {
+      noData();
+      T('Meanwhile: keep an emergency bag ready, watch for new cracks, tilting trees or muddy water, and stay away from steep slopes when it rains hard.',
+        'तब तक: एक आपात बैग तैयार रखें, नई दरारें, झुके पेड़ या मटमैला पानी दिखे तो ध्यान दें, और तेज़ बारिश में खड़ी ढलान से दूर रहें।');
+    } else {
+      if (level === 'critical') T('Move to a safe place now, away from slopes and the river. Keep your phone charged and call 112 if you are in danger.', 'अभी सुरक्षित जगह पर जाएँ, ढलान और नदी से दूर। फ़ोन चार्ज रखें और खतरे में हों तो 112 पर कॉल करें।');
+      else if (level === 'high') T('Keep an emergency bag ready (water, torch, medicines, documents). Watch for new cracks, tilting trees or muddy water, and avoid slopes.', 'एक आपात बैग तैयार रखें (पानी, टॉर्च, दवाइयाँ, कागज़ात)। नई दरारें, झुके पेड़ या मटमैला पानी दिखे तो ध्यान दें, और ढलान से दूर रहें।');
+      else T('No special action needed now. Keep drains near your house clear and report any cracks or falling stones in the Report section.', 'अभी कोई खास कदम ज़रूरी नहीं। घर के पास की नालियाँ साफ़ रखें और दरार या गिरते पत्थर दिखें तो रिपोर्ट सेक्शन में बताएँ।');
+      stated();
+    }
   } else if (intent === 'emergency') {
     T('If anyone is hurt, trapped or in danger, **call 112 now**. Move away from the slope, the river and the road below it, towards open, higher ground. Do not go back for belongings.',
       'अगर कोई घायल है, फँसा है या खतरे में है तो **अभी 112 पर कॉल करें**। ढलान, नदी और उसके नीचे की सड़क से दूर, खुली और ऊँची जगह की ओर जाएँ। सामान लेने वापस न जाएँ।');
-    T(`Right now the landslide risk at ${place} is ${LV.en[level]}.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`);
+    if (level) { T(`Right now the landslide risk at ${place} is ${LV.en[level]}.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`); stated(); }
   } else if (intent === 'signs') {
     T('Warning signs of a landslide: **new cracks** in the ground, road or walls; **tilting trees, poles or fences**; **muddy water** in streams or springs; **falling stones**; or a rumbling sound.',
       'भूस्खलन के चेतावनी संकेत: ज़मीन, सड़क या दीवारों में **नई दरारें**; **झुकते पेड़, खंभे या बाड़**; नालों या झरनों में **मटमैला पानी**; **गिरते पत्थर**; या गड़गड़ाहट की आवाज़।');
     T('If you see them: move away from the slope at once, warn people nearby, then send a report with a photo from a safe place (Report section). If anyone is in danger, **call 112**.',
       'अगर ये दिखें: तुरंत ढलान से दूर जाएँ, आसपास के लोगों को बताएँ, फिर सुरक्षित जगह से फ़ोटो के साथ रिपोर्ट भेजें (रिपोर्ट सेक्शन)। कोई खतरे में हो तो **112 पर कॉल करें**।');
-    if (level === 'high' || level === 'critical') T(`Take this seriously: the risk at ${place} is already ${LV.en[level]}.`, `इसे गंभीरता से लें: ${place} में खतरा पहले से ${LV.hi[level]} है।`);
+    if (level === 'high' || level === 'critical') { T(`Take this seriously: the risk at ${place} is already ${LV.en[level]}.`, `इसे गंभीरता से लें: ${place} में खतरा पहले से ${LV.hi[level]} है।`); stated(); }
   } else if (intent === 'report') {
     T('Open **Report** at the bottom of the screen: choose what you saw, add a photo if it is safe, mark the spot on the map or use your location, and send. Officials check every report and you will see when yours is verified.',
       'स्क्रीन के नीचे **रिपोर्ट** खोलें: जो देखा वह चुनें, सुरक्षित हो तो फ़ोटो जोड़ें, नक्शे पर जगह चुनें या अपनी लोकेशन दें, और भेजें। अधिकारी हर रिपोर्ट जाँचते हैं और आपकी रिपोर्ट सत्यापित होने पर आपको दिखेगा।');
     T('Only report from a safe place. If anyone is in danger, **call 112** first.', 'सिर्फ़ सुरक्षित जगह से रिपोर्ट करें। कोई खतरे में हो तो पहले **112 पर कॉल करें**।');
-  } else {
+  } else if (!level) noData();
+  else {
     T(`The landslide risk at ${place} is ${LV.en[level]} right now.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`);
     if (why.length) T(`Mainly because ${why.join(' and ')}.`, `मुख्य कारण: ${why.join(' और ')}।`);
+    stated();
   }
-  return { intent, location_id: loc.id, level, text: lines.join(' '), sources: ['live_risk', 'forecast', 'roads'], engine: 'template-v1' };
+  // `sources` names what the answer relied on (risk_model, forecast, roads; empty = general safety advice);
+  // `basis` carries the update times so the app can show them under the answer.
+  return { intent, location_id: loc.id, level, text: lines.join(' '), sources: [...sources], basis, engine: 'template-v1' };
 }
 
 // { question?: string, intent?: one of INTENTS, location_id, lang }. Answers may mark key phrases with **bold**.

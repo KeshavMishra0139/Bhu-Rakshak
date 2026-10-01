@@ -8,11 +8,15 @@ import { Languages, Loader2, MapPin, MessageCircle, Mic, MicOff, Phone, Send, Sp
 import { api } from '../api/client';
 import { useRiskStream } from '../live/RiskStreamProvider';
 import { useCitizen } from './CitizenContext';
-import { placeName } from '../lib/format';
+import { placeName, secondsSince, timeIST } from '../lib/format';
 import { speak, stopSpeaking } from '../lib/audio';
+import { useNow } from '../lib/useNow';
 
 type Lang = 'en' | 'hi';
-type Msg = { id: number; role: 'user' | 'assistant'; text: string };
+/** What the server says an answer relied on, and how fresh it was (see insights.js basisFor). */
+type Basis = { risk_ok: boolean; weather_ok: boolean; risk_updated_at: string | null; weather_fetched_at: string | null; drill: boolean; forced: boolean; preview: boolean; confidence: number | null };
+type Reply = { text: string; sources?: string[]; basis?: Basis };
+type Msg = { id: number; role: 'user' | 'assistant'; text: string; sources?: string[]; basis?: Basis };
 type Ask = { question?: string; intent?: string; label: string };
 
 const CHIP = 'min-h-[40px] rounded-full border border-[#cfe0d2] bg-white px-3.5 py-2 text-left text-[14px] font-semibold text-[#17392b] hover:border-[#2d765b] hover:bg-[#e8f3ed]';
@@ -83,8 +87,8 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
     }
     setBusy(true);
     try {
-      const d = await api.post<{ text: string }>('/assistant', { question: ask.question, intent: ask.intent, location_id: place, lang });
-      setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: d.text }]);
+      const d = await api.post<Reply>('/assistant', { question: ask.question, intent: ask.intent, location_id: place, lang });
+      setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: d.text, sources: d.sources, basis: d.basis }]);
       if (readAloud) speak(d.text.replace(/\*\*/g, ''), lang);
     } catch {
       setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: t('citizen.saathi_error', { lng: lang }) }]);
@@ -199,6 +203,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
             {msgs.map((m, i) => (
               <div key={m.id} ref={i === msgs.length - 1 ? lastMsg : undefined} className="scroll-mt-2">
                 <Bubble role={m.role}>{m.role === 'assistant' ? <Rich text={m.text} /> : m.text}</Bubble>
+                {m.role === 'assistant' && <SourceLine sources={m.sources} basis={m.basis} T={T} lang={lang} />}
               </div>
             ))}
             {busy && (
@@ -263,6 +268,24 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
       )}
     </SaathiCtx.Provider>
   );
+}
+
+/** Where an answer's facts came from and when they were last updated, under the bubble. Nothing for general advice. */
+function SourceLine({ sources, basis, T, lang }: { sources?: string[]; basis?: Basis; T: (key: string, opts?: Record<string, unknown>) => string; lang: Lang }) {
+  const now = useNow(30000);
+  if (!basis || !sources?.length) return null;
+  const ago = (iso: string | null) => {
+    const m = Math.floor((secondsSince(iso, now) ?? 0) / 60);
+    return m < 1 ? T('citizen.saathi_ago_now') : m < 60 ? T('citizen.saathi_ago_min', { count: m }) : T('citizen.saathi_ago_h', { count: Math.floor(m / 60) });
+  };
+  const parts: string[] = [];
+  if (sources.includes('risk_model')) {
+    parts.push(T(basis.forced ? 'citizen.saathi_src_forced' : 'citizen.saathi_src_model', { time: timeIST(basis.risk_updated_at, lang), ago: ago(basis.risk_updated_at) }));
+    if (basis.drill) parts.push(T('citizen.saathi_src_drill'));
+  }
+  if (sources.includes('forecast')) parts.push(T('citizen.saathi_src_rain', { time: timeIST(basis.weather_fetched_at, lang) }));
+  if (sources.includes('roads')) parts.push(T('citizen.saathi_src_roads'));
+  return <p className="mt-1 pl-9 text-[12px] leading-snug text-[#6b7d71]">{parts.join(' · ')}</p>;
 }
 
 function Bubble({ role, children }: { role: Msg['role']; children: ReactNode }) {
