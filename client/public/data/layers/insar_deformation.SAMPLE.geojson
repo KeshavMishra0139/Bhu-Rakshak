@@ -1,0 +1,828 @@
+{
+ "type": "FeatureCollection",
+ "sample": true,
+ "_comment": "SAMPLE DATA — placeholder shapes for demonstration only, not real observations. Replace with real data (see README.md).",
+ "properties_schema": {
+  "velocity_mm_yr": "number, line-of-sight; negative = moving away from the satellite",
+  "coherence": "0–1",
+  "period": "YYYY-MM/YYYY-MM"
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.1",
+    "velocity_mm_yr": -5.2,
+    "coherence": 0.66,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.59873,
+     27.33524
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.2",
+    "velocity_mm_yr": -1.1,
+    "coherence": 0.91,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.60354,
+     27.30771
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.3",
+    "velocity_mm_yr": -25.5,
+    "coherence": 0.9,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.61342,
+     27.33363
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.4",
+    "velocity_mm_yr": 2.5,
+    "coherence": 0.86,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.63007,
+     27.34833
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.5",
+    "velocity_mm_yr": -26.3,
+    "coherence": 0.65,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.60402,
+     27.30683
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.6",
+    "velocity_mm_yr": -11.9,
+    "coherence": 0.79,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.61683,
+     27.34716
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.7",
+    "velocity_mm_yr": -5.1,
+    "coherence": 0.78,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.58144,
+     27.34602
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.8",
+    "velocity_mm_yr": -8.8,
+    "coherence": 0.6,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.58977,
+     27.31339
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.9",
+    "velocity_mm_yr": -27.4,
+    "coherence": 0.54,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.62233,
+     27.30881
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.10",
+    "velocity_mm_yr": -22.4,
+    "coherence": 0.79,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.58781,
+     27.31373
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.11",
+    "velocity_mm_yr": -27.9,
+    "coherence": 0.52,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.63063,
+     27.34237
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.12",
+    "velocity_mm_yr": -16.1,
+    "coherence": 0.64,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.62123,
+     27.32406
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.13",
+    "velocity_mm_yr": -6.7,
+    "coherence": 0.86,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.61995,
+     27.32546
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.14",
+    "velocity_mm_yr": -27.8,
+    "coherence": 0.47,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.58221,
+     27.32269
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.15",
+    "velocity_mm_yr": -10.3,
+    "coherence": 0.54,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.62477,
+     27.33943
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 1.16",
+    "velocity_mm_yr": -14.7,
+    "coherence": 0.5,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88.5967,
+     27.32599
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.1",
+    "velocity_mm_yr": -3.5,
+    "coherence": 0.53,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.72848,
+     23.74762
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.2",
+    "velocity_mm_yr": -13,
+    "coherence": 0.89,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.69749,
+     23.73995
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.3",
+    "velocity_mm_yr": -24.5,
+    "coherence": 0.94,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.72141,
+     23.74213
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.4",
+    "velocity_mm_yr": -17.6,
+    "coherence": 0.74,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.7323,
+     23.75299
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.5",
+    "velocity_mm_yr": -25.7,
+    "coherence": 0.48,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.72194,
+     23.72005
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.6",
+    "velocity_mm_yr": -16.2,
+    "coherence": 0.55,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.72732,
+     23.71377
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.7",
+    "velocity_mm_yr": -19.1,
+    "coherence": 0.74,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.71547,
+     23.71693
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.8",
+    "velocity_mm_yr": -12.2,
+    "coherence": 0.68,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.69639,
+     23.73735
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.9",
+    "velocity_mm_yr": -3.1,
+    "coherence": 0.86,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.69301,
+     23.74803
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.10",
+    "velocity_mm_yr": 1.4,
+    "coherence": 0.82,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.72956,
+     23.72468
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.11",
+    "velocity_mm_yr": -24.6,
+    "coherence": 0.9,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.72749,
+     23.75373
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.12",
+    "velocity_mm_yr": -19.4,
+    "coherence": 0.78,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.71591,
+     23.75223
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.13",
+    "velocity_mm_yr": 0,
+    "coherence": 0.76,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.69365,
+     23.73699
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.14",
+    "velocity_mm_yr": 4.9,
+    "coherence": 0.47,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.69928,
+     23.73664
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.15",
+    "velocity_mm_yr": -24.9,
+    "coherence": 0.91,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.70596,
+     23.73808
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 2.16",
+    "velocity_mm_yr": -9.9,
+    "coherence": 0.79,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     92.72369,
+     23.71508
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.1",
+    "velocity_mm_yr": -21.6,
+    "coherence": 0.77,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.11509,
+     25.67599
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.2",
+    "velocity_mm_yr": -2.6,
+    "coherence": 0.81,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.1347,
+     25.69291
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.3",
+    "velocity_mm_yr": -23.3,
+    "coherence": 0.92,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.09079,
+     25.69416
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.4",
+    "velocity_mm_yr": -23.4,
+    "coherence": 0.88,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.10374,
+     25.65757
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.5",
+    "velocity_mm_yr": -27.1,
+    "coherence": 0.6,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.11235,
+     25.69163
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.6",
+    "velocity_mm_yr": -16.9,
+    "coherence": 0.62,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.0986,
+     25.66571
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.7",
+    "velocity_mm_yr": -17.5,
+    "coherence": 0.48,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.10452,
+     25.65799
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.8",
+    "velocity_mm_yr": -3.2,
+    "coherence": 0.83,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.13422,
+     25.65491
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.9",
+    "velocity_mm_yr": -17.8,
+    "coherence": 0.59,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.09498,
+     25.68724
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.10",
+    "velocity_mm_yr": -21.7,
+    "coherence": 0.58,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.13803,
+     25.65771
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.11",
+    "velocity_mm_yr": -14.8,
+    "coherence": 0.88,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.11783,
+     25.66322
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.12",
+    "velocity_mm_yr": -7.9,
+    "coherence": 0.93,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.09465,
+     25.67864
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.13",
+    "velocity_mm_yr": -23.6,
+    "coherence": 0.83,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.11454,
+     25.64585
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.14",
+    "velocity_mm_yr": -0.2,
+    "coherence": 0.51,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.09083,
+     25.68601
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.15",
+    "velocity_mm_yr": 1.8,
+    "coherence": 0.5,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.13876,
+     25.66196
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample point 3.16",
+    "velocity_mm_yr": -6,
+    "coherence": 0.75,
+    "period": "2025-06/2026-06"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     94.10052,
+     25.66297
+    ]
+   }
+  }
+ ]
+}

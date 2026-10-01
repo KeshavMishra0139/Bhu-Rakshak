@@ -17,6 +17,7 @@ import { DetailDrawer } from './DetailDrawer';
 import { InPersonView, type ViewTarget } from './InPersonView';
 import { streetViewLink, isPreview, type Basemap } from '../../lib/mapConfig';
 import { RiskMix } from '../../components/RiskMix';
+import { NerMapLayers, NerLayerControls, NerMapLegend, useNerLayers } from '../../components/NerLayers';
 
 const MiniMap = lazy(() => import('../../components/MiniMap'));
 import { LEVELS, riskConfig } from '../../lib/risk';
@@ -41,6 +42,7 @@ export default function MapPage() {
   const { selectedId, select, horizon, setHorizon } = useAuthority();
   const [layers, setLayers] = useState<Record<LayerKey, boolean>>({ corridors: true, roads: false, seismic: true, reports: true, resources: false });
   const [basemap, setBasemap] = useState<Basemap['id']>('hybrid');
+  const ner = useNerLayers('officer');
   const roads = useLive<{ roads: Road[] }>('/roads', ['road_updated']);
   const reports = useLive<{ reports: Report[] }>(can('incidents.view') ? '/reports' : null, ['report_updated']);
   const resources = useLive<{ resources: Resource[] }>(can('incidents.view') ? '/resources' : null, ['resource_updated', 'incident_updated']);
@@ -111,7 +113,10 @@ export default function MapPage() {
           <div ref={mapArea} aria-hidden={mapMin || undefined} className={`map-fold relative isolate overflow-hidden bg-[#dcebdc] ${mapMin ? 'map-folded' : 'min-h-[440px]'}`}>
             <WatchMap basemap={basemap} onMapClick={mode === 'street' ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId}
               onSelect={focusStation} focusTick={focusTick} layers={layers} corridorColors={corridorColors}
-              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} seismic={seismic.data} searchPin={searchPin} />
+              roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} seismic={seismic.data} searchPin={searchPin}>
+              <NerMapLayers ner={ner} />
+            </WatchMap>
+            {!showingStreet && <NerMapLegend ner={ner} className="absolute bottom-3 left-3" />}
             {showingStreet && <div className="absolute inset-0 z-[1050]"><InPersonView target={viewPoint} /></div>}
             {/* Inset map while in person: click anywhere on it to move the street view there. Kept above Google's logo. */}
             {showingStreet && (
@@ -182,10 +187,12 @@ export default function MapPage() {
                     {showingStreet && <div className="flex flex-col items-end gap-2">{viewAndSearch}</div>}
                     {!showingStreet && <div className="pointer-events-auto"><MapTypePicker iconOnly value={basemap} onChange={setBasemap} /></div>}
                     {!showingStreet && (
-                      <MapPopover label={t('map.layers')} icon={<Layers size={16} aria-hidden />} badge={layerKeys.filter((k) => layers[k]).length}>
+                      <MapPopover label={t('map.layers')} icon={<Layers size={16} aria-hidden />} badge={layerKeys.filter((k) => layers[k]).length + ner.count}
+                        panelClass="max-h-[min(70vh,34rem)] overflow-y-auto overscroll-contain">
                         {layerKeys.map((k) => (
                           <LayerSwitch key={k} label={t(`map.layer_${k}`)} on={layers[k]} onToggle={() => setLayers((x) => ({ ...x, [k]: !x[k] }))} />
                         ))}
+                        <NerLayerControls ner={ner} />
                       </MapPopover>
                     )}
                     {!showingStreet && (

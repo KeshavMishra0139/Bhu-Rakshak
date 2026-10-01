@@ -1,0 +1,263 @@
+{
+ "type": "FeatureCollection",
+ "sample": true,
+ "_comment": "SAMPLE DATA — placeholder shapes for demonstration only, not real observations. Replace with real data (see README.md).",
+ "properties_schema": {
+  "slope_deg": "number",
+  "cut_height_m": "number"
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample road cut 1",
+    "slope_deg": 47,
+    "cut_height_m": 14
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      88.46977,
+      27.01964
+     ],
+     [
+      88.47215,
+      27.02364
+     ],
+     [
+      88.47491,
+      27.02507
+     ],
+     [
+      88.47851,
+      27.02955
+     ],
+     [
+      88.48131,
+      27.03202
+     ],
+     [
+      88.48345,
+      27.03635
+     ],
+     [
+      88.48628,
+      27.0399
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample road cut 2",
+    "slope_deg": 52,
+    "cut_height_m": 15
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      88.51853,
+      27.21949
+     ],
+     [
+      88.5222,
+      27.22025
+     ],
+     [
+      88.52561,
+      27.22273
+     ],
+     [
+      88.52651,
+      27.22143
+     ],
+     [
+      88.52966,
+      27.22376
+     ],
+     [
+      88.53066,
+      27.22326
+     ],
+     [
+      88.53124,
+      27.22626
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample road cut 3",
+    "slope_deg": 59,
+    "cut_height_m": 7
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      88.55043,
+      27.5511
+     ],
+     [
+      88.55082,
+      27.55226
+     ],
+     [
+      88.55249,
+      27.55545
+     ],
+     [
+      88.55515,
+      27.55964
+     ],
+     [
+      88.55587,
+      27.56351
+     ],
+     [
+      88.55526,
+      27.56563
+     ],
+     [
+      88.55798,
+      27.57007
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample road cut 4",
+    "slope_deg": 42,
+    "cut_height_m": 19
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      92.70131,
+      23.77033
+     ],
+     [
+      92.69868,
+      23.77374
+     ],
+     [
+      92.69652,
+      23.77739
+     ],
+     [
+      92.69415,
+      23.78017
+     ],
+     [
+      92.69206,
+      23.78418
+     ],
+     [
+      92.69307,
+      23.78876
+     ],
+     [
+      92.68911,
+      23.79264
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample road cut 5",
+    "slope_deg": 54,
+    "cut_height_m": 11
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      93.42927,
+      25.04869
+     ],
+     [
+      93.43384,
+      25.05195
+     ],
+     [
+      93.43784,
+      25.05152
+     ],
+     [
+      93.44191,
+      25.05476
+     ],
+     [
+      93.44384,
+      25.05318
+     ],
+     [
+      93.44776,
+      25.05477
+     ],
+     [
+      93.45209,
+      25.0561
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "sample": true,
+    "name": "Sample road cut 6",
+    "slope_deg": 52,
+    "cut_height_m": 20
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      94.0991,
+      25.61953
+     ],
+     [
+      94.09876,
+      25.62276
+     ],
+     [
+      94.09878,
+      25.62473
+     ],
+     [
+      94.0991,
+      25.62601
+     ],
+     [
+      94.09959,
+      25.62805
+     ],
+     [
+      94.10009,
+      25.62865
+     ],
+     [
+      94.10092,
+      25.6306
+     ]
+    ]
+   }
+  }
+ ]
+}

@@ -11,6 +11,7 @@ import { useCitizen } from './CitizenContext';
 import { WatchMap, PIN_LABEL, type LayerKey } from '../authority/map/WatchMap';
 import { MapPopover, LayerSwitch } from '../authority/map/MapControls';
 import { CommunityReportsLayer, CommunityLegend, useCommunityReports } from '../components/CommunityReportsLayer';
+import { NerMapLayers, NerLayerControls, NerMapLegend, useNerLayers } from '../components/NerLayers';
 import { withPane } from '../lib/viewAs';
 import { MapTypePicker } from '../authority/map/MapTypePicker';
 import { WhyCard } from '../components/WhyCard';
@@ -36,6 +37,7 @@ export default function RiskMapPage() {
   const wide = useWide();
   const [show, setShow] = useState({ community: true });
   const community = useCommunityReports(show.community);
+  const ner = useNerLayers('citizen');
 
   useEffect(() => { api.get<{ roads: Road[] }>('/roads').then((d) => setRoads(d.roads)).catch(() => {}); }, []);
   useStreamEvent('road_updated', (rd) => setRoads((prev) => prev.map((x) => (x.id === rd.id ? rd : x))));
@@ -60,14 +62,17 @@ export default function RiskMapPage() {
         <div className="relative isolate h-[56dvh] min-h-[340px] overflow-hidden rounded-card border border-line lg:h-[calc(100dvh-11rem)] lg:min-h-[520px]">
           <WatchMap basemap={basemap} locations={list} horizon={0} activeId={selected} onSelect={(id) => pick(id)}
             layers={LAYERS} roads={roads} reports={[]} resources={[]} corridorColors={{}} focusTick={tick}>
+            <NerMapLayers ner={ner} />
             {show.community && <CommunityReportsLayer reports={community} />}
           </WatchMap>
+          <NerMapLegend ner={ner} className="absolute bottom-3 left-3" />
           <div className="pointer-events-none absolute right-3 top-3 z-[1100] flex flex-col items-end gap-2">
             <div className="pointer-events-auto"><MapTypePicker iconOnly value={basemap} onChange={setBasemap} /></div>
-            <MapPopover label={t('map.layers')} icon={<Layers size={16} aria-hidden />} badge={Object.values(show).filter(Boolean).length}
+            <MapPopover label={t('map.layers')} icon={<Layers size={16} aria-hidden />} badge={Object.values(show).filter(Boolean).length + ner.count}
               panelClass="max-h-[calc(56dvh-4rem)] overflow-y-auto overscroll-contain lg:max-h-[calc(100dvh-15rem)]">
               <LayerSwitch label={t('community.layer')} on={show.community} onToggle={() => setShow((x) => ({ ...x, community: !x.community }))} />
               {show.community && <div className="mt-2 px-2"><CommunityLegend count={community.length} /></div>}
+              <NerLayerControls ner={ner} />
             </MapPopover>
             <MapPopover label={t('map.legend')} icon={<Info size={16} aria-hidden />}>
               <ul className="space-y-1.5 text-[13px]">

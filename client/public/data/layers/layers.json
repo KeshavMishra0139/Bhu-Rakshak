@@ -1,0 +1,23 @@
+{
+  "_comment": "North East map layers. 'sample': true = placeholder shapes, shown on the map as SAMPLE DATA. To use real data: add the GeoJSON here, point 'file' at it, set 'sample' to false and fill 'source'.",
+  "layers": [
+    {
+      "id": "jhum",
+      "file": "jhum_burn_scars.SAMPLE.geojson",
+      "sample": true,
+      "source": "Placeholder. Real data: burn scars mapped from Sentinel-2 / Landsat (e.g. dNBR) for the current jhum season."
+    },
+    {
+      "id": "roadcut",
+      "file": "road_cutting_zones.SAMPLE.geojson",
+      "sample": true,
+      "source": "Placeholder. Real data: road cuts from DEM slope along OpenStreetMap roads, or PWD / BRO surveys."
+    },
+    {
+      "id": "insar",
+      "file": "insar_deformation.SAMPLE.geojson",
+      "sample": true,
+      "source": "Placeholder. Real data: Sentinel-1 InSAR line-of-sight velocities (e.g. processed with LiCSBAS or ASF HyP3)."
+    }
+  ]
+}

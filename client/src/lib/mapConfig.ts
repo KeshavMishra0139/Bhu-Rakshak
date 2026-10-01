@@ -97,7 +97,7 @@ export const WATCH_BOUNDS: [[number, number], [number, number]] = [[21.5, 85.0],
 /** NER preview places (outside Sikkim/Darjeeling): filled automatically, rock type and exposure not verified. */
 export const PREVIEW_CORRIDOR = 'ner_preview';
 export const isPreview = (l: { corridor_id?: string } | null | undefined) => l?.corridor_id === PREVIEW_CORRIDOR;
-export const MAP_MIN_ZOOM = 8;
+export const MAP_MIN_ZOOM = 6; // low enough to see the whole North East (regional rain layer)
 export const OFFICIAL_BOUNDARY_URL = '/geo/india_boundary.geojson';
 
 /**
