@@ -92,6 +92,22 @@ test('assistant recognises safety questions in English and Hindi, danger first',
   assert.equal(intentOf('Is my road open?'), 'roads');
   assert.equal(intentOf('क्या सड़क खुली है?'), 'roads');
   assert.match(answer({ intent: 'roads', locationId: 'gangtok', lang: 'en' }).text, /Roads near Gangtok: NH-10/);
+});
+
+test('assistant offers actions: road check for named places, report flow for what someone sees', () => {
+  const q1 = 'Is my road to Mangan safe?';
+  const a = answer({ intent: intentOf(q1), locationId: 'gangtok', lang: 'en', question: q1 });
+  assert.deepEqual(a.action, { type: 'route_check', from: 'gangtok', to: 'mangan' });
+  assert.match(a.text, /Check this road/);
+  const q2 = 'is the road from Rangpo to Nathula open';
+  assert.deepEqual(answer({ intent: intentOf(q2), locationId: 'gangtok', lang: 'en', question: q2 }).action, { type: 'route_check', from: 'rangpo', to: 'nathula_rd' });
+  assert.equal(answer({ intent: 'travel', locationId: 'gangtok', lang: 'en' }).action, null);
+  const q3 = "There's a crack in my wall";
+  const b = answer({ intent: intentOf(q3), locationId: 'gangtok', lang: 'en', question: q3 });
+  assert.deepEqual(b.action, { type: 'report', report_type: 'crack', ask_danger: true });
+  const q4 = 'What should I do if I see cracks?';
+  assert.equal(answer({ intent: intentOf(q4), locationId: 'gangtok', lang: 'en', question: q4 }).action, null);
+  assert.equal(answer({ intent: 'report', locationId: 'gangtok', lang: 'en' }).action.type, 'report');
   for (const s of ['the hill is falling', 'Help', 'rocks are falling on the road', "there's a landslide on NH10", 'पहाड़ गिर रहा है', 'भूस्खलन हो रहा है', 'पहिरो गयो', 'bachao']) assert.equal(intentOf(s), 'emergency', s);
   for (const s of ['What is the landslide risk?', 'is there a landslide risk today', 'Am I in danger?', 'क्या मैं खतरे में हूँ?', 'पहिरोको जोखिम कति छ?']) assert.notEqual(intentOf(s), 'emergency', s);
   const em = answer({ intent: 'emergency', locationId: 'gangtok', lang: 'en' });

@@ -3,8 +3,9 @@
 // which builds them from live risk, forecast and road data for the chosen place (no external AI service).
 // Voice input uses the browser's speech recognition where available; "Read aloud" speaks each answer.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Languages, Loader2, MapPin, MessageCircle, Mic, MicOff, Phone, Send, Sparkles, Volume2, VolumeX, X } from 'lucide-react';
+import { Languages, Loader2, MapPin, Megaphone, MessageCircle, Mic, MicOff, Phone, Route as RouteIcon, Send, Sparkles, Volume2, VolumeX, X } from 'lucide-react';
 import { api } from '../api/client';
 import { useRiskStream } from '../live/RiskStreamProvider';
 import { useCitizen } from './CitizenContext';
@@ -14,12 +15,15 @@ import { useNow } from '../lib/useNow';
 import { isEmergency } from '../lib/emergency';
 import { EmergencyCard, EMERGENCY_STEPS } from '../components/EmergencyCard';
 import { SafePlace } from '../components/SafePlace';
+import { withPane } from '../lib/viewAs';
 
 type Lang = 'en' | 'hi';
 /** What the server says an answer relied on, and how fresh it was (see insights.js basisFor). */
 type Basis = { risk_ok: boolean; weather_ok: boolean; risk_updated_at: string | null; weather_fetched_at: string | null; drill: boolean; forced: boolean; preview: boolean; confidence: number | null };
-type Reply = { text: string; sources?: string[]; basis?: Basis };
-type Msg = { id: number; role: 'user' | 'assistant'; text: string; sources?: string[]; basis?: Basis };
+/** Something an answer offers to open: the road checker with a route, or the report form (after a danger check). */
+type Action = { type: 'route_check'; from: string; to: string } | { type: 'report'; report_type: string | null; ask_danger: boolean };
+type Reply = { text: string; sources?: string[]; basis?: Basis; action?: Action | null };
+type Msg = { id: number; role: 'user' | 'assistant'; text: string; sources?: string[]; basis?: Basis; action?: Action | null };
 type Ask = { question?: string; intent?: string; label: string };
 
 const CHIP = 'min-h-[40px] rounded-full border border-[#cfe0d2] bg-white px-3.5 py-2 text-left text-[14px] font-semibold text-[#17392b] hover:border-[#2d765b] hover:bg-[#e8f3ed]';
@@ -47,8 +51,9 @@ const SpeechRecognitionCtor = (): (new () => SpeechRec) | null =>
 
 export function SaathiProvider({ children }: { children: ReactNode }) {
   const { t, i18n } = useTranslation();
-  const { list } = useRiskStream();
+  const { list, locations } = useRiskStream();
   const { viewingId, homeId } = useCitizen();
+  const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);
   // Saathi answers in English or Hindi; with the interface in Nepali it starts in Hindi (same script).
   const [lang, setLang] = useState<Lang>(i18n.language === 'hi' || i18n.language === 'ne' ? 'hi' : 'en');
@@ -98,7 +103,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
     setBusy(true);
     try {
       const d = await api.post<Reply>('/assistant', { question: ask.question, intent: ask.intent, location_id: place, lang });
-      setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: d.text, sources: d.sources, basis: d.basis }]);
+      setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: d.text, sources: d.sources, basis: d.basis, action: d.action }]);
       if (readAloud) speak(d.text.replace(/\*\*/g, ''), lang);
     } catch {
       setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: t('citizen.saathi_error', { lng: lang }) }]);
@@ -125,6 +130,35 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
     rec.current?.stop();
     stopSpeaking();
     setTimeout(() => fab.current?.focus(), 0);
+  };
+
+  // Open a page an answer offers, and move the panel out of the way so the person sees it.
+  const go = (path: string) => { navigate(withPane(path)); close(); };
+  const BTN = 'inline-flex min-h-[44px] items-center gap-2 rounded-full px-4 text-[14px] font-bold';
+  const actionRow = (a: Action) => {
+    if (a.type === 'route_check') {
+      const from = placeName(locations[a.from], lang) || a.from;
+      const to = placeName(locations[a.to], lang) || a.to;
+      return (
+        <button type="button" onClick={() => go(`/citizen/roads/check?from=${encodeURIComponent(a.from)}&to=${encodeURIComponent(a.to)}`)} className={`${BTN} bg-[#17392b] text-white hover:bg-[#21503c]`}>
+          <RouteIcon size={16} aria-hidden />{T('citizen.saathi_check_road', { from, to })}
+        </button>
+      );
+    }
+    const report = () => go(`/citizen/report${a.report_type ? `?type=${encodeURIComponent(a.report_type)}` : ''}`);
+    if (!a.ask_danger) {
+      return <button type="button" onClick={report} className={`${BTN} bg-[#17392b] text-white hover:bg-[#21503c]`}><Megaphone size={16} aria-hidden />{T('citizen.saathi_open_report')}</button>;
+    }
+    // One question at a time: danger first, then the report form (which asks one thing per step).
+    return (
+      <div className="rounded-2xl border border-[#e3ebe3] bg-white p-3">
+        <p className="font-bold">{T('citizen.saathi_danger_q')}</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <button type="button" onClick={() => setEmergency(true)} className={`${BTN} bg-risk-critical text-white`}><Phone size={16} aria-hidden />{T('citizen.saathi_danger_yes')}</button>
+          <button type="button" onClick={report} className={`${BTN} border border-[#cfe0d2] bg-white text-[#17392b] hover:bg-[#e8f3ed]`}><Megaphone size={16} aria-hidden />{T('citizen.saathi_danger_no')}</button>
+        </div>
+      </div>
+    );
   };
 
   const submit = (e?: FormEvent) => {
@@ -223,6 +257,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
               <div key={m.id} ref={i === msgs.length - 1 ? lastMsg : undefined} className="scroll-mt-2">
                 <Bubble role={m.role}>{m.role === 'assistant' ? <Rich text={m.text} /> : m.text}</Bubble>
                 {m.role === 'assistant' && <SourceLine sources={m.sources} basis={m.basis} T={T} lang={lang} />}
+                {m.role === 'assistant' && m.action && <div className="mt-2 pl-9">{actionRow(m.action)}</div>}
               </div>
             ))}
             {busy && (

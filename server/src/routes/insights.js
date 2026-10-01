@@ -97,7 +97,37 @@ export function basisFor(loc, risk, w, nowMs = Date.now()) {
   };
 }
 
-export function answer({ intent, locationId, lang }) {
+// ---------- Actions: what a question asks Saathi to open ----------
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** "Nathula road (Tsomgo)" → nathula road, tsomgo, nathula. */
+const nameVariants = (name) => {
+  const base = name.replace(/\s*\(.*\)\s*/, '').trim();
+  const inner = /\(([^)]+)\)/.exec(name)?.[1];
+  return [base, inner, base.replace(/\s+road$/i, '')].filter(Boolean).map((s) => s.toLowerCase());
+};
+/** Monitored places named in a question, in the order they appear ("from Gangtok to Mangan" → gangtok, mangan). */
+export function placesIn(text) {
+  const s = String(text || '').toLowerCase();
+  if (!s) return [];
+  const hits = [];
+  for (const l of q.all('SELECT id, name_en, name_hi FROM locations')) {
+    const at = [
+      ...nameVariants(l.name_en).map((v) => new RegExp(`\\b${escapeRe(v)}\\b`).exec(s)?.index ?? -1),
+      ...nameVariants(l.name_hi || '').map((v) => s.indexOf(v)),
+    ].filter((i) => i >= 0);
+    if (at.length) hits.push({ id: l.id, i: Math.min(...at) });
+  }
+  return hits.sort((a, b) => a.i - b.i).map((h) => h.id);
+}
+const SIGHTINGS = [['crack', /crack|दरार/], ['tilting', /tilt|\blean|झुक/], ['water_seepage', /muddy|spring|seep|मटमैल|झरना|सोता/], ['rockfall', /stone|rock|boulder|पत्थर|चट्टान/]];
+/** Report type when someone tells Saathi what they see ("There's a crack in my wall"); null for questions about signs. */
+export function sightingOf(text) {
+  const s = String(text || '').toLowerCase().trim();
+  if (!s || /^((what|how|should|when|why|if|is|are|can|do)\b|क्या|कैसे|कब|अगर|क्यों)/.test(s)) return null;
+  return SIGHTINGS.find(([, re]) => re.test(s))?.[0] || null;
+}
+
+export function answer({ intent, locationId, lang, question }) {
   const L = lang === 'hi' ? 'hi' : 'en';
   const loc = q.one('SELECT id, name_en, name_hi, road, corridor_id FROM locations WHERE id = :id', { id: locationId });
   if (!loc) throw new HttpError(400, 'invalid_location');
@@ -128,6 +158,17 @@ export function answer({ intent, locationId, lang }) {
   };
   const roadsOut = () => { if (roadLine) { T(`Roads: ${roadLine}.`, `सड़कें: ${roadLine}।`); sources.add('roads'); } };
   const stated = () => { sources.add('risk_model'); caveats(); };
+  // A road question that names a destination ("Is my road to Shillong safe?") or two places gets a button that opens
+  // the road checker with that route; the route's risk then comes from the model along the whole road.
+  let action = null;
+  const routeOffer = () => {
+    const named = placesIn(question);
+    const [from, to] = named.length >= 2 ? named : [loc.id, named[0]];
+    if (!to || from === to) return;
+    const nm = (id) => { const x = q.one('SELECT name_en, name_hi FROM locations WHERE id = :id', { id }); return L === 'hi' ? x.name_hi : x.name_en; };
+    T(`To see the risk along the whole road from ${nm(from)} to ${nm(to)}, tap **Check this road**.`, `${nm(from)} से ${nm(to)} तक पूरी सड़क का खतरा देखने के लिए **यह सड़क जाँचें** दबाएँ।`);
+    action = { type: 'route_check', from, to };
+  };
 
   if (intent === 'travel') {
     if (!level) noData();
@@ -140,6 +181,7 @@ export function answer({ intent, locationId, lang }) {
       if (win && level !== 'critical') { T(`Best time to go: around ${fmtTime(win.start, 'en')}, when the least rain is expected.`, `जाने का सबसे अच्छा समय: लगभग ${fmtTime(win.start, 'hi')}, तब सबसे कम बारिश की उम्मीद है।`); sources.add('forecast'); }
     }
     roadsOut();
+    routeOffer();
   } else if (intent === 'roads') {
     // Road status is what officials have entered, not the model: no level is stated here.
     if (!roads.length) T(`I don't have any monitored roads listed for ${place}. You can check a whole route in the road checker.`, `${place} के लिए कोई निगरानी वाली सड़क सूची में नहीं है। पूरा रास्ता जाँचने के लिए रोड चेकर देखें।`);
@@ -150,6 +192,7 @@ export function answer({ intent, locationId, lang }) {
         T(`Diversion for ${x.name_en}: ${x.diversion_en}.`, `${x.name_hi} के लिए दूसरा रास्ता: ${x.diversion_hi || x.diversion_en}।`);
       }
     }
+    routeOffer();
   } else if (intent === 'why') {
     if (!level) noData();
     else {
@@ -179,6 +222,11 @@ export function answer({ intent, locationId, lang }) {
     T('If anyone is hurt, trapped or in danger, **call 112 now**. Move away from the slope, the river and the road below it, towards open, higher ground. Do not go back for belongings.',
       'अगर कोई घायल है, फँसा है या खतरे में है तो **अभी 112 पर कॉल करें**। ढलान, नदी और उसके नीचे की सड़क से दूर, खुली और ऊँची जगह की ओर जाएँ। सामान लेने वापस न जाएँ।');
     if (level) { T(`Right now the landslide risk at ${place} is ${LV.en[level]}.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`); stated(); }
+  } else if (intent === 'signs' && sightingOf(question)) {
+    // Someone is telling us what they see: short advice, then the app asks one question at a time (danger? → report).
+    T('Thank you for telling me. If it is getting worse, or you hear cracking or rumbling, move away from it now and warn people nearby.',
+      'बताने के लिए धन्यवाद। अगर यह बढ़ रहा है, या चटकने या गड़गड़ाहट की आवाज़ आ रही है, तो अभी इससे दूर जाएँ और आसपास के लोगों को बताएँ।');
+    action = { type: 'report', report_type: sightingOf(question), ask_danger: true };
   } else if (intent === 'signs') {
     T('Warning signs of a landslide: **new cracks** in the ground, road or walls; **tilting trees, poles or fences**; **muddy water** in streams or springs; **falling stones**; or a rumbling sound.',
       'भूस्खलन के चेतावनी संकेत: ज़मीन, सड़क या दीवारों में **नई दरारें**; **झुकते पेड़, खंभे या बाड़**; नालों या झरनों में **मटमैला पानी**; **गिरते पत्थर**; या गड़गड़ाहट की आवाज़।');
@@ -189,6 +237,7 @@ export function answer({ intent, locationId, lang }) {
     T('Open **Report** at the bottom of the screen: choose what you saw, add a photo if it is safe, mark the spot on the map or use your location, and send. Officials check every report and you will see when yours is verified.',
       'स्क्रीन के नीचे **रिपोर्ट** खोलें: जो देखा वह चुनें, सुरक्षित हो तो फ़ोटो जोड़ें, नक्शे पर जगह चुनें या अपनी लोकेशन दें, और भेजें। अधिकारी हर रिपोर्ट जाँचते हैं और आपकी रिपोर्ट सत्यापित होने पर आपको दिखेगा।');
     T('Only report from a safe place. If anyone is in danger, **call 112** first.', 'सिर्फ़ सुरक्षित जगह से रिपोर्ट करें। कोई खतरे में हो तो पहले **112 पर कॉल करें**।');
+    action = { type: 'report', report_type: sightingOf(question), ask_danger: false };
   } else if (!level) noData();
   else {
     T(`The landslide risk at ${place} is ${LV.en[level]} right now.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`);
@@ -199,15 +248,16 @@ export function answer({ intent, locationId, lang }) {
     stated();
   }
   // `sources` names what the answer relied on (risk_model, forecast, roads; empty = general safety advice);
-  // `basis` carries the update times so the app can show them under the answer.
-  return { intent, location_id: loc.id, level, text: lines.join(' '), sources: [...sources], basis, engine: 'template-v1' };
+  // `basis` carries the update times so the app can show them under the answer; `action` is something to open
+  // (route_check {from, to} | report {report_type, ask_danger}).
+  return { intent, location_id: loc.id, level, text: lines.join(' '), sources: [...sources], basis, action, engine: 'template-v1' };
 }
 
 // { question?: string, intent?: one of INTENTS, location_id, lang }. Answers may mark key phrases with **bold**.
 r.post('/assistant', rateLimit({ bucket: 'assistant', max: 60, windowMs: 5 * 60000 }), ah(async (req, res) => {
   const b = req.body || {};
   const intent = INTENTS.includes(b.intent) ? b.intent : intentOf(b.question);
-  res.json(answer({ intent, locationId: String(b.location_id || req.actor?.homeLocationId || ''), lang: b.lang }));
+  res.json(answer({ intent, locationId: String(b.location_id || req.actor?.homeLocationId || ''), lang: b.lang, question: typeof b.question === 'string' ? b.question.slice(0, 500) : '' }));
 }));
 
 export default r;

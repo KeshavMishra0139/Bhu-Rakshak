@@ -428,7 +428,12 @@
     "signs_body": "If you see any of these, move away from the slope first, then report it from a safe place.",
     "report_it": "Report it",
     "q_status": "Am I safe?",
-    "q_roads": "Is my road open?"
+    "q_roads": "Is my road open?",
+    "saathi_check_road": "Check this road: {{from}} → {{to}}",
+    "saathi_open_report": "Open the report form",
+    "saathi_danger_q": "Is anyone in danger right now?",
+    "saathi_danger_yes": "Yes, someone is in danger",
+    "saathi_danger_no": "No, help me report it"
   },
   "authority": {
     "board_title": "Live risk board",

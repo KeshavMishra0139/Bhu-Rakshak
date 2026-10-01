@@ -3,7 +3,7 @@
 // if one exists. Desktop: segment list beside the map. Phone: full-width form, map, then the list.
 // Works in both the citizen and officer shells (it only needs the live risk stream).
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowDownUp, ArrowLeft, Crosshair, ExternalLink, Loader2, LocateFixed, Route as RouteIcon, X, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { errorKey } from '../api/client';
@@ -74,6 +74,22 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
       () => setGps('denied'), { timeout: 10000, maximumAge: 300000 },
     );
   }
+
+  // A route handed over by Saathi ("Is my road to Shillong safe?"): ?from=gangtok&to=shillong, checked straight away.
+  const [params] = useSearchParams();
+  const qFrom = params.get('from');
+  const qTo = params.get('to');
+  const asked = useRef<string | null>(null);
+  useEffect(() => {
+    const key = `${qFrom}>${qTo}`;
+    if (!qFrom || !qTo || asked.current === key) return;
+    const a = station(qFrom);
+    const b = station(qTo);
+    if (!a || !b) return; // places not loaded yet
+    asked.current = key;
+    setPts({ start: a, end: b });
+    check(a, b);
+  }, [qFrom, qTo, locations]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (selected == null) return;
