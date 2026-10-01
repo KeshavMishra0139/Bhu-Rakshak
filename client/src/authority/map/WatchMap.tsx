@@ -2,7 +2,7 @@
 // classic red map pins labelled by risk level, on free Esri satellite / street and OpenTopoMap terrain tiles (Leaflet),
 // plus optional operational layers (corridors, road status, citizen reports, resources).
 import 'leaflet/dist/leaflet.css';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import L from 'leaflet';
 import { CircleMarker, MapContainer, Marker, Polyline, ScaleControl, TileLayer, Tooltip, ZoomControl, useMap, useMapEvents } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
@@ -115,9 +115,11 @@ type Props = {
   searchPin?: SearchPin | null;
   /** Increments on every station pick, so picking the same station again re-centres it. */
   focusTick?: number;
+  /** Extra map layers (e.g. community warning signs, NER layers), drawn under the place pins. */
+  children?: ReactNode;
 };
 
-export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors, seismic = null, searchPin = null, focusTick = 0 }: Props) {
+export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, onSelect, layers, roads, reports, resources, corridorColors, seismic = null, searchPin = null, focusTick = 0, children }: Props) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const { resolved } = useTheme();
@@ -171,6 +173,8 @@ export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, on
           </Marker>
         );
       })}
+
+      {children}
 
       {locations.map((l) => {
         const lv = levelAt(l, horizon);

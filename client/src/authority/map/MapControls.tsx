@@ -16,7 +16,7 @@ export function MapIconButton({ label, onClick, active = false, children, expand
 }
 
 /** Icon button that opens a small panel beside it (to the left, since controls sit on the right edge). */
-export function MapPopover({ label, icon, children, badge }: { label: string; icon: ReactNode; children: ReactNode; badge?: number }) {
+export function MapPopover({ label, icon, children, badge, panelClass = '' }: { label: string; icon: ReactNode; children: ReactNode; badge?: number; panelClass?: string }) {
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -34,7 +34,7 @@ export function MapPopover({ label, icon, children, badge }: { label: string; ic
         {!!badge && <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-[#2a5d43] px-1 text-[9px] font-bold text-white">{badge}</span>}
       </MapIconButton>
       {open && (
-        <div role="dialog" aria-label={label} className="pop-enter origin-top-right absolute right-full top-0 mr-2 w-60 rounded-2xl border border-[#d9e5da] bg-white p-3 text-[#17392b] shadow-xl">
+        <div role="dialog" aria-label={label} className={`pop-enter origin-top-right absolute right-full top-0 mr-2 w-60 rounded-2xl border border-[#d9e5da] bg-white p-3 text-[#17392b] shadow-xl ${panelClass}`}>
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#7a8d80]">{label}</p>
           {children}
         </div>

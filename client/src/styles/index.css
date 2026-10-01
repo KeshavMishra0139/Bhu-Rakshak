@@ -196,5 +196,12 @@ html[lang='hi'] body, html[lang='ne'] body { @apply font-deva; line-height: 1.65
 .leaflet-control-attribution { background: rgb(var(--surface) / 0.75) !important; color: rgb(var(--muted)); font-size: 10px; }
 .leaflet-control-attribution a { color: rgb(var(--muted)); }
 .res-icon { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; font: 700 11px/1 'IBM Plex Mono', monospace; color: #fff; border: 2px solid #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.4); }
+/* Community warning-sign markers: icon per sign, green tick when verified, orange ? and dashed ring while unverified. */
+.cr-pin { position: relative; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 9999px; background: #fff; color: var(--c); border: 2.5px solid var(--c); box-shadow: 0 1px 3px rgb(0 0 0 / 0.4); }
+.cr-pin.is-unverified { border-style: dashed; }
+.cr-pin svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.cr-pin i { position: absolute; right: -5px; top: -5px; width: 14px; height: 14px; border-radius: 9999px; border: 1.5px solid #fff; font: 700 9px/11px Roboto, Arial, sans-serif; font-style: normal; text-align: center; color: #fff; }
+.cr-pin.is-verified i { background: #2F8F4E; }
+.cr-pin.is-unverified i { background: #D9731A; }
 .seismo-station { display: block; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid #6a3fb5; filter: drop-shadow(0 0 1.5px #fff) drop-shadow(0 1px 2px rgb(0 0 0 / 0.5)); }
 @media print { .no-print { display: none !important; } body { background: #fff; } }

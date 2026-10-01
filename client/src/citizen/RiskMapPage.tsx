@@ -2,13 +2,16 @@
 // on wide screens, in a bottom sheet on phones. Uses the same map and pins as the officer dashboard.
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Info, ChevronRight, Phone } from 'lucide-react';
+import { Info, ChevronRight, Phone, Layers, Megaphone } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { api } from '../api/client';
 import type { LocationSnap, Road } from '../api/types';
 import { useRiskStream, useStreamEvent } from '../live/RiskStreamProvider';
 import { useCitizen } from './CitizenContext';
 import { WatchMap, PIN_LABEL, type LayerKey } from '../authority/map/WatchMap';
-import { MapPopover } from '../authority/map/MapControls';
+import { MapPopover, LayerSwitch } from '../authority/map/MapControls';
+import { CommunityReportsLayer, CommunityLegend, useCommunityReports } from '../components/CommunityReportsLayer';
+import { withPane } from '../lib/viewAs';
 import { MapTypePicker } from '../authority/map/MapTypePicker';
 import { WhyCard } from '../components/WhyCard';
 import { ImpactSection } from '../components/ImpactSection';
@@ -31,6 +34,8 @@ export default function RiskMapPage() {
   const [basemap, setBasemap] = useState<Basemap['id']>('street');
   const [tick, setTick] = useState(0);
   const wide = useWide();
+  const [show, setShow] = useState({ community: true });
+  const community = useCommunityReports(show.community);
 
   useEffect(() => { api.get<{ roads: Road[] }>('/roads').then((d) => setRoads(d.roads)).catch(() => {}); }, []);
   useStreamEvent('road_updated', (rd) => setRoads((prev) => prev.map((x) => (x.id === rd.id ? rd : x))));
@@ -48,14 +53,22 @@ export default function RiskMapPage() {
           <h1 className="text-[1.6rem] font-bold leading-tight">{t('riskmap.title')}</h1>
           <p className="text-muted text-sm">{t('riskmap.sub')}</p>
         </div>
+        <Link to={withPane('/citizen/report')} className="btn-secondary !min-h-[40px] text-sm"><Megaphone size={16} aria-hidden />{t('community.report_cta')}</Link>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="relative isolate h-[56dvh] min-h-[340px] overflow-hidden rounded-card border border-line lg:h-[calc(100dvh-11rem)] lg:min-h-[520px]">
           <WatchMap basemap={basemap} locations={list} horizon={0} activeId={selected} onSelect={(id) => pick(id)}
-            layers={LAYERS} roads={roads} reports={[]} resources={[]} corridorColors={{}} focusTick={tick} />
+            layers={LAYERS} roads={roads} reports={[]} resources={[]} corridorColors={{}} focusTick={tick}>
+            {show.community && <CommunityReportsLayer reports={community} />}
+          </WatchMap>
           <div className="pointer-events-none absolute right-3 top-3 z-[1100] flex flex-col items-end gap-2">
             <div className="pointer-events-auto"><MapTypePicker iconOnly value={basemap} onChange={setBasemap} /></div>
+            <MapPopover label={t('map.layers')} icon={<Layers size={16} aria-hidden />} badge={Object.values(show).filter(Boolean).length}
+              panelClass="max-h-[calc(56dvh-4rem)] overflow-y-auto overscroll-contain lg:max-h-[calc(100dvh-15rem)]">
+              <LayerSwitch label={t('community.layer')} on={show.community} onToggle={() => setShow((x) => ({ ...x, community: !x.community }))} />
+              {show.community && <div className="mt-2 px-2"><CommunityLegend count={community.length} /></div>}
+            </MapPopover>
             <MapPopover label={t('map.legend')} icon={<Info size={16} aria-hidden />}>
               <ul className="space-y-1.5 text-[13px]">
                 {LEVELS.map((lv) => (

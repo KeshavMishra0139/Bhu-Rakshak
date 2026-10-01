@@ -165,7 +165,7 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
             </p>
           )}
           {main && (
-            <ul className="pointer-events-none absolute bottom-3 left-3 z-[1100] flex flex-wrap gap-x-3 gap-y-1 rounded-xl bg-surface/90 px-3 py-2 text-[11px] font-semibold shadow" aria-label={t('map.legend')}>
+            <ul className="pointer-events-none absolute bottom-3 left-3 z-[1100] flex max-w-[calc(100%-4.5rem)] flex-wrap gap-x-3 gap-y-1 rounded-xl bg-surface/90 px-3 py-2 text-[11px] font-semibold shadow" aria-label={t('map.legend')}>
               {LEVELS.map((lv) => <li key={lv} className="inline-flex items-center gap-1"><span className="h-1.5 w-4 rounded-full" style={{ background: levelVar(lv) }} aria-hidden />{t(`levels.${lv}`)}</li>)}
               <li className="inline-flex items-center gap-1"><span className="h-1.5 w-4 rounded-full" style={{ background: SEG_COLOR_NONE }} aria-hidden />{t('corridor.not_monitored')}</li>
             </ul>

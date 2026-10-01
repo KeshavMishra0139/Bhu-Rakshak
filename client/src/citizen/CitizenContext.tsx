@@ -167,7 +167,7 @@ function AlarmBanner({ active, actions, soundOn }: { active: Active; actions: { 
                 <Volume2 size={18} aria-hidden />{t('alarm.tap_enable')}
               </button>
             )}
-            <button type="button" onClick={actions.understand} className="btn bg-white text-ink hover:bg-white/90">{t('alarm.understand')}</button>
+            <button type="button" onClick={actions.understand} className="btn bg-white text-[#17392b] hover:bg-white/90">{t('alarm.understand')}</button>
             <button type="button" onClick={actions.snooze} className="btn bg-black/15 hover:bg-black/25 text-inherit">{t('alarm.snooze')}</button>
             <a href="tel:112" className="btn bg-black/30 hover:bg-black/40 text-inherit"><Phone size={18} aria-hidden />{t('alarm.call')}</a>
             <button type="button" className="btn bg-transparent hover:bg-black/15 text-inherit" aria-label={t('citizen.listen')}

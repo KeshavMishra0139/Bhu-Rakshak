@@ -33,7 +33,8 @@ r.post('/reports', rateLimit({ bucket: 'report', max: 15, windowMs: 10 * 60000 }
   let lat = Number(b.lat);
   let lng = Number(b.lng);
   let locationId = b.location_id && q.one('SELECT id FROM locations WHERE id = :id', { id: b.location_id }) ? b.location_id : null;
-  const hasCoords = Number.isFinite(lat) && Number.isFinite(lng) && lat > 26 && lat < 28.5 && lng > 87.5 && lng < 89.5;
+  // Anywhere on the watch map (Sikkim, Darjeeling and the North East preview places).
+  const hasCoords = Number.isFinite(lat) && Number.isFinite(lng) && lat > 21.5 && lat < 30 && lng > 85 && lng < 97.8;
   if (!hasCoords) {
     if (!locationId) throw new HttpError(400, 'report_location_required');
     const l = q.one('SELECT lat, lng FROM locations WHERE id = :id', { id: locationId });

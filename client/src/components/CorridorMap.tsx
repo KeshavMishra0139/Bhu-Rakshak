@@ -81,13 +81,13 @@ export default function CorridorMap({ route, alternative, showAlt, start, end, l
       )}
       {/* White casing under every segment, then the coloured segments on top. */}
       {route && route.segments.map((s, i) => (
-        <Polyline key={`c-${i}`} positions={s.coords} interactive={false} pathOptions={{ color: '#fff', weight: selected === i ? 13 : 10, opacity: 0.9 }} />
+        <Polyline key={`c-${i}`} positions={s.coords} interactive={false} pathOptions={{ color: '#fff', weight: selected === i ? 13 : 10, opacity: 1 }} />
       ))}
       {route && route.segments.map((s, i) => {
         const lv = segLevel(s, locations);
         return (
           <Polyline key={`s-${i}`} positions={s.coords} eventHandlers={{ click: () => onSelect(i) }}
-            pathOptions={{ color: lv === 'none' ? SEG_COLOR_NONE : levelVar(lv), weight: selected === i ? 9 : 6, opacity: showAlt && alternative ? 0.55 : 1 }}>
+            pathOptions={{ color: lv === 'none' ? SEG_COLOR_NONE : levelVar(lv), weight: selected === i ? 9 : 6, opacity: 1 }}>
             <Tooltip sticky>
               {t('corridor.seg_n', { n: i + 1 })} · {lv === 'none' ? t('corridor.not_monitored') : t(`levels.${lv}`)}
               {s.place_id && locations[s.place_id] ? ` · ${t('corridor.near', { place: placeName(locations[s.place_id], lang), km: s.place_km })}` : ''}
