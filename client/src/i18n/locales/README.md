@@ -12,6 +12,9 @@
 The three drafts cover the screens that matter most in an emergency: the citizen home page, the risk map and its
 "Why" card (level, time window, reasons, what is exposed, what to do), alerts and the alarm banner, and the report
 form. Anything they don't cover falls back to English. Drafts show a small "beta" tag in the language menu.
+They also cover Saathi's buttons, emergency screen, offline notes and the first-visit tour; Saathi's answers
+themselves come in English or Hindi. The danger words Saathi listens for in these languages (last lines of
+`shared/config/emergency.json`) are drafts too.
 
 The plain-language reasons in the Why card ("the soil is soaked", …) live in `shared/config/factors.json`
 (`plainAs`, `plainLus`, `plainNag` on each driver).

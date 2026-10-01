@@ -16,6 +16,10 @@
     "^(मैं|हम) खतरे में",
     "bachao|bachaao|madad|phans gay|fans gay|ghayal|pahad gir|pahaad gir|zameen khisak|jameen khisak|bhuskhalan ho",
     "बचाउ|बचाऊ|मद्दत|गुहार|च्यापि|पुरियो|पुरिए|घाइते|एम्बुलेन्स|आपतकाल|आपत्काल",
-    "पहिरो (गयो|खस्यो|आयो|झर्यो|जाँदै|खस्दै)|भिर (खस्यो|खस्दै|झर्दै)|ढुङ्गा (खस्दै|झर्दै)|घर (भत्कियो|ढल्यो)"
-  ]
+    "पहिरो (गयो|खस्यो|आयो|झर्यो|जाँदै|खस्दै)|भिर (खस्यो|खस्दै|झर्दै)|ढुङ्गा (खस्दै|झर्दै)|घर (भत्कियो|ढल्यो)",
+    "সহায় কৰক|বচাওক|বচাই দিয়ক|আহত|আৱদ্ধ|পাহাৰ খহি|মাটি খহি|ভূমিস্খলন হৈ",
+    "min ṭanpui|min tanpui|min chhanhim|min chhandam|minpui a tla|tlang a tla|lei a tla",
+    "bachai dibi|bachai lobi|\\bmodot\\b|phasi gise|pahar giri ase|pahar bhangi|mati bohi"
+  ],
+  "_drafts": "The last three lines (Assamese, Mizo, Nagamese) are drafts like those locale files: review them with native speakers."
 }

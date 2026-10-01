@@ -17,6 +17,7 @@ import { isEmergency } from '../lib/emergency';
 import { EmergencyCard, EMERGENCY_STEPS } from '../components/EmergencyCard';
 import { SafePlace } from '../components/SafePlace';
 import { withPane } from '../lib/viewAs';
+import { DRAFT_LANGS } from '../i18n';
 
 type Lang = 'en' | 'hi';
 /** What the server says an answer relied on, and how fresh it was (see insights.js basisFor). */
@@ -83,7 +84,10 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
   const place = placeId || viewingId || homeId;
   const placeLoc = list.find((l) => l.id === place);
   const places = useMemo(() => [...list].sort((a, b) => placeName(a, lang).localeCompare(placeName(b, lang))), [list, lang]);
-  const T = (key: string, opts?: Record<string, unknown>) => t(key, { lng: lang, ...opts });
+  // Panel text follows the answer language, except for interface languages Saathi can't answer in yet (Assamese,
+  // Mizo, Nagamese): their buttons, emergency screen and notes stay in that language (drafts), answers in English/Hindi.
+  const chrome = (DRAFT_LANGS as string[]).includes(i18n.language) ? i18n.language : lang;
+  const T = (key: string, opts?: Record<string, unknown>) => t(key, { lng: chrome, ...opts });
 
   // Show the start of the newest answer (long answers read from the top); while waiting, show the spinner.
   useEffect(() => {
@@ -220,7 +224,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
       {children}
 
       {isOpen && (
-        <section role="dialog" aria-modal="false" aria-labelledby="saathi-title" lang={lang}
+        <section role="dialog" aria-modal="false" aria-labelledby="saathi-title" lang={chrome}
           onKeyDown={(e) => { if (e.key === 'Escape') close(); }}
           className="saathi-panel fixed z-[60] inset-x-2 bottom-2 top-[7vh] flex flex-col overflow-hidden rounded-[24px] border border-[#d9e5da] bg-[#fbfcf8] text-[#1d2b24] shadow-[0_24px_80px_rgba(24,53,38,0.28)]
             sm:inset-x-auto sm:left-6 sm:bottom-6 sm:top-auto sm:h-[min(640px,calc(100vh-3rem))] sm:w-[420px]">
