@@ -36,7 +36,7 @@ export default function CitizenHome() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const { setMe } = useAuth();
-  const { locations, list } = useRiskStream();
+  const { locations, list, status } = useRiskStream();
   const { viewingId, setViewingId, homeId } = useCitizen();
   const [forecast, setForecast] = useState<Forecast | null>(null);
   const [roads, setRoads] = useState<Road[]>([]);
@@ -118,10 +118,21 @@ export default function CitizenHome() {
       </section>
 
       {!loc || !r ? (
-        <section className="card p-6">
-          <h1 className="text-2xl font-bold">{t('citizen.no_home_title')}</h1>
-          <p className="text-muted mt-1">{t('citizen.no_home_body')}</p>
-        </section>
+        !viewingId ? (
+          <section className="card p-6">
+            <h1 className="text-2xl font-bold">{t('citizen.no_home_title')}</h1>
+            <p className="text-muted mt-1">{t('citizen.no_home_body')}</p>
+          </section>
+        ) : status === 'connecting' && !list.length ? (
+          <div className="h-48 rounded-card bg-surface-2 animate-pulse" aria-hidden />
+        ) : (
+          // A place is chosen but there is no risk for it (offline with nothing saved, or no record): say so, never guess.
+          <section className="card p-6" role="status">
+            <h1 className="text-2xl font-bold">{t('citizen.no_data_title')}</h1>
+            <p className="mt-1 text-[1.05rem]">{t('citizen.no_data_body')}</p>
+            <a href="tel:112" className="btn-danger mt-4 text-lg"><Phone size={20} aria-hidden />{t('citizen.call_112')}</a>
+          </section>
+        )
       ) : (
         <div className="grid gap-5 lg:grid-cols-2">
           <section className="card overflow-hidden lg:col-span-2" aria-labelledby="status-title">

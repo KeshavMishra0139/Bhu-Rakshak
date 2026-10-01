@@ -410,7 +410,9 @@
     "em_step1": "Move away from the slope, the river and the road below it, to open, higher ground.",
     "em_step2": "Do not go back for belongings.",
     "em_step3": "Warn people near you. If anyone is hurt or trapped, tell 112 exactly where.",
-    "em_back": "Back to chat"
+    "em_back": "Back to chat",
+    "no_data_title": "We can't get the risk for this place right now",
+    "no_data_body": "Please follow instructions from local officials. If you are in danger, call 112."
   },
   "authority": {
     "board_title": "Live risk board",
