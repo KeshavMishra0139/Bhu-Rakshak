@@ -5,7 +5,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowDownUp, ArrowLeft, Crosshair, ExternalLink, Loader2, LocateFixed, Route as RouteIcon, X, ShieldCheck, Eye, EyeOff } from 'lucide-react';
+import { AlertTriangle, ArrowDownUp, ArrowLeft, Crosshair, Loader2, LocateFixed, Navigation, Route as RouteIcon, X, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { errorKey } from '../api/client';
 import { useRiskStream } from '../live/RiskStreamProvider';
 import { MapSearch } from '../authority/map/MapSearch';
@@ -18,7 +18,8 @@ import { withPane } from '../lib/viewAs';
 import { useWide } from '../lib/useWide';
 
 const CorridorMap = lazy(() => import('../components/CorridorMap'));
-type Pt = { lat: number; lng: number; label: string };
+/** `gps`: the start is where the person is right now (Google Maps can then start navigating straight away). */
+type Pt = { lat: number; lng: number; label: string; gps?: boolean };
 type Which = 'start' | 'end';
 const EXAMPLES: [string, string][] = [['gangtok', 'sevoke'], ['gangtok', 'mangan'], ['guwahati', 'shillong']];
 
@@ -70,7 +71,7 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
     if (!navigator.geolocation) { setGps('denied'); return; }
     setGps('busy');
     navigator.geolocation.getCurrentPosition(
-      (p) => { set('start', { lat: +p.coords.latitude.toFixed(5), lng: +p.coords.longitude.toFixed(5), label: t('corridor.my_location') }); setGps('idle'); },
+      (p) => { set('start', { lat: +p.coords.latitude.toFixed(5), lng: +p.coords.longitude.toFixed(5), label: t('corridor.my_location'), gps: true }); setGps('idle'); },
       () => setGps('denied'), { timeout: 10000, maximumAge: 300000 },
     );
   }
@@ -108,7 +109,15 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
 
   const km = (m: number) => (m / 1000).toFixed(m < 10000 ? 1 : 0);
   const dur = (s: number) => { const m = Math.round(s / 60); return m < 60 ? t('corridor.dur_min', { m }) : t('corridor.dur_h', { h: Math.floor(m / 60), m: m % 60 }); };
-  const gmaps = (r: CorridorRoute) => pts.start && pts.end ? googleDirectionsUrl({ origin: pts.start, destination: pts.end, waypoints: viaPoints(r).map(([lat, lng]) => ({ lat, lng })) }) : '#';
+  // "Get directions": Google Maps on the same roads checked here (a few points along the route keep it there). From the
+  // person's own location it starts turn-by-turn navigation straight away; from a chosen place it opens the route first.
+  const gmaps = (r: CorridorRoute) => {
+    if (!pts.start || !pts.end) return '#';
+    const waypoints = viaPoints(r).map(([lat, lng]) => ({ lat, lng }));
+    return pts.start.gps
+      ? googleDirectionsUrl({ destination: pts.end, waypoints, navigate: true })
+      : googleDirectionsUrl({ origin: pts.start, destination: pts.end, waypoints });
+  };
   const levelLabel = (l: SegLevel) => (l === 'none' ? t('corridor.not_monitored') : t(`levels.${l}`));
   const rows = sum?.rows || [];
   const visibleRows = showAll ? rows : rows.slice(0, 8);
@@ -219,9 +228,19 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
                     </li>
                   ))}
                 </ul>
-                <a href={gmaps(main)} target="_blank" rel="noopener noreferrer" className="btn-secondary mt-3 w-full !min-h-[40px] text-sm">
-                  <ExternalLink size={16} aria-hidden />{t('corridor.open_gmaps')}
+                {/* Directions straight from Google Maps. On a route through high-risk places, say so first and make it the
+                    secondary choice (the lower-risk route below gets the main button). */}
+                {sum.high > 0 && (
+                  <p className="mt-3 flex items-start gap-2 rounded-lg border border-risk-high/60 bg-risk-high/10 p-2.5 text-sm font-semibold">
+                    <AlertTriangle size={17} className="mt-0.5 shrink-0" aria-hidden />
+                    {altState === 'none' || (altState === 'found' && altSum && altSum.high >= sum.high) ? t('corridor.dir_risky_noalt') : t('corridor.dir_risky')}
+                  </p>
+                )}
+                <a href={gmaps(main)} target="_blank" rel="noopener noreferrer" className={`${sum.high > 0 ? 'btn-secondary' : 'btn-primary'} mt-3 w-full`}>
+                  <Navigation size={18} aria-hidden />{sum.high > 0 ? t('corridor.dir_anyway') : t('corridor.dir_get')}
+                  <span className="sr-only"> ({t('roads.gmaps_opens')})</span>
                 </a>
+                <p className="mt-1.5 text-xs text-muted">{pts.start?.gps ? t('corridor.dir_note_gps') : t('corridor.dir_note')}</p>
               </div>
             </section>
           )}
@@ -250,7 +269,9 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
                     <button type="button" className="btn-secondary !min-h-[40px] text-sm" aria-pressed={showAlt} onClick={() => setShowAlt((v) => !v)}>
                       {showAlt ? <EyeOff size={16} aria-hidden /> : <Eye size={16} aria-hidden />}{showAlt ? t('corridor.alt_hide') : t('corridor.alt_show')}
                     </button>
-                    <a href={gmaps(alt)} target="_blank" rel="noopener noreferrer" className="btn-secondary !min-h-[40px] text-sm"><ExternalLink size={16} aria-hidden />{t('corridor.open_gmaps_short')}</a>
+                    <a href={gmaps(alt)} target="_blank" rel="noopener noreferrer" className={`${altSum.high < sum.high ? 'btn-primary' : 'btn-secondary'} !min-h-[40px] text-sm`}>
+                      <Navigation size={16} aria-hidden />{t('corridor.dir_alt')}<span className="sr-only"> ({t('roads.gmaps_opens')})</span>
+                    </a>
                   </div>
                 </>
               )}

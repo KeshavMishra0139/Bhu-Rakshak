@@ -1231,7 +1231,14 @@
     "not_monitored": "Not monitored",
     "show_all": "Show all {{n}} segments",
     "show_fewer": "Show fewer",
-    "method": "Route from OpenStreetMap roads (OSRM). Each ~{{seg}} km segment takes the live risk level of the nearest monitored place within {{km}} km; farther segments are “not monitored”. Times are estimates; hill roads are often slower."
+    "method": "Route from OpenStreetMap roads (OSRM). Each ~{{seg}} km segment takes the live risk level of the nearest monitored place within {{km}} km; farther segments are “not monitored”. Times are estimates; hill roads are often slower.",
+    "dir_get": "Get directions in Google Maps",
+    "dir_anyway": "Directions for this route anyway",
+    "dir_alt": "Get directions",
+    "dir_note": "Opens Google Maps on the same roads checked here, from your start point. Press Start there to begin.",
+    "dir_note_gps": "Starts turn-by-turn directions in Google Maps from where you are now, on the same roads checked here.",
+    "dir_risky": "This route passes high-risk places. Use the lower-risk route below if there is one, or wait until it is safer.",
+    "dir_risky_noalt": "This route passes high-risk places and there is no safer way round. Avoid travel if you can and follow official advice."
   },
   "community": {
     "layer": "Community warning signs",
