@@ -18,6 +18,7 @@ import { useWide } from '../lib/useWide';
 import { WhyCard } from '../components/WhyCard';
 import { BottomSheet } from '../components/BottomSheet';
 import { SafePlace } from '../components/SafePlace';
+import { WarningSigns } from '../components/WarningSigns';
 import { LEVEL_ICON, TREND_ICON, levelVar, riskConfig } from '../lib/risk';
 import { canSpeak, speak, stopSpeaking } from '../lib/audio';
 import { useNow } from '../lib/useNow';
@@ -276,6 +277,8 @@ export default function CitizenHome() {
               ))}
             </ul>
           </section>
+
+          <WarningSigns />
         </div>
       )}
     </div>

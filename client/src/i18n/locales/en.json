@@ -423,7 +423,10 @@
     "safe_place_km": "{{km}} km away",
     "safe_place_sample": "Sample only, not a real shelter. To be replaced with the official list.",
     "safe_place_none": "No safe place listed near here yet. Follow instructions from local officials.",
-    "safe_place_go": "Directions"
+    "safe_place_go": "Directions",
+    "signs_title": "Warning signs to watch for",
+    "signs_body": "If you see any of these, move away from the slope first, then report it from a safe place.",
+    "report_it": "Report it"
   },
   "authority": {
     "board_title": "Live risk board",

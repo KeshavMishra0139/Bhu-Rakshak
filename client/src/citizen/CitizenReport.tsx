@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Camera, Crosshair, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { api, errorKey } from '../api/client';
@@ -46,6 +47,12 @@ export default function CitizenReport() {
 
   const loadMine = () => api.get<{ reports: Report[] }>('/reports/mine').then((d) => setMine(d.reports)).catch(() => {});
   useEffect(() => { loadMine(); }, []);
+  // A warning sign tapped on Home (or picked with Saathi) arrives already chosen: /citizen/report?type=crack
+  const [params] = useSearchParams();
+  const preset = params.get('type');
+  useEffect(() => {
+    if (preset && (TYPES as readonly string[]).includes(preset)) { setType(preset); setStep(1); setDone(false); }
+  }, [preset]);
   useStreamEvent('report_updated', () => { loadMine(); });
 
   const center: [number, number] = pin || (placeId && locations[placeId] ? [locations[placeId].lat, locations[placeId].lng] : [27.33, 88.5]);
