@@ -80,6 +80,8 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
   const qFrom = params.get('from');
   const qTo = params.get('to');
   const asked = useRef<string | null>(null);
+  const reveal = useRef(false);
+  const mapBox = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const key = `${qFrom}>${qTo}`;
     if (!qFrom || !qTo || asked.current === key) return;
@@ -87,9 +89,17 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
     const b = station(qTo);
     if (!a || !b) return; // places not loaded yet
     asked.current = key;
+    reveal.current = true;
     setPts({ start: a, end: b });
     check(a, b);
   }, [qFrom, qTo, locations]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Once that route is checked, scroll to the result (the map with the summary just below it), so nobody has to
+  // look for it under the form on a phone.
+  useEffect(() => {
+    if (!main || !reveal.current) return;
+    reveal.current = false;
+    mapBox.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, [main]);
 
   useEffect(() => {
     if (selected == null) return;
@@ -169,7 +179,7 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
       </section>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <div className="relative isolate h-[46dvh] min-h-[300px] overflow-hidden rounded-card border border-line lg:sticky lg:top-4 lg:h-[calc(100dvh-8rem)] lg:min-h-[480px]">
+        <div ref={mapBox} className="relative isolate h-[46dvh] min-h-[300px] scroll-mt-3 overflow-hidden rounded-card border border-line lg:sticky lg:top-4 lg:h-[calc(100dvh-8rem)] lg:min-h-[480px]">
           <Suspense fallback={<div className="skeleton h-full w-full" />}>
             <CorridorMap route={main} alternative={alt} showAlt={showAlt} start={pts.start && ll(pts.start)} end={pts.end && ll(pts.end)}
               locations={locations} list={list} picking={!!picking} selected={selected} onSelect={setSelected}
