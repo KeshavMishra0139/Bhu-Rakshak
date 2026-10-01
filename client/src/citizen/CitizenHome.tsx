@@ -86,7 +86,7 @@ export default function CitizenHome() {
     ? (peak ? t('citizen.s_moderate', { road, time: timeIST(peak, lang) }) : t('citizen.s_moderate_notime', { road }))
     : t(`citizen.s_${r.level}`, { road });
   const why = (r?.drivers || []).slice(0, 2).map((d) => driverPlain(d.key, lang));
-  const whyLine = why.length ? `${t('citizen.why')}: ${why.join(lang === 'hi' ? ' और ' : lang === 'ne' ? ' र ' : ' and ')}.` : '';
+  const whyLine = why.length ? `${t('citizen.why')}: ${why.join(t('citizen.and_sep'))}.` : '';
   const Icon = r ? LEVEL_ICON[r.level] : null;
   const Trend = r ? TREND_ICON[r.trend] : null;
   const nearRoads = roads.filter((x) => viewingId && x.path.includes(viewingId));

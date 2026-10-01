@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { env } from '../config/env.js';
+import { LANGUAGES, LANGUAGE_CHECK } from '../config/languages.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 let db;
@@ -19,16 +20,18 @@ export function openDb(file = env.dbPath) {
 }
 
 /**
- * One-time migration: databases created before Nepali allowed only 'en'/'hi' in users.language. SQLite can't
- * change a CHECK in place, so the table is rebuilt (same columns, rows and indexes) inside one transaction, and
- * rolled back if any foreign key would break. No-op once done or on a new database.
+ * Migration: older databases limit users.language to fewer languages (en/hi, then en/hi/ne). SQLite can't change
+ * a CHECK in place, so the table is rebuilt (same columns, rows and indexes) inside one transaction, and rolled back
+ * if the row count changes or any foreign key would break. No-op once the CHECK lists every language in LANGUAGES.
  */
 function migrateUserLanguages(d) {
-  const OLD = "CHECK (language IN ('en','hi'))";
   const row = d.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'users'").get();
-  if (!row?.sql.includes(OLD)) return;
+  const m = row?.sql.match(/CHECK \(language IN \(([^)]*)\)\)/);
+  if (!m) return;
+  const have = m[1].split(',').map((x) => x.trim().replace(/'/g, ''));
+  if (LANGUAGES.every((l) => have.includes(l))) return;
   const indexes = d.prepare("SELECT sql FROM sqlite_master WHERE type = 'index' AND tbl_name = 'users' AND sql IS NOT NULL").all().map((r) => r.sql);
-  const createNew = row.sql.replace(OLD, "CHECK (language IN ('en','hi','ne'))").replace(/^CREATE TABLE (IF NOT EXISTS )?"?users"?/, 'CREATE TABLE users_new');
+  const createNew = row.sql.replace(m[0], LANGUAGE_CHECK).replace(/^CREATE TABLE (IF NOT EXISTS )?"?users"?/, 'CREATE TABLE users_new');
   const before = d.prepare('SELECT COUNT(*) AS n FROM users').get().n;
   d.exec('PRAGMA foreign_keys = OFF');
   try {

@@ -1,12 +1,20 @@
 import factors from '@shared/config/factors.json';
 
-type DriverText = { en: string; hi: string; ne?: string; plainEn: string; plainHi: string; plainNe?: string };
+type DriverText = { en: string; hi: string; ne?: string; plainEn: string; plainHi: string; plainNe?: string; plainAs?: string; plainLus?: string; plainNag?: string };
 const drivers = factors.drivers as Record<string, DriverText>;
 
 /** Technical label (authority views). */
 export const driverLabel = (key: string, lang: string) => { const d = drivers[key]; if (!d) return key; return lang === 'ne' ? d.ne || d.hi : lang === 'hi' ? d.hi : d.en; };
-/** Plain-language phrase (citizen views). */
-export const driverPlain = (key: string, lang: string) => { const d = drivers[key]; if (!d) return key; return lang === 'ne' ? d.plainNe || d.plainHi : lang === 'hi' ? d.plainHi : d.plainEn; };
+/** Plain-language phrase (citizen views). Nepali falls back to Hindi; Assamese, Mizo and Nagamese to English. */
+const PLAIN_KEY: Record<string, keyof DriverText> = { as: 'plainAs', lus: 'plainLus', nag: 'plainNag' };
+export const driverPlain = (key: string, lang: string) => {
+  const d = drivers[key];
+  if (!d) return key;
+  if (lang === 'hi') return d.plainHi;
+  if (lang === 'ne') return d.plainNe || d.plainHi;
+  const k = PLAIN_KEY[lang];
+  return (k && d[k]) || d.plainEn;
+};
 
 export { factors };
 

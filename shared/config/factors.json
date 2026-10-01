@@ -425,7 +425,10 @@
       "plainEn": "it has rained for several days",
       "plainHi": "कई दिनों से बारिश हो रही है",
       "ne": "पछिल्लो ३ दिनको वर्षा",
-      "plainNe": "धेरै दिनदेखि पानी परिरहेको छ"
+      "plainNe": "धेरै दिनदेखि पानी परिरहेको छ",
+      "plainAs": "কেইবাদিনৰ পৰা বৰষুণ হৈ আছে",
+      "plainLus": "ni tam tak chhung ruah a sur",
+      "plainNag": "kiman din pora barish hoi ase"
     },
     "rain_24h": {
       "en": "Rain in the last 24 hours",
@@ -433,7 +436,10 @@
       "plainEn": "heavy rain today",
       "plainHi": "आज भारी बारिश हुई है",
       "ne": "पछिल्लो २४ घण्टाको वर्षा",
-      "plainNe": "आज भारी वर्षा भयो"
+      "plainNe": "आज भारी वर्षा भयो",
+      "plainAs": "আজি ধাৰাসাৰ বৰষুণ হৈছে",
+      "plainLus": "vawiinah ruah nasa a sur",
+      "plainNag": "aji bisi barish hoise"
     },
     "rain_intensity": {
       "en": "Current rainfall intensity",
@@ -441,7 +447,10 @@
       "plainEn": "rain is falling hard right now",
       "plainHi": "अभी तेज़ बारिश हो रही है",
       "ne": "हालको वर्षाको तीव्रता",
-      "plainNe": "अहिले ठूलो पानी परिरहेको छ"
+      "plainNe": "अहिले ठूलो पानी परिरहेको छ",
+      "plainAs": "এতিয়া জোৰেৰে বৰষুণ দিছে",
+      "plainLus": "tunah ruah nasa takin a sur mek",
+      "plainNag": "etiya jor pora barish hoi ase"
     },
     "rain_forecast": {
       "en": "Rain forecast, next 24 hours",
@@ -449,7 +458,10 @@
       "plainEn": "more rain is expected",
       "plainHi": "और बारिश होने वाली है",
       "ne": "वर्षाको पूर्वानुमान, अर्को २४ घण्टा",
-      "plainNe": "अझ वर्षा हुने अपेक्षा छ"
+      "plainNe": "अझ वर्षा हुने अपेक्षा छ",
+      "plainAs": "আৰু বৰষুণৰ সম্ভাৱনা আছে",
+      "plainLus": "ruah sur belh a beisei",
+      "plainNag": "aru barish hobo nisina ase"
     },
     "imd_warning": {
       "en": "IMD district rain warning",
@@ -457,7 +469,10 @@
       "plainEn": "IMD has warned of heavy rain here",
       "plainHi": "IMD ने यहाँ भारी बारिश की चेतावनी दी है",
       "ne": "IMD जिल्ला वर्षा चेतावनी",
-      "plainNe": "IMD ले यहाँ भारी वर्षाको चेतावनी दिएको छ"
+      "plainNe": "IMD ले यहाँ भारी वर्षाको चेतावनी दिएको छ",
+      "plainAs": "IMDয়ে ইয়াত ধাৰাসাৰ বৰষুণৰ সতৰ্কবাণী দিছে",
+      "plainLus": "IMD-in hetah ruah nasa tur vaukhanna a pe",
+      "plainNag": "IMD pora ita bisi barish laga hushiar khobor dise"
     },
     "soil_saturation": {
       "en": "Soil saturation",
@@ -465,7 +480,10 @@
       "plainEn": "the soil is soaked",
       "plainHi": "मिट्टी पानी से भरी है",
       "ne": "माटोको संतृप्ति",
-      "plainNe": "माटो पानीले भिजेर गलेको छ"
+      "plainNe": "माटो पानीले भिजेर गलेको छ",
+      "plainAs": "মাটি পানীৰে ভিজি পৰিছে",
+      "plainLus": "lei hi tuiin a hnawng hneh",
+      "plainNag": "mati pani pora bhorti hoi ase"
     },
     "slope": {
       "en": "Steep slope",
@@ -473,7 +491,10 @@
       "plainEn": "the hillside is steep",
       "plainHi": "पहाड़ी ढलान खड़ी है",
       "ne": "ठाडो भिर",
-      "plainNe": "पहाडको भिर ठाडो छ"
+      "plainNe": "पहाडको भिर ठाडो छ",
+      "plainAs": "পাহাৰৰ ঢাল খাৰা",
+      "plainLus": "tlang pang a chho",
+      "plainNag": "pahar laga dhal khara ase"
     },
     "history": {
       "en": "Past landslides nearby",
@@ -481,7 +502,10 @@
       "plainEn": "landslides have happened here before",
       "plainHi": "यहाँ पहले भी भूस्खलन हुए हैं",
       "ne": "नजिकका पुराना पहिरो",
-      "plainNe": "यहाँ पहिले पनि पहिरो गएको छ"
+      "plainNe": "यहाँ पहिले पनि पहिरो गएको छ",
+      "plainAs": "ইয়াত আগতেও ভূমিস্খলন হৈছে",
+      "plainLus": "hetah hian minpui a tla tawh",
+      "plainNag": "ita agote bhi landslide hoise"
     },
     "lithology": {
       "en": "Weak rock type",
@@ -489,7 +513,10 @@
       "plainEn": "the rock here is weak",
       "plainHi": "यहाँ की चट्टान कमज़ोर है",
       "ne": "कमजोर चट्टान",
-      "plainNe": "यहाँको चट्टान कमजोर छ"
+      "plainNe": "यहाँको चट्टान कमजोर छ",
+      "plainAs": "ইয়াৰ শিল দুৰ্বল",
+      "plainLus": "hetah hian lung a chak lo",
+      "plainNag": "ita laga pathor komjur ase"
     },
     "road_cutting": {
       "en": "Road cutting / construction",
@@ -497,7 +524,10 @@
       "plainEn": "road cutting has weakened the slope",
       "plainHi": "सड़क कटाई से ढलान कमज़ोर हुई है",
       "ne": "सडक कटान / निर्माण",
-      "plainNe": "सडक कटानले भिर कमजोर बनाएको छ"
+      "plainNe": "सडक कटानले भिर कमजोर बनाएको छ",
+      "plainAs": "পথ কটাৰ ফলত ঢাল দুৰ্বল হৈছে",
+      "plainLus": "kawng laihnain tlang pang a ti chak lo",
+      "plainNag": "rasta katai kene dhal komjur hoise"
     },
     "river_proximity": {
       "en": "Close to river (toe erosion)",
@@ -505,7 +535,10 @@
       "plainEn": "the river is cutting into the slope",
       "plainHi": "नदी ढलान को काट रही है",
       "ne": "नदी नजिक (फेद कटान)",
-      "plainNe": "नदीले भिरको फेद काटिरहेको छ"
+      "plainNe": "नदीले भिरको फेद काटिरहेको छ",
+      "plainAs": "নদীয়ে ঢালৰ তলখন খহাই আছে",
+      "plainLus": "luiin tlang pang a khuai mek",
+      "plainNag": "noi pora dhal laga tol khai ase"
     },
     "fault": {
       "en": "Near a fault / lineament",
@@ -513,7 +546,10 @@
       "plainEn": "the ground here is naturally cracked",
       "plainHi": "यहाँ ज़मीन में प्राकृतिक दरारें हैं",
       "ne": "भ्रंश / रेखा नजिक",
-      "plainNe": "यहाँको जमिन प्राकृतिक रूपमा चिरिएको छ"
+      "plainNe": "यहाँको जमिन प्राकृतिक रूपमा चिरिएको छ",
+      "plainAs": "ইয়াৰ মাটি প্ৰাকৃতিকভাৱে ফাট মেলা",
+      "plainLus": "hetah hian lei a phel nghal",
+      "plainNag": "ita laga mati nijor pora phati ase"
     },
     "low_vegetation": {
       "en": "Sparse vegetation",
@@ -521,7 +557,10 @@
       "plainEn": "few trees are holding the soil",
       "plainHi": "मिट्टी को थामने वाले पेड़ कम हैं",
       "ne": "कम वनस्पति",
-      "plainNe": "माटो थाम्ने रूख कम छन्"
+      "plainNe": "माटो थाम्ने रूख कम छन्",
+      "plainAs": "মাটি ধৰি ৰাখিবলৈ গছ-গছনি কম",
+      "plainLus": "lei vawngtu thingkung a tlem",
+      "plainNag": "mati dhori rakhibole gas kom ase"
     },
     "seismic": {
       "en": "Recent earthquake shaking",
@@ -529,7 +568,10 @@
       "plainEn": "a recent earthquake shook this slope",
       "plainHi": "हाल ही में आए भूकंप ने इस ढलान को हिलाया है",
       "ne": "हालको भूकम्पको कम्पन",
-      "plainNe": "हालैको भूकम्पले यो भिर हल्लायो"
+      "plainNe": "हालैको भूकम्पले यो भिर हल्लायो",
+      "plainAs": "শেহতীয়া ভূমিকম্পই এই ঢাল জোকাৰিছে",
+      "plainLus": "lirnghing hnai lamin he tlang pang hi a nghing",
+      "plainNag": "etiya laga bhumikampa pora etu dhal hilai dise"
     },
     "freeze_thaw": {
       "en": "Freeze–thaw / snowmelt",
@@ -537,7 +579,10 @@
       "plainEn": "ice and snow are melting",
       "plainHi": "बर्फ पिघल रही है",
       "ne": "जम्ने–पग्लने / हिउँ पग्लने",
-      "plainNe": "बरफ र हिउँ पग्लिरहेको छ"
+      "plainNe": "बरफ र हिउँ पग्लिरहेको छ",
+      "plainAs": "বৰফ আৰু হিম গলি আছে",
+      "plainLus": "vur leh tuikhal a tui mek",
+      "plainNag": "borof aru thanda pani goli ase"
     }
   }
 }

@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, ChevronDown, Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { LANGS, setLanguage, type Lang } from '../i18n';
+import { DRAFT_LANGS, LANG_NAMES, LANGS, setLanguage, type Lang } from '../i18n';
 import { useAuth } from '../auth/AuthProvider';
 
-// Each language is named in itself, so people can find their own.
-const NAMES: Record<Lang, string> = { en: 'English', hi: 'हिन्दी', ne: 'नेपाली' };
+const NAMES = LANG_NAMES;
 
-/** Language menu (English · हिन्दी · नेपाली). Switches the whole interface instantly and remembers the choice. */
+/** Language menu (English · हिन्दी · नेपाली · অসমীয়া · Mizo · Nagamese). Switches the whole interface instantly and remembers the choice. */
 export function LanguageToggle({ onDark = false }: { onDark?: boolean }) {
   const { t, i18n } = useTranslation();
   const { savePrefs } = useAuth();
@@ -41,6 +40,7 @@ export function LanguageToggle({ onDark = false }: { onDark?: boolean }) {
               <button type="button" role="menuitemradio" aria-checked={l === current} lang={l} onClick={() => choose(l)}
                 className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-ink hover:bg-surface-2">
                 <span className={l === current ? 'font-semibold' : ''}>{NAMES[l]}</span>
+                {DRAFT_LANGS.includes(l) && <span className="ml-auto rounded bg-surface-2 px-1.5 py-px text-[10px] font-bold uppercase tracking-wide text-muted" title={t('lang.draft_tip')}>{t('lang.beta')}</span>}
                 {l === current && <Check size={16} className="text-brand" aria-hidden />}
               </button>
             </li>

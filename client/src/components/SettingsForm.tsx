@@ -6,7 +6,7 @@ import { api, errorKey } from '../api/client';
 import type { Me, User } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
 import { useTheme, type ThemePref } from '../theme/ThemeProvider';
-import { setLanguage, type Lang } from '../i18n';
+import { LANG_NAMES, LANGS, setLanguage, type Lang } from '../i18n';
 import { useRiskStream } from '../live/RiskStreamProvider';
 import { placeName } from '../lib/format';
 import { audioUnlocked, onAudioState, playAlarm, stopAlarm, unlockAudio } from '../lib/audio';
@@ -152,11 +152,11 @@ export function SettingsForm({ variant }: { variant: 'citizen' | 'authority' }) 
           <fieldset className="sm:col-span-2">
             <legend className="field-label">{t('lang.label')}</legend>
             <div className="flex flex-wrap gap-2">
-              {(['en', 'hi', 'ne'] as Lang[]).map((l) => (
+              {LANGS.map((l) => (
                 <button key={l} type="button" lang={l} aria-pressed={lang === l}
                   className={`${lang === l ? 'btn-primary' : 'btn-secondary'} min-w-[7rem] flex-1`}
                   onClick={() => { setLanguage(l); api.put('/settings', { language: l }).catch(() => {}); }}>
-                  {t(`lang.${l}`)}
+                  {LANG_NAMES[l]}
                 </button>
               ))}
             </div>

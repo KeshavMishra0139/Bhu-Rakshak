@@ -100,7 +100,9 @@
     "en": "English",
     "hi": "हिन्दी",
     "switch": "हिन्दी में देखें",
-    "ne": "नेपाली"
+    "ne": "नेपाली",
+    "beta": "beta",
+    "draft_tip": "Draft translation — not yet checked by a native speaker"
   },
   "roles": {
     "citizen": "Citizen",
@@ -390,7 +392,8 @@
     "saathi_card_body": "Your safety assistant. Ask about travel, rain, warning signs or reporting, by typing or speaking, in English or Hindi.",
     "q_signs": "What should I do if I see cracks?",
     "q_report": "How do I report something?",
-    "q_rain": "How much rain is coming?"
+    "q_rain": "How much rain is coming?",
+    "and_sep": " and "
   },
   "authority": {
     "board_title": "Live risk board",

@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { api, ApiError } from '../api/client';
 import type { Me } from '../api/types';
-import { setLanguage, type Lang } from '../i18n';
+import { isLang, setLanguage, type Lang } from '../i18n';
 import { useTheme, type ThemePref } from '../theme/ThemeProvider';
 
 type Ctx = {
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setMeState(m);
     // A user's saved preferences win over the device defaults once they sign in.
     const lang = (m.actor.language || m.user.language) as Lang;
-    if (lang) setLanguage(lang);
+    if (isLang(lang)) setLanguage(lang);
     if (m.user.theme) theme.setPref(m.user.theme);
     if (m.user.text_size) theme.setTextSize(m.user.text_size);
     return m;

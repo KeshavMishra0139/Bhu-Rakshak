@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
   home_location_id TEXT REFERENCES locations(id),
   home_village    TEXT,
   id_document_path TEXT,
-  language        TEXT NOT NULL DEFAULT 'en' CHECK (language IN ('en','hi','ne')),
+  language        TEXT NOT NULL DEFAULT 'en' CHECK (language IN ('en','hi','ne','as','kha','lus','nag')),
   theme           TEXT NOT NULL DEFAULT 'system' CHECK (theme IN ('light','dark','system')),
   text_size       TEXT NOT NULL DEFAULT 'normal' CHECK (text_size IN ('normal','large')),
   prefs_json      TEXT NOT NULL DEFAULT '{}',

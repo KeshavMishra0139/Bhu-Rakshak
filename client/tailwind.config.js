@@ -26,7 +26,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['"Source Sans 3"', '"Noto Sans Devanagari"', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['"Source Sans 3"', '"Noto Sans Devanagari"', '"Noto Sans Bengali"', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
         deva: ['"Noto Sans Devanagari"', '"Source Sans 3"', 'system-ui', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },

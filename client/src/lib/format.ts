@@ -4,7 +4,8 @@ import type { LocationSnap } from '../api/types';
  * exists in English and Hindi, so Nepali readers get the Hindi version. */
 export const isDeva = (lang: string) => lang === 'hi' || lang === 'ne';
 // Nepali with Latin digits (as commonly written in Sikkim), Nepali month names.
-const locale = (lang: string) => (lang === 'hi' ? 'hi-IN' : lang === 'ne' ? 'ne-IN-u-nu-latn' : 'en-IN');
+// Assamese also with Latin digits; Mizo and Nagamese have no locale data in browsers, so they use Indian English.
+const locale = (lang: string) => (lang === 'hi' ? 'hi-IN' : lang === 'ne' ? 'ne-IN-u-nu-latn' : lang === 'as' ? 'as-IN-u-nu-latn' : 'en-IN');
 
 /** Clock time in IST, e.g. "4:05 pm". */
 export const timeIST = (iso: string | null | undefined, lang: string) =>
