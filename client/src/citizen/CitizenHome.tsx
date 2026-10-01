@@ -262,14 +262,14 @@ export default function CitizenHome() {
             <h2 id="contacts-title" className="text-lg font-bold">{t('citizen.contacts')}</h2>
             <a href="tel:112" className="btn-danger w-full mt-3 text-lg"><Phone size={20} aria-hidden />{t('citizen.call_112')}</a>
             <ul className="mt-3 divide-y divide-line">
-              {localContacts.filter((c) => c.phone !== '112').map((c) => (
+              {/* Only contacts officials have entered a number for ("To be configured" means nothing to a citizen). */}
+              {localContacts.filter((c) => c.phone && c.phone !== '112').map((c) => (
                 <li key={c.id} className="py-2.5 flex items-center gap-3">
                   <span className="flex-1">
                     <span className="block font-semibold">{c.role}</span>
                     <span className="block text-sm text-muted">{t(`districts.${c.district}`, { defaultValue: c.district })}</span>
                   </span>
-                  {c.phone ? <a className="btn-secondary" href={`tel:${c.phone}`}><Phone size={16} aria-hidden />{c.phone}</a>
-                    : <span className="text-sm text-muted">{t('citizen.to_be_configured')}</span>}
+                  <a className="btn-secondary" href={`tel:${c.phone}`}><Phone size={16} aria-hidden />{c.phone}</a>
                 </li>
               ))}
             </ul>
