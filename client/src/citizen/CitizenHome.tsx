@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Crosshair, Volume2, Square, ChevronDown, Phone, Sparkles, MessageCircle, Clock } from 'lucide-react';
+import { Crosshair, Volume2, Square, ChevronDown, Phone, Sparkles, MessageCircle, Clock, HelpCircle } from 'lucide-react';
 import { api } from '../api/client';
 import type { ImdSummary, Me, Road, Stakeholder } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
@@ -14,7 +14,9 @@ import { ImdPanel } from '../components/ImdPanel';
 import { placeName, timeIST, isDeva } from '../lib/format';
 import { isPreview } from '../lib/mapConfig';
 import { driverPlain } from '../lib/factors';
-import { confidenceBand } from '../lib/why';
+import { useWide } from '../lib/useWide';
+import { WhyCard } from '../components/WhyCard';
+import { BottomSheet } from '../components/BottomSheet';
 import { LEVEL_ICON, TREND_ICON, levelVar, riskConfig } from '../lib/risk';
 import { canSpeak, speak, stopSpeaking } from '../lib/audio';
 import { useNow } from '../lib/useNow';
@@ -46,6 +48,8 @@ export default function CitizenHome() {
   const [gps, setGps] = useState<'idle' | 'busy' | 'denied'>('idle');
   const [speaking, setSpeaking] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [showWhy, setShowWhy] = useState(false);
+  const wide = useWide();
 
   const loc = viewingId ? locations[viewingId] : undefined;
   const r = loc?.risk;
@@ -101,6 +105,8 @@ export default function CitizenHome() {
   const rainHours = rainAt ? Math.floor((now - new Date(rainAt).getTime()) / 3600000) : null;
   const staleNote = rainSource && rainSource !== 'open-meteo' ? t('citizen.no_live_rain')
     : rainHours != null && rainHours >= riskConfig.live.staleDataHours ? t('citizen.stale_rain', { hours: rainHours }) : '';
+  const imd = r?.conditions.imd as ImdSummary | null | undefined;
+  const imdUrgent = !!imd && [imd.nowcast?.color, imd.days[0]?.color].some((c) => c === 'orange' || c === 'red');
 
   function listen() {
     if (speaking) { stopSpeaking(); setSpeaking(false); return; }
@@ -158,10 +164,8 @@ export default function CitizenHome() {
                 </p>
                 <h1 id="status-title" className="text-[2rem] sm:text-[2.3rem] font-bold leading-tight">{t(`citizen.lt_${r.level}`)}</h1>
                 <p className="text-[1.2rem] mt-1 font-semibold">{sentence}</p>
-                {whyLine && <p className="mt-2 text-[1.05rem]">{whyLine}</p>}
                 <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <span className="rounded-pill border border-line px-3 py-1 text-sm font-semibold">{t(`citizen.sure_${confidenceBand(r.confidence)}`)}</span>
-                  {Trend && <span className="rounded-pill border border-line px-3 py-1 text-sm font-semibold inline-flex items-center gap-1"><Trend size={15} aria-hidden />{t(`trend.${r.trend}`)}</span>}
+                  {Trend &&<span className="rounded-pill border border-line px-3 py-1 text-sm font-semibold inline-flex items-center gap-1"><Trend size={15} aria-hidden />{t(`trend.${r.trend}`)}</span>}
                   <UpdatedAgo at={r.updated_at} />
                 </div>
                 {staleNote && (
@@ -169,13 +173,16 @@ export default function CitizenHome() {
                     <Clock size={18} className="mt-0.5 shrink-0" aria-hidden />{staleNote}
                   </p>
                 )}
-                <div className="mt-3"><WatchStrip compact /></div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {canSpeak() && (
                     <button type="button" className="btn-secondary" onClick={listen} aria-pressed={speaking}>
                       {speaking ? <Square size={18} aria-hidden /> : <Volume2 size={18} aria-hidden />}{speaking ? t('citizen.stop_listen') : t('citizen.listen')}
                     </button>
                   )}
+                  {/* The reasons, how sure we are and what we watch: one tap away, in the same Why card as the map. */}
+                  <button type="button" className="btn-secondary" aria-expanded={showWhy} onClick={() => setShowWhy((v) => !v)}>
+                    <HelpCircle size={18} aria-hidden />{t('citizen.why_btn')}
+                  </button>
                   <button type="button" className="btn-ghost" aria-expanded={showDetails} onClick={() => setShowDetails((v) => !v)}>
                     {showDetails ? t('citizen.hide_details') : t('citizen.details_toggle')}
                     <ChevronDown size={18} aria-hidden className={showDetails ? 'rotate-180' : ''} />
@@ -191,11 +198,24 @@ export default function CitizenHome() {
                     ))}
                   </dl>
                 )}
-                <ImdPanel imd={r.conditions.imd as ImdSummary | null | undefined} className="mt-4" plain />
+                {/* The weather department's warning sits in the details, unless it is orange or red (then it stays in view). */}
+                {(showDetails || imdUrgent) && <ImdPanel imd={imd} className="mt-4" plain />}
               </div>
               <div className="sm:self-start"><RiskBadge level={r.level} /></div>
             </div>
           </section>
+
+          {showWhy && wide && (
+            <div className="lg:col-span-2 drawer-enter">
+              <WhyCard loc={loc} onClose={() => setShowWhy(false)}><div className="mt-4"><WatchStrip compact /></div></WhyCard>
+            </div>
+          )}
+          {showWhy && !wide && (
+            <BottomSheet label={t('why.title')} onClose={() => setShowWhy(false)}
+              extra={<a href="tel:112" className="inline-flex min-h-[32px] items-center gap-1 rounded-pill bg-risk-critical px-3 text-xs font-bold text-white" aria-label={t('citizen.call_112')}><Phone size={13} aria-hidden />{t('citizen.sos')}</a>}>
+              <WhyCard loc={loc} variant="bare"><div className="mt-4"><WatchStrip compact /></div></WhyCard>
+            </BottomSheet>
+          )}
 
           <section className="card p-5" aria-labelledby="rain-title">
             <h2 id="rain-title" className="text-lg font-bold">{t('citizen.rain_48h')}</h2>

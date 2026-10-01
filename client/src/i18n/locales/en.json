@@ -417,7 +417,8 @@
     "no_live_rain": "Live rain data isn't available right now, so this is based on typical weather. Follow instructions from local officials.",
     "sure_high": "We're quite sure",
     "sure_medium": "We're fairly sure",
-    "sure_low": "We're not very sure"
+    "sure_low": "We're not very sure",
+    "why_btn": "Why?"
   },
   "authority": {
     "board_title": "Live risk board",
