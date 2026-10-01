@@ -9,7 +9,8 @@ import { Languages, Loader2, MapPin, Megaphone, MessageCircle, Mic, MicOff, Phon
 import { api } from '../api/client';
 import { useRiskStream } from '../live/RiskStreamProvider';
 import { useCitizen } from './CitizenContext';
-import { placeName, secondsSince, timeIST } from '../lib/format';
+import { dateTimeIST, placeName, secondsSince, timeIST } from '../lib/format';
+import faq from '../data/saathiFaq.json';
 import { speak, stopSpeaking } from '../lib/audio';
 import { useNow } from '../lib/useNow';
 import { isEmergency } from '../lib/emergency';
@@ -23,7 +24,12 @@ type Basis = { risk_ok: boolean; weather_ok: boolean; risk_updated_at: string | 
 /** Something an answer offers to open: the road checker with a route, or the report form (after a danger check). */
 type Action = { type: 'route_check'; from: string; to: string } | { type: 'report'; report_type: string | null; ask_danger: boolean };
 type Reply = { text: string; sources?: string[]; basis?: Basis; action?: Action | null };
-type Msg = { id: number; role: 'user' | 'assistant'; text: string; sources?: string[]; basis?: Basis; action?: Action | null };
+type Msg = { id: number; role: 'user' | 'assistant'; text: string; sources?: string[]; basis?: Basis; action?: Action | null;
+  /** Answered without the server: from the stored FAQ, or from the risk saved on this phone. */
+  offline?: 'faq' | 'saved' };
+
+type FaqEntry = { id: string; match: string | null; en: string; hi: string; ne?: string };
+const FAQ = (faq.entries as FaqEntry[]).map((e) => ({ ...e, re: e.match ? new RegExp(e.match, 'i') : null }));
 type Ask = { question?: string; intent?: string; label: string };
 
 const CHIP = 'min-h-[40px] rounded-full border border-[#cfe0d2] bg-white px-3.5 py-2 text-left text-[14px] font-semibold text-[#17392b] hover:border-[#2d765b] hover:bg-[#e8f3ed]';
@@ -96,6 +102,13 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
       if (readAloud) speak([T('citizen.em_title'), T('citizen.em_call'), ...EMERGENCY_STEPS.map((k) => T(k))].join('. '), lang);
       return;
     }
+    // No internet: answer from the stored FAQ, or with the last level saved on this phone (never a guess).
+    const answerOffline = () => {
+      const reply = offlineReply(ask);
+      setMsgs((m) => [...m, reply]);
+      if (readAloud) speak(reply.text.replace(/\*\*/g, ''), lang);
+    };
+    if (navigator.onLine === false) { answerOffline(); return; }
     if (!place) {
       setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: t('citizen.saathi_need_place', { lng: lang }) }]);
       return;
@@ -106,11 +119,22 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
       setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: d.text, sources: d.sources, basis: d.basis, action: d.action }]);
       if (readAloud) speak(d.text.replace(/\*\*/g, ''), lang);
     } catch {
-      setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: t('citizen.saathi_error', { lng: lang }) }]);
+      answerOffline();
     } finally {
       setBusy(false);
     }
   }, [busy, place, lang, readAloud, t]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /** Offline answer: general advice from the stored FAQ; for anything about risk, the last level this phone received. */
+  function offlineReply(ask: Ask): Msg {
+    const id = nextId.current++;
+    const entry = FAQ.find((e) => e.id === ask.intent) || (ask.question ? FAQ.find((e) => e.re?.test(ask.question!)) : undefined);
+    if (entry) return { id, role: 'assistant', text: entry[lang] || entry.en, offline: 'faq' };
+    const r = placeLoc?.risk;
+    if (!placeLoc || !r) return { id, role: 'assistant', text: T('citizen.saathi_offline_none') };
+    return { id, role: 'assistant', offline: 'saved',
+      text: T('citizen.saathi_offline_risk', { place: placeName(placeLoc, lang), level: T(`levels.${r.level}`), time: dateTimeIST(r.updated_at, lang) }) };
+  }
 
   const open = useCallback((ask?: Ask) => {
     setOpen(true);
@@ -257,6 +281,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
               <div key={m.id} ref={i === msgs.length - 1 ? lastMsg : undefined} className="scroll-mt-2">
                 <Bubble role={m.role}>{m.role === 'assistant' ? <Rich text={m.text} /> : m.text}</Bubble>
                 {m.role === 'assistant' && <SourceLine sources={m.sources} basis={m.basis} T={T} lang={lang} />}
+                {m.offline && <p className="mt-1 pl-9 text-[12px] leading-snug text-[#7a4a12]">{T(m.offline === 'faq' ? 'citizen.saathi_offline_faq_tag' : 'citizen.saathi_offline_saved_tag')}</p>}
                 {m.role === 'assistant' && m.action && <div className="mt-2 pl-9">{actionRow(m.action)}</div>}
               </div>
             ))}

@@ -1,0 +1,54 @@
+{
+  "_comment": "Saathi's offline answers: general safety advice that does not depend on live data, used when there is no internet or the server can't be reached. Risk questions are never answered from here (Saathi gives the last level saved on the phone, with its time, instead). `match` (a case-insensitive regular expression, null = only via its button) picks an entry for a typed question; the first match wins, in this order. Same wording as the live answers in server/src/routes/insights.js.",
+  "entries": [
+    {
+      "id": "report",
+      "match": "report|inform|रिपोर्ट|सूचना|खबर",
+      "en": "Open **Report** at the bottom of the screen: choose what you saw, add a photo if it is safe, and mark the spot. Without internet the report can't be sent yet, so try again when you have signal. Only report from a safe place. If anyone is in danger, **call 112**: phone calls work without internet.",
+      "hi": "स्क्रीन के नीचे **रिपोर्ट** खोलें: जो देखा वह चुनें, सुरक्षित हो तो फ़ोटो जोड़ें, और जगह चुनें। बिना इंटरनेट के रिपोर्ट अभी नहीं जाएगी, इसलिए सिग्नल मिलने पर फिर कोशिश करें। सिर्फ़ सुरक्षित जगह से रिपोर्ट करें। कोई खतरे में हो तो **112 पर कॉल करें**: फ़ोन कॉल बिना इंटरनेट के भी होती है।",
+      "ne": "स्क्रिनको तल **रिपोर्ट** खोल्नुहोस्: के देख्नुभयो छान्नुहोस्, सुरक्षित भए फोटो थप्नुहोस्, र ठाउँ छान्नुहोस्। इन्टरनेटबिना रिपोर्ट अहिले पठाउन सकिँदैन, त्यसैले सिग्नल आएपछि फेरि प्रयास गर्नुहोस्। सुरक्षित ठाउँबाट मात्र रिपोर्ट गर्नुहोस्। कोही खतरामा भए **११२ मा फोन गर्नुहोस्**: फोन कल इन्टरनेटबिना पनि लाग्छ।"
+    },
+    {
+      "id": "signs",
+      "match": "crack|stone|rock|boulder|tilt|\\blean|mud|sign|rumbl|दरार|पत्थर|चट्टान|झुक|मटमैल|संकेत|चिरा|ढुङ्गा|ढल्कि|धमिलो",
+      "en": "Warning signs of a landslide: **new cracks** in the ground, road or walls; **tilting trees, poles or fences**; **muddy water** in streams or springs; **falling stones**; or a rumbling sound. If you see them: move away from the slope at once, warn people nearby, then report it from a safe place. If anyone is in danger, **call 112**.",
+      "hi": "भूस्खलन के चेतावनी संकेत: ज़मीन, सड़क या दीवारों में **नई दरारें**; **झुकते पेड़, खंभे या बाड़**; नालों या झरनों में **मटमैला पानी**; **गिरते पत्थर**; या गड़गड़ाहट की आवाज़। अगर ये दिखें: तुरंत ढलान से दूर जाएँ, आसपास के लोगों को बताएँ, फिर सुरक्षित जगह से रिपोर्ट करें। कोई खतरे में हो तो **112 पर कॉल करें**।",
+      "ne": "पहिरोका चेतावनी संकेत: जमिन, सडक वा भित्तामा **नयाँ चिरा**; **ढल्किँदै गरेका रूख, खम्बा वा बार**; खोला वा मूलमा **धमिलो पानी**; **खस्दै गरेका ढुङ्गा**; वा गड्गडाहटको आवाज। यस्तो देखे: तुरुन्तै भिरबाट टाढा जानुहोस्, नजिकका मानिसलाई सचेत गराउनुहोस्, अनि सुरक्षित ठाउँबाट रिपोर्ट गर्नुहोस्। कोही खतरामा भए **११२ मा फोन गर्नुहोस्**।"
+    },
+    {
+      "id": "prepare",
+      "match": "prepare|ready|\\bkit\\b|\\bbag\\b|what should i do|what to do|तैयारी|बैग|क्या करूँ|क्या करें|क्या करना|तयारी|झोला|के गर्ने",
+      "en": "Keep an emergency bag ready: water, torch, medicines, documents and a phone charger. Watch for new cracks, tilting trees or muddy water, and stay away from steep slopes and streams when it rains hard. Know your nearest safe place, and follow instructions from local officials.",
+      "hi": "एक आपात बैग तैयार रखें: पानी, टॉर्च, दवाइयाँ, कागज़ात और फ़ोन चार्जर। नई दरारें, झुके पेड़ या मटमैला पानी दिखे तो ध्यान दें, और तेज़ बारिश में खड़ी ढलान और नालों से दूर रहें। अपनी सबसे नज़दीकी सुरक्षित जगह जानें, और स्थानीय अधिकारियों के निर्देश मानें।",
+      "ne": "आपतकालीन झोला तयार राख्नुहोस्: पानी, टर्च, औषधि, कागजात र फोन चार्जर। नयाँ चिरा, ढल्किएका रूख वा धमिलो पानी देखे ध्यान दिनुहोस्, र ठूलो वर्षामा ठाडो भिर र खोलाबाट टाढा रहनुहोस्। आफ्नो नजिकको सुरक्षित ठाउँ थाहा पाउनुहोस्, र स्थानीय अधिकारीहरूको निर्देशन पालना गर्नुहोस्।"
+    },
+    {
+      "id": "explain_status",
+      "match": null,
+      "en": "This card shows the landslide risk for the chosen place and what to do. There are four levels: **Low** (normal), **Moderate** (take care), **High** (avoid travel near slopes) and **Critical** (move to safety). The colour, the symbol and the word always go together.",
+      "hi": "यह कार्ड चुनी गई जगह का भूस्खलन का खतरा और क्या करना है, बताता है। चार स्तर हैं: **कम** (सामान्य), **मध्यम** (सावधान रहें), **उच्च** (ढलान के पास यात्रा न करें) और **गंभीर** (सुरक्षित जगह पर जाएँ)। रंग, निशान और शब्द हमेशा साथ दिखते हैं।",
+      "ne": "यो कार्डले छानिएको ठाउँको पहिरो जोखिम र के गर्ने भनेर देखाउँछ। चार स्तर छन्: **कम** (सामान्य), **मध्यम** (सावधान रहनुहोस्), **उच्च** (भिर नजिक यात्रा नगर्नुहोस्) र **गम्भीर** (सुरक्षित ठाउँमा जानुहोस्)। रङ, चिन्ह र शब्द सधैँ सँगै देखिन्छन्।"
+    },
+    {
+      "id": "explain_rain",
+      "match": null,
+      "en": "This chart shows how much rain is expected over the next 48 hours, hour by hour. Taller bars mean heavier rain. Heavy rain soaks the hillside, which makes landslides more likely.",
+      "hi": "यह चार्ट अगले 48 घंटों में हर घंटे कितनी बारिश की उम्मीद है, दिखाता है। ऊँची पट्टी यानी ज़्यादा बारिश। तेज़ बारिश से पहाड़ी की मिट्टी भीग जाती है, जिससे भूस्खलन की संभावना बढ़ती है।",
+      "ne": "यो चार्टले अर्को ४८ घण्टामा हरेक घण्टा कति वर्षा हुने अनुमान छ देखाउँछ। अग्लो पट्टी भनेको धेरै वर्षा। ठूलो वर्षाले पहाडको माटो भिजाउँछ, जसले पहिरोको सम्भावना बढाउँछ।"
+    },
+    {
+      "id": "explain_roads",
+      "match": null,
+      "en": "This list shows the main roads near the chosen place and their status as entered by officials: **Open**, **Caution** (go slowly, only if you need to) or **Avoid** (closed or unsafe).",
+      "hi": "यह सूची चुनी गई जगह के पास की मुख्य सड़कें और अधिकारियों द्वारा दर्ज उनकी स्थिति दिखाती है: **खुली**, **सावधानी** (धीरे चलें, ज़रूरी हो तभी) या **न जाएँ** (बंद या असुरक्षित)।",
+      "ne": "यो सूचीले छानिएको ठाउँ नजिकका मुख्य सडक र अधिकारीहरूले राखेको अवस्था देखाउँछ: **खुला**, **सावधानी** (बिस्तारै, आवश्यक भए मात्र) वा **नजानुहोस्** (बन्द वा असुरक्षित)।"
+    },
+    {
+      "id": "explain_contacts",
+      "match": null,
+      "en": "This card has the numbers to call in an emergency. **112** is free and works 24 hours for police, fire and ambulance. Below it is the nearest safe place to go if you are told to leave, and local disaster contacts once officials add them.",
+      "hi": "इस कार्ड में आपात स्थिति में कॉल करने के नंबर हैं। **112** मुफ़्त है और पुलिस, फ़ायर और एम्बुलेंस के लिए 24 घंटे काम करता है। उसके नीचे सबसे नज़दीकी सुरक्षित जगह है, जहाँ घर छोड़ने को कहा जाए तो जाएँ, और अधिकारी जोड़ें तो स्थानीय आपदा संपर्क।",
+      "ne": "यो कार्डमा आपतकालमा फोन गर्ने नम्बरहरू छन्। **११२** निःशुल्क छ र प्रहरी, दमकल र एम्बुलेन्सका लागि २४ घण्टा चल्छ। त्यसको तल, घर छोड्न भनिएमा जाने नजिकको सुरक्षित ठाउँ, र अधिकारीहरूले थपेपछि स्थानीय विपद् सम्पर्कहरू छन्।"
+    }
+  ]
+}

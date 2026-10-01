@@ -438,7 +438,11 @@
     "help_q_status": "What does the risk card mean?",
     "help_q_rain": "What does the rain chart mean?",
     "help_q_roads": "What does the roads list mean?",
-    "help_q_contacts": "What does the emergency card mean?"
+    "help_q_contacts": "What does the emergency card mean?",
+    "saathi_offline_risk": "I can't check the live risk right now. The last level this phone received for {{place}} was **{{level}}**, at {{time}}. It may have changed since. Follow instructions from local officials, and call **112** if you are in danger.",
+    "saathi_offline_none": "I can't check the live risk right now, and there is no saved update on this phone. Follow instructions from local officials, and call **112** if you are in danger. Phone calls work even without internet.",
+    "saathi_offline_faq_tag": "Offline answer · general safety advice",
+    "saathi_offline_saved_tag": "Saved on this phone · may be out of date"
   },
   "authority": {
     "board_title": "Live risk board",
