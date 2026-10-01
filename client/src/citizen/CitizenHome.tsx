@@ -20,6 +20,7 @@ import { BottomSheet } from '../components/BottomSheet';
 import { SafePlace } from '../components/SafePlace';
 import { WarningSigns } from '../components/WarningSigns';
 import { HelpButton } from '../components/HelpButton';
+import { CitizenTour } from './CitizenTour';
 import { LEVEL_ICON, TREND_ICON, levelVar, riskConfig } from '../lib/risk';
 import { canSpeak, speak, stopSpeaking } from '../lib/audio';
 import { useNow } from '../lib/useNow';
@@ -153,7 +154,7 @@ export default function CitizenHome() {
         )
       ) : (
         <div className="grid gap-5 lg:grid-cols-2">
-          <section className="card overflow-hidden lg:col-span-2" aria-labelledby="status-title">
+          <section className="card overflow-hidden lg:col-span-2" aria-labelledby="status-title" data-tour="status">
             <div className="p-6 sm:p-7 flex flex-col sm:flex-row gap-5" style={{ borderTop: `8px solid ${levelVar(r.level)}` }}>
               {Icon && (
                 <span className="h-20 w-20 shrink-0 rounded-2xl inline-flex items-center justify-center" style={{ background: levelVar(r.level), color: '#fff' }}>
@@ -186,7 +187,7 @@ export default function CitizenHome() {
                     </button>
                   )}
                   {/* The reasons, how sure we are and what we watch: one tap away, in the same Why card as the map. */}
-                  <button type="button" className="btn-secondary" aria-expanded={showWhy} onClick={() => setShowWhy((v) => !v)}>
+                  <button type="button" className="btn-secondary" aria-expanded={showWhy} onClick={() => setShowWhy((v) => !v)} data-tour="why">
                     <HelpCircle size={18} aria-hidden />{t('citizen.why_btn')}
                   </button>
                   <button type="button" className="btn-ghost" aria-expanded={showDetails} onClick={() => setShowDetails((v) => !v)}>
@@ -294,6 +295,7 @@ export default function CitizenHome() {
           <WarningSigns />
         </div>
       )}
+      <CitizenTour ready={!!loc && !!r} />
     </div>
   );
 }

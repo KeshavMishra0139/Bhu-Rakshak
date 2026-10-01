@@ -68,7 +68,7 @@ export function CitizenLayout({ children }: { children: ReactNode }) {
       <main id="main" className="mx-auto max-w-[1100px] px-4 py-5"><PageTransition className="">{children}</PageTransition></main>
 
       {/* Sticky SOS: always one tap from emergency services. */}
-      <a href="tel:112" className="fixed z-30 right-4 bottom-24 md:bottom-6 btn bg-risk-critical text-white shadow-lg rounded-pill px-5" aria-label={t('citizen.call_112')}>
+      <a href="tel:112" className="fixed z-30 right-4 bottom-24 md:bottom-6 btn bg-risk-critical text-white shadow-lg rounded-pill px-5" aria-label={t('citizen.call_112')} data-tour="sos">
         <Phone size={20} aria-hidden /> {t('citizen.sos')}
       </a>
 

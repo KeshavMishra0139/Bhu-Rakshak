@@ -341,7 +341,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
       )}
 
       {!isOpen && (
-        <button ref={fab} type="button" onClick={() => open()} aria-haspopup="dialog" aria-label={t('citizen.saathi_open_label')}
+        <button ref={fab} type="button" onClick={() => open()} aria-haspopup="dialog" aria-label={t('citizen.saathi_open_label')} data-tour="saathi"
           className="saathi-fab fixed z-40 left-4 bottom-24 md:bottom-6 inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#d37e4c] px-5 text-[15px] font-bold text-white shadow-[0_12px_28px_rgba(211,126,76,0.38)] transition hover:-translate-y-0.5 hover:bg-[#bf6d3d]">
           <MessageCircle size={20} aria-hidden />{t('citizen.saathi_open')}
         </button>

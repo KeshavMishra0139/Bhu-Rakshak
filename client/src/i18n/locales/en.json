@@ -442,7 +442,18 @@
     "saathi_offline_risk": "I can't check the live risk right now. The last level this phone received for {{place}} was **{{level}}**, at {{time}}. It may have changed since. Follow instructions from local officials, and call **112** if you are in danger.",
     "saathi_offline_none": "I can't check the live risk right now, and there is no saved update on this phone. Follow instructions from local officials, and call **112** if you are in danger. Phone calls work even without internet.",
     "saathi_offline_faq_tag": "Offline answer · general safety advice",
-    "saathi_offline_saved_tag": "Saved on this phone · may be out of date"
+    "saathi_offline_saved_tag": "Saved on this phone · may be out of date",
+    "tour_prompt": "New here? Take a quick 4-step tour of this page.",
+    "tour_start": "Show me",
+    "tour_no": "No thanks",
+    "tour_step": "Step {{n}} of {{total}}",
+    "tour_status": "This is your status: how risky it is right now, and what to do. The colour, symbol and word always go together.",
+    "tour_why": "Tap “Why?” to see the reasons and how sure we are.",
+    "tour_sos": "In danger? Tap “SOS 112” to call for help. It is on every page.",
+    "tour_saathi": "Ask Saathi anything, by typing or speaking. It also shows you what to do in an emergency.",
+    "tour_next": "Next",
+    "tour_done": "Done",
+    "tour_skip": "Skip tour"
   },
   "authority": {
     "board_title": "Live risk board",
