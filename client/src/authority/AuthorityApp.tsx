@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { NavLink, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import { PageTransition } from '../components/PageTransition';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,7 @@ import IncidentsPage from './IncidentsPage';
 import AlertsPage from './AlertsPage';
 import ReportsPage from './ReportsPage';
 import RoadsPage from './RoadsPage';
+const CorridorCheckPage = lazy(() => import('../citizen/CorridorCheckPage'));
 import ResourcesPage from './ResourcesPage';
 import AuditPage from './AuditPage';
 import SitrepPage from './SitrepPage';
@@ -157,6 +158,7 @@ export default function AuthorityApp() {
               <Route path="alerts" element={<AlertsPage />} />
               <Route path="reports" element={<ReportsPage />} />
               <Route path="roads" element={<RoadsPage />} />
+              <Route path="roads/check" element={<div className="mx-auto max-w-6xl p-4"><Suspense fallback={<div className="h-[60vh] rounded-card bg-surface-2 animate-pulse" />}><CorridorCheckPage backTo="/authority/roads" /></Suspense></div>} />
               <Route path="resources" element={<ResourcesPage />} />
               <Route path="audit" element={<AuditPage />} />
               <Route path="settings" element={<SettingsPage />} />

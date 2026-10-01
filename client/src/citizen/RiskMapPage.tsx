@@ -17,21 +17,9 @@ import { RiskBadge } from '../components/RiskBadge';
 import { LEVELS, LEVEL_RANK } from '../lib/risk';
 import { placeName } from '../lib/format';
 import { isPreview, type Basemap } from '../lib/mapConfig';
+import { useWide } from '../lib/useWide';
 
 const LAYERS: Record<LayerKey, boolean> = { corridors: false, roads: true, reports: false, resources: false, seismic: false };
-
-/** Matches the width at which the side panel replaces the bottom sheet (Tailwind `lg`). */
-function useWide() {
-  const q = '(min-width: 1024px)';
-  const [wide, setWide] = useState(() => typeof window !== 'undefined' && window.matchMedia(q).matches);
-  useEffect(() => {
-    const m = window.matchMedia(q);
-    const on = () => setWide(m.matches);
-    m.addEventListener('change', on);
-    return () => m.removeEventListener('change', on);
-  }, []);
-  return wide;
-}
 
 export default function RiskMapPage() {
   const { t, i18n } = useTranslation();

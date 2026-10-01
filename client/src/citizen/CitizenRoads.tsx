@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown, Clock, Route, Bus, Truck, Navigation, Shuffle } from 'lucide-react';
 import { api, errorKey } from '../api/client';
@@ -7,6 +8,7 @@ import { useRiskStream, useStreamEvent } from '../live/RiskStreamProvider';
 import { dateTimeIST, placeName, isDeva } from '../lib/format';
 import { RoadBadge, citizenRoadState } from './RoadBadge';
 import { diversionPlaces, googleDirectionsUrl } from '../lib/directions';
+import { withPane } from '../lib/viewAs';
 
 const MiniMap = lazy(() => import('../components/MiniMap'));
 
@@ -113,6 +115,7 @@ export default function CitizenRoads() {
       <div>
         <h1 className="text-[1.8rem] font-bold">{t('citizen.roads_title')}</h1>
         <p className="text-muted">{t('citizen.roads_intro')}</p>
+        <Link to={withPane('/citizen/roads/check')} className="btn-primary mt-3 w-full sm:w-auto"><Route size={18} aria-hidden />{t('corridor.cta')}</Link>
       </div>
       {err && <p className="field-error" role="alert">{t(err)}</p>}
       {!roads && !err && <div className="space-y-2">{[0, 1, 2].map((k) => <div key={k} className="h-16 card animate-pulse" />)}</div>}

@@ -12,6 +12,7 @@ import CitizenReport from './CitizenReport';
 import { SettingsForm } from '../components/SettingsForm';
 
 const RiskMapPage = lazy(() => import('./RiskMapPage'));
+const CorridorCheckPage = lazy(() => import('./CorridorCheckPage'));
 
 function Profile() {
   const { t } = useTranslation();
@@ -32,6 +33,7 @@ export default function CitizenApp() {
           <Route index element={<CitizenHome />} />
           <Route path="map" element={<Suspense fallback={<div className="h-[60vh] rounded-card bg-surface-2 animate-pulse" />}><RiskMapPage /></Suspense>} />
           <Route path="roads" element={<CitizenRoads />} />
+          <Route path="roads/check" element={<Suspense fallback={<div className="h-[60vh] rounded-card bg-surface-2 animate-pulse" />}><CorridorCheckPage /></Suspense>} />
           <Route path="alerts" element={<CitizenAlerts />} />
           <Route path="report" element={<CitizenReport />} />
           <Route path="profile" element={<Profile />} />

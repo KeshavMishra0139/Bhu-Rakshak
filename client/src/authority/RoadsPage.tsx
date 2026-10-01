@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Route as RouteIcon } from 'lucide-react';
+import { withPane } from '../lib/viewAs';
 import { useTranslation } from 'react-i18next';
 import { api, errorKey } from '../api/client';
 import type { Road } from '../api/types';
@@ -74,7 +77,10 @@ export default function RoadsPage() {
   const { data, reload } = useLive<{ roads: Road[] }>('/roads', ['road_updated']);
   return (
     <div className="mx-auto max-w-5xl p-4 space-y-4">
-      <h1 className="text-2xl font-bold">{t('roads.title')}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h1 className="text-2xl font-bold">{t('roads.title')}</h1>
+        <Link to={withPane('/authority/roads/check')} className="btn-secondary !min-h-[40px] text-sm"><RouteIcon size={16} aria-hidden />{t('corridor.cta')}</Link>
+      </div>
       {!can('roads.close') && !can('roads.status') && <p className="text-muted">{t('roads.read_only')}</p>}
       <ul className="grid gap-3 lg:grid-cols-2">{data?.roads.map((r) => <RoadRow key={`${r.id}-${r.updated_at}`} road={r} onSaved={reload} />)}</ul>
     </div>
