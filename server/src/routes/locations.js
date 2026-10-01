@@ -8,7 +8,8 @@ import { ah, HttpError, safeJson } from '../lib/util.js';
 const r = Router();
 /** Citizens see the top three reasons (the "Why" card); officers see all drivers. */
 const CITIZEN_DRIVERS = 3;
-const CITIZEN_CONDITION_KEYS = ['rain_intensity', 'rain_24h', 'rain_fc_24h', 'rain_fc_48h', 'data_fetched_at', 'imd'];
+// data_source + data_fetched_at let the citizen home say when rain data is old or not live.
+const CITIZEN_CONDITION_KEYS = ['rain_intensity', 'rain_24h', 'rain_fc_24h', 'rain_fc_48h', 'data_source', 'data_fetched_at', 'imd'];
 
 /** Trim technical detail for people without risk.details (citizens, guests). */
 export function riskForActor(risk, actor) {

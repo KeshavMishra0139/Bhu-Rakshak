@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Crosshair, Volume2, Square, ChevronDown, Phone, Sparkles, MessageCircle } from 'lucide-react';
+import { Crosshair, Volume2, Square, ChevronDown, Phone, Sparkles, MessageCircle, Clock } from 'lucide-react';
 import { api } from '../api/client';
 import type { ImdSummary, Me, Road, Stakeholder } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
@@ -14,8 +14,9 @@ import { ImdPanel } from '../components/ImdPanel';
 import { placeName, timeIST, isDeva } from '../lib/format';
 import { isPreview } from '../lib/mapConfig';
 import { driverPlain } from '../lib/factors';
-import { LEVEL_ICON, TREND_ICON, levelVar } from '../lib/risk';
+import { LEVEL_ICON, TREND_ICON, levelVar, riskConfig } from '../lib/risk';
 import { canSpeak, speak, stopSpeaking } from '../lib/audio';
+import { useNow } from '../lib/useNow';
 import { withPane } from '../lib/viewAs';
 import { RoadBadge } from './RoadBadge';
 import { WatchStrip } from '../components/RiskMix';
@@ -92,11 +93,18 @@ export default function CitizenHome() {
   const nearRoads = roads.filter((x) => viewingId && x.path.includes(viewingId));
   const localContacts = contacts.filter((c) => c.district === loc?.district || c.district === 'All');
   const maxRain = Math.max(1, ...(forecast?.hourly_rain.map((x) => x.rain_mm) || [1]));
+  // "Updated" is when the score was recalculated; the rain behind it can be older, or not live at all.
+  const now = useNow(60000);
+  const rainAt = typeof r?.conditions.data_fetched_at === 'string' ? r.conditions.data_fetched_at : null;
+  const rainSource = typeof r?.conditions.data_source === 'string' ? r.conditions.data_source : null;
+  const rainHours = rainAt ? Math.floor((now - new Date(rainAt).getTime()) / 3600000) : null;
+  const staleNote = rainSource && rainSource !== 'open-meteo' ? t('citizen.no_live_rain')
+    : rainHours != null && rainHours >= riskConfig.live.staleDataHours ? t('citizen.stale_rain', { hours: rainHours }) : '';
 
   function listen() {
     if (speaking) { stopSpeaking(); setSpeaking(false); return; }
     if (!loc || !r) return;
-    const text = `${placeName(loc, lang)}. ${t(`citizen.lt_${r.level}`)}. ${sentence} ${whyLine}`;
+    const text = `${placeName(loc, lang)}. ${t(`citizen.lt_${r.level}`)}. ${sentence} ${staleNote} ${whyLine}`;
     if (speak(text, lang)) { setSpeaking(true); setTimeout(() => setSpeaking(false), Math.min(20000, text.length * 90)); }
   }
 
@@ -155,6 +163,11 @@ export default function CitizenHome() {
                   {Trend && <span className="rounded-pill border border-line px-3 py-1 text-sm font-semibold inline-flex items-center gap-1"><Trend size={15} aria-hidden />{t(`trend.${r.trend}`)}</span>}
                   <UpdatedAgo at={r.updated_at} />
                 </div>
+                {staleNote && (
+                  <p className="mt-3 flex items-start gap-2 rounded-lg border border-risk-moderate/60 bg-risk-moderate/10 p-3 font-semibold" role="status">
+                    <Clock size={18} className="mt-0.5 shrink-0" aria-hidden />{staleNote}
+                  </p>
+                )}
                 <div className="mt-3"><WatchStrip compact /></div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {canSpeak() && (

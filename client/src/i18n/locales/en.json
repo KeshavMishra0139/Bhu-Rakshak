@@ -412,7 +412,9 @@
     "em_step3": "Warn people near you. If anyone is hurt or trapped, tell 112 exactly where.",
     "em_back": "Back to chat",
     "no_data_title": "We can't get the risk for this place right now",
-    "no_data_body": "Please follow instructions from local officials. If you are in danger, call 112."
+    "no_data_body": "Please follow instructions from local officials. If you are in danger, call 112.",
+    "stale_rain": "Rain data is {{hours}} hours old, so this may not be up to date. Follow instructions from local officials.",
+    "no_live_rain": "Live rain data isn't available right now, so this is based on typical weather. Follow instructions from local officials."
   },
   "authority": {
     "board_title": "Live risk board",
