@@ -9,7 +9,7 @@ for (const s of ['', '-wal', '-shm']) fs.rmSync(process.env.DB_PATH + s, { force
 
 const { seedIfEmpty } = await import('../src/db/seed.js');
 const { draftAlert } = await import('../src/routes/alerts.js');
-const { answer, intentOf } = await import('../src/routes/insights.js');
+const { answer, intentOf, INTENTS } = await import('../src/routes/insights.js');
 const { ensureFallback } = await import('../src/ingest/openMeteo.js');
 const { q } = await import('../src/db/index.js');
 const { can } = await import('../src/auth/permissions.js');
@@ -122,6 +122,21 @@ test('assistant explains each home card in plain words', () => {
   assert.match(answer({ intent: 'explain_contacts', locationId: 'gangtok', lang: 'en' }).text, /\*\*112\*\* is free/);
   q.run("DELETE FROM risk_state WHERE location_id = 'mangan'");
   assert.doesNotMatch(answer({ intent: 'explain_status', locationId: 'mangan', lang: 'en' }).text, /Right now it is/);
+});
+
+test('assistant answers in Nepali, with the same safety rules', () => {
+  setRisk('gangtok', 'high', new Date().toISOString());
+  setWeather('gangtok', 'open-meteo', new Date().toISOString());
+  const s = answer({ intent: 'status', locationId: 'gangtok', lang: 'ne' });
+  assert.match(s.text, /गंगटोक मा पहिरोको जोखिम उच्च छ/);
+  assert.match(s.text, /यात्रा नगर्नुहोस्/);
+  assert.match(answer({ intent: 'travel', locationId: 'gangtok', lang: 'ne' }).text, /सडकहरू: NH-10/);
+  assert.match(answer({ intent: 'emergency', locationId: 'gangtok', lang: 'ne' }).text, /११२ मा फोन गर्नुहोस्/);
+  assert.match(answer({ intent: 'status', locationId: 'mangan', lang: 'ne' }).text, /ताजा जानकारी छैन/);
+  assert.equal(intentOf('के म सुरक्षित छु?'), 'status');
+  assert.equal(intentOf('मेरो सडक खुला छ?'), 'roads');
+  // Every intent gives a Nepali answer (no English left over).
+  for (const intent of INTENTS) assert.doesNotMatch(answer({ intent, locationId: 'gangtok', lang: 'ne' }).text, /\b(the|is|and|you)\b/i, intent);
   for (const s of ['the hill is falling', 'Help', 'rocks are falling on the road', "there's a landslide on NH10", 'पहाड़ गिर रहा है', 'भूस्खलन हो रहा है', 'पहिरो गयो', 'bachao']) assert.equal(intentOf(s), 'emergency', s);
   for (const s of ['What is the landslide risk?', 'is there a landslide risk today', 'Am I in danger?', 'क्या मैं खतरे में हूँ?', 'पहिरोको जोखिम कति छ?']) assert.notEqual(intentOf(s), 'emergency', s);
   const em = answer({ intent: 'emergency', locationId: 'gangtok', lang: 'en' });

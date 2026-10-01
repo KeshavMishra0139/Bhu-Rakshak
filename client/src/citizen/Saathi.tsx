@@ -19,7 +19,7 @@ import { SafePlace } from '../components/SafePlace';
 import { withPane } from '../lib/viewAs';
 import { DRAFT_LANGS } from '../i18n';
 
-type Lang = 'en' | 'hi';
+type Lang = 'en' | 'hi' | 'ne';
 /** What the server says an answer relied on, and how fresh it was (see insights.js basisFor). */
 type Basis = { risk_ok: boolean; weather_ok: boolean; risk_updated_at: string | null; weather_fetched_at: string | null; drill: boolean; forced: boolean; preview: boolean; confidence: number | null };
 /** Something an answer offers to open: the road checker with a route, or the report form (after a danger check). */
@@ -62,8 +62,8 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
   const { viewingId, homeId } = useCitizen();
   const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);
-  // Saathi answers in English or Hindi; with the interface in Nepali it starts in Hindi (same script).
-  const [lang, setLang] = useState<Lang>(i18n.language === 'hi' || i18n.language === 'ne' ? 'hi' : 'en');
+  // Saathi answers in English, Hindi or Nepali, starting in the interface language when it is one of them.
+  const [lang, setLang] = useState<Lang>(i18n.language === 'hi' || i18n.language === 'ne' ? i18n.language : 'en');
   const [placeId, setPlaceId] = useState<string | null>(null);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [busy, setBusy] = useState(false);
@@ -205,7 +205,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
     const Ctor = SpeechRecognitionCtor();
     if (!Ctor) { setNotice(T('citizen.saathi_no_voice')); return; }
     const r = new Ctor();
-    r.lang = lang === 'hi' ? 'hi-IN' : 'en-IN';
+    r.lang = lang === 'hi' ? 'hi-IN' : lang === 'ne' ? 'ne-NP' : 'en-IN';
     r.continuous = false;
     r.interimResults = false;
     r.onresult = (ev) => { const said = ev.results[0]?.[0]?.transcript?.trim(); if (said) send({ question: said, label: said }); };
@@ -246,6 +246,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
                 <select value={lang} onChange={(e) => setLang(e.target.value as Lang)} className="bg-transparent text-white outline-none">
                   <option value="en" className="text-[#17392b]">English</option>
                   <option value="hi" className="text-[#17392b]">हिन्दी</option>
+                  <option value="ne" className="text-[#17392b]">नेपाली</option>
                 </select>
               </label>
               <button type="button" onClick={toggleVoice} aria-pressed={listening}
@@ -259,6 +260,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
                 {readAloud ? T('citizen.saathi_voice_on') : T('citizen.saathi_read')}
               </button>
             </div>
+            {chrome !== lang && <p className="mt-2 text-[12px] text-[#cfe3d1]">{T('citizen.saathi_answers_note')}</p>}
           </header>
 
           <div className="flex items-center gap-2 border-b border-[#e3ebe3] bg-[#f3f7f1] px-4 py-2 text-[13px]">

@@ -389,7 +389,7 @@
     "saathi_no_voice": "Voice input isn’t supported in this browser. Try Chrome or Edge, or type your question.",
     "saathi_not_heard": "I couldn’t hear that. Please try again in a quieter place, or type your question.",
     "saathi_card_title": "Ask Saathi",
-    "saathi_card_body": "Your safety assistant. Ask about travel, rain, warning signs or reporting, by typing or speaking, in English or Hindi.",
+    "saathi_card_body": "Your safety assistant. Ask about travel, rain, warning signs or reporting, by typing or speaking, in English, Hindi or Nepali.",
     "q_signs": "What should I do if I see cracks?",
     "q_report": "How do I report something?",
     "q_rain": "How much rain is coming?",
@@ -454,7 +454,8 @@
     "tour_next": "Next",
     "tour_done": "Done",
     "tour_skip": "Skip tour",
-    "no_voice_lang": "Read aloud isn't available in this language on this phone."
+    "no_voice_lang": "Read aloud isn't available in this language on this phone.",
+    "saathi_answers_note": "Answers come in English, Hindi or Nepali for now."
   },
   "authority": {
     "board_title": "Live risk board",

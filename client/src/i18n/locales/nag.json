@@ -204,7 +204,7 @@
     "saathi_no_voice": "Etu browser te awaj pora kotha koribo napare. Chrome aru Edge use koribi, nohoile kotha likhibi.",
     "saathi_not_heard": "Moi hunibo napare. Shanti jaga te aru try koribi, nohoile kotha likhibi.",
     "saathi_card_title": "Saathi ke sudibi",
-    "saathi_card_body": "Apuni laga bachi thaka sahayak. Jabole, barish, hushiar ishara aru report laga kotha likhi kene aru koi kene sudibi. Jowab English aru Hindi te dibo.",
+    "saathi_card_body": "Apuni laga bachi thaka sahayak. Jabole, barish, hushiar ishara aru report laga kotha likhi kene aru koi kene sudibi. Jowab English, Hindi aru Nepali te dibo.",
     "q_travel": "Aji jabole bachi thaka ase naki?",
     "q_why": "Khotra kele etu nisina ase?",
     "q_prepare": "Moi etiya ki koribo lage?",
@@ -271,7 +271,8 @@
     "tour_next": "Agote",
     "tour_done": "Hoi gise",
     "tour_skip": "Tour chari dibi",
-    "no_voice_lang": "Etu phone te etu bhasa te pori kene hunabo napare."
+    "no_voice_lang": "Etu phone te etu bhasa te pori kene hunabo napare.",
+    "saathi_answers_note": "Etiya jowab English, Hindi aru Nepali te he ase."
   },
   "nav": {
     "report": "Report",

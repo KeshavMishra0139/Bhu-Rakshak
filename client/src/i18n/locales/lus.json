@@ -204,7 +204,7 @@
     "saathi_no_voice": "He browser-ah aw hmanga zawhna a theih loh. Chrome emaw Edge hmang la, emaw i zawhna ziak rawh.",
     "saathi_not_heard": "Ka hre thei lo. Hmun reh zawkah ti nawn leh la, emaw i zawhna ziak rawh.",
     "saathi_card_title": "Saathi zawt rawh",
-    "saathi_card_body": "I himna puitu. Kal kual, ruah, vaukhanna chhinchhiahna emaw report chungchang ziakin emaw sawiin zawt rawh. English emaw Hindi-in a chhang ṭhin.",
+    "saathi_card_body": "I himna puitu. Kal kual, ruah, vaukhanna chhinchhiahna emaw report chungchang ziakin emaw sawiin zawt rawh. English, Hindi emaw Nepali-in a chhang ṭhin.",
     "q_travel": "Vawiin kal kual a him em?",
     "q_why": "Engvangin nge hlauhawmna hi hetiang a nih?",
     "q_prepare": "Tunah eng nge ka tih ang?",
@@ -271,7 +271,8 @@
     "tour_next": "A dawt",
     "tour_done": "A zo",
     "tour_skip": "Kalsan rawh",
-    "no_voice_lang": "He phone-ah he ṭawngin ri takin chhiar a theih loh."
+    "no_voice_lang": "He phone-ah he ṭawngin ri takin chhiar a theih loh.",
+    "saathi_answers_note": "Tunah chuan chhanna hi English, Hindi emaw Nepali-in a ni."
   },
   "nav": {
     "report": "Report",
