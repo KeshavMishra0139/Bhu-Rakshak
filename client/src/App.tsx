@@ -18,6 +18,7 @@ const CitizenApp = lazy(() => import('./citizen/CitizenApp'));
 const AuthorityApp = lazy(() => import('./authority/AuthorityApp'));
 const AdminApp = lazy(() => import('./admin/AdminApp'));
 const About = lazy(() => import('./pages/About'));
+const HindcastPage = lazy(() => import('./pages/HindcastPage'));
 const DevBar = lazy(() => import('./dev/DevBar').then((m) => ({ default: m.DevBar })));
 const SplitView = lazy(() => import('./dev/SplitView'));
 
@@ -58,6 +59,7 @@ export default function App() {
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/pending" element={<Pending />} />
                     <Route path="/about" element={<About />} />
+                    <Route path="/hindcast" element={<HindcastPage />} />
                     <Route path="/citizen/*" element={<RequireRole roles={['citizen']}><CitizenApp /></RequireRole>} />
                     <Route path="/authority/*" element={<RequireRole roles={['authority']}><AuthorityApp /></RequireRole>} />
                     <Route path="/admin/*" element={<RequireRole roles={['admin']}><AdminApp /></RequireRole>} />

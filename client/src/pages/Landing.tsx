@@ -81,7 +81,10 @@ export default function Landing() {
       <footer className="border-t border-line">
         <div className="mx-auto max-w-7xl px-5 py-6 flex flex-wrap items-center justify-between gap-3 text-sm text-muted">
           <span>{t('app.team')}</span>
-          <Link to="/about" className="font-semibold text-brand hover:underline">{t('about.title')}</Link>
+          <span className="flex flex-wrap gap-4">
+            <Link to="/hindcast" className="font-semibold text-brand hover:underline">{t('hindcast.link')}</Link>
+            <Link to="/about" className="font-semibold text-brand hover:underline">{t('about.title')}</Link>
+          </span>
         </div>
       </footer>
     </>

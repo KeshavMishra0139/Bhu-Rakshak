@@ -29,6 +29,11 @@ export default function About() {
           <h2 id="status" className="text-xl font-bold">{t('about.status')}</h2>
           <p className="mt-2">{t('about.status_d')}</p>
         </section>
+        <section aria-labelledby="hindcast" className="card p-5">
+          <h2 id="hindcast" className="text-xl font-bold">{t('hindcast.about_title')}</h2>
+          <p className="mt-2">{t('hindcast.about_body')}</p>
+          <Link to="/hindcast" className="btn-secondary mt-3">{t('hindcast.link')}</Link>
+        </section>
         <section aria-labelledby="credits">
           <h2 id="credits" className="text-xl font-bold">{t('about.credits')}</h2>
           <ul className="mt-3 space-y-2 list-disc pl-5">

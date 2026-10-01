@@ -203,5 +203,9 @@ html[lang='hi'] body, html[lang='ne'] body { @apply font-deva; line-height: 1.65
 .cr-pin i { position: absolute; right: -5px; top: -5px; width: 14px; height: 14px; border-radius: 9999px; border: 1.5px solid #fff; font: 700 9px/11px Roboto, Arial, sans-serif; font-style: normal; text-align: center; color: #fff; }
 .cr-pin.is-verified i { background: #2F8F4E; }
 .cr-pin.is-unverified i { background: #D9731A; }
+/* Hindcast map: the landslide site (X) and the monitoring point coloured by its replayed level. */
+.hc-site { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9999px; background: #d7263d; border: 3px solid #fff; box-shadow: 0 1px 4px rgb(0 0 0 / 0.45); }
+.hc-site svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 3.2; stroke-linecap: round; }
+.hc-station { display: block; width: 22px; height: 22px; border-radius: 9999px; border: 3px solid #fff; box-shadow: 0 1px 4px rgb(0 0 0 / 0.45); transition: background-color 0.25s; }
 .seismo-station { display: block; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid #6a3fb5; filter: drop-shadow(0 0 1.5px #fff) drop-shadow(0 1px 2px rgb(0 0 0 / 0.5)); }
 @media print { .no-print { display: none !important; } body { background: #fff; } }
