@@ -19,6 +19,7 @@ import { WhyCard } from '../components/WhyCard';
 import { BottomSheet } from '../components/BottomSheet';
 import { SafePlace } from '../components/SafePlace';
 import { WarningSigns } from '../components/WarningSigns';
+import { HelpButton } from '../components/HelpButton';
 import { LEVEL_ICON, TREND_ICON, levelVar, riskConfig } from '../lib/risk';
 import { canSpeak, speak, stopSpeaking } from '../lib/audio';
 import { useNow } from '../lib/useNow';
@@ -164,10 +165,13 @@ export default function CitizenHome() {
                   {placeName(loc, lang)}, {t(`districts.${loc.district}`)}
                   {viewingId === homeId && <span className="ml-2 rounded-pill bg-surface-2 px-2 py-0.5 text-xs">{t('citizen.your_area')}</span>}
                 </p>
-                <h1 id="status-title" className="text-[2rem] sm:text-[2.3rem] font-bold leading-tight">{t(`citizen.lt_${r.level}`)}</h1>
+                <div className="flex items-start gap-1">
+                  <h1 id="status-title" className="text-[2rem] sm:text-[2.3rem] font-bold leading-tight">{t(`citizen.lt_${r.level}`)}</h1>
+                  <span className="mt-2 sm:mt-3"><HelpButton topic="status" /></span>
+                </div>
                 <p className="text-[1.2rem] mt-1 font-semibold">{sentence}</p>
                 <div className="mt-4 flex flex-wrap items-center gap-2">
-                  {Trend &&<span className="rounded-pill border border-line px-3 py-1 text-sm font-semibold inline-flex items-center gap-1"><Trend size={15} aria-hidden />{t(`trend.${r.trend}`)}</span>}
+                  {Trend && <span className="rounded-pill border border-line px-3 py-1 text-sm font-semibold inline-flex items-center gap-1"><Trend size={15} aria-hidden />{t(`trend.${r.trend}`)}</span>}
                   <UpdatedAgo at={r.updated_at} />
                 </div>
                 {staleNote && (
@@ -220,7 +224,10 @@ export default function CitizenHome() {
           )}
 
           <section className="card p-5" aria-labelledby="rain-title">
-            <h2 id="rain-title" className="text-lg font-bold">{t('citizen.rain_48h')}</h2>
+            <div className="flex items-center gap-1">
+              <h2 id="rain-title" className="text-lg font-bold">{t('citizen.rain_48h')}</h2>
+              <HelpButton topic="rain" />
+            </div>
             {forecast ? (
               <>
                 <div className="mt-4 flex items-end gap-[2px] h-32" role="img"
@@ -246,7 +253,10 @@ export default function CitizenHome() {
 
           <section className="card p-5" aria-labelledby="roads-title">
             <div className="flex items-center justify-between gap-2">
-              <h2 id="roads-title" className="text-lg font-bold">{t('citizen.roads_here')}</h2>
+              <div className="flex items-center gap-1">
+                <h2 id="roads-title" className="text-lg font-bold">{t('citizen.roads_here')}</h2>
+                <HelpButton topic="roads" />
+              </div>
               <Link to={withPane('/citizen/roads')} className="text-brand font-semibold text-sm hover:underline">{t('citizen.all_roads')}</Link>
             </div>
             <ul className="mt-3 divide-y divide-line">
@@ -261,7 +271,10 @@ export default function CitizenHome() {
           </section>
 
           <section className="card p-5" aria-labelledby="contacts-title">
-            <h2 id="contacts-title" className="text-lg font-bold">{t('citizen.contacts')}</h2>
+            <div className="flex items-center gap-1">
+              <h2 id="contacts-title" className="text-lg font-bold">{t('citizen.contacts')}</h2>
+              <HelpButton topic="contacts" />
+            </div>
             <a href="tel:112" className="btn-danger w-full mt-3 text-lg"><Phone size={20} aria-hidden />{t('citizen.call_112')}</a>
             <div className="mt-3"><SafePlace from={loc} /></div>
             <ul className="mt-3 divide-y divide-line">

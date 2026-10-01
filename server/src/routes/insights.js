@@ -39,7 +39,9 @@ const ROAD = { en: { open: 'open', caution: 'open with caution', restricted: 're
 // IST hour boundaries fall on :30 UTC, so the rounded start prints as a whole IST hour ("7 am").
 const fmtTime = (iso, lang) => new Intl.DateTimeFormat(lang === 'hi' ? 'hi-IN' : 'en-IN', { hour: 'numeric', timeZone: 'Asia/Kolkata' }).format(new Date(iso));
 
-export const INTENTS = ['travel', 'roads', 'why', 'rain', 'prepare', 'status', 'signs', 'report', 'emergency'];
+export const INTENTS = ['travel', 'roads', 'why', 'rain', 'prepare', 'status', 'signs', 'report', 'emergency',
+  // "What does this mean?" beside the home cards
+  'explain_status', 'explain_rain', 'explain_roads', 'explain_contacts'];
 
 // Same list the app checks offline before sending (shared/config/emergency.json).
 const EMERGENCY = new RegExp(emergencyConfig.patterns.join('|'), 'i');
@@ -238,6 +240,23 @@ export function answer({ intent, locationId, lang, question }) {
       'स्क्रीन के नीचे **रिपोर्ट** खोलें: जो देखा वह चुनें, सुरक्षित हो तो फ़ोटो जोड़ें, नक्शे पर जगह चुनें या अपनी लोकेशन दें, और भेजें। अधिकारी हर रिपोर्ट जाँचते हैं और आपकी रिपोर्ट सत्यापित होने पर आपको दिखेगा।');
     T('Only report from a safe place. If anyone is in danger, **call 112** first.', 'सिर्फ़ सुरक्षित जगह से रिपोर्ट करें। कोई खतरे में हो तो पहले **112 पर कॉल करें**।');
     action = { type: 'report', report_type: sightingOf(question), ask_danger: false };
+  } else if (intent === 'explain_status') {
+    T(`This card shows the landslide risk for ${place} right now, and what to do. There are four levels: **Low** (normal), **Moderate** (take care), **High** (avoid travel near slopes) and **Critical** (move to safety). The colour, the symbol and the word always go together.`,
+      `यह कार्ड ${place} में अभी भूस्खलन का खतरा और क्या करना है, बताता है। चार स्तर हैं: **कम** (सामान्य), **मध्यम** (सावधान रहें), **उच्च** (ढलान के पास यात्रा न करें) और **गंभीर** (सुरक्षित जगह पर जाएँ)। रंग, निशान और शब्द हमेशा साथ दिखते हैं।`);
+    if (!level) noData();
+    else { T(`Right now it is **${LV.en[level]}**. Tap **Why?** on the card to see the reasons.`, `अभी स्तर **${{ low: 'कम', moderate: 'मध्यम', high: 'उच्च', critical: 'गंभीर' }[level]}** है। कारण देखने के लिए कार्ड पर **क्यों?** दबाएँ।`); stated(); }
+  } else if (intent === 'explain_rain') {
+    T(`This chart shows how much rain is expected at ${place} over the next 48 hours, hour by hour. Taller bars mean heavier rain. Heavy rain soaks the hillside, which makes landslides more likely.`,
+      `यह चार्ट ${place} में अगले 48 घंटों में हर घंटे कितनी बारिश की उम्मीद है, दिखाता है। ऊँची पट्टी यानी ज़्यादा बारिश। तेज़ बारिश से पहाड़ी की मिट्टी भीग जाती है, जिससे भूस्खलन की संभावना बढ़ती है।`);
+    if (hourly) { T(`About ${round(rain24, 0)} mm is expected in the next 24 hours.`, `अगले 24 घंटों में लगभग ${round(rain24, 0)} मिमी बारिश की उम्मीद है।`); sources.add('forecast'); }
+    else T(`I don't have up-to-date rain data for ${place} right now.`, `अभी मेरे पास ${place} की बारिश की ताज़ा जानकारी नहीं है।`);
+  } else if (intent === 'explain_roads') {
+    T(`This list shows the main roads near ${place} and their status as entered by officials: **Open**, **Caution** (go slowly, only if you need to) or **Avoid** (closed or unsafe). To check a whole route, use the road checker on the Roads page.`,
+      `यह सूची ${place} के पास की मुख्य सड़कें और अधिकारियों द्वारा दर्ज उनकी स्थिति दिखाती है: **खुली**, **सावधानी** (धीरे चलें, ज़रूरी हो तभी) या **न जाएँ** (बंद या असुरक्षित)। पूरा रास्ता जाँचने के लिए सड़क पेज पर रोड चेकर देखें।`);
+    if (roadLine) { T(`Right now: ${roadLine}.`, `अभी: ${roadLine}।`); sources.add('roads'); }
+  } else if (intent === 'explain_contacts') {
+    T('This card has the numbers to call in an emergency. **112** is free and works 24 hours for police, fire and ambulance. Below it is the nearest safe place to go if you are told to leave, and local disaster contacts once officials add them.',
+      'इस कार्ड में आपात स्थिति में कॉल करने के नंबर हैं। **112** मुफ़्त है और पुलिस, फ़ायर और एम्बुलेंस के लिए 24 घंटे काम करता है। उसके नीचे सबसे नज़दीकी सुरक्षित जगह है, जहाँ घर छोड़ने को कहा जाए तो जाएँ, और अधिकारी जोड़ें तो स्थानीय आपदा संपर्क।');
   } else if (!level) noData();
   else {
     T(`The landslide risk at ${place} is ${LV.en[level]} right now.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`);

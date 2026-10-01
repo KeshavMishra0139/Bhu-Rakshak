@@ -433,7 +433,12 @@
     "saathi_open_report": "Open the report form",
     "saathi_danger_q": "Is anyone in danger right now?",
     "saathi_danger_yes": "Yes, someone is in danger",
-    "saathi_danger_no": "No, help me report it"
+    "saathi_danger_no": "No, help me report it",
+    "help_label": "What does this mean?",
+    "help_q_status": "What does the risk card mean?",
+    "help_q_rain": "What does the rain chart mean?",
+    "help_q_roads": "What does the roads list mean?",
+    "help_q_contacts": "What does the emergency card mean?"
   },
   "authority": {
     "board_title": "Live risk board",

@@ -108,6 +108,20 @@ test('assistant offers actions: road check for named places, report flow for wha
   const q4 = 'What should I do if I see cracks?';
   assert.equal(answer({ intent: intentOf(q4), locationId: 'gangtok', lang: 'en', question: q4 }).action, null);
   assert.equal(answer({ intent: 'report', locationId: 'gangtok', lang: 'en' }).action.type, 'report');
+});
+
+test('assistant explains each home card in plain words', () => {
+  setRisk('gangtok', 'high', new Date().toISOString());
+  setWeather('gangtok', 'open-meteo', new Date().toISOString());
+  const s = answer({ intent: 'explain_status', locationId: 'gangtok', lang: 'en' });
+  assert.match(s.text, /four levels/);
+  assert.match(s.text, /Right now it is \*\*high\*\*/);
+  assert.match(answer({ intent: 'explain_status', locationId: 'gangtok', lang: 'hi' }).text, /अभी स्तर \*\*उच्च\*\*/);
+  assert.match(answer({ intent: 'explain_rain', locationId: 'gangtok', lang: 'en' }).text, /Taller bars mean heavier rain/);
+  assert.match(answer({ intent: 'explain_roads', locationId: 'gangtok', lang: 'en' }).text, /Right now: NH-10/);
+  assert.match(answer({ intent: 'explain_contacts', locationId: 'gangtok', lang: 'en' }).text, /\*\*112\*\* is free/);
+  q.run("DELETE FROM risk_state WHERE location_id = 'mangan'");
+  assert.doesNotMatch(answer({ intent: 'explain_status', locationId: 'mangan', lang: 'en' }).text, /Right now it is/);
   for (const s of ['the hill is falling', 'Help', 'rocks are falling on the road', "there's a landslide on NH10", 'पहाड़ गिर रहा है', 'भूस्खलन हो रहा है', 'पहिरो गयो', 'bachao']) assert.equal(intentOf(s), 'emergency', s);
   for (const s of ['What is the landslide risk?', 'is there a landslide risk today', 'Am I in danger?', 'क्या मैं खतरे में हूँ?', 'पहिरोको जोखिम कति छ?']) assert.notEqual(intentOf(s), 'emergency', s);
   const em = answer({ intent: 'emergency', locationId: 'gangtok', lang: 'en' });
