@@ -228,6 +228,8 @@ export default function CitizenHome() {
             </BottomSheet>
           )}
 
+          <CitizenTour ready />
+
           <section className="card p-5" aria-labelledby="rain-title">
             <div className="flex items-center gap-1">
               <h2 id="rain-title" className="text-lg font-bold">{t('citizen.rain_48h')}</h2>
@@ -299,7 +301,6 @@ export default function CitizenHome() {
           <WarningSigns />
         </div>
       )}
-      <CitizenTour ready={!!loc && !!r} />
     </div>
   );
 }

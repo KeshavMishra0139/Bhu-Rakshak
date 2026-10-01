@@ -18,7 +18,7 @@ export function WarningSigns() {
     <section className="card p-5 lg:col-span-2" aria-labelledby="signs-title">
       <h2 id="signs-title" className="text-lg font-bold">{t('citizen.signs_title')}</h2>
       <p className="text-muted">{t('citizen.signs_body')}</p>
-      <ul className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-4">
+      <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
         {SIGNS.map(({ type, Icon }) => (
           <li key={type}>
             <Link to={withPane(`/citizen/report?type=${type}`)} className="flex h-full min-h-[64px] items-center gap-3 rounded-lg border border-line p-3 font-semibold leading-snug hover:bg-surface-2">

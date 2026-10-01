@@ -51,7 +51,11 @@ export default function CitizenReport() {
   const [params] = useSearchParams();
   const preset = params.get('type');
   useEffect(() => {
-    if (preset && (TYPES as readonly string[]).includes(preset)) { setType(preset); setStep(1); setDone(false); }
+    if (preset && (TYPES as readonly string[]).includes(preset)) {
+      setType(preset); setStep(1); setDone(false);
+      // Bring the chosen sign (and Next below it) into view; on a phone it can be below the fold.
+      window.setTimeout(() => document.querySelector('fieldset [aria-pressed="true"]')?.scrollIntoView({ block: 'center' }), 150);
+    }
   }, [preset]);
   useStreamEvent('report_updated', () => { loadMine(); });
 

@@ -455,7 +455,8 @@
     "tour_done": "Done",
     "tour_skip": "Skip tour",
     "no_voice_lang": "Read aloud isn't available in this language on this phone.",
-    "saathi_answers_note": "Answers come in English, Hindi or Nepali for now."
+    "saathi_answers_note": "Answers come in English, Hindi or Nepali for now.",
+    "safe_place_near": "Less than 1 km away"
   },
   "authority": {
     "board_title": "Live risk board",

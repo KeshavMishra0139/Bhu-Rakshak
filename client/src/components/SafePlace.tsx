@@ -51,7 +51,7 @@ export function SafePlace({ from, T, lang, tone = 'card' }: Props) {
         <>
           <p className="mt-1 font-bold leading-snug">
             {isDeva(lg) ? nearest.name_hi : nearest.name_en}
-            <span className={`ml-1.5 font-normal ${muted}`}>· {tr('citizen.safe_place_km', { km: nearest.d < 10 ? nearest.d.toFixed(1) : Math.round(nearest.d) })}</span>
+            <span className={`ml-1.5 font-normal ${muted}`}>· {nearest.d < 1 ? tr('citizen.safe_place_near') : tr('citizen.safe_place_km', { km: nearest.d < 10 ? nearest.d.toFixed(1) : Math.round(nearest.d) })}</span>
           </p>
           {data.sample ? (
             <p className="mt-1.5 inline-block rounded bg-[#fff3df] px-2 py-1 text-xs font-semibold text-[#7a4a12]">{tr('citizen.safe_place_sample')}</p>

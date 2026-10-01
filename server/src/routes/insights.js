@@ -156,7 +156,7 @@ export function answer({ intent, locationId, lang, question }) {
   const T = (en, hi, ne) => lines.push(L === 'ne' ? ne ?? hi : L === 'hi' ? hi : en);
   const noData = () => T(`I don't have up-to-date risk information for ${place} right now, so I can't say whether it is safe. Please follow instructions from local officials. If you are in danger, **call 112**.`,
     `अभी मेरे पास ${place} के खतरे की ताज़ा जानकारी नहीं है, इसलिए मैं नहीं बता सकता कि वहाँ सुरक्षित है या नहीं। कृपया स्थानीय अधिकारियों के निर्देश मानें। खतरे में हों तो **112 पर कॉल करें**।`,
-    `अहिले मसँग ${place} को जोखिमको ताजा जानकारी छैन, त्यसैले त्यहाँ सुरक्षित छ कि छैन भन्न सक्दिनँ। कृपया स्थानीय अधिकारीहरूको निर्देशन पालना गर्नुहोस्। खतरामा हुनुहुन्छ भने **११२ मा फोन गर्नुहोस्**।`);
+    `अहिले मसँग ${place}को जोखिमको ताजा जानकारी छैन, त्यसैले त्यहाँ सुरक्षित छ कि छैन भन्न सक्दिनँ। कृपया स्थानीय अधिकारीहरूको निर्देशन पालना गर्नुहोस्। खतरामा हुनुहुन्छ भने **११२ मा फोन गर्नुहोस्**।`);
   // Added after any sentence that states a level, so the person knows how much weight to give it.
   const caveats = () => {
     if (basis.drill) T('Note: a practice drill is running for this area, so these levels are simulated, not real.', 'ध्यान दें: इस इलाके में अभ्यास (ड्रिल) चल रहा है, इसलिए ये स्तर असली नहीं, अभ्यास के हैं।',
@@ -177,7 +177,7 @@ export function answer({ intent, locationId, lang, question }) {
     if (!to || from === to) return;
     const nm = (id) => nameOf(q.one('SELECT name_en, name_hi FROM locations WHERE id = :id', { id }));
     T(`To see the risk along the whole road from ${nm(from)} to ${nm(to)}, tap **Check this road**.`, `${nm(from)} से ${nm(to)} तक पूरी सड़क का खतरा देखने के लिए **यह सड़क जाँचें** दबाएँ।`,
-      `${nm(from)} देखि ${nm(to)} सम्म पूरै सडकको जोखिम हेर्न **यो सडक जाँच्नुहोस्** थिच्नुहोस्।`);
+      `${nm(from)}देखि ${nm(to)}सम्म पूरै सडकको जोखिम हेर्न **यो सडक जाँच्नुहोस्** थिच्नुहोस्।`);
     action = { type: 'route_check', from, to };
   };
 
@@ -201,27 +201,29 @@ export function answer({ intent, locationId, lang, question }) {
   } else if (intent === 'roads') {
     // Road status is what officials have entered, not the model: no level is stated here.
     if (!roads.length) T(`I don't have any monitored roads listed for ${place}. You can check a whole route in the road checker.`, `${place} के लिए कोई निगरानी वाली सड़क सूची में नहीं है। पूरा रास्ता जाँचने के लिए रोड चेकर देखें।`,
-      `${place} का लागि निगरानी गरिएको कुनै सडक सूचीमा छैन। पूरै बाटो जाँच्न रोड चेकर हेर्नुहोस्।`);
+      `${place}का लागि निगरानी गरिएको कुनै सडक सूचीमा छैन। पूरै बाटो जाँच्न रोड चेकर हेर्नुहोस्।`);
     else {
       T(`Roads near ${place}: ${roadLine}.`, `${place} के पास की सड़कें: ${roadLine}।`, `${place} नजिकका सडकहरू: ${roadLine}।`);
       sources.add('roads');
+      // Officers may end the diversion text with a full stop; don't double it.
+      const bare = (s) => String(s || '').trim().replace(/[.।]+$/, '');
       for (const x of roads.filter((y) => !['open', 'cleared'].includes(y.status) && y.diversion_en)) {
-        T(`Diversion for ${x.name_en}: ${x.diversion_en}.`, `${x.name_hi} के लिए दूसरा रास्ता: ${x.diversion_hi || x.diversion_en}।`, `${x.name_hi} का लागि अर्को बाटो: ${x.diversion_hi || x.diversion_en}।`);
+        T(`Diversion for ${x.name_en}: ${bare(x.diversion_en)}.`, `${x.name_hi} के लिए दूसरा रास्ता: ${bare(x.diversion_hi || x.diversion_en)}।`, `${x.name_hi}का लागि अर्को बाटो: ${bare(x.diversion_hi || x.diversion_en)}।`);
       }
     }
     routeOffer();
   } else if (intent === 'why') {
     if (!level) noData();
     else {
-      T(`The landslide risk at ${place} is ${LV.en[level]}.`, `${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`, `${place} मा पहिरोको जोखिम ${LV.ne[level]} छ।`);
+      T(`The landslide risk at ${place} is ${LV.en[level]}.`, `${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`, `${place}मा पहिरोको जोखिम ${LV.ne[level]} छ।`);
       if (why.length) T(`Mainly because ${why.join(' and ')}.`, `मुख्य कारण: ${why.join(' और ')}।`, `मुख्य कारण: ${why.join(' र ')}।`);
       stated();
     }
   } else if (intent === 'rain') {
     if (!hourly) T(`I don't have up-to-date rain data for ${place} right now. Please follow weather warnings and instructions from local officials.`, `अभी मेरे पास ${place} की बारिश की ताज़ा जानकारी नहीं है। कृपया मौसम चेतावनियाँ और स्थानीय अधिकारियों के निर्देश मानें।`,
-      `अहिले मसँग ${place} को वर्षाको ताजा जानकारी छैन। कृपया मौसम चेतावनी र स्थानीय अधिकारीहरूको निर्देशन पालना गर्नुहोस्।`);
+      `अहिले मसँग ${place}को वर्षाको ताजा जानकारी छैन। कृपया मौसम चेतावनी र स्थानीय अधिकारीहरूको निर्देशन पालना गर्नुहोस्।`);
     else {
-      T(`About ${round(rain24, 0)} mm of rain is expected at ${place} in the next 24 hours.`, `अगले 24 घंटों में ${place} में लगभग ${round(rain24, 0)} मिमी बारिश होने की उम्मीद है।`, `अर्को 24 घण्टामा ${place} मा करिब ${round(rain24, 0)} मिमी वर्षा हुने अनुमान छ।`);
+      T(`About ${round(rain24, 0)} mm of rain is expected at ${place} in the next 24 hours.`, `अगले 24 घंटों में ${place} में लगभग ${round(rain24, 0)} मिमी बारिश होने की उम्मीद है।`, `अर्को 24 घण्टामा ${place}मा करिब ${round(rain24, 0)} मिमी वर्षा हुने अनुमान छ।`);
       if (win) T(`The driest daytime window starts around ${fmtTime(win.start, 'en')}.`, `दिन में सबसे सूखा समय लगभग ${fmtTime(win.start, 'hi')} से शुरू होगा।`, `दिउँसोको सबैभन्दा सुख्खा समय करिब ${fmtTime(win.start, 'ne')} बाट सुरु हुन्छ।`);
       sources.add('forecast');
     }
@@ -244,7 +246,7 @@ export function answer({ intent, locationId, lang, question }) {
     T('If anyone is hurt, trapped or in danger, **call 112 now**. Move away from the slope, the river and the road below it, towards open, higher ground. Do not go back for belongings.',
       'अगर कोई घायल है, फँसा है या खतरे में है तो **अभी 112 पर कॉल करें**। ढलान, नदी और उसके नीचे की सड़क से दूर, खुली और ऊँची जगह की ओर जाएँ। सामान लेने वापस न जाएँ।',
       'कोही घाइते, च्यापिएको वा खतरामा छ भने **अहिले नै ११२ मा फोन गर्नुहोस्**। भिर, नदी र त्यसमुनिको सडकबाट टाढा, खुला र अग्लो ठाउँतर्फ जानुहोस्। सामान लिन नफर्कनुहोस्।');
-    if (level) { T(`Right now the landslide risk at ${place} is ${LV.en[level]}.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`, `अहिले ${place} मा पहिरोको जोखिम ${LV.ne[level]} छ।`); stated(); }
+    if (level) { T(`Right now the landslide risk at ${place} is ${LV.en[level]}.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`, `अहिले ${place}मा पहिरोको जोखिम ${LV.ne[level]} छ।`); stated(); }
   } else if (intent === 'signs' && sightingOf(question)) {
     // Someone is telling us what they see: short advice, then the app asks one question at a time (danger? → report).
     T('Thank you for telling me. If it is getting worse, or you hear cracking or rumbling, move away from it now and warn people nearby.',
@@ -258,7 +260,7 @@ export function answer({ intent, locationId, lang, question }) {
     T('If you see them: move away from the slope at once, warn people nearby, then send a report with a photo from a safe place (Report section). If anyone is in danger, **call 112**.',
       'अगर ये दिखें: तुरंत ढलान से दूर जाएँ, आसपास के लोगों को बताएँ, फिर सुरक्षित जगह से फ़ोटो के साथ रिपोर्ट भेजें (रिपोर्ट सेक्शन)। कोई खतरे में हो तो **112 पर कॉल करें**।',
       'यस्तो देखे: तुरुन्तै भिरबाट टाढा जानुहोस्, नजिकका मानिसलाई सचेत गराउनुहोस्, अनि सुरक्षित ठाउँबाट फोटोसहित रिपोर्ट पठाउनुहोस् (रिपोर्ट सेक्सन)। कोही खतरामा भए **११२ मा फोन गर्नुहोस्**।');
-    if (level === 'high' || level === 'critical') { T(`Take this seriously: the risk at ${place} is already ${LV.en[level]}.`, `इसे गंभीरता से लें: ${place} में खतरा पहले से ${LV.hi[level]} है।`, `यसलाई गम्भीरतापूर्वक लिनुहोस्: ${place} मा जोखिम पहिले नै ${LV.ne[level]} छ।`); stated(); }
+    if (level === 'high' || level === 'critical') { T(`Take this seriously: the risk at ${place} is already ${LV.en[level]}.`, `इसे गंभीरता से लें: ${place} में खतरा पहले से ${LV.hi[level]} है।`, `यसलाई गम्भीरतापूर्वक लिनुहोस्: ${place}मा जोखिम पहिले नै ${LV.ne[level]} छ।`); stated(); }
   } else if (intent === 'report') {
     T('Open **Report** at the bottom of the screen: choose what you saw, add a photo if it is safe, mark the spot on the map or use your location, and send. Officials check every report and you will see when yours is verified.',
       'स्क्रीन के नीचे **रिपोर्ट** खोलें: जो देखा वह चुनें, सुरक्षित हो तो फ़ोटो जोड़ें, नक्शे पर जगह चुनें या अपनी लोकेशन दें, और भेजें। अधिकारी हर रिपोर्ट जाँचते हैं और आपकी रिपोर्ट सत्यापित होने पर आपको दिखेगा।',
@@ -268,7 +270,7 @@ export function answer({ intent, locationId, lang, question }) {
   } else if (intent === 'explain_status') {
     T(`This card shows the landslide risk for ${place} right now, and what to do. There are four levels: **Low** (normal), **Moderate** (take care), **High** (avoid travel near slopes) and **Critical** (move to safety). The colour, the symbol and the word always go together.`,
       `यह कार्ड ${place} में अभी भूस्खलन का खतरा और क्या करना है, बताता है। चार स्तर हैं: **कम** (सामान्य), **मध्यम** (सावधान रहें), **उच्च** (ढलान के पास यात्रा न करें) और **गंभीर** (सुरक्षित जगह पर जाएँ)। रंग, निशान और शब्द हमेशा साथ दिखते हैं।`,
-      `यो कार्डले ${place} मा अहिलेको पहिरो जोखिम र के गर्ने भनेर देखाउँछ। चार स्तर छन्: **कम** (सामान्य), **मध्यम** (सावधान रहनुहोस्), **उच्च** (भिर नजिक यात्रा नगर्नुहोस्) र **गम्भीर** (सुरक्षित ठाउँमा जानुहोस्)। रङ, चिन्ह र शब्द सधैँ सँगै देखिन्छन्।`);
+      `यो कार्डले ${place}मा अहिलेको पहिरो जोखिम र के गर्ने भनेर देखाउँछ। चार स्तर छन्: **कम** (सामान्य), **मध्यम** (सावधान रहनुहोस्), **उच्च** (भिर नजिक यात्रा नगर्नुहोस्) र **गम्भीर** (सुरक्षित ठाउँमा जानुहोस्)। रङ, चिन्ह र शब्द सधैँ सँगै देखिन्छन्।`);
     if (!level) noData();
     else {
       T(`Right now it is **${LV.en[level]}**. Tap **Why?** on the card to see the reasons.`, `अभी स्तर **${{ low: 'कम', moderate: 'मध्यम', high: 'उच्च', critical: 'गंभीर' }[level]}** है। कारण देखने के लिए कार्ड पर **क्यों?** दबाएँ।`,
@@ -278,9 +280,9 @@ export function answer({ intent, locationId, lang, question }) {
   } else if (intent === 'explain_rain') {
     T(`This chart shows how much rain is expected at ${place} over the next 48 hours, hour by hour. Taller bars mean heavier rain. Heavy rain soaks the hillside, which makes landslides more likely.`,
       `यह चार्ट ${place} में अगले 48 घंटों में हर घंटे कितनी बारिश की उम्मीद है, दिखाता है। ऊँची पट्टी यानी ज़्यादा बारिश। तेज़ बारिश से पहाड़ी की मिट्टी भीग जाती है, जिससे भूस्खलन की संभावना बढ़ती है।`,
-      `यो चार्टले ${place} मा अर्को 48 घण्टामा हरेक घण्टा कति वर्षा हुने अनुमान छ देखाउँछ। अग्लो पट्टी भनेको धेरै वर्षा। ठूलो वर्षाले पहाडको माटो भिजाउँछ, जसले पहिरोको सम्भावना बढाउँछ।`);
+      `यो चार्टले ${place}मा अर्को 48 घण्टामा हरेक घण्टा कति वर्षा हुने अनुमान छ देखाउँछ। अग्लो पट्टी भनेको धेरै वर्षा। ठूलो वर्षाले पहाडको माटो भिजाउँछ, जसले पहिरोको सम्भावना बढाउँछ।`);
     if (hourly) { T(`About ${round(rain24, 0)} mm is expected in the next 24 hours.`, `अगले 24 घंटों में लगभग ${round(rain24, 0)} मिमी बारिश की उम्मीद है।`, `अर्को 24 घण्टामा करिब ${round(rain24, 0)} मिमी वर्षा हुने अनुमान छ।`); sources.add('forecast'); }
-    else T(`I don't have up-to-date rain data for ${place} right now.`, `अभी मेरे पास ${place} की बारिश की ताज़ा जानकारी नहीं है।`, `अहिले मसँग ${place} को वर्षाको ताजा जानकारी छैन।`);
+    else T(`I don't have up-to-date rain data for ${place} right now.`, `अभी मेरे पास ${place} की बारिश की ताज़ा जानकारी नहीं है।`, `अहिले मसँग ${place}को वर्षाको ताजा जानकारी छैन।`);
   } else if (intent === 'explain_roads') {
     T(`This list shows the main roads near ${place} and their status as entered by officials: **Open**, **Caution** (go slowly, only if you need to) or **Avoid** (closed or unsafe). To check a whole route, use the road checker on the Roads page.`,
       `यह सूची ${place} के पास की मुख्य सड़कें और अधिकारियों द्वारा दर्ज उनकी स्थिति दिखाती है: **खुली**, **सावधानी** (धीरे चलें, ज़रूरी हो तभी) या **न जाएँ** (बंद या असुरक्षित)। पूरा रास्ता जाँचने के लिए सड़क पेज पर रोड चेकर देखें।`,
@@ -292,7 +294,7 @@ export function answer({ intent, locationId, lang, question }) {
       'यो कार्डमा आपतकालमा फोन गर्ने नम्बरहरू छन्। **११२** निःशुल्क छ र प्रहरी, दमकल र एम्बुलेन्सका लागि २४ घण्टा चल्छ। त्यसको तल, घर छोड्न भनिएमा जाने नजिकको सुरक्षित ठाउँ, र अधिकारीहरूले थपेपछि स्थानीय विपद् सम्पर्कहरू छन्।');
   } else if (!level) noData();
   else {
-    T(`The landslide risk at ${place} is ${LV.en[level]} right now.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`, `अहिले ${place} मा पहिरोको जोखिम ${LV.ne[level]} छ।`);
+    T(`The landslide risk at ${place} is ${LV.en[level]} right now.`, `अभी ${place} में भूस्खलन का खतरा ${LV.hi[level]} है।`, `अहिले ${place}मा पहिरोको जोखिम ${LV.ne[level]} छ।`);
     // "Am I safe?" also needs what to do.
     T({ critical: 'Move to a safe place now, away from slopes and the river.', high: 'Avoid travel and stay away from slopes and streams.', moderate: 'Take care: travel in daylight and watch for warning signs.', low: 'No special action is needed now.' }[level],
       { critical: 'अभी ढलान और नदी से दूर, सुरक्षित जगह पर जाएँ।', high: 'यात्रा से बचें और ढलान व नालों से दूर रहें।', moderate: 'सावधान रहें: दिन में यात्रा करें और चेतावनी संकेतों पर नज़र रखें।', low: 'अभी कोई खास कदम ज़रूरी नहीं।' }[level],

@@ -128,7 +128,7 @@ test('assistant answers in Nepali, with the same safety rules', () => {
   setRisk('gangtok', 'high', new Date().toISOString());
   setWeather('gangtok', 'open-meteo', new Date().toISOString());
   const s = answer({ intent: 'status', locationId: 'gangtok', lang: 'ne' });
-  assert.match(s.text, /गंगटोक मा पहिरोको जोखिम उच्च छ/);
+  assert.match(s.text, /गंगटोकमा पहिरोको जोखिम उच्च छ/);
   assert.match(s.text, /यात्रा नगर्नुहोस्/);
   assert.match(answer({ intent: 'travel', locationId: 'gangtok', lang: 'ne' }).text, /सडकहरू: NH-10/);
   assert.match(answer({ intent: 'emergency', locationId: 'gangtok', lang: 'ne' }).text, /११२ मा फोन गर्नुहोस्/);
