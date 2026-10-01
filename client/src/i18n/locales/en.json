@@ -453,7 +453,8 @@
     "tour_saathi": "Ask Saathi anything, by typing or speaking. It also shows you what to do in an emergency.",
     "tour_next": "Next",
     "tour_done": "Done",
-    "tour_skip": "Skip tour"
+    "tour_skip": "Skip tour",
+    "no_voice_lang": "Read aloud isn't available in this language on this phone."
   },
   "authority": {
     "board_title": "Live risk board",

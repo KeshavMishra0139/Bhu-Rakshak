@@ -110,12 +110,24 @@ export function vibrate(pattern: number[]) {
   try { navigator.vibrate?.(pattern); } catch { /* unsupported */ }
 }
 
-/** Read text aloud in the chosen language (graceful no-op if unsupported). */
+// Voices load asynchronously in some browsers: ask early so they are ready by the first tap.
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.getVoices();
+
+/** Read text aloud in the chosen language. Returns false if this device can't (no speech, or no voice for the script). */
 export function speak(text: string, lang: string) {
   if (!('speechSynthesis' in window)) return false;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   const voices = window.speechSynthesis.getVoices();
+  // Assamese: an Assamese voice, else a Bengali one (same script). English voices can't read the script, so say no.
+  if (lang === 'as') {
+    const v = voices.find((x) => x.lang.toLowerCase().startsWith('as')) || voices.find((x) => x.lang.toLowerCase().startsWith('bn'));
+    if (!v) return false;
+    u.voice = v;
+    u.lang = v.lang;
+    window.speechSynthesis.speak(u);
+    return true;
+  }
   // Nepali voices are rare on phones: use one if present, else a Hindi voice (same script, widely understood).
   const want = lang === 'ne' ? (voices.some((v) => v.lang.toLowerCase().startsWith('ne')) ? 'ne' : 'hi') : lang === 'hi' ? 'hi' : 'en-in';
   u.lang = want === 'ne' ? 'ne-NP' : want === 'hi' ? 'hi-IN' : 'en-IN';

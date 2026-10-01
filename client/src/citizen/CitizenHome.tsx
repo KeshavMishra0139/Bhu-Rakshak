@@ -53,6 +53,8 @@ export default function CitizenHome() {
   const [speaking, setSpeaking] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showWhy, setShowWhy] = useState(false);
+  const [noVoice, setNoVoice] = useState(false);
+  useEffect(() => setNoVoice(false), [lang]);
   const wide = useWide();
 
   const loc = viewingId ? locations[viewingId] : undefined;
@@ -117,6 +119,7 @@ export default function CitizenHome() {
     if (!loc || !r) return;
     const text = `${placeName(loc, lang)}. ${t(`citizen.lt_${r.level}`)}. ${sentence} ${staleNote} ${whyLine}`;
     if (speak(text, lang)) { setSpeaking(true); setTimeout(() => setSpeaking(false), Math.min(20000, text.length * 90)); }
+    else setNoVoice(true); // e.g. Assamese on a phone with no Assamese or Bengali voice
   }
 
   return (
@@ -181,7 +184,7 @@ export default function CitizenHome() {
                   </p>
                 )}
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {canSpeak() && (
+                  {canSpeak() && !noVoice && (
                     <button type="button" className="btn-secondary" onClick={listen} aria-pressed={speaking}>
                       {speaking ? <Square size={18} aria-hidden /> : <Volume2 size={18} aria-hidden />}{speaking ? t('citizen.stop_listen') : t('citizen.listen')}
                     </button>
@@ -195,6 +198,7 @@ export default function CitizenHome() {
                     <ChevronDown size={18} aria-hidden className={showDetails ? 'rotate-180' : ''} />
                   </button>
                 </div>
+                {noVoice && <p className="mt-2 text-sm text-muted" role="status">{t('citizen.no_voice_lang')}</p>}
                 {showDetails && (
                   <dl className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {([['d_rain_now', r.conditions.rain_intensity, 'mm/h'], ['d_rain_24h', r.conditions.rain_24h, 'mm'], ['d_rain_fc', r.conditions.rain_fc_24h, 'mm']] as const).map(([k, v, u]) => (
