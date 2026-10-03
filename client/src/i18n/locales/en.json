@@ -294,6 +294,7 @@
     "mm": "{{value}} mm",
     "best_travel": "Best time to travel: {{start}} to {{end}}",
     "best_travel_none": "No clear dry window in the next day and a half.",
+    "rain_unavailable": "The live rain forecast isn't available right now.",
     "listen": "Listen",
     "stop_listen": "Stop",
     "today": "Today",

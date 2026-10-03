@@ -178,6 +178,7 @@
     "mm": "{{value}} mm",
     "best_travel": "Kal hun ṭha ber: {{start}} atanga {{end}} thleng",
     "best_travel_none": "Ni khat leh a chanve chhungin hun ro chiang a awm lo.",
+    "rain_unavailable": "Tunah ruah thlirlawkna live a awm lo.",
     "roads_here": "I bula kawngte",
     "all_roads": "Kawng zawng zawng en rawh",
     "contacts": "Harsatna huna biak tur",

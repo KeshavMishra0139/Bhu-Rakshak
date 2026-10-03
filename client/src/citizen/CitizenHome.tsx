@@ -88,12 +88,17 @@ export default function CitizenHome() {
   }
 
   const road = loc?.road?.split(' / ')[0] || (lang === 'hi' ? 'मुख्य सड़क' : lang === 'ne' ? 'मुख्य सडक' : 'the main road');
+  // Without live rain, the hours come from the typical-weather stand-in, which is not a forecast:
+  // then show no rain times, bars or travel windows (safety rule: never present a guess as data).
+  const rainSource = typeof r?.conditions.data_source === 'string' ? r.conditions.data_source : null;
+  const noLiveRain = !!rainSource && rainSource !== 'open-meteo';
   // "Avoid travel after {time}": the rainiest hour in the next 12 h, if meaningful rain is expected.
   const peak = useMemo(() => {
+    if (noLiveRain) return null;
     const next = forecast?.hourly_rain.slice(0, 12) || [];
     const top = next.reduce<(typeof next)[number] | null>((m, x) => (!m || x.rain_mm > m.rain_mm ? x : m), null);
     return top && top.rain_mm >= 1 ? top.time : null;
-  }, [forecast]);
+  }, [forecast, noLiveRain]);
   const sentence = !r ? '' : r.level === 'moderate'
     // The rainiest hour can fall after midnight: then it is "tomorrow", not "today".
     ? (peak ? t(dayIST(Date.parse(peak)) === dayIST(Date.now()) ? 'citizen.s_moderate' : 'citizen.s_moderate_tomorrow', { road, time: timeIST(peak, lang) })
@@ -109,9 +114,8 @@ export default function CitizenHome() {
   // "Updated" is when the score was recalculated; the rain behind it can be older, or not live at all.
   const now = useNow(60000);
   const rainAt = typeof r?.conditions.data_fetched_at === 'string' ? r.conditions.data_fetched_at : null;
-  const rainSource = typeof r?.conditions.data_source === 'string' ? r.conditions.data_source : null;
   const rainHours = rainAt ? Math.floor((now - new Date(rainAt).getTime()) / 3600000) : null;
-  const staleNote = rainSource && rainSource !== 'open-meteo' ? t('citizen.no_live_rain')
+  const staleNote = noLiveRain ? t('citizen.no_live_rain')
     : rainHours != null && rainHours >= riskConfig.live.staleDataHours ? t('citizen.stale_rain', { hours: rainHours }) : '';
   const imd = r?.conditions.imd as ImdSummary | null | undefined;
   const imdUrgent = !!imd && [imd.nowcast?.color, imd.days[0]?.color].some((c) => c === 'orange' || c === 'red');
@@ -237,7 +241,7 @@ export default function CitizenHome() {
               <h2 id="rain-title" className="text-lg font-bold">{t('citizen.rain_48h')}</h2>
               <HelpButton topic="rain" />
             </div>
-            {forecast ? (
+            {noLiveRain ? <p className="mt-3 text-muted">{t('citizen.rain_unavailable')}</p> : forecast ? (
               <>
                 <div className="mt-4 flex items-end gap-[2px] h-32" role="img"
                   aria-label={`${t('citizen.rain_48h')}: ${t('citizen.mm', { value: forecast.hourly_rain.reduce((a, x) => a + x.rain_mm, 0).toFixed(0) })}`}>

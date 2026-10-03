@@ -178,6 +178,7 @@
     "mm": "{{value}} mm",
     "best_travel": "Jabole bhal homoi: {{start}} pora {{end}} tak",
     "best_travel_none": "Aha der din te sukha homoi nai.",
+    "rain_unavailable": "Etiya live barish laga andaj nai.",
     "roads_here": "Apuni usor laga rasta",
     "all_roads": "Sob rasta sabi",
     "contacts": "Emergency phone number",
