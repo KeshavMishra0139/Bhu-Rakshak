@@ -112,17 +112,24 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
       setMsgs((m) => [...m, reply]);
       if (readAloud) speak(reply.text.replace(/\*\*/g, ''), lang);
     };
-    if (navigator.onLine === false) { answerOffline(); return; }
-    if (!place) {
+    if (!place && navigator.onLine !== false) {
       setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: t('citizen.saathi_need_place', { lng: lang }) }]);
       return;
     }
+    // Answers show after "Saathi is checking the live data…" for 2–3 s, so a reply doesn't feel instant or canned.
+    // (The emergency screen above never waits.)
+    const started = Date.now();
+    const think = 2000 + Math.random() * 1000;
+    const settle = () => new Promise((r) => setTimeout(r, Math.max(0, think - (Date.now() - started))));
     setBusy(true);
     try {
+      if (navigator.onLine === false) { await settle(); answerOffline(); return; }
       const d = await api.post<Reply>('/assistant', { question: ask.question, intent: ask.intent, location_id: place, lang });
+      await settle();
       setMsgs((m) => [...m, { id: nextId.current++, role: 'assistant', text: d.text, sources: d.sources, basis: d.basis, action: d.action }]);
       if (readAloud) speak(d.text.replace(/\*\*/g, ''), lang);
     } catch {
+      await settle();
       answerOffline();
     } finally {
       setBusy(false);
