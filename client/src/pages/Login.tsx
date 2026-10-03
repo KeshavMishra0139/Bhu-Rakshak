@@ -71,10 +71,14 @@ export default function Login() {
               </button>
             </form>
 
-            <p className="mt-5 text-[0.95rem]">
-              {t('auth.new_here')}{' '}
-              <Link to="/signup" className="font-semibold text-brand underline underline-offset-2">{t('common.create_account')}</Link>
-            </p>
+            {/* New accounts: pick the kind first (officer accounts are checked by an administrator). */}
+            <div className="mt-5 text-[0.95rem]">
+              <p>{t('auth.new_here')}</p>
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                <Link to="/signup" className="btn-secondary">{t('auth.signup_citizen')}</Link>
+                <Link to="/signup?as=officer" className="btn-secondary">{t('auth.signup_officer')}</Link>
+              </div>
+            </div>
 
             {demo?.enabled && (
               <section className="mt-9 pt-7 border-t border-line" aria-labelledby="demo-title">

@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { errorKey } from '../api/client';
 import { useAuth, homePathFor } from '../auth/AuthProvider';
@@ -38,7 +38,9 @@ export default function Signup() {
   const nav = useNavigate();
   const { me, signupCitizen, signupAuthority } = useAuth();
   const { list } = useRiskStream();
-  const [tab, setTab] = useState<Tab>('citizen');
+  // /signup?as=officer opens on the Officer / SDMA tab (link from the sign-in page).
+  const [params] = useSearchParams();
+  const [tab, setTab] = useState<Tab>(params.get('as') === 'officer' ? 'authority' : 'citizen');
   const [f, setF] = useState<Record<string, string>>({ language: ['hi', 'ne'].includes(i18n.language) ? i18n.language : 'en' });
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);

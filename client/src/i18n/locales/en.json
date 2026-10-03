@@ -137,12 +137,14 @@
     "dev_email": "Developer email",
     "dev_code": "Access code",
     "dev_submit": "Sign in as developer",
-    "live_strip_title": "Right now across the region"
+    "live_strip_title": "Right now across the region",
+    "signup_citizen": "Sign up as a citizen",
+    "signup_officer": "Sign up as an officer / SDMA"
   },
   "signup": {
     "title": "Create your account",
-    "tab_citizen": "Resident or visitor",
-    "tab_authority": "Government official",
+    "tab_citizen": "Citizen",
+    "tab_authority": "Officer / SDMA",
     "citizen_intro": "Get warnings for the area you live in or are travelling to.",
     "authority_intro": "Official accounts are checked by an administrator before they can see operations data.",
     "name": "Full name",
