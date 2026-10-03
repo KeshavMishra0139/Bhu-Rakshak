@@ -11,6 +11,9 @@ const locale = (lang: string) => (lang === 'hi' ? 'hi-IN' : lang === 'ne' ? 'ne-
 export const timeIST = (iso: string | null | undefined, lang: string) =>
   iso ? new Intl.DateTimeFormat(locale(lang), { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' }).format(new Date(iso)) : '';
 
+/** Calendar day in IST, e.g. "2026-10-03" (for "today" vs "tomorrow"). */
+export const dayIST = (ms: number) => new Date(ms + 5.5 * 3600000).toISOString().slice(0, 10);
+
 /** Date + time in IST, e.g. "24 Sept, 4:05 pm". */
 export const dateTimeIST = (iso: string | null | undefined, lang: string) =>
   iso ? new Intl.DateTimeFormat(locale(lang), { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' }).format(new Date(iso)) : '';

@@ -11,7 +11,7 @@ import { useSaathi } from './Saathi';
 import { RiskBadge } from '../components/RiskBadge';
 import { UpdatedAgo } from '../components/UpdatedAgo';
 import { ImdPanel } from '../components/ImdPanel';
-import { placeName, timeIST, isDeva } from '../lib/format';
+import { placeName, timeIST, dayIST, isDeva } from '../lib/format';
 import { isPreview } from '../lib/mapConfig';
 import { driverPlain } from '../lib/factors';
 import { useWide } from '../lib/useWide';
@@ -95,7 +95,9 @@ export default function CitizenHome() {
     return top && top.rain_mm >= 1 ? top.time : null;
   }, [forecast]);
   const sentence = !r ? '' : r.level === 'moderate'
-    ? (peak ? t('citizen.s_moderate', { road, time: timeIST(peak, lang) }) : t('citizen.s_moderate_notime', { road }))
+    // The rainiest hour can fall after midnight: then it is "tomorrow", not "today".
+    ? (peak ? t(dayIST(Date.parse(peak)) === dayIST(Date.now()) ? 'citizen.s_moderate' : 'citizen.s_moderate_tomorrow', { road, time: timeIST(peak, lang) })
+      : t('citizen.s_moderate_notime', { road }))
     : t(`citizen.s_${r.level}`, { road });
   const why = (r?.drivers || []).slice(0, 2).map((d) => driverPlain(d.key, lang));
   const whyLine = why.length ? `${t('citizen.why')}: ${why.join(t('citizen.and_sep'))}.` : '';
