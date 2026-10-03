@@ -3,6 +3,8 @@
 Landslide early warning and risk management for Sikkim and the Darjeeling hills.
 Team ByteMatrix, Smart India Hackathon 2026 (SIH26001). **Predict → Visualize → Verify → Warn.**
 
+**Live preview:** [bhu-rakshak-1hxp.onrender.com](https://bhu-rakshak-1hxp.onrender.com). It is password-protected: ask the team for the access password. On the free hosting plan the first visit after 15 idle minutes takes about a minute to load (see [Publishing and deploying](#publishing-and-deploying)).
+
 One app, two products chosen by the account role:
 
 - **Authority dashboard** (officers and SDMA): a full-screen, map-first command centre with an inbox, incidents, alerts, field reports, roads with a route checker, resources, an audit log, a situation report, system health, and an **experimental AI model** that learns from recorded landslides, runs every 3 hours on live weather and earthquake data, and shows its own track record (it never sends alerts).
@@ -31,7 +33,7 @@ Open **http://localhost:5173**. The API runs on port 4000; Vite proxies `/api`. 
 | `npm test` | Server tests (engine, hysteresis, features, inbox routing, permissions, alert templates, assistant) |
 | `npm run build` then `npm start` | Production build; the server also serves `client/dist` on port 4000 |
 
-With no internet the app still runs. It uses a clearly labelled fallback weather series until Open-Meteo is reachable; map tiles and Street View need an internet connection.
+With no internet the app still runs. It uses a clearly labelled fallback weather series until Open-Meteo is reachable; the citizen home then says live rain data isn't available and shows no rain times, rain chart or travel window (a guess is never shown as a forecast). Map tiles and Street View need an internet connection.
 
 ## Demo credentials
 
@@ -86,7 +88,7 @@ The only accuracy figures shown are the AI model's published backtests (`ml/mode
 
 ## Weather data
 
-- **Open-Meteo** (no key): hourly rain, snow, temperature and five soil-moisture layers for every location, 7 days back and 3 ahead (`server/src/ingest/openMeteo.js`).
+- **Open-Meteo** (no key): hourly rain, snow, temperature and five soil-moisture layers for every location, 7 days back and 3 ahead (`server/src/ingest/openMeteo.js`). The free limit (10,000 calls a day) counts per internet address, so on shared hosting other apps can use it up; see [Publishing and deploying](#publishing-and-deploying).
 - **IMD** (`server/src/ingest/imd.js`): district-wise warnings (5 days) and district-wise nowcasts (next ~3 hours) from the IMD API portal, `https://api.imd.gov.in/api/v1`.
   - Register at [api.imd.gov.in](https://api.imd.gov.in) and put your API key and JWT in `IMD_API_KEY` and `IMD_TOKEN`. Requests send them as `x-api-key` and `Authorization: Bearer …`. The older `mausam.imd.gov.in/api/*` endpoints need your server's IP whitelisted by IMD instead.
   - Warnings are matched to our districts by both old and new Sikkim names (`server/src/data/imd_districts.json`).
@@ -126,10 +128,27 @@ Data credits are on the About page and in each map's attribution line.
 - GitHub stores the code; it cannot run this app (GitHub Pages only serves static files). Host it on any service that runs Node 22.13+ with a disk for the SQLite database, e.g. a small VPS, Render or Railway: `npm install`, `npm run build`, `npm start`.
 - Never commit `.env` (it is in `.gitignore`). On the server set a long random `JWT_SECRET`, and for a public site set `DEMO_LOGIN_ENABLED=false` and `DEV_MODE_ENABLED=false`. Use `SITE_PASSWORD` to keep a preview private.
 
+### The live preview on Render
+
+The [live preview](https://bhu-rakshak-1hxp.onrender.com) is a Render web service (free plan, Singapore region) that deploys automatically on every push to `main`.
+
+| Setting | Value |
+| --- | --- |
+| Build command | `npm ci --include=dev && npm run build` (the client build needs the dev dependencies) |
+| Start command | `npm start` |
+| Health check path | empty (with `SITE_PASSWORD` set, `/api/*` answers 401 until the access password is entered) |
+| Environment | `NODE_VERSION=24`, `NODE_ENV=production`, `JWT_SECRET`, `SITE_PASSWORD`, `DEMO_LOGIN_ENABLED`, `DEMO_PASSWORD`, and optionally `DEV_MODE_ENABLED`, `DEV_PASSWORD`, `DEV_ACCESS_CODE`. Values live only in Render's Environment settings, never in the repository. |
+
+What to expect on the free plan:
+
+- **Sleeps after 15 idle minutes;** the next visit takes about a minute while it starts. Open the link a minute before a demo.
+- **No permanent disk:** every deploy and restart reloads the demo data, so accounts and reports created there do not last. For lasting data use a paid instance with a disk at `/var/data` and `DB_PATH=/var/data/bhu-rakshak.db` (report photos and officer ID documents are stored in `server/uploads`, so they also need to move onto the disk).
+- **Live weather may be missing:** Render's servers share their internet addresses with other customers, and Open-Meteo often refuses them (HTTP 429, "limit exceeded"). The site then says so and uses typical weather, as above. For dependable live weather use a host with its own address, or an Open-Meteo API key (paid). A local run (`npm run dev`) on your own connection gets live data.
+
 ## Test status
 
 - **Tested here:**
-  - 66 server tests (`npm test`), including the engine, IMD parsing, the AI model's live features, the assistant's safety rules (it never states a level without current data), road corridors and the site gate.
+  - 67 server tests (`npm test`), including the engine, IMD parsing, the AI model's live features, the assistant's safety rules (it never states a level without current data), road corridors, the site gate and the forecast hours.
   - HTTP integration of every endpoint and permission rule, run against small Express stand-ins because packages couldn't be installed in the build environment.
   - SSE fan-out: each role gets only its own events.
   - Storm timing: High after about 60 s, Critical after about 120 s.
