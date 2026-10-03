@@ -156,6 +156,7 @@
     "lt_critical": "Khub bisi khotra",
     "s_low": "Aji {{road}} pora hodai nisina jabole pare.",
     "s_moderate": "Aji {{time}} pichete {{road}} pora najabi.",
+    "s_moderate_tomorrow": "Kali {{time}} pichete {{road}} pora najabi.",
     "s_moderate_notime": "{{road}} pora hushiar kori kene aru din te he jabi.",
     "s_high": "{{road}} pora najabi. Pahar dhal aru nala pora dur thakibi.",
     "s_critical": "Etiya-e bachi thaka jaga te jabi. {{road}} use nakoribi.",

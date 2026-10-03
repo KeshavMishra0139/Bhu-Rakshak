@@ -285,6 +285,7 @@
     "lt_critical": "Critical danger",
     "s_low": "Normal travel on {{road}} is fine today.",
     "s_moderate": "Avoid travel on {{road}} after {{time}} today.",
+    "s_moderate_tomorrow": "Avoid travel on {{road}} after {{time}} tomorrow.",
     "s_moderate_notime": "Travel on {{road}} with care and only in daylight.",
     "s_high": "Avoid travel on {{road}}. Stay away from slopes and streams.",
     "s_critical": "Move to a safe place now. Do not use {{road}}.",
