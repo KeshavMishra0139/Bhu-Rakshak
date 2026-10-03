@@ -388,5 +388,16 @@
     "swipe": "Sob column sabole kinar phale swipe koribi",
     "sources": "Kotha laga jaga ({{date}} te check korise)",
     "note": "Table laga kotha English te ase; thik koribole client/src/data/comparison.json bodli koribi."
+  },
+  "guide": {
+    "link": "Guide",
+    "title_citizen": "Bhu-Rakshak kineka use koribo",
+    "intro_citizen": "Sob page, olop sojo step te. Page khulibole button tipibi.",
+    "jump": "Sidha jabi",
+    "open": "Etu page khulibi",
+    "replay_tour": "Home laga porichoy aru sabi",
+    "open_full": "Pura guide khulibi",
+    "card_title": "Bhu-Rakshak kineka use koribo",
+    "card_body": "Sob page laga chuti guide."
   }
 }

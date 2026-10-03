@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Home, Route, Bell, Megaphone, UserRound, Phone, Volume2, Map as MapIcon } from 'lucide-react';
+import { Home, Route, Bell, Megaphone, UserRound, Phone, Volume2, Map as MapIcon, BookOpen } from 'lucide-react';
 import { Logo } from '../components/Logo';
 import { LiveIndicator } from '../components/LiveIndicator';
 import { LanguageToggle } from '../components/LanguageToggle';
@@ -59,6 +59,10 @@ export function CitizenLayout({ children }: { children: ReactNode }) {
             {NAV.map((n) => <NavLink key={n.to} to={withPane(n.to)} end={n.end} className={linkCls}>{t(n.key)}</NavLink>)}
           </nav>
           <div className="flex-1" />
+          {/* Guide: icon here on wider screens; on phones it is on the Profile page. */}
+          <NavLink to={withPane('/citizen/guide')} className="btn-ghost hidden md:inline-flex px-3" aria-label={t('guide.link')} title={t('guide.link')}>
+            <BookOpen size={18} aria-hidden />
+          </NavLink>
           <InstallButton />
           <span className="hidden sm:inline"><LiveIndicator /></span>
           <LanguageToggle />

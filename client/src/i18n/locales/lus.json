@@ -388,5 +388,16 @@
     "swipe": "Column zawng zawng en turin a sir lamah swipe rawh",
     "sources": "Hnarte ({{date}}-a en)",
     "note": "Table thu hi Sap ṭawngin a ni; siam ṭhat duh chuan client/src/data/comparison.json thlak rawh."
+  },
+  "guide": {
+    "link": "Kaihhruaina",
+    "title_citizen": "Bhu-Rakshak hman dan",
+    "intro_citizen": "Phek tin, kalphung awlsam tlemte-in. Phek hawng turin button hmet rawh.",
+    "jump": "Kal nghal rawh",
+    "open": "He phek hi hawng rawh",
+    "replay_tour": "Home kaihhruaina en leh rawh",
+    "open_full": "Kaihhruaina kim hawng rawh",
+    "card_title": "Bhu-Rakshak hman dan",
+    "card_body": "Phek tin kaihhruaina tawi."
   }
 }

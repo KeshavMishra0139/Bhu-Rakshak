@@ -3,9 +3,11 @@
 // dismissed it is never shown again on this device. Targets are marked with data-tour="…".
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Compass, X } from 'lucide-react';
 import { useCitizen } from './CitizenContext';
+import { withPane } from '../lib/viewAs';
 
 const KEY = 'br.tourDone';
 const STEPS = ['status', 'why', 'sos', 'saathi'] as const;
@@ -99,6 +101,7 @@ export function CitizenTour({ ready }: { ready: boolean }) {
               {last ? t('citizen.tour_done') : t('citizen.tour_next')}
             </button>
             {!last && <button type="button" className="btn-ghost" onClick={finish}>{t('citizen.tour_skip')}</button>}
+            {last && <Link to={withPane('/citizen/guide')} className="btn-ghost" onClick={finish}>{t('guide.open_full')}</Link>}
           </div>
         </div>
       </div>

@@ -1,0 +1,197 @@
+{
+  "_comment": "The in-app guide (/citizen/guide and /authority/guide): one section per page or feature, in English, Hindi and Nepali (Assamese, Mizo and Nagamese readers see English). `to` is the page the section's button opens; `icon` is a lucide icon name mapped in GuidePage.tsx. Keep it in step with the screens when they change.",
+  "citizen": [
+    {
+      "id": "home", "icon": "home", "to": "/citizen",
+      "title": { "en": "Home: am I safe?", "hi": "होम: क्या मैं सुरक्षित हूँ?", "ne": "होम: के म सुरक्षित छु?" },
+      "what": { "en": "Your place's landslide risk right now, and what to do.", "hi": "आपकी जगह पर अभी भूस्खलन का खतरा, और क्या करना है।", "ne": "तपाईंको ठाउँमा अहिलेको पहिरो जोखिम, र के गर्ने।" },
+      "steps": {
+        "en": ["Choose your place at the top, or tap Use my location. Set as my home keeps it for next time.", "Read the big level (Low, Moderate, High or Critical) and the sentence under it: that is what to do.", "Tap Why? for the reasons and how sure we are, and See details for the rain numbers.", "Tap Listen to hear it read aloud. Tap the ? beside a card and Saathi explains it.", "Further down: rain for the next 48 hours, roads near you, emergency contacts, the nearest safe place and the warning signs to watch for."],
+        "hi": ["ऊपर अपनी जगह चुनें, या मेरी लोकेशन दबाएँ। 'मेरा घर बनाएँ' से यह अगली बार के लिए याद रहती है।", "बड़ा स्तर (कम, मध्यम, उच्च या गंभीर) और उसके नीचे का वाक्य पढ़ें: वही करना है।", "कारण और हम कितने पक्के हैं, जानने के लिए 'क्यों?' दबाएँ; बारिश के आँकड़ों के लिए 'विवरण देखें'।", "पढ़कर सुनने के लिए 'सुनें' दबाएँ। किसी कार्ड के पास ? दबाएँ, साथी उसे समझाएगा।", "नीचे: अगले 48 घंटे की बारिश, आपके पास की सड़कें, आपातकालीन संपर्क, सबसे नज़दीकी सुरक्षित जगह और चेतावनी संकेत।"],
+        "ne": ["माथि आफ्नो ठाउँ छान्नुहोस्, वा मेरो लोकेसन थिच्नुहोस्। 'मेरो घर बनाउनुहोस्' ले अर्को पटकका लागि सम्झन्छ।", "ठूलो स्तर (कम, मध्यम, उच्च वा गम्भीर) र त्यसमुनिको वाक्य पढ्नुहोस्: त्यही गर्ने हो।", "कारण र हामी कति पक्का छौँ हेर्न 'किन?' थिच्नुहोस्; वर्षाको तथ्याङ्कका लागि 'विवरण हेर्नुहोस्'।", "पढेर सुन्न 'सुन्नुहोस्' थिच्नुहोस्। कुनै कार्डछेउको ? थिच्नुहोस्, साथीले बुझाउँछ।", "तल: अर्को 48 घण्टाको वर्षा, नजिकका सडक, आपतकालीन सम्पर्क, नजिकको सुरक्षित ठाउँ र चेतावनी संकेतहरू।"]
+      }
+    },
+    {
+      "id": "map", "icon": "map", "to": "/citizen/map",
+      "title": { "en": "Map", "hi": "नक्शा", "ne": "नक्सा" },
+      "what": { "en": "Every monitored place on one map.", "hi": "निगरानी वाली हर जगह एक नक्शे पर।", "ne": "निगरानी गरिएका सबै ठाउँ एउटै नक्सामा।" },
+      "steps": {
+        "en": ["Each pin shows its level with a colour and a symbol.", "Tap a pin, or a place in the list, to open its Why card: when the risk is highest, the reasons and what is nearby.", "Turn on Community warning signs to see what residents have reported. Reports stay marked unverified until an officer checks them."],
+        "hi": ["हर पिन रंग और निशान से अपना स्तर दिखाता है।", "किसी पिन या सूची की जगह पर दबाएँ: खतरा कब सबसे ज़्यादा है, कारण और आसपास क्या है, दिखेगा।", "निवासियों की सूचनाएँ देखने के लिए 'समुदाय के चेतावनी संकेत' चालू करें। अधिकारी जाँचने तक वे असत्यापित दिखती हैं।"],
+        "ne": ["हरेक पिनले रङ र चिन्हले आफ्नो स्तर देखाउँछ।", "कुनै पिन वा सूचीको ठाउँ थिच्नुहोस्: जोखिम कहिले बढी हुन्छ, कारण र नजिक के छ, देखिन्छ।", "बासिन्दाका सूचना हेर्न 'समुदायका चेतावनी संकेत' खोल्नुहोस्। अधिकारीले नजाँचेसम्म ती अप्रमाणित देखिन्छन्।"]
+      }
+    },
+    {
+      "id": "roads", "icon": "route", "to": "/citizen/roads",
+      "title": { "en": "Roads and route check", "hi": "सड़कें और रास्ते की जाँच", "ne": "सडक र बाटोको जाँच" },
+      "what": { "en": "Is my road open, and how do I get there safely?", "hi": "क्या मेरी सड़क खुली है, और सुरक्षित कैसे पहुँचूँ?", "ne": "मेरो सडक खुला छ? सुरक्षित कसरी पुग्ने?" },
+      "steps": {
+        "en": ["Each road shows Open, Caution or Avoid, with any diversion and the expected clearing time.", "Start travelling opens Google Maps with turn-by-turn directions. If a road is unsafe, it goes through the officers' diversion.", "Check a road corridor: pick a start and a destination to see the risk along the whole route, then tap Get directions in Google Maps."],
+        "hi": ["हर सड़क पर खुली, सावधानी या न जाएँ दिखता है, साथ में दूसरा रास्ता और खुलने का अनुमानित समय।", "'यात्रा शुरू करें' Google Maps में मोड़-दर-मोड़ रास्ता खोलता है। सड़क असुरक्षित हो तो अधिकारियों के दूसरे रास्ते से ले जाता है।", "'सड़क कॉरिडोर जाँचें': शुरुआत और मंज़िल चुनें, पूरे रास्ते का खतरा देखें, फिर 'Google Maps में रास्ता पाएँ' दबाएँ।"],
+        "ne": ["हरेक सडकमा खुला, सावधानी वा नजानुहोस् देखिन्छ, साथै अर्को बाटो र खुल्ने अनुमानित समय।", "'यात्रा सुरु गर्नुहोस्' ले Google Maps मा मोड-मोडको निर्देशन खोल्छ। सडक असुरक्षित भए अधिकारीहरूको अर्को बाटो हुँदै लैजान्छ।", "'सडक कोरिडोर जाँच्नुहोस्': सुरु र गन्तव्य छान्नुहोस्, पूरै बाटोको जोखिम हेर्नुहोस्, अनि 'Google Maps मा बाटो पाउनुहोस्' थिच्नुहोस्।"]
+      }
+    },
+    {
+      "id": "alerts", "icon": "bell", "to": "/citizen/alerts",
+      "title": { "en": "Alerts and alarm", "hi": "अलर्ट और अलार्म", "ne": "अलर्ट र अलार्म" },
+      "what": { "en": "Official warnings, and the alarm when your area is in danger.", "hi": "आधिकारिक चेतावनियाँ, और आपके इलाके में खतरा होने पर अलार्म।", "ne": "आधिकारिक चेतावनी, र तपाईंको क्षेत्रमा खतरा हुँदा अलार्म।" },
+      "steps": {
+        "en": ["Alerts from officials appear here, newest first. Tap I understand so they know you saw it.", "Share on WhatsApp to warn family and neighbours.", "When your area becomes High or Critical, a banner and an alarm sound appear on every page. Tap I understand, or Snooze for 10 minutes."],
+        "hi": ["अधिकारियों के अलर्ट यहाँ दिखते हैं, नए सबसे ऊपर। 'मैं समझ गया' दबाएँ ताकि उन्हें पता चले कि आपने देखा।", "परिवार और पड़ोसियों को बताने के लिए WhatsApp पर साझा करें।", "जब आपके इलाके में खतरा उच्च या गंभीर हो, हर पेज पर बैनर और अलार्म आता है। 'मैं समझ गया' या 10 मिनट के लिए रोकें दबाएँ।"],
+        "ne": ["अधिकारीहरूका अलर्ट यहाँ देखिन्छन्, नयाँ माथि। 'मैले बुझेँ' थिच्नुहोस् ताकि उनीहरूलाई थाहा होस्।", "परिवार र छिमेकीलाई सचेत गराउन WhatsApp मा साझा गर्नुहोस्।", "तपाईंको क्षेत्र उच्च वा गम्भीर हुँदा हरेक पेजमा ब्यानर र अलार्म आउँछ। 'मैले बुझेँ' वा 10 मिनेट रोक्नुहोस् थिच्नुहोस्।"]
+      }
+    },
+    {
+      "id": "report", "icon": "megaphone", "to": "/citizen/report",
+      "title": { "en": "Report a hazard", "hi": "खतरे की रिपोर्ट करें", "ne": "खतराको रिपोर्ट गर्नुहोस्" },
+      "what": { "en": "Tell officials about cracks, falling stones or a blocked road.", "hi": "दरारें, गिरते पत्थर या बंद सड़क के बारे में अधिकारियों को बताएँ।", "ne": "चिरा, खस्दै गरेका ढुङ्गा वा बन्द सडकबारे अधिकारीलाई जानकारी दिनुहोस्।" },
+      "steps": {
+        "en": ["Step 1: choose what you saw. Step 2: add a photo, taken from a safe distance, and a few words. Step 3: mark the place or use your location.", "Your reports shows each report's status: Submitted, Verified, Rejected or Resolved.", "Only report from a safe place. If anyone is in danger, call 112 first."],
+        "hi": ["कदम 1: जो देखा वह चुनें। कदम 2: सुरक्षित दूरी से फ़ोटो और कुछ शब्द जोड़ें। कदम 3: नक्शे पर जगह चुनें या अपनी लोकेशन दें।", "'आपकी रिपोर्टें' में हर रिपोर्ट की स्थिति दिखती है: भेजी गई, सत्यापित, अस्वीकृत या हल हुई।", "सिर्फ़ सुरक्षित जगह से रिपोर्ट करें। कोई खतरे में हो तो पहले 112 पर कॉल करें।"],
+        "ne": ["चरण 1: के देख्नुभयो छान्नुहोस्। चरण 2: सुरक्षित दूरीबाट फोटो र केही शब्द थप्नुहोस्। चरण 3: नक्सामा ठाउँ छान्नुहोस् वा आफ्नो लोकेसन दिनुहोस्।", "'तपाईंका रिपोर्ट' मा हरेक रिपोर्टको अवस्था देखिन्छ: पठाइएको, प्रमाणित, अस्वीकृत वा समाधान भएको।", "सुरक्षित ठाउँबाट मात्र रिपोर्ट गर्नुहोस्। कोही खतरामा भए पहिले 112 मा फोन गर्नुहोस्।"]
+      }
+    },
+    {
+      "id": "saathi", "icon": "sparkles", "to": null,
+      "title": { "en": "Ask Saathi", "hi": "साथी से पूछें", "ne": "साथीलाई सोध्नुहोस्" },
+      "what": { "en": "A safety assistant that answers from live data.", "hi": "एक सुरक्षा सहायक जो लाइव डेटा से जवाब देता है।", "ne": "लाइभ डेटाबाट उत्तर दिने सुरक्षा सहायक।" },
+      "steps": {
+        "en": ["Tap Ask Saathi at the bottom left. Type, tap a question button, or tap Speak. Answers come in English, Hindi or Nepali.", "Every answer about risk shows its source and update time. If there is no recent data, Saathi says so instead of guessing.", "Saathi can open the road checker for a route, guide you through a report, and answer common questions offline.", "If you write words like help or the hill is falling, Saathi shows the emergency screen straight away."],
+        "hi": ["नीचे बाईं ओर 'साथी से पूछें' दबाएँ। लिखें, कोई सवाल-बटन दबाएँ, या 'बोलें' दबाएँ। जवाब अंग्रेज़ी, हिन्दी या नेपाली में आते हैं।", "खतरे के हर जवाब के नीचे स्रोत और अपडेट का समय दिखता है। ताज़ा डेटा न हो तो साथी अंदाज़ा नहीं लगाता, साफ़ बताता है।", "साथी किसी रास्ते के लिए रोड चेकर खोल सकता है, रिपोर्ट भरने में मदद कर सकता है, और बिना इंटरनेट के आम सवालों के जवाब देता है।", "'बचाओ' या 'पहाड़ गिर रहा है' जैसे शब्द लिखते ही साथी आपातकालीन स्क्रीन दिखाता है।"],
+        "ne": ["तल बायाँ 'साथीलाई सोध्नुहोस्' थिच्नुहोस्। लेख्नुहोस्, कुनै प्रश्न-बटन थिच्नुहोस्, वा 'बोल्नुहोस्' थिच्नुहोस्। उत्तर अङ्ग्रेजी, हिन्दी वा नेपालीमा आउँछ।", "जोखिमबारे हरेक उत्तरमुनि स्रोत र अद्यावधिक समय देखिन्छ। ताजा डेटा नभए साथीले अनुमान गर्दैन, स्पष्ट भन्छ।", "साथीले कुनै बाटोका लागि रोड चेकर खोल्न, रिपोर्ट भर्न मद्दत गर्न र इन्टरनेटबिना सामान्य प्रश्नको उत्तर दिन सक्छ।", "'बचाउ' वा 'पहिरो गयो' जस्ता शब्द लेख्नेबित्तिकै साथीले आपतकालीन स्क्रिन देखाउँछ।"]
+      }
+    },
+    {
+      "id": "sos", "icon": "phone", "to": null,
+      "title": { "en": "SOS 112 and emergencies", "hi": "SOS 112 और आपात स्थिति", "ne": "SOS 112 र आपतकाल" },
+      "what": { "en": "Help is always one tap away.", "hi": "मदद हमेशा एक टैप दूर है।", "ne": "मद्दत सधैँ एक ट्याप टाढा छ।" },
+      "steps": {
+        "en": ["The red SOS 112 button is on every page. 112 is free and works 24 hours: police, fire and ambulance.", "On Home, Emergency contacts lists local disaster contacts and the nearest safe place."],
+        "hi": ["लाल 'SOS 112' बटन हर पेज पर है। 112 मुफ़्त है और 24 घंटे चलता है: पुलिस, फ़ायर और एम्बुलेंस।", "होम पर 'आपातकालीन संपर्क' में स्थानीय आपदा संपर्क और सबसे नज़दीकी सुरक्षित जगह है।"],
+        "ne": ["रातो 'SOS 112' बटन हरेक पेजमा छ। 112 निःशुल्क छ र 24 घण्टा चल्छ: प्रहरी, दमकल र एम्बुलेन्स।", "होममा 'आपतकालीन सम्पर्क' मा स्थानीय विपद् सम्पर्क र नजिकको सुरक्षित ठाउँ छ।"]
+      }
+    },
+    {
+      "id": "profile", "icon": "user", "to": "/citizen/profile",
+      "title": { "en": "Profile and settings", "hi": "प्रोफ़ाइल और सेटिंग", "ne": "प्रोफाइल र सेटिङ" },
+      "what": { "en": "Your area, language and alarm settings.", "hi": "आपका इलाका, भाषा और अलार्म की सेटिंग।", "ne": "तपाईंको क्षेत्र, भाषा र अलार्म सेटिङ।" },
+      "steps": {
+        "en": ["Set your home area, language and text size. Large makes everything easier to read.", "Turn the alarm sound, volume and vibration on or off, and test the High and Critical alarm.", "Change your password, or delete your account."],
+        "hi": ["अपना घर का इलाका, भाषा और अक्षरों का आकार चुनें। 'बड़ा' से सब पढ़ने में आसान हो जाता है।", "अलार्म की आवाज़, वॉल्यूम और कंपन चालू या बंद करें, और उच्च व गंभीर अलार्म जाँचें।", "पासवर्ड बदलें, या अपना खाता हटाएँ।"],
+        "ne": ["आफ्नो घरको क्षेत्र, भाषा र अक्षरको आकार छान्नुहोस्। 'ठूलो' ले सबै पढ्न सजिलो बनाउँछ।", "अलार्मको आवाज, भोल्युम र कम्पन खोल्नुहोस् वा बन्द गर्नुहोस्, र उच्च तथा गम्भीर अलार्म जाँच्नुहोस्।", "पासवर्ड बदल्नुहोस्, वा खाता मेटाउनुहोस्।"]
+      }
+    },
+    {
+      "id": "app", "icon": "download", "to": null,
+      "title": { "en": "Install and offline", "hi": "इंस्टॉल और ऑफ़लाइन", "ne": "इन्स्टल र अफलाइन" },
+      "what": { "en": "Use it like an app, even with a weak signal.", "hi": "ऐप की तरह इस्तेमाल करें, कमज़ोर सिग्नल में भी।", "ne": "एपजस्तै प्रयोग गर्नुहोस्, कमजोर सिग्नलमा पनि।" },
+      "steps": {
+        "en": ["Tap Install app in the header to add Bhu-Rakshak to your phone's home screen.", "Without internet, the app shows the last data it saved, with the time. Calls to 112 still work."],
+        "hi": ["ऊपर 'ऐप इंस्टॉल करें' दबाकर भू-रक्षक को फ़ोन की होम स्क्रीन पर जोड़ें।", "बिना इंटरनेट के ऐप आखिरी सहेजा डेटा समय के साथ दिखाता है। 112 पर कॉल तब भी होती है।"],
+        "ne": ["माथि 'एप इन्स्टल गर्नुहोस्' थिचेर भू-रक्षकलाई फोनको होम स्क्रिनमा थप्नुहोस्।", "इन्टरनेटबिना एपले अन्तिम सुरक्षित डेटा समयसहित देखाउँछ। 112 मा फोन तब पनि लाग्छ।"]
+      }
+    }
+  ],
+  "officer": [
+    {
+      "id": "map", "icon": "map", "to": "/authority",
+      "title": { "en": "Live risk map", "hi": "लाइव खतरा नक्शा", "ne": "लाइभ जोखिम नक्सा" },
+      "what": { "en": "Every monitored place, ranked by risk.", "hi": "निगरानी वाली हर जगह, खतरे के क्रम में।", "ne": "निगरानी गरिएका सबै ठाउँ, जोखिमको क्रममा।" },
+      "steps": {
+        "en": ["The list on the right ranks the stations. Switch Now, +6h, +12h, +24h and +48h to see the forecast.", "Use the map buttons for base maps, extra layers (regional rain, sample InSAR, burn scars, road-cutting zones, community reports), search and full screen.", "Click a pin or a station to open its panel: Overview, Conditions, Terrain, Exposure, and Incidents & Response.", "From the panel, Create incident or Draft alert (if your role allows it)."],
+        "hi": ["दाईं ओर की सूची स्टेशनों को खतरे के क्रम में दिखाती है। पूर्वानुमान के लिए अभी, +6घं, +12घं, +24घं और +48घं बदलें।", "नक्शे के बटनों से बेस मैप, अतिरिक्त परतें (क्षेत्रीय बारिश, नमूना InSAR, जले हुए क्षेत्र, सड़क-कटाई क्षेत्र, समुदाय की रिपोर्टें), खोज और पूरी स्क्रीन।", "किसी पिन या स्टेशन पर क्लिक करें: अवलोकन, स्थिति, भू-भाग, जोखिम में क्या है, और घटनाएँ व प्रतिक्रिया।", "पैनल से 'घटना बनाएँ' या 'अलर्ट का मसौदा' (अगर आपकी भूमिका अनुमति दे)।"],
+        "ne": ["दायाँको सूचीले स्टेशनहरूलाई जोखिमको क्रममा देखाउँछ। पूर्वानुमानका लागि अहिले, +6घ, +12घ, +24घ र +48घ बदल्नुहोस्।", "नक्साका बटनबाट आधार नक्सा, थप तह (क्षेत्रीय वर्षा, नमुना InSAR, डढेका क्षेत्र, सडक-कटान क्षेत्र, समुदायका रिपोर्ट), खोज र पूरा स्क्रिन।", "कुनै पिन वा स्टेशनमा क्लिक गर्नुहोस्: सारांश, अवस्था, भू-भाग, जोखिममा के छ, र घटना तथा प्रतिक्रिया।", "प्यानलबाट 'घटना बनाउनुहोस्' वा 'अलर्टको मस्यौदा' (तपाईंको भूमिकाले अनुमति दिए)।"]
+      }
+    },
+    {
+      "id": "ai", "icon": "flask", "to": "/authority",
+      "title": { "en": "AI model (experimental)", "hi": "AI मॉडल (प्रयोगात्मक)", "ne": "AI मोडेल (प्रयोगात्मक)" },
+      "what": { "en": "A second opinion that learns patterns from past landslides and runs on live data.", "hi": "एक दूसरी राय, जो पिछले भूस्खलनों से पैटर्न सीखती है और लाइव डेटा पर चलती है।", "ne": "दोस्रो राय, जसले पुराना पहिरोबाट ढाँचा सिक्छ र लाइभ डेटामा चल्छ।" },
+      "steps": {
+        "en": ["In a place's panel, the AI model shows Elevated or Normal for today and tomorrow, with its score and the rain and shaking it used.", "It was trained on recorded landslides and runs every 3 hours on live weather and earthquake data. It never sends alerts: use it alongside the main risk score.", "Its track record compares its past predictions with confirmed landslides. Download the full prediction log as CSV.", "Record a landslide adds a confirmed event. The model is judged against, and retrained on, this record. Wrong entries can be retracted, not deleted."],
+        "hi": ["किसी जगह के पैनल में AI मॉडल आज और कल के लिए 'बढ़ा हुआ' या 'सामान्य' दिखाता है, साथ में स्कोर और इस्तेमाल हुई बारिश व झटके।", "इसे दर्ज भूस्खलनों पर प्रशिक्षित किया गया है और यह हर 3 घंटे लाइव मौसम और भूकंप डेटा पर चलता है। यह कभी अलर्ट नहीं भेजता: मुख्य खतरा स्कोर के साथ इस्तेमाल करें।", "इसका ट्रैक रिकॉर्ड पिछली भविष्यवाणियों की तुलना पुष्ट भूस्खलनों से करता है। पूरा प्रेडिक्शन लॉग CSV में डाउनलोड करें।", "'भूस्खलन दर्ज करें' से पुष्ट घटना जुड़ती है। मॉडल को इसी रिकॉर्ड से परखा और दोबारा प्रशिक्षित किया जाता है। गलत प्रविष्टि वापस ली जा सकती है, मिटाई नहीं जाती।"],
+        "ne": ["कुनै ठाउँको प्यानलमा AI मोडेलले आज र भोलिका लागि 'बढेको' वा 'सामान्य' देखाउँछ, साथै स्कोर र प्रयोग गरिएको वर्षा तथा कम्पन।", "यसलाई अभिलेखित पहिरोमा तालिम दिइएको छ र यो हरेक 3 घण्टामा लाइभ मौसम र भूकम्प डेटामा चल्छ। यसले कहिल्यै अलर्ट पठाउँदैन: मुख्य जोखिम स्कोरसँगै प्रयोग गर्नुहोस्।", "यसको ट्र्याक रेकर्डले पुराना भविष्यवाणीलाई पुष्टि भएका पहिरोसँग तुलना गर्छ। पूरा प्रेडिक्सन लग CSV मा डाउनलोड गर्नुहोस्।", "'पहिरो अभिलेख गर्नुहोस्' ले पुष्टि भएको घटना थप्छ। मोडेललाई यही अभिलेखबाट जाँचिन्छ र फेरि तालिम दिइन्छ। गलत प्रविष्टि फिर्ता लिन सकिन्छ, मेटाइँदैन।"]
+      }
+    },
+    {
+      "id": "inbox", "icon": "inbox", "to": "/authority/inbox",
+      "title": { "en": "Inbox", "hi": "इनबॉक्स", "ne": "इनबक्स" },
+      "what": { "en": "Messages when risk rises in your area.", "hi": "आपके इलाके में खतरा बढ़ने पर संदेश।", "ne": "तपाईंको क्षेत्रमा जोखिम बढ्दा सन्देश।" },
+      "steps": {
+        "en": ["High and Critical changes arrive here with a pop-up and a chime. The unread count shows in the menu.", "Tap Acknowledge so your team knows it has been seen."],
+        "hi": ["उच्च और गंभीर बदलाव पॉप-अप और घंटी के साथ यहाँ आते हैं। न पढ़े संदेशों की गिनती मेनू में दिखती है।", "'स्वीकार करें' दबाएँ ताकि टीम को पता चले कि इसे देख लिया गया है।"],
+        "ne": ["उच्च र गम्भीर परिवर्तन पप-अप र घण्टीसहित यहाँ आउँछन्। नपढिएका सन्देशको सङ्ख्या मेनुमा देखिन्छ।", "'स्वीकार गर्नुहोस्' थिच्नुहोस् ताकि टोलीलाई थाहा होस् कि यो हेरिएको छ।"]
+      }
+    },
+    {
+      "id": "incidents", "icon": "clipboard", "to": "/authority/incidents",
+      "title": { "en": "Incidents", "hi": "घटनाएँ", "ne": "घटनाहरू" },
+      "what": { "en": "Track a situation from the first sign to closing it.", "hi": "किसी स्थिति को शुरू से बंद होने तक ट्रैक करें।", "ne": "कुनै अवस्थालाई सुरुदेखि बन्द हुँदासम्म ट्र्याक गर्नुहोस्।" },
+      "steps": {
+        "en": ["Create an incident from a place's panel or from a field report.", "Move it through its stages and tick the action checklist for its level. Every tick goes into the audit log.", "Assign resources such as excavators, rescue teams and ambulances, and release them when done."],
+        "hi": ["किसी जगह के पैनल या फ़ील्ड रिपोर्ट से घटना बनाएँ।", "इसे चरणों से आगे बढ़ाएँ और उसके स्तर की कार्य-सूची पर निशान लगाएँ। हर निशान ऑडिट लॉग में जाता है।", "एक्सकेवेटर, बचाव दल और एम्बुलेंस जैसे संसाधन लगाएँ, और काम पूरा होने पर हटाएँ।"],
+        "ne": ["कुनै ठाउँको प्यानल वा फिल्ड रिपोर्टबाट घटना बनाउनुहोस्।", "यसलाई चरणहरूमा अगाडि बढाउनुहोस् र त्यसको स्तरको कार्यसूचीमा चिन्ह लगाउनुहोस्। हरेक चिन्ह अडिट लगमा जान्छ।", "एक्स्काभेटर, उद्धार टोली र एम्बुलेन्स जस्ता स्रोत खटाउनुहोस्, र काम सकिएपछि फिर्ता लिनुहोस्।"]
+      }
+    },
+    {
+      "id": "alerts", "icon": "megaphone", "to": "/authority/alerts",
+      "title": { "en": "Alerts", "hi": "अलर्ट", "ne": "अलर्ट" },
+      "what": { "en": "Send public warnings to residents.", "hi": "निवासियों को सार्वजनिक चेतावनी भेजें।", "ne": "बासिन्दालाई सार्वजनिक चेतावनी पठाउनुहोस्।" },
+      "steps": {
+        "en": ["Choose where to send it: a place, a corridor or a district. An English and Hindi draft is filled in from the template; edit it if needed.", "Send alert asks you to confirm. Residents of that area see it in their Alerts page and can share it.", "Cancel an alert sent by mistake, or send an All clear when the danger has passed."],
+        "hi": ["चुनें कि कहाँ भेजना है: कोई जगह, कॉरिडोर या ज़िला। टेम्पलेट से अंग्रेज़ी और हिन्दी मसौदा भर जाता है; ज़रूरत हो तो बदलें।", "'अलर्ट भेजें' पुष्टि माँगता है। उस इलाके के निवासी इसे अपने अलर्ट पेज पर देखते हैं और साझा कर सकते हैं।", "गलती से भेजा अलर्ट रद्द करें, या खतरा टलने पर 'सब ठीक' भेजें।"],
+        "ne": ["कहाँ पठाउने छान्नुहोस्: कुनै ठाउँ, कोरिडोर वा जिल्ला। टेम्प्लेटबाट अङ्ग्रेजी र हिन्दी मस्यौदा भरिन्छ; आवश्यक भए बदल्नुहोस्।", "'अलर्ट पठाउनुहोस्' ले पुष्टि माग्छ। त्यस क्षेत्रका बासिन्दाले आफ्नो अलर्ट पेजमा देख्छन् र साझा गर्न सक्छन्।", "गल्तीले पठाइएको अलर्ट रद्द गर्नुहोस्, वा खतरा टरेपछि 'सबै ठीक' पठाउनुहोस्।"]
+      }
+    },
+    {
+      "id": "reports", "icon": "file-warning", "to": "/authority/reports",
+      "title": { "en": "Field reports", "hi": "फ़ील्ड रिपोर्टें", "ne": "फिल्ड रिपोर्टहरू" },
+      "what": { "en": "Check what residents report.", "hi": "निवासियों की रिपोर्टें जाँचें।", "ne": "बासिन्दाका रिपोर्ट जाँच्नुहोस्।" },
+      "steps": {
+        "en": ["Open a report to see its photo, place and description. Reports waiting too long are highlighted.", "Verify or Reject it. When verifying you can also create an incident, or add it to the landslide record the AI model learns from."],
+        "hi": ["फ़ोटो, जगह और विवरण देखने के लिए रिपोर्ट खोलें। देर से रुकी रिपोर्टें अलग दिखती हैं।", "सत्यापित या अस्वीकार करें। सत्यापित करते समय घटना भी बना सकते हैं, या उसे भूस्खलन रिकॉर्ड में जोड़ सकते हैं जिससे AI मॉडल सीखता है।"],
+        "ne": ["फोटो, ठाउँ र विवरण हेर्न रिपोर्ट खोल्नुहोस्। धेरै बेर पर्खिरहेका रिपोर्ट छुट्टै देखिन्छन्।", "प्रमाणित वा अस्वीकार गर्नुहोस्। प्रमाणित गर्दा घटना पनि बनाउन सक्नुहुन्छ, वा AI मोडेलले सिक्ने पहिरो अभिलेखमा थप्न सक्नुहुन्छ।"]
+      }
+    },
+    {
+      "id": "roads", "icon": "route", "to": "/authority/roads",
+      "title": { "en": "Roads", "hi": "सड़कें", "ne": "सडकहरू" },
+      "what": { "en": "Road status that residents and navigation follow.", "hi": "सड़कों की स्थिति, जिसे निवासी और नेविगेशन मानते हैं।", "ne": "सडकको अवस्था, जुन बासिन्दा र नेभिगेसनले पछ्याउँछन्।" },
+      "steps": {
+        "en": ["Set each road to Open, Caution, Restricted, Blocked or Cleared, with a clearing time and a diversion in English and Hindi.", "Turn the Tourist and Heavy-vehicle advisories on or off. Some roles can view roads but not change them.", "Check a road corridor shows the risk along any route; Get directions opens it in Google Maps."],
+        "hi": ["हर सड़क को खुली, सावधानी, सीमित, बंद या साफ़ पर रखें, साथ में खुलने का समय और अंग्रेज़ी व हिन्दी में दूसरा रास्ता।", "पर्यटक और भारी-वाहन सलाह चालू या बंद करें। कुछ भूमिकाएँ सड़कें देख सकती हैं, बदल नहीं सकतीं।", "'सड़क कॉरिडोर जाँचें' किसी भी रास्ते का खतरा दिखाता है; 'रास्ता पाएँ' उसे Google Maps में खोलता है।"],
+        "ne": ["हरेक सडकलाई खुला, सावधानी, सीमित, बन्द वा खुलिसकेको राख्नुहोस्, साथै खुल्ने समय र अङ्ग्रेजी तथा हिन्दीमा अर्को बाटो।", "पर्यटक र भारी-सवारी सल्लाह खोल्नुहोस् वा बन्द गर्नुहोस्। केही भूमिकाले सडक हेर्न सक्छन्, बदल्न सक्दैनन्।", "'सडक कोरिडोर जाँच्नुहोस्' ले कुनै पनि बाटोको जोखिम देखाउँछ; 'बाटो पाउनुहोस्' ले Google Maps मा खोल्छ।"]
+      }
+    },
+    {
+      "id": "resources", "icon": "truck", "to": "/authority/resources",
+      "title": { "en": "Resources", "hi": "संसाधन", "ne": "स्रोतहरू" },
+      "what": { "en": "Machines, teams and shelters.", "hi": "मशीनें, दल और शिविर।", "ne": "मेसिन, टोली र शिविर।" },
+      "steps": {
+        "en": ["See excavators, rescue teams, ambulances and relief shelters with their status and district.", "Deploy or release them, and update how many places a shelter has in use."],
+        "hi": ["एक्सकेवेटर, बचाव दल, एम्बुलेंस और राहत शिविर उनकी स्थिति और ज़िले के साथ देखें।", "उन्हें लगाएँ या हटाएँ, और शिविर में भरी जगहों की संख्या अपडेट करें।"],
+        "ne": ["एक्स्काभेटर, उद्धार टोली, एम्बुलेन्स र राहत शिविर तिनको अवस्था र जिल्लासहित हेर्नुहोस्।", "तिनलाई खटाउनुहोस् वा फिर्ता लिनुहोस्, र शिविरमा भरिएका ठाउँको सङ्ख्या अद्यावधिक गर्नुहोस्।"]
+      }
+    },
+    {
+      "id": "tools", "icon": "wrench", "to": null,
+      "title": { "en": "Tools", "hi": "टूल्स", "ne": "टुल्स" },
+      "what": { "en": "Reports, records, practice and system health (Tools menu, top right).", "hi": "रिपोर्ट, रिकॉर्ड, अभ्यास और सिस्टम की सेहत (ऊपर दाईं ओर टूल्स मेनू)।", "ne": "रिपोर्ट, अभिलेख, अभ्यास र प्रणालीको अवस्था (माथि दायाँ टुल्स मेनु)।" },
+      "steps": {
+        "en": ["Situation report: a one-page summary of today. Print it or save it as PDF.", "Audit log: every action taken, by whom and when.", "Storm drill (SDMA): practise with simulated heavy rain on chosen corridors. Turn it off afterwards.", "System health: whether each data feed (weather, IMD, earthquakes, AI model) is working."],
+        "hi": ["स्थिति रिपोर्ट: आज का एक पेज का सार। प्रिंट करें या PDF में सहेजें।", "ऑडिट लॉग: हर कार्रवाई, किसने और कब की।", "तूफ़ान अभ्यास (SDMA): चुने हुए कॉरिडोर पर नकली भारी बारिश से अभ्यास करें। बाद में बंद करें।", "सिस्टम की सेहत: हर डेटा फ़ीड (मौसम, IMD, भूकंप, AI मॉडल) काम कर रही है या नहीं।"],
+        "ne": ["स्थिति रिपोर्ट: आजको एक पेजको सारांश। प्रिन्ट गर्नुहोस् वा PDF मा सुरक्षित गर्नुहोस्।", "अडिट लग: हरेक कार्य, कसले र कहिले गर्‍यो।", "आँधी अभ्यास (SDMA): छानिएका कोरिडोरमा नक्कली ठूलो वर्षाले अभ्यास गर्नुहोस्। पछि बन्द गर्नुहोस्।", "प्रणालीको अवस्था: हरेक डेटा फिड (मौसम, IMD, भूकम्प, AI मोडेल) चलिरहेको छ कि छैन।"]
+      }
+    },
+    {
+      "id": "settings", "icon": "settings", "to": "/authority/settings",
+      "title": { "en": "Settings", "hi": "सेटिंग", "ne": "सेटिङ" },
+      "what": { "en": "Your account and display.", "hi": "आपका खाता और डिस्प्ले।", "ne": "तपाईंको खाता र डिस्प्ले।" },
+      "steps": {
+        "en": ["Language and display, text size, and the chime for new High or Critical inbox messages.", "Change your password."],
+        "hi": ["भाषा और डिस्प्ले, अक्षरों का आकार, और उच्च या गंभीर इनबॉक्स संदेशों की घंटी।", "पासवर्ड बदलें।"],
+        "ne": ["भाषा र डिस्प्ले, अक्षरको आकार, र उच्च वा गम्भीर इनबक्स सन्देशको घण्टी।", "पासवर्ड बदल्नुहोस्।"]
+      }
+    }
+  ]
+}

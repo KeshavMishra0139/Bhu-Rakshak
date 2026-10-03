@@ -1306,5 +1306,19 @@
     "swipe": "Swipe sideways to see all columns",
     "sources": "Sources (checked {{date}})",
     "note": "Table text is in English; edit client/src/data/comparison.json to correct or update a cell."
+  },
+  "guide": {
+    "link": "Guide",
+    "title_citizen": "How to use Bhu-Rakshak",
+    "intro_citizen": "Every page, in a few simple steps. Tap a button to open that page.",
+    "title_officer": "Officer and SDMA guide",
+    "intro_officer": "Every page of the officer dashboard, in a few steps.",
+    "roles_note": "You only see the pages and buttons your role allows.",
+    "jump": "Jump to",
+    "open": "Open this page",
+    "replay_tour": "Replay the home tour",
+    "open_full": "Open the full guide",
+    "card_title": "How to use Bhu-Rakshak",
+    "card_body": "A short guide to every page."
   }
 }

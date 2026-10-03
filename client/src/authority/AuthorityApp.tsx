@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState, type ReactNod
 import { NavLink, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import { PageTransition } from '../components/PageTransition';
 import { useTranslation } from 'react-i18next';
-import { Map, Inbox, ClipboardList, Megaphone, FileWarning, Route as RouteIcon, Truck, Wrench, ScrollText, Activity, FileText, UserRound, LogOut, Settings } from 'lucide-react';
+import { Map, Inbox, ClipboardList, Megaphone, FileWarning, Route as RouteIcon, Truck, Wrench, ScrollText, Activity, FileText, UserRound, LogOut, Settings, BookOpen } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthProvider';
 import { useStreamEvent, useRiskStream } from '../live/RiskStreamProvider';
@@ -29,6 +29,7 @@ const CorridorCheckPage = lazy(() => import('../citizen/CorridorCheckPage'));
 import ResourcesPage from './ResourcesPage';
 import AuditPage from './AuditPage';
 import SitrepPage from './SitrepPage';
+import GuidePage from '../pages/GuidePage';
 import { OfflineBanner } from '../components/OfflineBanner';
 
 function Popover({ label, icon, children, align = 'right' }: { label: string; icon: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
@@ -45,7 +46,8 @@ function Popover({ label, icon, children, align = 'right' }: { label: string; ic
   }, [open]);
   return (
     <div className="relative" ref={ref}>
-      <button type="button" className="btn-ghost px-3" aria-expanded={open} aria-haspopup="true" onClick={() => setOpen((v) => !v)}>
+      {/* On the dark header in both themes (btn-ghost alone gives dark text, invisible in the light theme). */}
+      <button type="button" className="btn-ghost px-3 text-on-brand hover:bg-white/10" aria-expanded={open} aria-haspopup="true" onClick={() => setOpen((v) => !v)}>
         {icon}<span className="hidden xl:inline">{label}</span>
       </button>
       {open && <div className={`pop-enter absolute ${align === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'} top-full mt-1 z-[1000] w-[340px] max-w-[92vw] card shadow-2xl p-4`} onClick={(e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false); }}>{children}</div>}
@@ -107,7 +109,12 @@ function Shell({ children }: { children: ReactNode }) {
               </NavLink>
             ))}
           </nav>
-          <div className="hidden md:flex items-center gap-2 mr-1"><LiveIndicator onDark /><UpdatedAgo at={lastUpdateAt} className="!text-on-brand/60" /></div>
+          {/* "Updated …" only on very wide screens, so every menu item fits at laptop width (the Live dot stays). */}
+          <div className="hidden md:flex items-center gap-2 mr-1"><LiveIndicator onDark /><UpdatedAgo at={lastUpdateAt} className="hidden 2xl:inline !text-on-brand/60" /></div>
+          <NavLink to={withPane('/authority/guide')} className={({ isActive }) => `btn-ghost px-3 ${isActive ? 'bg-white/15 text-white' : 'text-on-brand hover:bg-white/10'}`}
+            title={t('guide.link')} aria-label={t('guide.link')}>
+            <BookOpen size={18} aria-hidden />
+          </NavLink>
           <Popover label={t('nav.tools')} icon={<Wrench size={18} aria-hidden />}>
             <div className="space-y-4 text-ink">
               <div className="flex flex-col gap-1">
@@ -164,6 +171,7 @@ export default function AuthorityApp() {
               <Route path="resources" element={<ResourcesPage />} />
               <Route path="audit" element={<AuditPage />} />
               <Route path="settings" element={<SettingsPage />} />
+              <Route path="guide" element={<GuidePage role="officer" />} />
               <Route path="*" element={<MapPage />} />
             </Routes>
           </Shell>
