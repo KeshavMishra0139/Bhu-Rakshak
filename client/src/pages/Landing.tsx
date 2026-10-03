@@ -27,7 +27,7 @@ export default function Landing() {
       <AppHeader>
         <div className="flex justify-end gap-2">
           {me ? <Link to={homePathFor(me)} className="btn-primary">{t('landing.open_live')}</Link>
-            : <><Link to="/login" className="btn-ghost">{t('common.sign_in')}</Link><Link to="/signup" className="btn-primary hidden sm:inline-flex">{t('landing.sign_up')}</Link></>}
+            : <><Link to="/login" className="btn-ghost whitespace-nowrap">{t('common.sign_in')}</Link><Link to="/signup" className="btn-primary hidden sm:inline-flex">{t('landing.sign_up')}</Link></>}
         </div>
       </AppHeader>
       <main id="main">
@@ -46,14 +46,16 @@ export default function Landing() {
                 )}
               </div>
               <dl className="mt-10 grid grid-cols-3 gap-4 max-w-lg">
-                <div><dt className="text-sm text-on-brand/70">{t('landing.stat_monitored')}</dt><dd className="text-3xl font-bold text-white tabular-nums">{list.length || '–'}</dd></div>
-                <div><dt className="text-sm text-on-brand/70">{t('landing.stat_watches')}</dt><dd className="text-3xl font-bold text-white tabular-nums">{list.length ? watches : '–'}</dd></div>
-                <div><dt className="text-sm text-on-brand/70">{t('landing.stat_refresh')}</dt><dd className="text-3xl font-bold text-white tabular-nums">{weatherAt ? timeIST(weatherAt, i18n.language) : '–'}</dd></div>
+                <div><dt className="text-sm text-on-brand/70">{t('landing.stat_monitored')}</dt><dd className="text-2xl sm:text-3xl font-bold text-white tabular-nums">{list.length || '–'}</dd></div>
+                <div><dt className="text-sm text-on-brand/70">{t('landing.stat_watches')}</dt><dd className="text-2xl sm:text-3xl font-bold text-white tabular-nums">{list.length ? watches : '–'}</dd></div>
+                <div><dt className="text-sm text-on-brand/70">{t('landing.stat_refresh')}</dt><dd className="text-2xl sm:text-3xl font-bold text-white tabular-nums">{weatherAt ? timeIST(weatherAt, i18n.language) : '–'}</dd></div>
               </dl>
               <div className="mt-6"><WatchStrip onDark /></div>
             </div>
             <div className="relative isolate">
-              <div className="h-[380px] lg:h-[460px] rounded-2xl overflow-hidden border border-white/15 shadow-2xl">
+              {/* A soft glow behind the map lifts it off the hero without a hard frame. */}
+              <div aria-hidden className="absolute -inset-10 -z-10 rounded-[3rem] bg-[radial-gradient(closest-side,rgb(124_196_207/0.16),transparent)]" />
+              <div className="h-[380px] lg:h-[460px] rounded-2xl overflow-hidden border border-white/15 shadow-2xl ring-1 ring-black/20">
                 <Suspense fallback={<div className="h-full w-full bg-white/5 animate-pulse" />}><LandingMap /></Suspense>
               </div>
               <div className="absolute top-3 left-3 z-[500] rounded-lg bg-brand-deep/85 px-3 py-1.5 flex items-center gap-3">
@@ -65,15 +67,16 @@ export default function Landing() {
 
         <section className="mx-auto max-w-7xl px-5 py-14" aria-labelledby="how">
           <h2 id="how" className="text-2xl font-bold">{t('landing.how_title')}</h2>
-          <ol className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* The four steps as one flow: a line joins the icons on wide screens (the order is already the list's). */}
+          <ol className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             {STEPS.map(([k, Icon], i) => (
               <li key={k} className="relative">
                 <div className="flex items-center gap-3">
-                  <span className="h-11 w-11 rounded-full bg-brand/12 text-brand inline-flex items-center justify-center"><Icon size={22} aria-hidden /></span>
-                  <span className="font-mono text-sm text-muted">{i + 1} / 4</span>
+                  <span className="relative z-[1] h-12 w-12 rounded-2xl bg-brand/12 text-brand ring-1 ring-brand/20 inline-flex items-center justify-center"><Icon size={22} aria-hidden /></span>
+                  {i < STEPS.length - 1 && <span aria-hidden className="hidden lg:block h-px flex-1 bg-gradient-to-r from-brand/40 to-brand/5" />}
                 </div>
-                <h3 className="mt-3 text-xl font-bold">{t(`landing.${k}`)}</h3>
-                <p className="mt-1 text-muted">{t(`landing.${k}_d`)}</p>
+                <h3 className="mt-4 text-xl font-semibold">{t(`landing.${k}`)}</h3>
+                <p className="mt-1.5 max-w-[34ch] text-muted">{t(`landing.${k}_d`)}</p>
               </li>
             ))}
           </ol>

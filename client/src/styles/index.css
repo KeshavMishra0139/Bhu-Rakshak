@@ -5,12 +5,13 @@
 /* Theme tokens as RGB triplets so Tailwind can apply alpha. */
 :root,
 [data-theme='light'] {
-  --bg: 246 244 239;          /* warm paper */
+  --bg: 243 246 246;          /* mist: neutrals share the teal ink's cool tint */
   --surface: 255 255 255;
-  --surface-2: 238 235 227;
+  --surface-2: 234 240 241;
   --ink: 22 36 42;
   --muted: 88 104 110;
-  --line: 218 213 202;
+  --line: 213 223 226;
+  --shadow: 11 42 51;         /* shadows tinted deep teal, not black */
   --brand: 15 94 110;         /* teal: actions, links */
   --brand-deep: 11 42 51;     /* teal-navy: sidebar, brand panel */
   --on-brand: 232 241 242;
@@ -31,6 +32,7 @@
   --ink: 228 237 239;
   --muted: 150 168 174;
   --line: 36 62 74;
+  --shadow: 1 8 11;
   --brand: 92 182 196;
   --brand-deep: 7 20 25;
   --on-brand: 220 236 239;
@@ -62,6 +64,14 @@ body {
 }
 html[lang='hi'] body, html[lang='ne'] body { @apply font-deva; line-height: 1.65; }
 
+/* Headings: a display face with a little more character than the body text, balanced line breaks. Tighter tracking
+   only for Latin-script languages (it would crowd Devanagari and Bengali). */
+h1, h2, h3 { @apply font-display; text-wrap: balance; }
+html:is([lang='en'], [lang='lus'], [lang='nag']) h1 { letter-spacing: -0.02em; }
+p { text-wrap: pretty; }
+::selection { background: rgb(var(--brand) / 0.25); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
 /* Visible keyboard focus everywhere. */
 :focus-visible {
   outline: 2px solid rgb(var(--focus));
@@ -78,11 +88,13 @@ html[lang='hi'] body, html[lang='ne'] body { @apply font-deva; line-height: 1.65
 }
 
 @layer components {
-  .card { @apply bg-surface border border-line rounded-card; transition: box-shadow 0.25s var(--ease-out), border-color 0.25s, transform 0.25s var(--ease-out); }
+  .card { @apply bg-surface border border-line rounded-card shadow-sm; transition: box-shadow 0.25s var(--ease-out), border-color 0.25s, transform 0.25s var(--ease-out); }
+  /* Dark: a faint top light gives cards depth without a heavier border. */
+  [data-theme='dark'] .card { background-image: linear-gradient(180deg, rgb(255 255 255 / 0.028), transparent 140px); }
   /* Cards you can click lift slightly. */
   .card-hover:hover { @apply shadow-md; border-color: rgb(var(--brand) / 0.35); transform: translateY(-1px); }
   .label-mono { @apply font-mono text-[0.75rem] text-muted tracking-normal; }
-  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[0.95rem] font-semibold disabled:opacity-50 disabled:cursor-not-allowed; min-height: 44px;
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-[10px] px-4 py-2.5 text-[0.95rem] font-semibold disabled:opacity-50 disabled:cursor-not-allowed; min-height: 44px;
     transition: background-color 0.18s, border-color 0.18s, color 0.18s, box-shadow 0.22s var(--ease-out), transform 0.12s var(--ease-out); }
   .btn:active:not(:disabled) { transform: scale(0.97); }
   .btn-primary { @apply btn bg-brand text-white hover:bg-brand/90 shadow-sm hover:shadow-md; }
@@ -90,7 +102,7 @@ html[lang='hi'] body, html[lang='ne'] body { @apply font-deva; line-height: 1.65
   .btn-secondary { @apply btn bg-surface text-ink border border-line hover:bg-surface-2; }
   .btn-ghost { @apply btn bg-transparent text-ink hover:bg-surface-2; }
   .btn-danger { @apply btn bg-risk-critical text-white hover:bg-risk-critical/90; }
-  .input { @apply w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-ink placeholder:text-muted/70 focus:border-brand; min-height: 44px;
+  .input { @apply w-full rounded-[10px] border border-line bg-surface px-3 py-2.5 text-ink placeholder:text-muted/70 focus:border-brand; min-height: 44px;
     transition: border-color 0.18s, box-shadow 0.18s; }
   .input:focus { box-shadow: 0 0 0 3px rgb(var(--brand) / 0.15); }
   .field-label { @apply block text-sm font-semibold mb-1.5; }

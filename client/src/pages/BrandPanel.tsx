@@ -18,7 +18,7 @@ export function BrandPanel() {
       <Contours className="absolute -right-24 -top-10 w-[720px] h-[720px] text-[#7CC4CF] opacity-[0.22] pointer-events-none" />
       <Link to="/" className="relative self-start"><Logo onDark /></Link>
       <div className="relative mt-10 lg:mt-auto max-w-md hidden sm:block">
-        <p className="text-[2rem] lg:text-[2.4rem] font-bold leading-[1.1] text-white text-balance">{t('landing.headline')}</p>
+        <p className="font-display text-[2rem] lg:text-[2.4rem] font-bold leading-[1.1] tracking-[-0.02em] text-white text-balance">{t('landing.headline')}</p>
         <p className="mt-3 text-on-brand/80 text-[1.02rem]">{t('app.tagline')}</p>
       </div>
       <section className="relative mt-8 lg:mt-12 max-w-md" aria-labelledby="live-strip">

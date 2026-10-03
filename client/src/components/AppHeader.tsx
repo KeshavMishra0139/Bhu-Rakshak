@@ -24,7 +24,8 @@ export function AppHeader({ children }: { children?: ReactNode }) {
           <UpdatedAgo at={lastUpdateAt} />
         </div>
         <div className="flex-1">{children}</div>
-        <div className="md:hidden"><LiveIndicator /></div>
+        {/* Phones under 640 px have no room for it next to sign-in and language (the map shows Live). */}
+        <div className="hidden sm:block md:hidden"><LiveIndicator /></div>
         <LanguageToggle />
         <div className="hidden sm:block"><ThemeToggle /></div>
         {me && (
