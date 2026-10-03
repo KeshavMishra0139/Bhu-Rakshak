@@ -156,7 +156,6 @@
     "lt_critical": "Hlauhawm em em",
     "s_low": "Vawiinah {{road}}-ah pangngai takin i kal thei.",
     "s_moderate": "Vawiin {{time}} hnu chuan {{road}}-ah kal suh.",
-    "s_moderate_tomorrow": "Naktuk {{time}} hnu chuan {{road}}-ah kal suh.",
     "s_moderate_notime": "{{road}}-ah fimkhur takin, chhun lamah chauh kal rawh.",
     "s_high": "{{road}}-ah kal suh. Tlang pang leh lui atang hian hla takah awm rawh.",
     "s_critical": "Tunah hmun him lamah kal rawh. {{road}} hmang suh.",

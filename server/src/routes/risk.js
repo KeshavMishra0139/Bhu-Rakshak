@@ -51,14 +51,11 @@ r.get('/risk/forecast', ah(async (req, res) => {
   if (hourly) {
     const i = hourIndex(hourly, now);
     const ramp = getControls().scenario.active || rampFor(loc.corridor_id) > 0 ? Math.pow(rampFor(loc.corridor_id), 1.7) : 0;
-    // Each value is one IST clock hour of the forecast, so label it with that hour's start ("4:00 am", not "4:40 am").
-    const hourStart = now - ((now + 5.5 * 3600000) % 3600000);
     for (let h = 1; h <= 48; h++) {
       const k = Math.min(hourly.time.length - 1, i + h);
       const persist = Math.max(0, 1 - h / 36);
       const mm = (hourly.precipitation?.[k] || 0) + ramp * riskConfig.scenario.maxRainIntensityBoostMm * 0.5 * persist;
-      const at = hourStart + h * 3600000;
-      rain.push({ time: new Date(at).toISOString(), hour_ist: Math.floor(istHourOfDay(at)), rain_mm: round(mm, 1) });
+      rain.push({ time: new Date(now + h * 3600000).toISOString(), hour_ist: Math.floor(istHourOfDay(now + h * 3600000)), rain_mm: round(mm, 1) });
     }
   }
   // Best 3-hour daylight window (06:00–18:00 IST) in the next 36 h with the least rain.

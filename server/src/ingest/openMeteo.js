@@ -46,20 +46,6 @@ function storeLocation(loc, hourly, daily, source, fetchedAt) {
     { id: loc.id, at: fetchedAt, h: JSON.stringify(hourly), d: JSON.stringify(daily || {}), f: JSON.stringify(features), src: source });
 }
 
-/** Error for a refused request, with Open-Meteo's own explanation, e.g. "HTTP 429 (Daily API request limit exceeded…)". */
-export async function httpError(res, label = 'HTTP') {
-  let reason = '';
-  try { reason = String(JSON.parse(await res.text())?.reason || ''); } catch { /* no readable body */ }
-  const err = new Error(`${label} ${res.status}${reason ? ` (${reason.slice(0, 160)})` : ''}`);
-  err.status = res.status;
-  return err;
-}
-
-// True while Open-Meteo is refusing our requests for exceeding its usage limit (HTTP 429). On shared hosting the
-// limit is shared with other apps on the same internet address, so the AI model's request would be refused too.
-let refused = false;
-export const openMeteoRefused = () => refused;
-
 /** Fetch all locations in one call. Keeps the last cached snapshot on any failure. */
 export async function refreshWeather({ fetchImpl = globalThis.fetch, timeoutMs = 20000 } = {}) {
   const locations = q.all('SELECT id, lat, lng FROM locations ORDER BY id');
@@ -70,7 +56,7 @@ export async function refreshWeather({ fetchImpl = globalThis.fetch, timeoutMs =
     const timer = setTimeout(() => ctrl.abort(), timeoutMs);
     const res = await fetchImpl(url, { signal: ctrl.signal, headers: { 'User-Agent': 'Bhu-Rakshak/0.1 (SIH 2026 prototype)' } });
     clearTimeout(timer);
-    if (!res.ok) throw await httpError(res);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     let body = await res.json();
     if (!Array.isArray(body)) body = [body];
     if (body.length !== locations.length) throw new Error(`expected ${locations.length} results, got ${body.length}`);
@@ -80,11 +66,9 @@ export async function refreshWeather({ fetchImpl = globalThis.fetch, timeoutMs =
       storeLocation(locations[k], r.hourly, r.daily, 'open-meteo', fetchedAt);
     }));
     setFeed('open_meteo', 'ok', `${locations.length} locations`, true);
-    refused = false;
     bus.emit('weather_refreshed', { at: fetchedAt, source: 'open-meteo' });
     return { ok: true, count: locations.length };
   } catch (e) {
-    refused = e.status === 429;
     const msg = e.name === 'AbortError' ? 'timeout' : e.message;
     const cached = q.one('SELECT COUNT(*) AS n FROM weather_cache WHERE source = :s', { s: 'open-meteo' }).n;
     setFeed('open_meteo', cached ? 'degraded' : 'error', `Serving last cached snapshot (${msg})`, false);
@@ -105,26 +89,6 @@ export function ensureFallback() {
   return missing.length;
 }
 
-// After a failed refresh, try again sooner than the regular schedule: 5 min later, then 15 min after that.
-// The ladder restarts after the next success.
-const RETRY_MINUTES = [5, 15];
-let retryTimer = null;
-let retries = 0;
-async function scheduledRefresh() {
-  const r = await refreshWeather();
-  if (r.ok) {
-    retries = 0;
-    clearTimeout(retryTimer);
-    retryTimer = null;
-    return;
-  }
-  if (retryTimer || retries >= RETRY_MINUTES.length) return;
-  const minutes = RETRY_MINUTES[retries++];
-  console.warn(`[open-meteo] trying again in ${minutes} min.`);
-  retryTimer = setTimeout(() => { retryTimer = null; scheduledRefresh(); }, minutes * 60000);
-  retryTimer.unref?.();
-}
-
 let cronTask;
 let intervalHandle;
 export async function startWeatherSchedule() {
@@ -133,17 +97,16 @@ export async function startWeatherSchedule() {
     setFeed('open_meteo', 'degraded', 'Ingest disabled by DISABLE_INGEST', false);
     return;
   }
-  scheduledRefresh(); // fire and forget; cached/fallback data serves meanwhile
+  refreshWeather(); // fire and forget; cached/fallback data serves meanwhile
   const minutes = riskConfig.live.openMeteoRefreshMinutes;
   try {
     const cron = (await import('node-cron')).default;
-    cronTask = cron.schedule(`*/${minutes} * * * *`, () => scheduledRefresh(), { timezone: 'Asia/Kolkata' });
+    cronTask = cron.schedule(`*/${minutes} * * * *`, () => refreshWeather(), { timezone: 'Asia/Kolkata' });
   } catch {
-    intervalHandle = setInterval(() => scheduledRefresh(), minutes * 60000);
+    intervalHandle = setInterval(() => refreshWeather(), minutes * 60000);
   }
 }
 export function stopWeatherSchedule() {
   cronTask?.stop();
   if (intervalHandle) clearInterval(intervalHandle);
-  clearTimeout(retryTimer);
 }

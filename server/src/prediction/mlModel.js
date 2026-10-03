@@ -12,9 +12,8 @@ import path from 'node:path';
 import { q, tx } from '../db/index.js';
 import { env, REPO_ROOT } from '../config/env.js';
 import { nowIso } from '../lib/util.js';
-import { setFeed, httpError, openMeteoRefused } from '../ingest/openMeteo.js';
+import { setFeed } from '../ingest/openMeteo.js';
 import { seismicData } from '../ingest/seismic.js';
-import { bus } from '../events/bus.js';
 import { liveFeatures } from '../../../ml/live_features.mjs';
 import { predictProba } from '../../../ml/gbdt.mjs';
 
@@ -99,7 +98,7 @@ export async function refreshMl({ fetchImpl = globalThis.fetch, now = Date.now()
   });
   try {
     const res = await fetchImpl(`https://api.open-meteo.com/v1/forecast?${params}`, { headers: { 'User-Agent': 'Bhu-Rakshak/0.1 (SIH 2026 prototype)' }, signal: AbortSignal.timeout(30000) });
-    if (!res.ok) throw await httpError(res, 'Open-Meteo HTTP');
+    if (!res.ok) throw new Error(`Open-Meteo HTTP ${res.status}`);
     const body = await res.json();
     const series = Array.isArray(body) ? body : [body];
     const today = istDate(now);
@@ -135,31 +134,11 @@ export const latestMl = () => latest;
 export const predictionLog = () => q.all('SELECT location_id, for_date, issued_on, score, elevated, model_version, computed_at FROM ml_predictions ORDER BY for_date, location_id, issued_on');
 
 let timer;
-let started = false;
-let running = null;
-const runMl = () => (running ??= refreshMl().finally(() => { running = null; }));
-
-/** A scheduled run waits while Open-Meteo is refusing the site's weather requests (its request would be refused too). */
-function scheduledMl() {
-  started = true;
-  if (!openMeteoRefused()) return runMl();
-  setFeed('ml_model', latest.computed_at ? 'degraded' : 'error', 'Experimental model: waiting until Open-Meteo accepts requests again', false);
-}
-// When weather comes back after a refusal, catch up at once instead of waiting for the next 3-hourly run.
-function onWeather({ source }) {
-  if (!started || source !== 'open-meteo') return;
-  if (!latest.computed_at || Date.now() - Date.parse(latest.computed_at) > REFRESH_MIN * 60000) runMl();
-}
-
 export function startMlSchedule() {
   try { loadModel(); } catch (e) { setFeed('ml_model', 'not_configured', `Model file missing: ${e.message}`, false); return; }
   if (env.disableIngest) { setFeed('ml_model', 'degraded', 'Ingest disabled by DISABLE_INGEST', false); return; }
-  setTimeout(scheduledMl, 5000).unref?.(); // after the seismic feed's first load
-  timer = setInterval(scheduledMl, REFRESH_MIN * 60000);
+  setTimeout(() => refreshMl(), 5000).unref?.(); // after the seismic feed's first load
+  timer = setInterval(() => refreshMl(), REFRESH_MIN * 60000);
   timer.unref?.();
-  bus.on('weather_refreshed', onWeather);
 }
-export function stopMlSchedule() {
-  if (timer) clearInterval(timer);
-  bus.off('weather_refreshed', onWeather);
-}
+export function stopMlSchedule() { if (timer) clearInterval(timer); }
