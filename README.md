@@ -5,10 +5,11 @@ Team ByteMatrix, Smart India Hackathon 2026 (SIH26001). **Predict → Visualize 
 
 One app, two products chosen by the account role:
 
-- **Authority dashboard**: a full-screen, map-first command centre with an inbox, incidents, alerts, field reports, roads, resources, an audit log, a situation report and system health.
-- **Citizen website**: a calm, responsive site with five sections (Home, Roads, Alerts, Report, Profile), a High/Critical alarm, and **Bhu-Rakshak Saathi**, a safety assistant (floating "Ask Saathi" button on every page, styled after the team portal's Saathi). Saathi answers in English or Hindi from live risk, rain and road data for the chosen place: travel safety, why the risk is what it is, what to do now, landslide warning signs, how to report, rain, and emergencies (always pointing to 112). It takes typed or spoken questions (browser speech recognition, Chrome/Edge) and can read answers aloud.
+- **Authority dashboard** (officers and SDMA): a full-screen, map-first command centre with an inbox, incidents, alerts, field reports, roads with a route checker, resources, an audit log, a situation report, system health, and an **experimental AI model** that learns from recorded landslides, runs every 3 hours on live weather and earthquake data, and shows its own track record (it never sends alerts).
+- **Citizen website**: a calm, responsive site (Home, Map, Roads, Alerts, Report, Profile) that answers "am I safe and what should I do?" first, with a High/Critical alarm, warning signs, the nearest safe place, a route checker with Google Maps directions, and **Bhu-Rakshak Saathi**, a safety assistant. Saathi answers in English, Hindi or Nepali from live risk, rain and road data (always with its source and update time, and never guessing when data is missing), opens the road checker or the report form for you, switches to an emergency screen on words like "help", and answers common questions offline.
+- **Guides** for both: `/citizen/guide` and `/authority/guide` explain every page; sign-up offers "Citizen" or "Officer / SDMA" (officer accounts are approved by an administrator).
 
-Both work in English and Hindi, and in Light / Dark / System themes.
+Languages: English, Hindi and Nepali, plus draft Assamese, Mizo and Nagamese for the citizen screens. Light / Dark / System themes. Installable, and usable offline with the last saved data.
 
 ## Run it
 
@@ -75,12 +76,13 @@ Actions taken while viewing as another role are logged as `developer (as <role>)
 
 | | Component |
 | --- | --- |
-| **Real** | Open-Meteo weather and soil moisture (fetched every 30 min, cached, served offline), IMD district warnings and nowcasts (every 30 min once `IMD_API_KEY` and `IMD_TOKEN` are set), Esri satellite and street maps, Google Street View (embedded), auth and roles, inbox routing and escalation, incidents with SOP checklist and audit log, alerts with dashboard delivery and acknowledgement counts, citizen reports with verification, roads, resources, situation report, EN/HI, themes |
+| **Real** | Open-Meteo weather and soil moisture (fetched every 30 min, cached, served offline), IMD district warnings and nowcasts (every 30 min once `IMD_API_KEY` and `IMD_TOKEN` are set), Esri satellite and street maps, Google Street View (embedded), auth and roles, inbox routing and escalation, incidents with SOP checklist and audit log, alerts with dashboard delivery and acknowledgement counts, citizen reports with verification, roads, resources, situation report, earthquakes (NCS, USGS backup), English / Hindi / Nepali, themes |
 | **Generated** | Live risk values: a transparent baseline engine anchored on real weather, with bounded live variation and the Storm scenario. Derived features (saturation index, cloudburst and freeze–thaw flags). Saathi assistant answers (templates over live data; no external AI service). Historical landslide points (seeded from per-location counts). |
 | **Seed placeholders** | Slope, geology, NDVI, land cover, river and road distance, landslide history, population and facilities (`server/src/data/*.json`), road statuses, resources and contacts |
-| **Pending / stubs (labelled in code)** | Trained ML model (`ModelPredictionProvider`, `POST {MODEL_URL}/predict`); SMS and push delivery (`notifications/providers.js`, logged through the provider interface); seismic feed and ground sensors; official Survey of India boundary (place it at `client/public/geo/india_boundary.geojson`; until then the legend shows "Official boundary data pending"); real GIS layers from Bhuvan, GSI and the census |
+| **Experimental** | The AI model (`server/src/prediction/mlModel.js`, `ml/`): gradient-boosted trees trained on recorded landslides, scored every 3 hours on live Open-Meteo and NCS/USGS earthquake data, logged daily and judged against the confirmed-landslide record officers keep. A second opinion for officers only. |
+| **Pending / stubs (labelled in code)** | An external model service (`ModelPredictionProvider`, `POST {MODEL_URL}/predict`); SMS and push delivery (`notifications/providers.js`, logged through the provider interface); ground sensors; official Survey of India boundary (place it at `client/public/geo/india_boundary.geojson`; until then the legend shows "Official boundary data pending"); real GIS layers from Bhuvan, GSI and the census |
 
-No accuracy figures are claimed anywhere. Confidence reflects only data freshness and agreement.
+The only accuracy figures shown are the AI model's published backtests (`ml/models/*.md`) and its live track record. Confidence in the main risk score reflects only data freshness and agreement.
 
 ## Weather data
 
@@ -117,11 +119,17 @@ Data credits are on the About page and in each map's attribution line.
 - **Risk:** thresholds, hysteresis, alarm repeat times, escalation and management timers are in `shared/config/risk.json`.
 - **Factors:** each factor's unit, English/Hindi label and data source is in `shared/config/factors.json`.
 - **Alert text:** bilingual templates are in `server/src/data/alert_templates.json`.
+- **Danger words** Saathi reacts to: `shared/config/emergency.json`. **Guides:** `client/src/data/guide.json`. **Sample data to replace:** `client/src/data/safe_places.SAMPLE.json`, `client/public/data/layers/*.SAMPLE.geojson`.
+
+## Publishing and deploying
+
+- GitHub stores the code; it cannot run this app (GitHub Pages only serves static files). Host it on any service that runs Node 22.13+ with a disk for the SQLite database, e.g. a small VPS, Render or Railway: `npm install`, `npm run build`, `npm start`.
+- Never commit `.env` (it is in `.gitignore`). On the server set a long random `JWT_SECRET`, and for a public site set `DEMO_LOGIN_ENABLED=false` and `DEV_MODE_ENABLED=false`. Use `SITE_PASSWORD` to keep a preview private.
 
 ## Test status
 
 - **Tested here:**
-  - 26 server unit tests, including IMD parsing, district matching, day selection, nowcast expiry, the engine fallback and the credential headers.
+  - 66 server tests (`npm test`), including the engine, IMD parsing, the AI model's live features, the assistant's safety rules (it never states a level without current data), road corridors and the site gate.
   - HTTP integration of every endpoint and permission rule, run against small Express stand-ins because packages couldn't be installed in the build environment.
   - SSE fan-out: each role gets only its own events.
   - Storm timing: High after about 60 s, Critical after about 120 s.
