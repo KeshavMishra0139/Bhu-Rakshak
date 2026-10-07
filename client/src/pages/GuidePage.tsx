@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   ArrowRight, Bell, BookOpen, Check, ClipboardList, Compass, Download, FileWarning, FlaskConical, Home, Inbox, Map as MapIcon,
-  Megaphone, Phone, Route, Settings, Sparkles, Truck, UserRound, Wrench, type LucideIcon,
+  Megaphone, Phone, Route, Settings, ShieldAlert, Sparkles, Truck, UserRound, Wrench, type LucideIcon,
 } from 'lucide-react';
 import guide from '../data/guide.json';
 import { withPane } from '../lib/viewAs';
@@ -18,7 +18,7 @@ type Role = 'citizen' | 'officer';
 const ICONS: Record<string, LucideIcon> = {
   home: Home, map: MapIcon, route: Route, bell: Bell, megaphone: Megaphone, sparkles: Sparkles, phone: Phone, user: UserRound,
   download: Download, flask: FlaskConical, inbox: Inbox, clipboard: ClipboardList, 'file-warning': FileWarning, truck: Truck,
-  wrench: Wrench, settings: Settings,
+  wrench: Wrench, settings: Settings, 'shield-alert': ShieldAlert,
 };
 
 export default function GuidePage({ role }: { role: Role }) {

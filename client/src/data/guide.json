@@ -104,6 +104,16 @@
       }
     },
     {
+      "id": "zones", "icon": "shield-alert", "to": "/authority/zones",
+      "title": { "en": "Red zones and relocation", "hi": "लाल क्षेत्र और स्थानांतरण", "ne": "रातो क्षेत्र र स्थानान्तरण" },
+      "what": { "en": "Where people may need to move first (problem statement SIH26191).", "hi": "पहले कहाँ से लोगों को हटाना पड़ सकता है (समस्या कथन SIH26191)।", "ne": "पहिले कहाँबाट मानिस सार्नुपर्ला (समस्या कथन SIH26191)।" },
+      "steps": {
+        "en": ["Places at High or Critical are in a red zone; Moderate is amber. Zones follow the live level and show on the map as dashed circles.", "Relocate first lists red-zone places by level, then risk score, then buildings exposed (from OpenStreetMap), with Open on map and Draft alert.", "Carrying capacity shows the inputs we have and what an official assessment still needs. No limit is made up."],
+        "hi": ["उच्च या गंभीर स्तर की जगहें लाल क्षेत्र में हैं; मध्यम पीला है। क्षेत्र लाइव स्तर के साथ बदलते हैं और नक्शे पर डैश वाले घेरे की तरह दिखते हैं।", "पहले यहाँ से हटाएँ सूची लाल क्षेत्र की जगहों को स्तर, फिर जोखिम स्कोर, फिर जोखिम में इमारतों (OpenStreetMap से) के क्रम में दिखाती है, नक्शे पर खोलें और अलर्ट ड्राफ्ट करें के साथ।", "वहन क्षमता में उपलब्ध जानकारी और आधिकारिक आकलन के लिए बाकी ज़रूरतें दिखती हैं। कोई सीमा अपने मन से नहीं बनाई जाती।"],
+        "ne": ["उच्च वा गम्भीर स्तरका ठाउँ रातो क्षेत्रमा छन्; मध्यम पहेँलो हो। क्षेत्र लाइभ स्तरसँगै बदलिन्छन् र नक्सामा ड्यास भएका घेरा जस्तै देखिन्छन्।", "पहिले यहाँबाट सार्नुहोस् सूचीले रातो क्षेत्रका ठाउँलाई स्तर, जोखिम स्कोर, अनि जोखिममा परेका भवन (OpenStreetMap बाट) को क्रममा देखाउँछ, नक्सामा खोल्नुहोस् र अलर्ट ड्राफ्ट गर्नुहोस् सहित।", "वहन क्षमतामा उपलब्ध जानकारी र आधिकारिक मूल्याङ्कनका लागि बाँकी कुरा देखिन्छन्। कुनै सीमा आफैँ बनाइँदैन।"]
+      }
+    },
+    {
       "id": "ai", "icon": "flask", "to": "/authority",
       "title": { "en": "AI model (experimental)", "hi": "AI मॉडल (प्रयोगात्मक)", "ne": "AI मोडेल (प्रयोगात्मक)" },
       "what": { "en": "A second opinion that learns patterns from past landslides and runs on live data.", "hi": "एक दूसरी राय, जो पिछले भूस्खलनों से पैटर्न सीखती है और लाइव डेटा पर चलती है।", "ne": "दोस्रो राय, जसले पुराना पहिरोबाट ढाँचा सिक्छ र लाइभ डेटामा चल्छ।" },

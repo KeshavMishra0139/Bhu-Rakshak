@@ -23,7 +23,8 @@ import { placeName } from '../lib/format';
 import { isPreview, type Basemap } from '../lib/mapConfig';
 import { useWide } from '../lib/useWide';
 
-const LAYERS: Record<LayerKey, boolean> = { corridors: false, roads: true, reports: false, resources: false, seismic: false };
+// Zones are an officer planning layer (relocation); the citizen map shows levels and roads.
+const LAYERS: Record<LayerKey, boolean> = { zones: false, corridors: false, roads: true, reports: false, resources: false, seismic: false };
 
 export default function RiskMapPage() {
   const { t, i18n } = useTranslation();

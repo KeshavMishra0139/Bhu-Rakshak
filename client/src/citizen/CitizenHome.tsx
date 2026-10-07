@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Crosshair, Volume2, Square, ChevronDown, Phone, Sparkles, MessageCircle, Clock, HelpCircle } from 'lucide-react';
+import { Crosshair, Volume2, Square, ChevronDown, Phone, Sparkles, MessageCircle, Clock, HelpCircle, Route, MapPinned, Megaphone } from 'lucide-react';
 import { api } from '../api/client';
 import type { ImdSummary, Me, Road, Stakeholder } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
@@ -26,6 +26,9 @@ import { canSpeak, speak, stopSpeaking } from '../lib/audio';
 import { useNow } from '../lib/useNow';
 import { withPane } from '../lib/viewAs';
 import { RoadBadge } from './RoadBadge';
+import { scrollBehavior } from '../lib/motion';
+
+const TILE = 'flex min-h-[76px] flex-col items-center justify-center gap-1.5 rounded-xl border border-line bg-surface-2/50 px-2 py-3 text-center text-sm font-semibold leading-tight transition-colors hover:border-brand/50 hover:bg-brand/5';
 import { WatchStrip } from '../components/RiskMix';
 
 type Forecast = { hourly_rain: { time: string; hour_ist: number; rain_mm: number }[]; best_travel: { start: string; end: string; rain_mm: number } | null };
@@ -164,10 +167,11 @@ export default function CitizenHome() {
       ) : (
         <div className="grid gap-5 lg:grid-cols-2">
           <section className="card overflow-hidden lg:col-span-2" aria-labelledby="status-title" data-tour="status">
-            <div className="p-6 sm:p-7 flex flex-col sm:flex-row gap-5" style={{ borderTop: `8px solid ${levelVar(r.level)}` }}>
+            {/* Phones: a smaller icon (stacked), so the level and what to do come into view a little sooner. */}
+            <div className="p-6 sm:p-7 flex flex-col sm:flex-row gap-4 sm:gap-5" style={{ borderTop: `8px solid ${levelVar(r.level)}` }}>
               {Icon && (
-                <span className="h-20 w-20 shrink-0 rounded-2xl inline-flex items-center justify-center" style={{ background: levelVar(r.level), color: '#fff' }}>
-                  <Icon size={46} aria-hidden strokeWidth={2.2} />
+                <span className="h-14 w-14 sm:h-20 sm:w-20 shrink-0 rounded-2xl inline-flex items-center justify-center" style={{ background: levelVar(r.level), color: '#fff' }}>
+                  <Icon size={46} aria-hidden strokeWidth={2.2} className="h-8 w-8 sm:h-[46px] sm:w-[46px]" />
                 </span>
               )}
               <div className="flex-1 min-w-0">
@@ -205,6 +209,15 @@ export default function CitizenHome() {
                   </button>
                 </div>
                 {noVoice && <p className="mt-2 text-sm text-muted" role="status">{t('citizen.no_voice_lang')}</p>}
+                {/* The three things people most often need next, one tap each. */}
+                <nav aria-label={t('citizen.tiles_label')} className="mt-5 grid grid-cols-3 gap-2">
+                  <Link to={withPane('/citizen/roads')} className={TILE}><Route size={22} className="text-brand" aria-hidden />{t('citizen.tile_roads')}</Link>
+                  <a href="#safe-place" className={TILE}
+                    onClick={(e) => { e.preventDefault(); document.getElementById('safe-place')?.scrollIntoView({ behavior: scrollBehavior(), block: 'start' }); }}>
+                    <MapPinned size={22} className="text-brand" aria-hidden />{t('citizen.tile_safe')}
+                  </a>
+                  <Link to={withPane('/citizen/report')} className={TILE}><Megaphone size={22} className="text-brand" aria-hidden />{t('citizen.tile_report')}</Link>
+                </nav>
                 {showDetails && (
                   <dl className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {([['d_rain_now', r.conditions.rain_intensity, 'mm/h'], ['d_rain_24h', r.conditions.rain_24h, 'mm'], ['d_rain_fc', r.conditions.rain_fc_24h, 'mm']] as const).map(([k, v, u]) => (
@@ -289,7 +302,7 @@ export default function CitizenHome() {
               <HelpButton topic="contacts" />
             </div>
             <a href="tel:112" className="btn-danger w-full mt-3 text-lg"><Phone size={20} aria-hidden />{t('citizen.call_112')}</a>
-            <div className="mt-3"><SafePlace from={loc} /></div>
+            <div id="safe-place" className="mt-3 scroll-mt-4"><SafePlace from={loc} /></div>
             <ul className="mt-3 divide-y divide-line">
               {/* Only contacts officials have entered a number for ("To be configured" means nothing to a citizen). */}
               {localContacts.filter((c) => c.phone && c.phone !== '112').map((c) => (

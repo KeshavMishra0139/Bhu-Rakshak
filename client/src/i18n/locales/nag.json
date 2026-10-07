@@ -276,7 +276,11 @@
     "no_voice_lang": "Etu phone te etu bhasa te pori kene hunabo napare.",
     "saathi_answers_note": "Etiya jowab English, Hindi aru Nepali te he ase.",
     "safe_place_near": "1 km pora kom dur",
-    "photo_preview_alt": "Apuni laga photo"
+    "photo_preview_alt": "Apuni laga photo",
+    "tiles_label": "Apuni ki koribo pare",
+    "tile_roads": "Rasta sabi",
+    "tile_safe": "Usorte safe jaga",
+    "tile_report": "Sign report koribi"
   },
   "nav": {
     "report": "Report",

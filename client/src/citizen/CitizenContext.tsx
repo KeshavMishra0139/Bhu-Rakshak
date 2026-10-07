@@ -1,6 +1,7 @@
 // Citizen state shared by every citizen page: which place is being viewed, and the High/Critical alarm.
 // The alarm is driven by the same risk_escalation events that fill the authority inbox.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { OctagonAlert, AlertTriangle, Phone, BellRing, Volume2 } from 'lucide-react';
 import { api } from '../api/client';
@@ -151,6 +152,8 @@ function AlarmBanner({ active, actions, soundOn }: { active: Active; actions: { 
   const Icon = lv === 'critical' ? OctagonAlert : AlertTriangle;
   const snoozed = !!active.snoozedUntil && Date.now() < active.snoozedUntil;
   const quiet = active.acknowledged || snoozed;
+  // Critical, not yet acknowledged: the whole screen, one instruction, two big actions. Afterwards: the slim banner.
+  if (lv === 'critical' && !quiet) return <CriticalTakeover place={place} actions={actions} soundOn={soundOn} />;
   return (
     <div role="alert" aria-live="assertive" className="sticky z-40" style={{ top: 'var(--devbar-h, 0px)', background: levelVar(lv), color: levelInk(lv) }}>
       <div className={`mx-auto max-w-[1100px] px-4 ${quiet ? 'py-2' : 'py-4'} flex flex-wrap items-center gap-3`}>
@@ -178,6 +181,36 @@ function AlarmBanner({ active, actions, soundOn }: { active: Active; actions: { 
         )}
       </div>
     </div>
+  );
+}
+
+function CriticalTakeover({ place, actions, soundOn }: { place: string; actions: { understand: () => void; snooze: () => void; enableSound: () => void }; soundOn: boolean }) {
+  const { t, i18n } = useTranslation();
+  const call = useRef<HTMLAnchorElement>(null);
+  useEffect(() => { call.current?.focus(); }, []);
+  // Rendered into <body> so no page transform or sticky header can sit on top of it.
+  return createPortal(
+    <div role="alertdialog" aria-modal="true" aria-labelledby="crit-title" aria-describedby="crit-body"
+      className="fade-enter fixed inset-0 z-[1300] flex flex-col items-center justify-center overflow-y-auto overscroll-contain p-6 text-center"
+      style={{ background: levelVar('critical'), color: levelInk('critical') }}>
+      <span className="grid h-24 w-24 place-items-center rounded-full bg-black/20"><OctagonAlert size={56} aria-hidden /></span>
+      <h1 id="crit-title" className="mt-5 max-w-2xl text-[2rem] font-bold leading-tight sm:text-[2.6rem]">{t('alarm.b_critical', { place })}</h1>
+      <p id="crit-body" className="mt-3 max-w-xl text-xl font-semibold sm:text-2xl">{t('alarm.i_critical')}</p>
+      <div className="mt-8 flex w-full max-w-sm flex-col gap-3">
+        <a ref={call} href="tel:112" className="btn min-h-[60px] bg-white text-xl text-[#7a1414] hover:bg-white/90"><Phone size={24} aria-hidden />{t('alarm.call')}</a>
+        <button type="button" onClick={actions.understand} className="btn min-h-[52px] border-2 border-white/70 bg-black/15 text-lg text-inherit hover:bg-black/25">{t('alarm.understand')}</button>
+      </div>
+      <div className="mt-4 flex flex-wrap justify-center gap-2">
+        {!soundOn && (
+          <button type="button" onClick={actions.enableSound} className="btn bg-black/20 text-inherit hover:bg-black/30"><Volume2 size={18} aria-hidden />{t('alarm.tap_enable')}</button>
+        )}
+        <button type="button" onClick={() => speak(`${t('alarm.b_critical', { place })}. ${t('alarm.i_critical')}`, i18n.language)} className="btn bg-black/20 text-inherit hover:bg-black/30">
+          <BellRing size={18} aria-hidden />{t('citizen.listen')}
+        </button>
+        <button type="button" onClick={actions.snooze} className="btn bg-transparent text-inherit underline-offset-2 hover:underline">{t('alarm.snooze')}</button>
+      </div>
+    </div>,
+    document.body,
   );
 }
 

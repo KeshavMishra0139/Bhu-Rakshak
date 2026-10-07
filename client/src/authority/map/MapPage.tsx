@@ -9,11 +9,12 @@ import { useAuth } from '../../auth/AuthProvider';
 import { useRiskStream } from '../../live/RiskStreamProvider';
 import { useLive } from '../useLive';
 import { useAuthority } from '../AuthorityContext';
-import { WatchMap, levelAt, quakeColor, type LayerKey, type SearchPin } from './WatchMap';
+import { WatchMap, levelAt, quakeColor, PIN_COLOR, type LayerKey, type SearchPin } from './WatchMap';
 import { MapSearch } from './MapSearch';
 import { MapTypePicker } from './MapTypePicker';
 import { MapIconButton, MapPopover, LayerSwitch } from './MapControls';
 import { DetailDrawer } from './DetailDrawer';
+import { SituationStrip } from './SituationStrip';
 import { InPersonView, type ViewTarget } from './InPersonView';
 import { streetViewLink, isPreview, type Basemap } from '../../lib/mapConfig';
 import { RiskMix } from '../../components/RiskMix';
@@ -23,16 +24,34 @@ const MiniMap = lazy(() => import('../../components/MiniMap'));
 import { LEVELS, riskConfig } from '../../lib/risk';
 import { placeName } from '../../lib/format';
 
-// Colours from the team's watch map, plus a deeper red for Critical (the portal has three levels).
-const DOT: Record<Level, string> = { low: 'bg-[#3f8c70]', moderate: 'bg-[#d9983d]', high: 'bg-[#cf624f]', critical: 'bg-[#9e2a2b]' };
+// Legend dots use the same colours as the map pins.
+const DOT: Record<Level, string> = { low: 'bg-[#2F8F4E]', moderate: 'bg-[#C99A12]', high: 'bg-[#D9731A]', critical: 'bg-[#C62828]' };
 const VALUE: Record<Level, string> = { low: 'text-[#9dd2a6]', moderate: 'text-[#f4c993]', high: 'text-[#f1846d]', critical: 'text-[#ff7a7a]' };
 const PILL: Record<Level, string> = {
   low: 'bg-[#2d6143] text-[#b4e1b9]', moderate: 'bg-[#6b512a] text-[#ffd993]', high: 'bg-[#71372f] text-[#ffb4a4]', critical: 'bg-[#5a1d1f] text-[#ff9c9c]',
 };
-const LAYER_KEYS: LayerKey[] = ['corridors', 'roads', 'seismic', 'reports', 'resources'];
+const LAYER_KEYS: LayerKey[] = ['zones', 'corridors', 'roads', 'seismic', 'reports', 'resources'];
 const SEG = 'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold';
 const SEG_ON = 'bg-[#2a5d43] text-[#d7efd8]';
 const SEG_OFF = 'text-[#315542] hover:bg-[#e8f3ed]';
+
+/** Tiny risk-score line from now to +48 h (the engine's forecast), ending in the colour of the last level. */
+function Spark({ l, label }: { l: LocationSnap; label: string }) {
+  const r = l.risk;
+  if (!r || !r.forecast?.length) return null;
+  const pts = [{ h: 0, score: r.score, level: r.level }, ...[...r.forecast].sort((a, b) => a.h - b.h)];
+  const W = 46, H = 16, maxH = pts[pts.length - 1].h || 1;
+  const xy = pts.map((p) => [(p.h / maxH) * (W - 3) + 1.5, H - 1.5 - Math.max(0, Math.min(1, p.score)) * (H - 3)] as const);
+  const end = xy[xy.length - 1];
+  const colour = PIN_COLOR[pts[pts.length - 1].level][0];
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="shrink-0" role="img" aria-label={label}>
+      <title>{label}</title>
+      <polyline points={xy.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ')} fill="none" stroke="#9fb3a6" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={end[0]} cy={end[1]} r="2.4" fill={colour} />
+    </svg>
+  );
+}
 
 export default function MapPage() {
   const { t, i18n } = useTranslation();
@@ -40,7 +59,7 @@ export default function MapPage() {
   const { can } = useAuth();
   const { list, corridors } = useRiskStream();
   const { selectedId, select, horizon, setHorizon } = useAuthority();
-  const [layers, setLayers] = useState<Record<LayerKey, boolean>>({ corridors: true, roads: false, seismic: true, reports: true, resources: false });
+  const [layers, setLayers] = useState<Record<LayerKey, boolean>>({ zones: true, corridors: true, roads: false, seismic: true, reports: true, resources: false });
   const [basemap, setBasemap] = useState<Basemap['id']>('hybrid');
   const ner = useNerLayers('officer');
   const roads = useLive<{ roads: Road[] }>('/roads', ['road_updated']);
@@ -96,8 +115,9 @@ export default function MapPage() {
 
   return (
     <div className="relative flex h-full min-h-0">
-      <div className="flex-1 min-w-0 p-3 max-md:p-0 overflow-y-auto">
-        <div className={`map-console lg:h-full ${mapMin ? 'map-min' : ''}`}>
+      <div className="flex-1 min-w-0 p-3 max-md:p-0 overflow-y-auto flex flex-col gap-3 max-md:gap-0">
+        <SituationStrip list={list} reports={reports.data?.reports} />
+        <div className={`map-console lg:flex-1 lg:min-h-0 ${mapMin ? 'map-min' : ''}`}>
           {mapMin && (
             <div className="fade-enter flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-[#15241c] px-4 py-3 text-[#d7efd8]">
               <p className="inline-flex items-center gap-2 text-sm font-semibold">
@@ -202,6 +222,12 @@ export default function MapPage() {
                             <li key={lv} className="flex items-center gap-2"><span className={`h-2.5 w-2.5 rounded-full ${DOT[lv]}`} aria-hidden />{t(`levels.${lv}`)}</li>
                           ))}
                         </ul>
+                        {layers.zones && (
+                          <ul className="mt-3 space-y-1.5 border-t border-[#e3ece4] pt-2 text-[13px]">
+                            <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-full border-2 border-dashed border-[#C62828] bg-[#C62828]/20" aria-hidden />{t('map.legend_red_zone')}</li>
+                            <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-full border-2 border-dashed border-[#C99A12] bg-[#E0B53A]/20" aria-hidden />{t('map.legend_amber_zone')}</li>
+                          </ul>
+                        )}
                         {layers.seismic && seismic.data && (
                           <div className="mt-3 border-t border-[#e3ece4] pt-2 text-[13px]" title={seismic.data.feed?.message || undefined}>
                             <p className="mb-1.5 text-[11px] font-bold text-[#7a8d80]">{t('map.layer_seismic')}</p>
@@ -263,7 +289,10 @@ export default function MapPage() {
                       <span className="mt-1 block text-[10px] text-[#85998b]">
                         {t(`districts.${l.district}`)} · {live ? t('map.data_live') : t('map.refreshing')}
                       </span>
-                      <span className="mt-1.5 block max-w-[180px]"><RiskMix drivers={l.risk?.drivers} onDark /></span>
+                      <span className="mt-1.5 flex items-center gap-2">
+                        <span className="block w-full max-w-[150px]"><RiskMix drivers={l.risk?.drivers} onDark /></span>
+                        <Spark l={l} label={t('map.spark_tip')} />
+                      </span>
                       {noAlert && <span className="mt-1 flex items-center gap-1 text-[10px] font-bold text-[#ff9c9c]"><AlertTriangle size={11} aria-hidden />{t('map.critical_no_alert')}</span>}
                     </span>
                     <span className="text-right">

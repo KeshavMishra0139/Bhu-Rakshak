@@ -276,7 +276,11 @@
     "no_voice_lang": "He phone-ah he ṭawngin ri takin chhiar a theih loh.",
     "saathi_answers_note": "Tunah chuan chhanna hi English, Hindi emaw Nepali-in a ni.",
     "safe_place_near": "km 1 aia hla lo",
-    "photo_preview_alt": "I thlalak"
+    "photo_preview_alt": "I thlalak",
+    "tiles_label": "I tih theih te",
+    "tile_roads": "Kawngte en rawh",
+    "tile_safe": "Hmun him hnai ber",
+    "tile_report": "Chhinchhiahna report rawh"
   },
   "nav": {
     "report": "Report",

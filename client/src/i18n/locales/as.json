@@ -276,7 +276,11 @@
     "tour_skip": "পৰিচয় এৰক",
     "saathi_answers_note": "উত্তৰ এতিয়া ইংৰাজী, হিন্দী বা নেপালীত দিয়া হয়।",
     "safe_place_near": "1 কি.মি.তকৈ কম দূৰত",
-    "photo_preview_alt": "আপোনাৰ ফটো"
+    "photo_preview_alt": "আপোনাৰ ফটো",
+    "tiles_label": "আপুনি কি কৰিব পাৰে",
+    "tile_roads": "পথ চাওক",
+    "tile_safe": "ওচৰৰ সুৰক্ষিত ঠাই",
+    "tile_report": "সংকেত জনাওক"
   },
   "nav": {
     "report": "ৰিপ'ৰ্ট",

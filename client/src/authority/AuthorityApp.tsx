@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState, type ReactNod
 import { NavLink, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import { PageTransition } from '../components/PageTransition';
 import { useTranslation } from 'react-i18next';
-import { Map, Inbox, ClipboardList, Megaphone, FileWarning, Route as RouteIcon, Truck, Wrench, ScrollText, Activity, FileText, UserRound, LogOut, Settings, BookOpen } from 'lucide-react';
+import { Map, Inbox, ClipboardList, Megaphone, FileWarning, Route as RouteIcon, Truck, Wrench, ScrollText, Activity, FileText, UserRound, LogOut, Settings, BookOpen, ShieldAlert } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthProvider';
 import { useStreamEvent, useRiskStream } from '../live/RiskStreamProvider';
@@ -30,6 +30,7 @@ import ResourcesPage from './ResourcesPage';
 import AuditPage from './AuditPage';
 import SitrepPage from './SitrepPage';
 import GuidePage from '../pages/GuidePage';
+import ZonesPage from './ZonesPage';
 import { OfflineBanner } from '../components/OfflineBanner';
 
 function Popover({ label, icon, children, align = 'right' }: { label: string; icon: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
@@ -83,6 +84,7 @@ function Shell({ children }: { children: ReactNode }) {
 
   const items = [
     { to: '/authority', key: 'nav.map', Icon: Map, end: true, show: true },
+    { to: '/authority/zones', key: 'nav.zones', Icon: ShieldAlert, show: can('incidents.view') },
     { to: '/authority/inbox', key: 'nav.inbox', Icon: Inbox, show: can('inbox.read'), badge: unread.unread, badgeCritical: unread.critical > 0 },
     { to: '/authority/incidents', key: 'nav.incidents', Icon: ClipboardList, show: can('incidents.view') },
     { to: '/authority/alerts', key: 'nav.alerts', Icon: Megaphone, show: can('incidents.view') },
@@ -132,7 +134,8 @@ function Shell({ children }: { children: ReactNode }) {
             </div>
           </Popover>
           <LanguageToggle onDark />
-          <span className="hidden sm:block"><ThemeToggle onDark /></span>
+          {/* Only on very wide screens, so every menu item fits at laptop width (theme is also in Settings). */}
+          <span className="hidden 2xl:block"><ThemeToggle onDark /></span>
           <Popover label={me?.user.name || ''} icon={<UserRound size={18} aria-hidden />}>
             <div className="text-ink space-y-2">
               <p className="font-bold">{me?.user.name}</p>
@@ -173,6 +176,7 @@ export default function AuthorityApp() {
               <Route path="audit" element={<AuditPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="guide" element={<GuidePage role="officer" />} />
+              <Route path="zones" element={<ZonesPage />} />
               <Route path="*" element={<MapPage />} />
             </Routes>
           </Shell>

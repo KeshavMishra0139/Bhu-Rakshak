@@ -6,6 +6,17 @@ import { RiskBadge } from '../components/RiskBadge';
 import { dateTimeIST, placeName } from '../lib/format';
 import { useLive } from './useLive';
 import { IncidentDetail, STAGES } from './IncidentDetail';
+import { Clock } from 'lucide-react';
+import { useNow } from '../lib/useNow';
+
+/** "45 min", "3 h 10 min", "2 d 4 h": how long an incident has been open. */
+function openFor(since: string, now: number, t: (k: string, o?: Record<string, unknown>) => string) {
+  const m = Math.max(0, Math.floor((now - Date.parse(since)) / 60000));
+  if (m < 60) return t('incidents.dur_m', { m });
+  const h = Math.floor(m / 60);
+  if (h < 24) return m % 60 ? t('incidents.dur_hm', { h, m: m % 60 }) : t('incidents.dur_h', { h });
+  return t('incidents.dur_dh', { d: Math.floor(h / 24), h: h % 24 });
+}
 
 export default function IncidentsPage() {
   const { t, i18n } = useTranslation();
@@ -14,6 +25,7 @@ export default function IncidentsPage() {
   const selected = params.get('id');
   const [showClosed, setShowClosed] = useState(false);
   const { data, error } = useLive<{ incidents: Incident[] }>('/incidents', ['incident_updated']);
+  const now = useNow(60000);
   const stages = STAGES.filter((s) => showClosed || s !== 'closed');
   const select = (id: string | null) => { const p = new URLSearchParams(params); if (id) p.set('id', id); else p.delete('id'); setParams(p, { replace: true }); };
 
@@ -41,6 +53,11 @@ export default function IncidentsPage() {
                         <span className="flex items-start gap-2"><span className="flex-1 font-semibold text-sm leading-snug">{i.title}</span><RiskBadge level={i.level} size="sm" /></span>
                         <span className="block text-xs text-muted mt-1">{placeName(i, lang)} · {i.owner_name || t('incidents.no_owner')}</span>
                         <span className="block label-mono mt-1">{dateTimeIST(i.detected_at, lang)}</span>
+                        {s !== 'resolved' && s !== 'closed' && (
+                          <span className="mt-1.5 inline-flex items-center gap-1 rounded-pill bg-surface-2 px-2 py-0.5 text-xs font-semibold tabular-nums">
+                            <Clock size={12} aria-hidden />{t('incidents.open_for', { time: openFor(i.detected_at, now, t) })}
+                          </span>
+                        )}
                         {(i.resource_count || 0) > 0 && <span className="block text-xs mt-1">{t('incidents.resources')}: {i.resource_count}</span>}
                       </button>
                     </li>

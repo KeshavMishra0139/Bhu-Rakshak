@@ -1,20 +1,32 @@
 // Corridor watch map for the authority dashboard, in the style of the team's citizen-portal map:
-// classic red map pins labelled by risk level, on free Esri satellite / street and OpenTopoMap terrain tiles (Leaflet),
-// plus optional operational layers (corridors, road status, citizen reports, resources).
+// teardrop pins coloured and labelled by risk level, on free Esri satellite / street and OpenTopoMap terrain tiles
+// (Leaflet), plus optional layers (red/amber hazard zones, corridors, road status, citizen reports, resources).
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useMemo, type ReactNode } from 'react';
 import L from 'leaflet';
-import { CircleMarker, MapContainer, Marker, Polyline, ScaleControl, TileLayer, Tooltip, ZoomControl, useMap, useMapEvents } from 'react-leaflet';
+import { Circle, CircleMarker, MapContainer, Marker, Polyline, ScaleControl, TileLayer, Tooltip, ZoomControl, useMap, useMapEvents } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import type { Level, LocationSnap, Report, Resource, Road, SeismicData } from '../../api/types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { BASEMAPS, WATCH_BOUNDS, MAP_CENTER, MAP_MIN_ZOOM, basemapNativeZoom, basemapOverlays, basemapUrl, type Basemap } from '../../lib/mapConfig';
 import { dateTimeIST, placeName, isDeva } from '../../lib/format';
+import { riskConfig } from '../../lib/risk';
 
 /** Pin label per level: tick for calm, dot to watch, exclamation for danger. */
 export const PIN_LABEL: Record<Level, string> = { low: '✓', moderate: '•', high: '!', critical: '!!' };
+/** Pin fill and outline per level: the app's risk colours, so the map reads at a glance (label + colour, never colour alone). */
+export const PIN_COLOR: Record<Level, [string, string]> = {
+  low: ['#2F8F4E', '#1E5E33'], moderate: ['#C99A12', '#7F600A'], high: ['#D9731A', '#8F4A0F'], critical: ['#C62828', '#7E1717'],
+};
 
-export type LayerKey = 'corridors' | 'roads' | 'reports' | 'resources' | 'seismic';
+export type LayerKey = 'zones' | 'corridors' | 'roads' | 'reports' | 'resources' | 'seismic';
+
+/** Hazard-based zone of a level (PS SIH26191): red at High/Critical, amber at Moderate, none at Low. */
+export const zoneOf = (lv: Level | null): 'red' | 'amber' | null => (lv === 'high' || lv === 'critical' ? 'red' : lv === 'moderate' ? 'amber' : null);
+const ZONE_STYLE = {
+  red: { color: '#C62828', fillColor: '#C62828', fillOpacity: 0.16, weight: 2, dashArray: '6 5' },
+  amber: { color: '#C99A12', fillColor: '#E0B53A', fillOpacity: 0.12, weight: 1.5, dashArray: '6 5' },
+} as const;
 
 const ROAD_COLOR: Record<Road['status'], string> = { open: '#2F8F4E', cleared: '#2F8F4E', caution: '#C99A12', restricted: '#D9731A', blocked: '#C62828' };
 const RES_ICON: Record<Resource['type'], [string, string]> = { excavator: ['J', '#8a6d1d'], rescue_team: ['R', '#1F7A8C'], ambulance: ['A', '#b3261e'], shelter: ['S', '#3f6e3a'] };
@@ -22,18 +34,19 @@ const RES_ICON: Record<Resource['type'], [string, string]> = { excavator: ['J', 
 export const levelAt = (l: LocationSnap, horizon: number): Level | null =>
   !l.risk ? null : horizon === 0 ? l.risk.level : (l.risk.forecast?.find((f) => f.h === horizon)?.level || l.risk.level);
 
-// Classic teardrop map pin (26×37) with a white label, anchored at its tip.
+// Classic teardrop map pin (26×37) in the level's colour with a white label, anchored at its tip.
 const pinCache = new Map<string, L.DivIcon>();
-function pinIcon(label: string, active: boolean) {
-  const key = `${label}|${active}`;
+function pinIcon(lv: Level, active: boolean) {
+  const key = `${lv}|${active}`;
   let icon = pinCache.get(key);
   if (!icon) {
+    const [fill, stroke] = PIN_COLOR[lv];
     icon = L.divIcon({
       className: `watch-pin${active ? ' active' : ''}`,
       iconSize: [26, 37],
       iconAnchor: [13, 37],
       tooltipAnchor: [0, -34],
-      html: `<svg width="26" height="37" viewBox="0 0 26 37" aria-hidden="true"><path d="M13 0.8C6.2 0.8 0.8 6.2 0.8 13c0 9.4 12.2 23.2 12.2 23.2S25.2 22.4 25.2 13C25.2 6.2 19.8 0.8 13 0.8z" fill="#EA4335" stroke="#A52714" stroke-width="1.2"/></svg><span>${label}</span>`,
+      html: `<svg width="26" height="37" viewBox="0 0 26 37" aria-hidden="true"><path d="M13 0.8C6.2 0.8 0.8 6.2 0.8 13c0 9.4 12.2 23.2 12.2 23.2S25.2 22.4 25.2 13C25.2 6.2 19.8 0.8 13 0.8z" fill="${fill}" stroke="${stroke}" stroke-width="1.2"/></svg><span>${PIN_LABEL[lv]}</span>`,
     });
     pinCache.set(key, icon);
   }
@@ -135,6 +148,17 @@ export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, on
         subdomains={base.subdomains || 'abc'} />
       {basemapOverlays(base, resolved).map((o) => <TileLayer key={`${base.id}-${resolved}-${o.url}`} url={o.url} subdomains={o.subdomains || 'abc'} maxZoom={base.maxZoom} maxNativeZoom={o.nativeZoom ?? basemapNativeZoom(base, resolved)} />)}
 
+      {/* Hazard-based zones: an indicative circle around each monitored slope, from its live level (drawn first, under everything). */}
+      {layers.zones && locations.map((l) => {
+        const lv = levelAt(l, horizon);
+        const z = zoneOf(lv);
+        if (!z || !lv) return null;
+        return (
+          <Circle key={`z-${l.id}-${z}`} center={[l.lat, l.lng]} radius={riskConfig.zones.radiusKm * 1000} pathOptions={ZONE_STYLE[z]}>
+            <Tooltip sticky>{t(z === 'red' ? 'map.zone_red_tip' : 'map.zone_amber_tip', { place: placeName(l, lang), level: t(`levels.${lv}`), km: riskConfig.zones.radiusKm })}</Tooltip>
+          </Circle>
+        );
+      })}
       {layers.corridors && roads.map((r) => (
         <Polyline key={`c-${r.id}`} positions={pathOf(r)} interactive={false}
           pathOptions={{ color: corridorColors[r.corridor_id] || '#7CC4CF', weight: 4, opacity: 0.8, dashArray: '2 8', lineCap: 'round' }} />
@@ -181,7 +205,7 @@ export function WatchMap({ basemap, onMapClick, locations, horizon, activeId, on
         if (!lv) return null;
         const isActive = l.id === activeId;
         return (
-          <Marker key={l.id} position={[l.lat, l.lng]} icon={pinIcon(PIN_LABEL[lv], isActive)} zIndexOffset={isActive ? 1000 : 0}
+          <Marker key={l.id} position={[l.lat, l.lng]} icon={pinIcon(lv, isActive)} zIndexOffset={isActive ? 1000 + (lv === 'critical' ? 300 : lv === 'high' ? 200 : 0) : lv === 'critical' ? 300 : lv === 'high' ? 200 : lv === 'moderate' ? 100 : 0}
             title={placeName(l, lang)} alt={`${placeName(l, lang)}: ${t(`levels.${lv}`)}`} eventHandlers={{ click: () => onSelect(l.id) }}>
             <Tooltip direction="top">{placeName(l, lang)} · {t(`levels.${lv}`)}{horizon ? ` (+${horizon}h)` : ''}</Tooltip>
           </Marker>

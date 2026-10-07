@@ -46,7 +46,7 @@ export async function createApp() {
   });
   app.use(attachUser);
 
-  const routes = ['auth', 'locations', 'risk', 'inbox', 'settings', 'health', 'tools', 'incidents', 'alerts', 'reports', 'operations', 'insights', 'admin', 'map', 'ml', 'impact', 'corridor', 'communityReports', 'layers'];
+  const routes = ['auth', 'locations', 'risk', 'inbox', 'settings', 'health', 'tools', 'incidents', 'alerts', 'reports', 'operations', 'insights', 'admin', 'map', 'ml', 'impact', 'corridor', 'communityReports', 'layers', 'zones'];
   for (const name of routes) {
     const { default: router } = await import(`./routes/${name}.js`);
     app.use(name === 'auth' ? '/api/auth' : '/api', router);
