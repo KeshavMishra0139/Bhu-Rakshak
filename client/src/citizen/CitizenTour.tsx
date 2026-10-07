@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Compass, X } from 'lucide-react';
 import { useCitizen } from './CitizenContext';
 import { withPane } from '../lib/viewAs';
+import { scrollBehavior } from '../lib/motion';
 
 const KEY = 'br.tourDone';
 const STEPS = ['status', 'why', 'sos', 'saathi'] as const;
@@ -44,7 +45,7 @@ export function CitizenTour({ ready }: { ready: boolean }) {
     const el = target();
     const isTall = !!el && el.getBoundingClientRect().height > window.innerHeight * 0.45;
     setTall(isTall);
-    el?.scrollIntoView({ block: isTall ? 'start' : 'center', behavior: 'smooth' });
+    el?.scrollIntoView({ block: isTall ? 'start' : 'center', behavior: scrollBehavior() });
     measure();
     const id = window.setTimeout(measure, 400); // after the smooth scroll
     next.current?.focus();
@@ -88,7 +89,7 @@ export function CitizenTour({ ready }: { ready: boolean }) {
     <>
       {box && (
         // The ring is part of the same box-shadow as the dimming (a separate Tailwind ring would be overridden).
-        <div aria-hidden className="pointer-events-none fixed z-[41] rounded-2xl transition-all duration-300"
+        <div aria-hidden className="pointer-events-none fixed z-[41] rounded-2xl transition-[top,left,width,height] duration-300"
           style={{ ...box, boxShadow: '0 0 0 4px rgb(var(--brand)), 0 0 0 9999px rgb(0 0 0 / 0.55)' }} />
       )}
       <div role="dialog" aria-labelledby="tour-text" aria-live="polite"

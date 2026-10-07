@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { MapPin, ImageOff, Clock } from 'lucide-react';
+import { MapPin, ImageOff, Clock, X } from 'lucide-react';
 import { api, errorKey } from '../api/client';
 import type { Report } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
@@ -20,7 +21,14 @@ export default function ReportsPage() {
   const now = useNow(30000);
   const [filter, setFilter] = useState<F>('submitted');
   const [withIncident, setWithIncident] = useState<Record<string, boolean>>({});
-  const [photo, setPhoto] = useState<string | null>(null);
+  const [photo, setPhoto] = useState<{ src: string; alt: string } | null>(null);
+  const closePhoto = useCallback(() => setPhoto(null), []);
+  // Describes the evidence for screen readers, e.g. "Photo: Debris, Mangan, North Sikkim".
+  const photoAlt = (r: Report) => {
+    const place = r.name_en ? placeName({ name_en: r.name_en, name_hi: r.name_hi || r.name_en }, lang) : '';
+    const where = [place, r.district ? t(`districts.${r.district}`) : ''].filter(Boolean).join(', ');
+    return `${t('reports.photo')}: ${t(`reports.ty_${r.type}`)}${where ? `, ${where}` : ''}`;
+  };
   const [err, setErr] = useState<string | null>(null);
   const { data, reload } = useLive<{ reports: Report[] }>(`/reports${filter ? `?status=${filter}` : ''}`, ['report_updated']);
   const limit = riskConfig.management.unverifiedReportWarningMinutes;
@@ -57,8 +65,8 @@ export default function ReportsPage() {
             <li key={r.id} className={`card p-4 space-y-2 ${overdue ? 'ring-2 ring-risk-high' : ''}`}>
               <div className="flex items-start gap-3">
                 {r.has_photo ? (
-                  <button type="button" onClick={() => setPhoto(`/api/reports/${r.id}/photo`)} className="shrink-0" aria-label={t('reports.photo')}>
-                    <img src={`/api/reports/${r.id}/photo`} alt="" className="h-16 w-16 rounded-lg object-cover border border-line" loading="lazy" />
+                  <button type="button" onClick={() => setPhoto({ src: `/api/reports/${r.id}/photo`, alt: photoAlt(r) })} className="shrink-0">
+                    <img src={`/api/reports/${r.id}/photo`} alt={photoAlt(r)} width={64} height={64} className="h-16 w-16 rounded-lg object-cover border border-line" loading="lazy" />
                   </button>
                 ) : <span className="h-16 w-16 shrink-0 rounded-lg bg-surface-2 inline-flex items-center justify-center text-muted" title={t('reports.no_photo')}><ImageOff size={20} aria-hidden /></span>}
                 <div className="flex-1 min-w-0">
@@ -88,11 +96,35 @@ export default function ReportsPage() {
           );
         })}
       </ul>
-      {photo && (
-        <div role="dialog" aria-modal="true" aria-label={t('reports.photo')} className="fixed inset-0 z-[900] bg-black/70 flex items-center justify-center p-4" onClick={() => setPhoto(null)}>
-          <img src={photo} alt="" className="max-h-[85vh] max-w-full rounded-lg" />
-        </div>
-      )}
+      {photo && <PhotoDialog src={photo.src} alt={photo.alt} onClose={closePhoto} />}
     </div>
+  );
+}
+
+/** Full-size report photo: Escape or the close button closes it; focus moves in, stays in, and returns to the thumbnail. */
+function PhotoDialog({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  const { t } = useTranslation();
+  const closeBtn = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    closeBtn.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      else if (e.key === 'Tab') { e.preventDefault(); closeBtn.current?.focus(); }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('keydown', onKey); opener?.focus(); };
+  }, [onClose]);
+  // Rendered into <body>: the page's entrance animation (a transform) would otherwise pin "fixed" to the page,
+  // leaving the header uncovered and clickable behind a modal.
+  return createPortal(
+    <div role="dialog" aria-modal="true" aria-label={alt} className="fixed inset-0 z-[900] bg-black/70 flex items-center justify-center p-4 overscroll-contain" onClick={onClose}>
+      <img src={src} alt={alt} className="max-h-[85vh] max-w-full rounded-lg" onClick={(e) => e.stopPropagation()} />
+      <button ref={closeBtn} type="button" onClick={onClose} aria-label={t('common.close')}
+        className="btn absolute right-4 top-4 bg-black/60 px-3 text-white hover:bg-black/80">
+        <X size={20} aria-hidden />
+      </button>
+    </div>,
+    document.body,
   );
 }

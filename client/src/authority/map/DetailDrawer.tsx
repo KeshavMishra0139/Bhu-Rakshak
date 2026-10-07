@@ -151,7 +151,7 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
                 {r.drivers.map((dr) => (
                   <li key={dr.key}>
                     <div className="flex justify-between text-sm"><span>{driverLabel(dr.key, lang)}</span><span className="font-mono">{dr.contribution}%</span></div>
-                    <div className="h-2 rounded-pill bg-surface-2 mt-1"><div className="h-full rounded-pill bg-brand transition-all duration-700" style={{ width: `${dr.contribution}%` }} /></div>
+                    <div className="h-2 overflow-hidden rounded-pill bg-surface-2 mt-1"><div className="h-full w-full origin-left rounded-pill bg-brand transition-transform duration-700" style={{ transform: `scaleX(${Math.min(100, Math.max(0, dr.contribution)) / 100})` }} /></div>
                   </li>
                 ))}
               </ul>

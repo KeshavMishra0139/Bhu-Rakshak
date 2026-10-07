@@ -17,7 +17,8 @@ function Pending() {
   const [err, setErr] = useState<string | null>(null);
   const load = () => api.get<{ users: (User & { has_id_document: boolean })[] }>('/admin/pending').then((d) => setUsers(d.users)).catch((e) => setErr(errorKey(e)));
   useEffect(() => { load(); }, []);
-  const act = async (id: string, what: 'approve' | 'reject') => {
+  const act = async (id: string, what: 'approve' | 'reject', name = '') => {
+    if (what === 'reject' && !window.confirm(t('adminx.reject_confirm', { name }))) return;
     try { await api.post(`/admin/users/${id}/${what}`, what === 'reject' ? { reason: reason[id] || '' } : {}); load(); } catch (e) { setErr(errorKey(e)); }
   };
   if (err) return <p className="field-error" role="alert">{t(err)}</p>;
@@ -39,10 +40,10 @@ function Pending() {
           {u.has_id_document ? <a className="btn-ghost !min-h-[36px] py-1 text-sm" href={`/api/admin/users/${u.id}/id-document`} target="_blank" rel="noopener noreferrer"><FileText size={16} aria-hidden />{t('adminx.view_id')}</a>
             : <p className="text-sm text-muted">{t('adminx.no_id')}</p>}
           <label htmlFor={`rr-${u.id}`} className="field-label !mb-1 text-sm">{t('adminx.reject_reason')}</label>
-          <input id={`rr-${u.id}`} className="input !min-h-[38px] py-1.5" value={reason[u.id] || ''} onChange={(e) => setReason({ ...reason, [u.id]: e.target.value })} />
+          <input name="reject_reason" autoComplete="off" id={`rr-${u.id}`} className="input !min-h-[38px] py-1.5" value={reason[u.id] || ''} onChange={(e) => setReason({ ...reason, [u.id]: e.target.value })} />
           <div className="flex gap-2 pt-1">
             <button type="button" className="btn-primary" onClick={() => act(u.id, 'approve')}><Check size={18} aria-hidden />{t('adminx.approve')}</button>
-            <button type="button" className="btn-secondary" onClick={() => act(u.id, 'reject')}><X size={18} aria-hidden />{t('adminx.reject')}</button>
+            <button type="button" className="btn-secondary" onClick={() => act(u.id, 'reject', u.name)}><X size={18} aria-hidden />{t('adminx.reject')}</button>
           </div>
         </li>
       ))}
@@ -58,7 +59,7 @@ function Users() {
   return (
     <div className="space-y-3">
       <label htmlFor="u-q" className="sr-only">{t('adminx.search_users')}</label>
-      <input id="u-q" className="input max-w-sm" placeholder={t('adminx.search_users')} value={q} onChange={(e) => setQ(e.target.value)} />
+      <input name="user_search" autoComplete="off" spellCheck={false} id="u-q" className="input max-w-sm" placeholder={t('adminx.search_users')} value={q} onChange={(e) => setQ(e.target.value)} />
       <div className="card overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-surface-2 text-left text-muted">
@@ -95,8 +96,8 @@ function Contacts() {
         {rows.map((s) => (
           <li key={s.id} className="card p-3 grid gap-2 sm:grid-cols-[1fr_1fr_160px_auto] items-end">
             <div><p className="font-semibold">{s.role}</p><p className="text-sm text-muted">{t(`districts.${s.district}`, { defaultValue: s.district })}</p></div>
-            <input aria-label={t('signup.name')} className="input !min-h-[38px] py-1.5" value={s.name || ''} onChange={(e) => setRows(rows.map((x) => (x.id === s.id ? { ...x, name: e.target.value } : x)))} />
-            <input aria-label={t('signup.phone')} className="input !min-h-[38px] py-1.5 font-mono" placeholder={t('citizen.to_be_configured')} value={s.phone || ''} onChange={(e) => setRows(rows.map((x) => (x.id === s.id ? { ...x, phone: e.target.value } : x)))} />
+            <input name="contact_name" autoComplete="off" aria-label={t('signup.name')} className="input !min-h-[38px] py-1.5" value={s.name || ''} onChange={(e) => setRows(rows.map((x) => (x.id === s.id ? { ...x, name: e.target.value } : x)))} />
+            <input name="contact_phone" autoComplete="off" aria-label={t('signup.phone')} className="input !min-h-[38px] py-1.5 font-mono" placeholder={t('citizen.to_be_configured')} value={s.phone || ''} onChange={(e) => setRows(rows.map((x) => (x.id === s.id ? { ...x, phone: e.target.value } : x)))} />
             <button type="button" className="btn-secondary !min-h-[38px]" onClick={() => save(s)}>{saved === s.id ? t('common.saved') : t('common.save')}</button>
           </li>
         ))}

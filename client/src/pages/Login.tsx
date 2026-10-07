@@ -51,13 +51,13 @@ export default function Login() {
             <form onSubmit={onSubmit} className="mt-7 space-y-4" noValidate>
               <div>
                 <label htmlFor="identifier" className="field-label">{t('auth.identifier')}</label>
-                <input id="identifier" className="input" autoComplete="username" inputMode="email" value={identifier}
+                <input name="identifier" spellCheck={false} id="identifier" className="input" autoComplete="username" inputMode="email" value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)} required />
               </div>
               <div>
                 <label htmlFor="password" className="field-label">{t('auth.password')}</label>
                 <div className="relative">
-                  <input id="password" className="input pr-12" type={showPw ? 'text' : 'password'} autoComplete="current-password"
+                  <input name="password" id="password" className="input pr-12" type={showPw ? 'text' : 'password'} autoComplete="current-password"
                     value={password} onChange={(e) => setPassword(e.target.value)} required />
                   <button type="button" className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 inline-flex items-center justify-center text-muted hover:text-ink"
                     onClick={() => setShowPw((s) => !s)} aria-label={showPw ? t('auth.hide_password') : t('auth.show_password')}>
@@ -142,15 +142,15 @@ function DevDialog({ dialogRef, onSubmit }: { dialogRef: RefObject<HTMLDialogEle
         </div>
         <div>
           <label className="field-label" htmlFor="dev-email">{t('auth.dev_email')}</label>
-          <input id="dev-email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" />
+          <input name="email" spellCheck={false} id="dev-email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" />
         </div>
         <div>
           <label className="field-label" htmlFor="dev-pw">{t('auth.password')}</label>
-          <input id="dev-pw" className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" />
+          <input name="dev_password" id="dev-pw" className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" />
         </div>
         <div>
           <label className="field-label" htmlFor="dev-code">{t('auth.dev_code')} <span className="font-normal text-muted">({t('common.optional')})</span></label>
-          <input id="dev-code" className="input" value={code} onChange={(e) => setCode(e.target.value)} autoComplete="one-time-code" />
+          <input name="access_code" spellCheck={false} id="dev-code" className="input" value={code} onChange={(e) => setCode(e.target.value)} autoComplete="one-time-code" />
         </div>
         {error && <p className="field-error" role="alert">{t(error)}</p>}
         <div className="flex gap-2 justify-end pt-1">

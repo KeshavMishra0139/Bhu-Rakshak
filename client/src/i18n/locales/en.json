@@ -43,7 +43,8 @@
     "title": "Title",
     "updated": "Updated {{time}}",
     "pending": "pending",
-    "about": "About & data sources"
+    "about": "About & data sources",
+    "show_more": "Show {{count}} more"
   },
   "live": {
     "live": "Live",
@@ -436,7 +437,8 @@
     "tour_skip": "Skip tour",
     "no_voice_lang": "Read aloud isn't available in this language on this phone.",
     "saathi_answers_note": "Answers come in English, Hindi or Nepali for now.",
-    "safe_place_near": "Less than 1 km away"
+    "safe_place_near": "Less than 1 km away",
+    "photo_preview_alt": "Your photo"
   },
   "authority": {
     "scenario_title": "Storm scenario",
@@ -473,7 +475,7 @@
     },
     "filter_my_district": "My district",
     "filter_escalated": "Escalated",
-    "search_placeholder": "Search place or district",
+    "search_placeholder": "Search place or district…",
     "open_on_map": "Open on map",
     "create_incident": "Create incident",
     "draft_alert": "Draft alert",
@@ -583,7 +585,7 @@
     "mode_map": "Map",
     "view_mode": "Map or in-person view",
     "in_person_pick": "Pick another spot",
-    "in_person_tip": "If Google shows \"No Street View available\", pick a spot on a road.",
+    "in_person_tip": "If Google shows “No Street View available”, pick a spot on a road.",
     "fullscreen": "Full screen",
     "exit_fullscreen": "Exit full screen",
     "src_maps": "Maps: Esri satellite · OpenStreetMap · Google Street View",
@@ -596,7 +598,7 @@
     "topo_hint": "Contours, hill shading, trails and landmarks.",
     "terrain_hint": "Relief shading and contour lines from elevation data.",
     "search_label": "Search a place",
-    "search_placeholder": "Search a place or monitored station",
+    "search_placeholder": "Search a place or monitored station…",
     "search_clear": "Clear search",
     "search_stations": "Monitored stations",
     "search_places": "Other places",
@@ -674,7 +676,7 @@
     "take": "Take ownership",
     "detected_at": "Detected {{time}}",
     "move_to": "Move to",
-    "note_placeholder": "Add a note for the team",
+    "note_placeholder": "Add a note for the team…",
     "add_note": "Add note",
     "sop": "Action checklist",
     "sop_hint": "Actions for {{level}} risk. Every tick is recorded in the audit log.",
@@ -727,7 +729,8 @@
     "d_stub_sent": "Logged by provider interface",
     "d_failed": "Failed",
     "choose_target": "Choose where to send it",
-    "confirm_send": "Send this alert to {{target}}?"
+    "confirm_send": "Send this alert to {{target}}?",
+    "cancel_confirm": "Cancel this alert for everyone? This can't be undone."
   },
   "reports": {
     "title": "Field reports",
@@ -922,7 +925,8 @@
     "search_users": "Search name, email or phone",
     "contacts_hint": "Numbers stay “To be configured” until you enter real ones. Never invent numbers.",
     "approved": "Approved",
-    "rejected": "Rejected"
+    "rejected": "Rejected",
+    "reject_confirm": "Reject {{name}}'s officer account?"
   },
   "dev": {
     "badge": "Developer mode",

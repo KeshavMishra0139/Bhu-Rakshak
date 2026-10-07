@@ -45,12 +45,12 @@ function RoadRow({ road, onSaved }: { road: Road; onSaved: () => void }) {
           </div>
           <div>
             <label className="field-label" htmlFor={`eta-${road.id}`}>{t('roads.eta_label')}</label>
-            <input id={`eta-${road.id}`} className="input" type="number" min={0} step={0.5} value={f.eta} onChange={(e) => setF({ ...f, eta: e.target.value })} />
+            <input name="eta" autoComplete="off" id={`eta-${road.id}`} className="input" type="number" min={0} step={0.5} value={f.eta} onChange={(e) => setF({ ...f, eta: e.target.value })} />
           </div>
           {canClose && (
             <>
-              <div><label className="field-label" htmlFor={`den-${road.id}`}>{t('roads.diversion_en')}</label><input id={`den-${road.id}`} className="input" value={f.den} onChange={(e) => setF({ ...f, den: e.target.value })} /></div>
-              <div><label className="field-label" htmlFor={`dhi-${road.id}`}>{t('roads.diversion_hi')}</label><input id={`dhi-${road.id}`} lang="hi" className="input" value={f.dhi} onChange={(e) => setF({ ...f, dhi: e.target.value })} /></div>
+              <div><label className="field-label" htmlFor={`den-${road.id}`}>{t('roads.diversion_en')}</label><input name="diversion_en" autoComplete="off" id={`den-${road.id}`} className="input" value={f.den} onChange={(e) => setF({ ...f, den: e.target.value })} /></div>
+              <div><label className="field-label" htmlFor={`dhi-${road.id}`}>{t('roads.diversion_hi')}</label><input name="diversion_hi" autoComplete="off" id={`dhi-${road.id}`} lang="hi" className="input" value={f.dhi} onChange={(e) => setF({ ...f, dhi: e.target.value })} /></div>
               <label className="inline-flex items-center gap-2"><input type="checkbox" className="h-4 w-4 accent-[rgb(var(--brand))]" checked={f.ta} onChange={(e) => setF({ ...f, ta: e.target.checked })} />{t('roads.tourist')}</label>
               <label className="inline-flex items-center gap-2"><input type="checkbox" className="h-4 w-4 accent-[rgb(var(--brand))]" checked={f.hva} onChange={(e) => setF({ ...f, hva: e.target.checked })} />{t('roads.heavy')}</label>
             </>

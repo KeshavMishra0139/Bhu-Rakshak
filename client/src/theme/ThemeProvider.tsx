@@ -8,6 +8,14 @@ const media = () => window.matchMedia('(prefers-color-scheme: dark)');
 const read = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
 const write = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* ignore */ } };
 
+/** The phone browser bar colour: the dark teal brand bar, unless a layout has set its own header colour
+ * (data-bar-light / data-bar-dark on <html>, see CitizenLayout). */
+export function applyThemeColor(resolved: 'light' | 'dark') {
+  const d = document.documentElement.dataset;
+  const colour = resolved === 'dark' ? d.barDark || '#071419' : d.barLight || '#0B2A33';
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', colour);
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [pref, setPrefState] = useState<ThemePref>(() => (['light', 'dark', 'system'].includes(read('br.theme') || '') ? (read('br.theme') as ThemePref) : 'system'));
   const [systemDark, setSystemDark] = useState(() => media().matches);
@@ -24,7 +32,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', resolved);
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', resolved === 'dark' ? '#071419' : '#0B2A33');
+    applyThemeColor(resolved);
   }, [resolved]);
 
   useEffect(() => { document.documentElement.setAttribute('data-text-size', textSize); }, [textSize]);

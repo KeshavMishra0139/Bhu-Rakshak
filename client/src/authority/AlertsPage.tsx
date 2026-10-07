@@ -94,8 +94,8 @@ export default function AlertsPage() {
             <div key={k}>
               <label htmlFor={`a-${k}`} className="field-label">{t(`alertsx.${k}`)}</label>
               {k.startsWith('title')
-                ? <input id={`a-${k}`} className="input" lang={k.endsWith('hi') ? 'hi' : 'en'} value={f[k]} onChange={set(k)} required maxLength={160} />
-                : <textarea id={`a-${k}`} className="input min-h-[90px]" lang={k.endsWith('hi') ? 'hi' : 'en'} value={f[k]} onChange={set(k)} required maxLength={1000} />}
+                ? <input name={k} autoComplete="off" id={`a-${k}`} className="input" lang={k.endsWith('hi') ? 'hi' : 'en'} value={f[k]} onChange={set(k)} required maxLength={160} />
+                : <textarea name={k} autoComplete="off" id={`a-${k}`} className="input min-h-[90px]" lang={k.endsWith('hi') ? 'hi' : 'en'} value={f[k]} onChange={set(k)} required maxLength={1000} />}
             </div>
           ))}
           <fieldset>
@@ -138,7 +138,7 @@ export default function AlertsPage() {
                 {a.deliveries?.map((d, i) => <span key={i} className="text-muted">{t(`alertsx.ch_${d.channel}`)}: {t(`alertsx.d_${d.status}`)}</span>)}
               </div>
               {can('alerts.dispatch') && !a.cancelled_at && (
-                <button type="button" className="btn-ghost !min-h-[36px] py-1 mt-2 text-sm" onClick={() => api.post(`/alerts/${a.id}/cancel`).then(reload)}><Ban size={15} aria-hidden />{t('alertsx.cancel')}</button>
+                <button type="button" className="btn-ghost !min-h-[36px] py-1 mt-2 text-sm" onClick={() => { if (window.confirm(t('alertsx.cancel_confirm'))) api.post(`/alerts/${a.id}/cancel`).then(reload); }}><Ban size={15} aria-hidden />{t('alertsx.cancel')}</button>
               )}
             </li>
           ))}

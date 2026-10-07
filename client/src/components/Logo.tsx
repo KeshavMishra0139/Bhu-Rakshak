@@ -9,8 +9,9 @@ export function Logo({ onDark = false, compact = false, alert = false }: { onDar
       <BrandShield variant="mini" motion={alert ? 'alert' : 'hover'} size={30} />
       {!compact && (
         <span className="leading-tight">
-          <span className={`block font-bold text-[1.05rem] ${onDark ? 'text-white' : 'text-ink'}`}>{t('app.name')}</span>
-          <span className={`block text-xs ${onDark ? 'text-on-brand/70' : 'text-muted'}`} lang={i18n.language === 'en' ? 'hi' : 'en'}>{t('app.name_local')}</span>
+          {/* translate="no": browser auto-translate must not change the brand name. */}
+          <span translate="no" className={`block font-bold text-[1.05rem] ${onDark ? 'text-white' : 'text-ink'}`}>{t('app.name')}</span>
+          <span translate="no" className={`block text-xs ${onDark ? 'text-on-brand/70' : 'text-muted'}`} lang={i18n.language === 'en' ? 'hi' : 'en'}>{t('app.name_local')}</span>
         </span>
       )}
     </span>

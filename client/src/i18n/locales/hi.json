@@ -43,7 +43,8 @@
     "title": "शीर्षक",
     "updated": "{{time}} को अपडेट",
     "pending": "बाकी",
-    "about": "जानकारी और डेटा स्रोत"
+    "about": "जानकारी और डेटा स्रोत",
+    "show_more": "{{count}} और दिखाएँ"
   },
   "live": {
     "live": "लाइव",
@@ -436,7 +437,8 @@
     "tour_skip": "परिचय छोड़ें",
     "no_voice_lang": "इस फ़ोन पर इस भाषा में पढ़कर सुनाना उपलब्ध नहीं है।",
     "saathi_answers_note": "जवाब अभी अंग्रेज़ी, हिन्दी या नेपाली में आते हैं।",
-    "safe_place_near": "1 किमी से कम दूर"
+    "safe_place_near": "1 किमी से कम दूर",
+    "photo_preview_alt": "आपकी फ़ोटो"
   },
   "authority": {
     "scenario_title": "तूफ़ान परिदृश्य",
@@ -473,7 +475,7 @@
     },
     "filter_my_district": "मेरा ज़िला",
     "filter_escalated": "आगे बढ़ाए गए",
-    "search_placeholder": "स्थान या ज़िला खोजें",
+    "search_placeholder": "स्थान या ज़िला खोजें…",
     "open_on_map": "नक्शे पर खोलें",
     "create_incident": "घटना दर्ज करें",
     "draft_alert": "चेतावनी तैयार करें",
@@ -583,7 +585,7 @@
     "mode_map": "मानचित्र",
     "view_mode": "मानचित्र या ज़मीनी दृश्य",
     "in_person_pick": "दूसरी जगह चुनें",
-    "in_person_tip": "अगर Google \"No Street View available\" दिखाए, तो किसी सड़क पर जगह चुनें।",
+    "in_person_tip": "अगर Google “No Street View available” दिखाए, तो किसी सड़क पर जगह चुनें।",
     "fullscreen": "पूरी स्क्रीन",
     "exit_fullscreen": "पूरी स्क्रीन से बाहर",
     "src_maps": "मानचित्र: Esri उपग्रह · OpenStreetMap · Google Street View",
@@ -596,7 +598,7 @@
     "topo_hint": "समोच्च रेखाएँ, पहाड़ी छाया, पगडंडियाँ और प्रमुख जगहें।",
     "terrain_hint": "ऊँचाई के डेटा से उभार की छाया और समोच्च रेखाएँ।",
     "search_label": "जगह खोजें",
-    "search_placeholder": "कोई जगह या निगरानी स्टेशन खोजें",
+    "search_placeholder": "कोई जगह या निगरानी स्टेशन खोजें…",
     "search_clear": "खोज साफ़ करें",
     "search_stations": "निगरानी स्टेशन",
     "search_places": "अन्य जगहें",
@@ -674,7 +676,7 @@
     "take": "ज़िम्मेदारी लें",
     "detected_at": "{{time}} को पता चला",
     "move_to": "आगे बढ़ाएँ",
-    "note_placeholder": "टीम के लिए टिप्पणी लिखें",
+    "note_placeholder": "टीम के लिए टिप्पणी लिखें…",
     "add_note": "टिप्पणी जोड़ें",
     "sop": "कार्य सूची",
     "sop_hint": "{{level}} खतरे के लिए कदम। हर टिक ऑडिट लॉग में दर्ज होता है।",
@@ -727,7 +729,8 @@
     "d_stub_sent": "प्रदाता इंटरफ़ेस में दर्ज",
     "d_failed": "विफल",
     "choose_target": "कहाँ भेजना है चुनें",
-    "confirm_send": "यह चेतावनी {{target}} को भेजें?"
+    "confirm_send": "यह चेतावनी {{target}} को भेजें?",
+    "cancel_confirm": "इस अलर्ट को सबके लिए रद्द करें? इसे वापस नहीं लिया जा सकता।"
   },
   "reports": {
     "title": "फ़ील्ड रिपोर्ट",
@@ -922,7 +925,8 @@
     "search_users": "नाम, ईमेल या फ़ोन खोजें",
     "contacts_hint": "असली नंबर डालने तक “अभी सेट नहीं” दिखेगा। कभी भी नंबर अनुमान से न डालें।",
     "approved": "मंज़ूर",
-    "rejected": "अस्वीकृत"
+    "rejected": "अस्वीकृत",
+    "reject_confirm": "{{name}} का अधिकारी खाता अस्वीकार करें?"
   },
   "dev": {
     "badge": "डेवलपर मोड",

@@ -55,7 +55,11 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  /* A soft brand tint on tap instead of the grey flash (mobile browsers). */
+  -webkit-tap-highlight-color: rgb(var(--brand) / 0.12);
 }
+/* Taps on controls act at once (no double-tap-to-zoom delay). Maps keep their own pinch and pan. */
+a, button, input, select, textarea, label, summary, [role='button'], [role='tab'], [role='radio'] { touch-action: manipulation; }
 html[data-text-size='large'] { font-size: 18px; }
 
 body {

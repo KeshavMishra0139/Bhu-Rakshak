@@ -47,8 +47,9 @@ function Popover({ label, icon, children, align = 'right' }: { label: string; ic
   return (
     <div className="relative" ref={ref}>
       {/* On the dark header in both themes (btn-ghost alone gives dark text, invisible in the light theme). */}
-      <button type="button" className="btn-ghost px-3 text-on-brand hover:bg-white/10" aria-expanded={open} aria-haspopup="true" onClick={() => setOpen((v) => !v)}>
-        {icon}<span className="hidden xl:inline">{label}</span>
+      <button type="button" className="btn-ghost px-3 text-on-brand hover:bg-white/10" aria-expanded={open} aria-haspopup="true" title={label} onClick={() => setOpen((v) => !v)}>
+        {/* Label hidden on narrower screens but still read out by screen readers. */}
+        {icon}<span className="sr-only xl:not-sr-only">{label}</span>
       </button>
       {open && <div className={`pop-enter absolute ${align === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'} top-full mt-1 z-[1000] w-[340px] max-w-[92vw] card shadow-2xl p-4`} onClick={(e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false); }}>{children}</div>}
     </div>
@@ -96,12 +97,12 @@ function Shell({ children }: { children: ReactNode }) {
     <div className="flex flex-col" style={{ height: 'calc(100dvh - var(--devbar-h, 0px))' }}>
       <header className="no-print shrink-0 bg-brand-deep text-on-brand">
         <div className="h-14 px-3 flex items-center gap-2">
-          <Link to={withPane('/authority')} className="mr-1"><Logo onDark compact /></Link>
+          <Link to={withPane('/authority')} className="mr-1" aria-label={t('app.name')}><Logo onDark compact /></Link>
           <nav className="flex-1 min-w-0 overflow-x-auto flex items-center gap-0.5" aria-label={t('common.menu')}>
             {items.map(({ to, key, Icon, end, badge, badgeCritical }) => (
-              <NavLink key={to} to={withPane(to)} end={end}
+              <NavLink key={to} to={withPane(to)} end={end} title={t(key)}
                 className={({ isActive }) => `relative shrink-0 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-semibold ${isActive ? 'bg-white/15 text-white' : 'text-on-brand/80 hover:text-white hover:bg-white/10'}`}>
-                <Icon size={17} aria-hidden /><span className="hidden lg:inline">{t(key)}</span>
+                <Icon size={17} aria-hidden /><span className="sr-only lg:not-sr-only">{t(key)}</span>
                 {!!badge && (
                   <span className={`ml-0.5 rounded-pill px-1.5 text-[0.7rem] font-bold tabular-nums ${badgeCritical ? 'bg-risk-critical text-white' : 'bg-white text-brand-deep'}`}
                     aria-label={t('inbox.unread_count', { count: badge })}>{badge}</span>

@@ -16,6 +16,7 @@ import { levelVar, LEVELS } from '../lib/risk';
 import { placeName } from '../lib/format';
 import { withPane } from '../lib/viewAs';
 import { useWide } from '../lib/useWide';
+import { scrollBehavior } from '../lib/motion';
 
 const CorridorMap = lazy(() => import('../components/CorridorMap'));
 /** `gps`: the start is where the person is right now (Google Maps can then start navigating straight away). */
@@ -99,12 +100,12 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
   useEffect(() => {
     if (!main || !reveal.current) return;
     reveal.current = false;
-    mapBox.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    mapBox.current?.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
   }, [main]);
 
   useEffect(() => {
     if (selected == null) return;
-    listRef.current?.querySelector<HTMLElement>(`[data-seg="${selected}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    listRef.current?.querySelector<HTMLElement>(`[data-seg="${selected}"]`)?.scrollIntoView({ block: 'nearest', behavior: scrollBehavior() });
   }, [selected]);
 
   const km = (m: number) => (m / 1000).toFixed(m < 10000 ? 1 : 0);

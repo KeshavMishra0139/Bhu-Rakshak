@@ -11,6 +11,7 @@ import { withPane } from '../lib/viewAs';
 import { PageTransition } from '../components/PageTransition';
 import { OfflineBanner, InstallButton } from '../components/OfflineBanner';
 import { useCitizen } from './CitizenContext';
+import { applyThemeColor, useTheme } from '../theme/ThemeProvider';
 
 const NAV = [
   { to: '/citizen', key: 'citizen.home', Icon: Home, end: true },
@@ -48,6 +49,15 @@ function SoundPrompt() {
 export function CitizenLayout({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
   const { active } = useCitizen(); // a High/Critical alarm turns the logo's warning waves red
+  // The phone's browser bar matches this site's header (surface colour); the officer dashboard keeps the dark teal.
+  const { resolved } = useTheme();
+  useEffect(() => {
+    const d = document.documentElement.dataset;
+    d.barLight = '#FFFFFF';
+    d.barDark = '#102028';
+    applyThemeColor(resolved);
+    return () => { delete d.barLight; delete d.barDark; applyThemeColor(resolved); };
+  }, [resolved]);
   const linkCls = ({ isActive }: { isActive: boolean }) =>
     `px-3 py-2 rounded-lg font-semibold ${isActive ? 'bg-brand/12 text-brand' : 'text-muted hover:text-ink'}`;
   return (
@@ -74,7 +84,7 @@ export function CitizenLayout({ children }: { children: ReactNode }) {
       <main id="main" className="mx-auto max-w-[1100px] px-4 py-5"><PageTransition className="">{children}</PageTransition></main>
 
       {/* Sticky SOS: always one tap from emergency services. */}
-      <a href="tel:112" className="fixed z-30 right-4 bottom-24 md:bottom-6 btn bg-risk-critical text-white shadow-lg rounded-pill px-5" aria-label={t('citizen.call_112')} data-tour="sos">
+      <a href="tel:112" className="fixed z-30 right-4 bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] md:bottom-6 btn bg-risk-critical text-white shadow-lg rounded-pill px-5" aria-label={t('citizen.call_112')} data-tour="sos">
         <Phone size={20} aria-hidden /> {t('citizen.sos')}
       </a>
 

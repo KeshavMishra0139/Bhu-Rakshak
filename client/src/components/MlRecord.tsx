@@ -74,10 +74,10 @@ export function LandslideRecordBox({ locationId }: { locationId: string }) {
       {open && (
         <form className="space-y-2 rounded-md bg-surface-2 p-2" onSubmit={(e) => { e.preventDefault(); save(); }}>
           <label className="block text-sm">{t('ml.record_date')}
-            <input type="date" className="input mt-1" value={date} max={todayIST()} required onChange={(e) => setDate(e.target.value)} />
+            <input name="landslide_date" autoComplete="off" type="date" className="input mt-1" value={date} max={todayIST()} required onChange={(e) => setDate(e.target.value)} />
           </label>
           <label className="block text-sm">{t('ml.record_notes')}
-            <input type="text" className="input mt-1" value={notes} maxLength={500} placeholder={t('ml.record_notes_hint')} onChange={(e) => setNotes(e.target.value)} />
+            <input name="landslide_notes" autoComplete="off" type="text" className="input mt-1" value={notes} maxLength={500} placeholder={t('ml.record_notes_hint')} onChange={(e) => setNotes(e.target.value)} />
           </label>
           <p className="text-xs text-muted">{t('ml.record_help')}</p>
           <div className="flex gap-2">

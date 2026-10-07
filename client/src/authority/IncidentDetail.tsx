@@ -173,7 +173,7 @@ export function IncidentDetail({ id, onClose }: { id: string; onClose?: () => vo
         <h4 className="font-bold">{t('incidents.timeline')}</h4>
         <form onSubmit={addNote} className="mt-2 flex gap-2">
           <label htmlFor={`note-${inc.id}`} className="sr-only">{t('incidents.note_placeholder')}</label>
-          <input id={`note-${inc.id}`} className="input !min-h-[40px] py-1.5" placeholder={t('incidents.note_placeholder')} value={note} onChange={(e) => setNote(e.target.value)} />
+          <input name="note" autoComplete="off" id={`note-${inc.id}`} className="input !min-h-[40px] py-1.5" placeholder={t('incidents.note_placeholder')} value={note} onChange={(e) => setNote(e.target.value)} />
           <button type="submit" className="btn-secondary !min-h-[40px]" disabled={!note.trim()}>{t('incidents.add_note')}</button>
         </form>
         <ol className="mt-3 border-l-2 border-line pl-4 space-y-2.5">

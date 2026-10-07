@@ -14,8 +14,8 @@ const STATUS_COLOR: Record<Report['status'], string> = {
   submitted: 'rgb(var(--muted))', verified: 'rgb(var(--risk-low))', rejected: 'rgb(var(--risk-critical))', resolved: 'rgb(var(--brand))',
 };
 
-/** Shrink photos in the browser so uploads stay small on slow connections. */
-async function compress(file: File): Promise<string> {
+/** Shrink photos in the browser so uploads stay small on slow connections. Returns the JPEG and its size. */
+async function compress(file: File): Promise<{ src: string; w: number; h: number }> {
   const url = URL.createObjectURL(file);
   try {
     const img = await new Promise<HTMLImageElement>((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
@@ -24,7 +24,7 @@ async function compress(file: File): Promise<string> {
     c.width = Math.round(img.width * scale);
     c.height = Math.round(img.height * scale);
     c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height);
-    return c.toDataURL('image/jpeg', 0.8);
+    return { src: c.toDataURL('image/jpeg', 0.8), w: c.width, h: c.height };
   } finally { URL.revokeObjectURL(url); }
 }
 
@@ -36,6 +36,7 @@ export default function CitizenReport() {
   const [step, setStep] = useState(1);
   const [type, setType] = useState<string>('');
   const [photo, setPhoto] = useState<string | null>(null);
+  const [photoSize, setPhotoSize] = useState<{ w: number; h: number } | null>(null);
   const [desc, setDesc] = useState('');
   const [pin, setPin] = useState<[number, number] | null>(null);
   const [placeId, setPlaceId] = useState<string>(viewingId || '');
@@ -59,6 +60,16 @@ export default function CitizenReport() {
   }, [preset]);
   useStreamEvent('report_updated', () => { loadMine(); });
 
+  // Warn before closing or reloading the page with a half-filled report (the browser shows its own message).
+  // The sign type alone doesn't count: it is often pre-chosen from a tap on Home.
+  const unsaved = !done && !!(photo || desc || pin);
+  useEffect(() => {
+    if (!unsaved) return;
+    const warn = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ''; };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [unsaved]);
+
   const center: [number, number] = pin || (placeId && locations[placeId] ? [locations[placeId].lat, locations[placeId].lng] : [27.33, 88.5]);
 
   function gps() {
@@ -76,7 +87,7 @@ export default function CitizenReport() {
     } catch (e) { setErr(errorKey(e)); } finally { setBusy(false); }
   }
 
-  function reset() { setStep(1); setType(''); setPhoto(null); setDesc(''); setPin(null); setDone(false); }
+  function reset() { setStep(1); setType(''); setPhoto(null); setPhotoSize(null); setDesc(''); setPin(null); setDone(false); }
 
   const places = [...list].sort((a, b) => placeName(a, lang).localeCompare(placeName(b, lang)));
 
@@ -96,7 +107,7 @@ export default function CitizenReport() {
         ) : (
           <>
             <p className="mt-5 label-mono">{t('citizen.step_of', { n: step })}</p>
-            <div className="mt-1 h-1.5 rounded-pill bg-surface-2"><div className="h-full rounded-pill bg-brand transition-all" style={{ width: `${(step / 3) * 100}%` }} /></div>
+            <div className="mt-1 h-1.5 overflow-hidden rounded-pill bg-surface-2"><div className="h-full w-full origin-left rounded-pill bg-brand transition-transform duration-300" style={{ transform: `scaleX(${step / 3})` }} /></div>
 
             {step === 1 && (
               <fieldset className="mt-5">
@@ -119,15 +130,15 @@ export default function CitizenReport() {
                 <div>
                   <label className="btn-secondary cursor-pointer">
                     <Camera size={18} aria-hidden />{photo ? t('citizen.change_photo') : t('citizen.add_photo')}
-                    <input type="file" accept="image/*" capture="environment" className="sr-only"
-                      onChange={async (e) => { const f = e.target.files?.[0]; if (f) setPhoto(await compress(f)); }} />
+                    <input type="file" name="photo" accept="image/*" capture="environment" className="sr-only"
+                      onChange={async (e) => { const f = e.target.files?.[0]; if (f) { const p = await compress(f); setPhoto(p.src); setPhotoSize({ w: p.w, h: p.h }); } }} />
                   </label>
                   <p className="field-hint">{t('citizen.photo_hint')}</p>
-                  {photo && <img src={photo} alt="" className="mt-3 max-h-48 rounded-lg border border-line" />}
+                  {photo && <img src={photo} alt={t('citizen.photo_preview_alt')} width={photoSize?.w} height={photoSize?.h} className="mt-3 h-auto max-h-48 w-auto max-w-full rounded-lg border border-line" />}
                 </div>
                 <div>
                   <label htmlFor="desc" className="field-label">{t('citizen.describe')} <span className="font-normal text-muted">({t('common.optional')})</span></label>
-                  <textarea id="desc" className="input min-h-[100px]" maxLength={600} value={desc} onChange={(e) => setDesc(e.target.value)} />
+                  <textarea id="desc" name="description" autoComplete="off" className="input min-h-[100px]" maxLength={600} value={desc} onChange={(e) => setDesc(e.target.value)} />
                 </div>
                 <div className="flex gap-2">
                   <button type="button" className="btn-ghost" onClick={() => setStep(1)}><ArrowLeft size={18} aria-hidden />{t('common.back')}</button>
@@ -148,7 +159,7 @@ export default function CitizenReport() {
                 {pin && <p className="font-semibold text-risk-low" role="status">{t('citizen.pin_set')} <span className="label-mono">{pin[0].toFixed(4)}, {pin[1].toFixed(4)}</span></p>}
                 <div>
                   <label htmlFor="rplace" className="field-label">{t('citizen.loc_pick')}</label>
-                  <select id="rplace" className="input" value={placeId} onChange={(e) => setPlaceId(e.target.value)}>
+                  <select id="rplace" name="place" className="input" value={placeId} onChange={(e) => setPlaceId(e.target.value)}>
                     <option value="">—</option>
                     {places.map((l) => <option key={l.id} value={l.id}>{placeName(l, lang)}</option>)}
                   </select>

@@ -96,27 +96,27 @@ export default function Signup() {
 
             <form id="signup-form" role="tabpanel" onSubmit={submit} className="mt-6 space-y-4" noValidate>
               <Field id="name" label={t('signup.name')}>
-                <input id="name" className="input" autoComplete="name" value={f.name || ''} onChange={set('name')} required />
+                <input name="name" id="name" className="input" autoComplete="name" value={f.name || ''} onChange={set('name')} required />
               </Field>
 
               {tab === 'citizen' ? (
                 <>
                   <Field id="phone" label={t('signup.phone')} hint={t('signup.email_or_phone_hint')}>
-                    <input id="phone" className="input" type="tel" inputMode="tel" autoComplete="tel" placeholder="98765 43210"
+                    <input name="phone" id="phone" className="input" type="tel" inputMode="tel" autoComplete="tel" placeholder="98765 43210"
                       value={f.phone || ''} onChange={set('phone')} aria-describedby="phone-hint" />
                   </Field>
                   <Field id="email" label={t('signup.email')} optional>
-                    <input id="email" className="input" type="email" autoComplete="email" value={f.email || ''} onChange={set('email')} />
+                    <input name="email" spellCheck={false} id="email" className="input" type="email" autoComplete="email" value={f.email || ''} onChange={set('email')} />
                   </Field>
                 </>
               ) : (
                 <Field id="email" label={t('signup.official_email')} hint={t('signup.official_email_hint')}>
-                  <input id="email" className="input" type="email" autoComplete="email" value={f.email || ''} onChange={set('email')} required aria-describedby="email-hint" />
+                  <input name="email" spellCheck={false} id="email" className="input" type="email" autoComplete="email" value={f.email || ''} onChange={set('email')} required aria-describedby="email-hint" />
                 </Field>
               )}
 
               <Field id="password" label={t('auth.password')} hint={t('signup.password_hint')}>
-                <input id="password" className="input" type="password" autoComplete="new-password" value={f.password || ''} onChange={set('password')} required aria-describedby="password-hint" />
+                <input name="password" id="password" className="input" type="password" autoComplete="new-password" value={f.password || ''} onChange={set('password')} required aria-describedby="password-hint" />
               </Field>
 
               {tab === 'citizen' ? (
@@ -128,7 +128,7 @@ export default function Signup() {
                     </select>
                   </Field>
                   <Field id="village" label={t('signup.home_village')} optional>
-                    <input id="village" className="input" value={f.home_village || ''} onChange={set('home_village')} />
+                    <input name="home_village" autoComplete="off" id="village" className="input" value={f.home_village || ''} onChange={set('home_village')} />
                   </Field>
                 </div>
               ) : (
@@ -149,10 +149,10 @@ export default function Signup() {
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <Field id="badge" label={t('signup.badge_id')}>
-                      <input id="badge" className="input" value={f.badge_id || ''} onChange={set('badge_id')} required />
+                      <input name="badge_id" autoComplete="off" spellCheck={false} id="badge" className="input" value={f.badge_id || ''} onChange={set('badge_id')} required />
                     </Field>
                     <Field id="dept" label={t('signup.department')}>
-                      <input id="dept" className="input" value={f.department || ''} onChange={set('department')} required />
+                      <input name="department" autoComplete="off" id="dept" className="input" value={f.department || ''} onChange={set('department')} required />
                     </Field>
                   </div>
                   <Field id="idfile" label={t('signup.id_upload')} hint={file ? t('signup.id_selected', { name: file.name }) : t('signup.id_upload_hint')} optional>

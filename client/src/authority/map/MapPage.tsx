@@ -267,7 +267,7 @@ export default function MapPage() {
                       {noAlert && <span className="mt-1 flex items-center gap-1 text-[10px] font-bold text-[#ff9c9c]"><AlertTriangle size={11} aria-hidden />{t('map.critical_no_alert')}</span>}
                     </span>
                     <span className="text-right">
-                      <span className={`block text-xs font-bold ${VALUE[lv]}`}>{typeof rain === 'number' ? rain.toFixed(1) : '–'}</span>
+                      <span className={`block text-xs font-bold tabular-nums ${VALUE[lv]}`}>{typeof rain === 'number' ? rain.toFixed(1) : '–'}</span>
                       <span className="text-[9px] text-[#7f9284]">{t('map.mm24')}</span>
                     </span>
                     <span className={`ml-3 rounded-full px-2 py-1 text-[9px] font-bold ${PILL[lv]}`}>{t(`levels.${lv}`)}</span>

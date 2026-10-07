@@ -29,9 +29,9 @@ export function AppHeader({ children }: { children?: ReactNode }) {
         <LanguageToggle />
         <div className="hidden sm:block"><ThemeToggle /></div>
         {me && (
-          <button type="button" className="btn-ghost px-3" onClick={async () => { await logout(); nav('/login'); }}>
+          <button type="button" className="btn-ghost px-3" title={t('common.sign_out')} onClick={async () => { await logout(); nav('/login'); }}>
             <LogOut size={18} aria-hidden />
-            <span className="hidden lg:inline">{t('common.sign_out')}</span>
+            <span className="sr-only lg:not-sr-only">{t('common.sign_out')}</span>
           </button>
         )}
       </div>

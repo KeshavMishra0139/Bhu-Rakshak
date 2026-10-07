@@ -23,7 +23,7 @@ const loader = [
   '<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:system-ui,sans-serif">',
   shieldSvg('full', { id: 'boot', className: 'bm bm-intro bm-loop', width: 170 }),
   '</div>',
-  `<style>${css}[data-theme='dark'] #root > div{background:#0a151a}</style>`,
+  `<style>${css}[data-theme='dark'] #root > div{background:#0a151a}[data-theme='dark'] #root > div text:first-of-type{fill:#e4edef}[data-theme='dark'] #root > div text:last-of-type{fill:#96a8ae}</style>`,
 ].join('\n      ');
 const htmlFile = path.join(CLIENT, 'index.html');
 const html = fs.readFileSync(htmlFile, 'utf8');

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { CheckCircle2, ChevronDown, Siren, MapPin, ClipboardPlus, Megaphone, Truck, Search, Inbox } from 'lucide-react';
 import { api, errorKey } from '../api/client';
@@ -13,7 +13,9 @@ import { levelVar } from '../lib/risk';
 import { withPane } from '../lib/viewAs';
 import { useAuthority } from './AuthorityContext';
 
-type Filter = 'all' | 'critical' | 'high' | 'unread' | 'my_district' | 'escalated';
+const FILTERS = ['all', 'critical', 'high', 'unread', 'my_district', 'escalated'] as const;
+type Filter = (typeof FILTERS)[number];
+const PAGE = 50;
 
 export default function InboxPage() {
   const { t, i18n } = useTranslation();
@@ -22,11 +24,22 @@ export default function InboxPage() {
   const { me, can } = useAuth();
   const { corridors } = useRiskStream();
   const { openOnMap, draftAlert } = useAuthority();
-  const [filter, setFilter] = useState<Filter>('all');
-  const [corridor, setCorridor] = useState('');
-  const [q, setQ] = useState('');
-  const [sort, setSort] = useState<'newest' | 'priority'>('newest');
+  // Filters live in the address (?filter=critical&corridor=…&sort=priority&q=…), so a view can be bookmarked or shared.
+  const [params, setParams] = useSearchParams();
+  const setParam = (k: string, v: string, fallback: string) =>
+    setParams((p) => { const n = new URLSearchParams(p); if (v && v !== fallback) n.set(k, v); else n.delete(k); return n; }, { replace: true });
+  const filter = (FILTERS as readonly string[]).includes(params.get('filter') || '') ? (params.get('filter') as Filter) : 'all';
+  const corridor = params.get('corridor') || '';
+  const q = params.get('q') || '';
+  const sort: 'newest' | 'priority' = params.get('sort') === 'priority' ? 'priority' : 'newest';
+  const setFilter = (v: Filter) => setParam('filter', v, 'all');
+  const setCorridor = (v: string) => setParam('corridor', v, '');
+  const setQ = (v: string) => setParam('q', v, '');
+  const setSort = (v: 'newest' | 'priority') => setParam('sort', v, 'newest');
   const [messages, setMessages] = useState<InboxMessage[] | null>(null);
+  // Long lists render 50 at a time ("Show more").
+  const [shown, setShown] = useState(PAGE);
+  useEffect(() => { setShown(PAGE); }, [filter, corridor, q, sort]);
   const [open, setOpen] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [err, setErr] = useState<string | null>(null);
@@ -93,7 +106,7 @@ export default function InboxPage() {
         <div className="relative flex-1 min-w-[180px]">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
           <label htmlFor="inbox-q" className="sr-only">{t('inbox.search_placeholder')}</label>
-          <input id="inbox-q" className="input !min-h-[38px] py-1.5 pl-9 text-sm" placeholder={t('inbox.search_placeholder')} value={q} onChange={(e) => setQ(e.target.value)} />
+          <input name="search" autoComplete="off" id="inbox-q" className="input !min-h-[38px] py-1.5 pl-9 text-sm" placeholder={t('inbox.search_placeholder')} value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
       </div>
       {err && <p className="field-error" role="alert">{t(err)}</p>}
@@ -107,7 +120,7 @@ export default function InboxPage() {
       {!messages && !err && <div className="space-y-2">{[0, 1, 2].map((k) => <div key={k} className="h-20 card animate-pulse" />)}</div>}
 
       <ul className="space-y-2">
-        {messages?.map((m) => {
+        {messages?.slice(0, shown).map((m) => {
           const p = m.params;
           const place = placeName(p, lang);
           const expanded = open === m.id;
@@ -179,6 +192,11 @@ export default function InboxPage() {
           );
         })}
       </ul>
+      {messages && messages.length > shown && (
+        <button type="button" className="btn-secondary w-full" onClick={() => setShown((n) => n + PAGE)}>
+          {t('common.show_more', { count: Math.min(PAGE, messages.length - shown) })}
+        </button>
+      )}
     </div>
   );
 }

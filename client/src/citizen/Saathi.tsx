@@ -247,13 +247,15 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
               </button>
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <label className="flex min-h-[40px] items-center gap-2 rounded-full bg-white/10 px-3 text-[13px] font-bold">
+              {/* The ring on the pill shows keyboard focus (the select itself has no outline). */}
+              <label className="flex min-h-[40px] items-center gap-2 rounded-full bg-white/10 px-3 text-[13px] font-bold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-white">
                 <Languages size={15} aria-hidden />
                 <span className="sr-only">{T('citizen.saathi_lang')}</span>
-                <select value={lang} onChange={(e) => setLang(e.target.value as Lang)} className="bg-transparent text-white outline-none">
-                  <option value="en" className="text-[#17392b]">English</option>
-                  <option value="hi" className="text-[#17392b]">हिन्दी</option>
-                  <option value="ne" className="text-[#17392b]">नेपाली</option>
+                <select name="saathi-lang" value={lang} onChange={(e) => setLang(e.target.value as Lang)} className="bg-transparent text-white outline-none">
+                  {/* Explicit colours: the option list is drawn by the browser and would be dark-on-dark in the dark theme. */}
+                  <option value="en" className="bg-white text-[#17392b]">English</option>
+                  <option value="hi" className="bg-white text-[#17392b]">हिन्दी</option>
+                  <option value="ne" className="bg-white text-[#17392b]">नेपाली</option>
                 </select>
               </label>
               <button type="button" onClick={toggleVoice} aria-pressed={listening}
@@ -335,7 +337,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
 
           <form onSubmit={submit} className="flex items-end gap-2 border-t border-[#e3ebe3] bg-white px-3 py-3">
             <label htmlFor="saathi-input" className="sr-only">{T('citizen.saathi_input')}</label>
-            <textarea id="saathi-input" ref={input} rows={1} value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={onKey}
+            <textarea name="message" autoComplete="off" id="saathi-input" ref={input} rows={1} value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={onKey}
               placeholder={T('citizen.saathi_input')}
               className="max-h-32 min-h-[44px] flex-1 resize-none rounded-2xl border border-[#d9e5da] bg-[#fbfcf8] px-3.5 py-2.5 text-[16px] text-[#1d2b24] placeholder:text-[#8a9a8f] focus:border-[#2d765b]" />
             <button type="submit" disabled={busy || !draft.trim()} aria-label={T('citizen.saathi_send')}
@@ -355,7 +357,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
 
       {!isOpen && (
         <button ref={fab} type="button" onClick={() => open()} aria-haspopup="dialog" aria-label={t('citizen.saathi_open_label')} data-tour="saathi"
-          className="saathi-fab fixed z-40 left-4 bottom-24 md:bottom-6 inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#d37e4c] px-5 text-[15px] font-bold text-white shadow-[0_12px_28px_rgba(211,126,76,0.38)] transition hover:-translate-y-0.5 hover:bg-[#bf6d3d]">
+          className="saathi-fab fixed z-40 left-4 bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] md:bottom-6 inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#d37e4c] px-5 text-[15px] font-bold text-white shadow-[0_12px_28px_rgba(211,126,76,0.38)] transition hover:-translate-y-0.5 hover:bg-[#bf6d3d]">
           <MessageCircle size={20} aria-hidden />{t('citizen.saathi_open')}
         </button>
       )}

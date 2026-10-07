@@ -118,15 +118,15 @@ export function SettingsForm({ variant }: { variant: 'citizen' | 'authority' }) 
         <form onSubmit={saveProfile} className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="s-name" className="field-label">{t('signup.name')}</label>
-            <input id="s-name" className="input" value={profile.name || ''} onChange={(e) => setProfile({ ...profile, name: e.target.value })} />
+            <input name="name" autoComplete="name" id="s-name" className="input" value={profile.name || ''} onChange={(e) => setProfile({ ...profile, name: e.target.value })} />
           </div>
           <div>
             <label htmlFor="s-phone" className="field-label">{t('signup.phone')}</label>
-            <input id="s-phone" className="input" type="tel" value={profile.phone || ''} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} />
+            <input name="phone" autoComplete="tel" id="s-phone" className="input" type="tel" value={profile.phone || ''} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} />
           </div>
           <div>
             <label htmlFor="s-email" className="field-label">{t('signup.email')}</label>
-            <input id="s-email" className="input opacity-70" value={profile.email || ''} readOnly />
+            <input name="email" autoComplete="email" id="s-email" className="input opacity-70" value={profile.email || ''} readOnly />
           </div>
           {variant === 'citizen' && (
             <>
@@ -139,7 +139,7 @@ export function SettingsForm({ variant }: { variant: 'citizen' | 'authority' }) 
               </div>
               <div>
                 <label htmlFor="s-village" className="field-label">{t('signup.home_village')}</label>
-                <input id="s-village" className="input" value={profile.home_village || ''} onChange={(e) => setProfile({ ...profile, home_village: e.target.value })} />
+                <input name="home_village" autoComplete="off" id="s-village" className="input" value={profile.home_village || ''} onChange={(e) => setProfile({ ...profile, home_village: e.target.value })} />
               </div>
             </>
           )}
@@ -216,11 +216,11 @@ export function SettingsForm({ variant }: { variant: 'citizen' | 'authority' }) 
         <form onSubmit={changePw} className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="pw-cur" className="field-label">{t('settings.current_pw')}</label>
-            <input id="pw-cur" type="password" autoComplete="current-password" className="input" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} />
+            <input name="current_password" id="pw-cur" type="password" autoComplete="current-password" className="input" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} />
           </div>
           <div>
             <label htmlFor="pw-new" className="field-label">{t('settings.new_pw')}</label>
-            <input id="pw-new" type="password" autoComplete="new-password" className="input" value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} />
+            <input name="new_password" id="pw-new" type="password" autoComplete="new-password" className="input" value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} />
             <p className="field-hint">{t('signup.password_hint')}</p>
           </div>
           <div className="sm:col-span-2"><button type="submit" className="btn-secondary" disabled={!pw.current || !pw.next}>{t('settings.password')}</button></div>
@@ -238,7 +238,7 @@ export function SettingsForm({ variant }: { variant: 'citizen' | 'authority' }) 
           <p className="text-muted">{t('settings.delete_body')}</p>
           <div className="flex flex-wrap gap-2">
             <label htmlFor="del-pw" className="sr-only">{t('settings.current_pw')}</label>
-            <input id="del-pw" type="password" className="input max-w-xs" placeholder={t('settings.current_pw')} value={delPw} onChange={(e) => setDelPw(e.target.value)} />
+            <input name="delete_password" autoComplete="current-password" id="del-pw" type="password" className="input max-w-xs" placeholder={t('settings.current_pw')} value={delPw} onChange={(e) => setDelPw(e.target.value)} />
             <button type="button" className="btn-danger" disabled={!delPw} onClick={deleteAccount}>{t('settings.delete_confirm')}</button>
           </div>
         </section>

@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import guide from '../data/guide.json';
 import { withPane } from '../lib/viewAs';
+import { scrollBehavior } from '../lib/motion';
 
 type Text = { en: string; hi?: string; ne?: string };
 type Section = { id: string; icon: string; to: string | null; title: Text; what: Text; steps: { en: string[]; hi?: string[]; ne?: string[] } };
@@ -26,7 +27,7 @@ export default function GuidePage({ role }: { role: Role }) {
   const lg = i18n.language === 'hi' || i18n.language === 'ne' ? i18n.language : 'en';
   const sections = (guide as unknown as Record<Role, Section[]>)[role];
   const pick = (x: Text) => x[lg] || x.en;
-  const jump = (id: string) => document.getElementById(`g-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const jump = (id: string) => document.getElementById(`g-${id}`)?.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
   const replayTour = () => {
     try { localStorage.removeItem('br.tourDone'); } catch { /* private mode */ }
     nav(withPane('/citizen'));

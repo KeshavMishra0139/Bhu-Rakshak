@@ -76,7 +76,7 @@ export function MapSearch({ locations, onPickStation, onPickPlace, autoFocus = f
     <div ref={box} className="pointer-events-auto relative z-20 w-[min(340px,100%)]">
       <div className="flex items-center gap-2 rounded-xl border border-white/80 bg-white/95 px-3 shadow-sm backdrop-blur focus-within:ring-2 focus-within:ring-[#2d765b]">
         <Search size={16} className="shrink-0 text-[#476350]" aria-hidden />
-        <input type="search" role="combobox" aria-expanded={showList} aria-controls={listId} aria-autocomplete="list"
+        <input name="place_search" autoComplete="off" type="search" role="combobox" aria-expanded={showList} aria-controls={listId} aria-autocomplete="list"
           aria-activedescendant={showList && options[active] ? optId(active) : undefined} aria-label={t('map.search_label')}
           autoFocus={autoFocus} placeholder={t('map.search_placeholder')} value={q} onChange={(e) => { setQ(e.target.value); setOpen(true); }} onFocus={() => setOpen(true)} onKeyDown={onKey}
           className="min-h-[40px] w-full bg-transparent text-[13px] font-semibold text-[#1d2b24] placeholder:text-[#7a8d80] outline-none [&::-webkit-search-cancel-button]:hidden" />
