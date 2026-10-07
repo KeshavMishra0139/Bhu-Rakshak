@@ -21,7 +21,7 @@ export const PIN_COLOR: Record<Level, [string, string]> = {
 
 export type LayerKey = 'zones' | 'corridors' | 'roads' | 'reports' | 'resources' | 'seismic';
 
-/** Hazard-based zone of a level (PS SIH26191): red at High/Critical, amber at Moderate, none at Low. */
+/** Hazard-based zone of a level: red at High/Critical, amber at Moderate, none at Low. */
 export const zoneOf = (lv: Level | null): 'red' | 'amber' | null => (lv === 'high' || lv === 'critical' ? 'red' : lv === 'moderate' ? 'amber' : null);
 const ZONE_STYLE = {
   red: { color: '#C62828', fillColor: '#C62828', fillOpacity: 0.16, weight: 2, dashArray: '6 5' },

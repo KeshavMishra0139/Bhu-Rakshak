@@ -106,7 +106,7 @@
     {
       "id": "zones", "icon": "shield-alert", "to": "/authority/zones",
       "title": { "en": "Red zones and relocation", "hi": "लाल क्षेत्र और स्थानांतरण", "ne": "रातो क्षेत्र र स्थानान्तरण" },
-      "what": { "en": "Where people may need to move first (problem statement SIH26191).", "hi": "पहले कहाँ से लोगों को हटाना पड़ सकता है (समस्या कथन SIH26191)।", "ne": "पहिले कहाँबाट मानिस सार्नुपर्ला (समस्या कथन SIH26191)।" },
+      "what": { "en": "Where people may need to move first.", "hi": "पहले कहाँ से लोगों को हटाना पड़ सकता है।", "ne": "पहिले कहाँबाट मानिस सार्नुपर्ला।" },
       "steps": {
         "en": ["Places at High or Critical are in a red zone; Moderate is amber. Zones follow the live level and show on the map as dashed circles.", "Relocate first lists red-zone places by level, then risk score, then buildings exposed (from OpenStreetMap), with Open on map and Draft alert.", "Carrying capacity shows the inputs we have and what an official assessment still needs. No limit is made up."],
         "hi": ["उच्च या गंभीर स्तर की जगहें लाल क्षेत्र में हैं; मध्यम पीला है। क्षेत्र लाइव स्तर के साथ बदलते हैं और नक्शे पर डैश वाले घेरे की तरह दिखते हैं।", "पहले यहाँ से हटाएँ सूची लाल क्षेत्र की जगहों को स्तर, फिर जोखिम स्कोर, फिर जोखिम में इमारतों (OpenStreetMap से) के क्रम में दिखाती है, नक्शे पर खोलें और अलर्ट ड्राफ्ट करें के साथ।", "वहन क्षमता में उपलब्ध जानकारी और आधिकारिक आकलन के लिए बाकी ज़रूरतें दिखती हैं। कोई सीमा अपने मन से नहीं बनाई जाती।"],

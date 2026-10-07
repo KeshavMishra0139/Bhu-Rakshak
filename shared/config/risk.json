@@ -43,7 +43,7 @@
     "maxSaturationBoost": 0.32
   },
   "zones": {
-    "_comment": "Hazard-based zones (PS SIH26191): an indicative circle around each monitored slope, red at High/Critical, amber at Moderate, from the live level. Replace with mapped hazard polygons (GSI/NDMA zonation) when available.",
+    "_comment": "Hazard-based zones: an indicative circle around each monitored slope, red at High/Critical, amber at Moderate, from the live level. Replace with mapped hazard polygons (GSI/NDMA zonation) when available.",
     "radiusKm": 2
   }
 }

@@ -1,4 +1,4 @@
-// Red zones and relocation (PS SIH26191): what is exposed at every monitored place, for the officer "Red zones" page.
+// Red zones and relocation: what is exposed at every monitored place, for the officer "Red zones" page.
 // The zone itself comes from the live risk level (client side, same stream as the map); this adds the exposure:
 // buildings, schools and health facilities mapped in OpenStreetMap within 1 km (real, but OSM coverage in the hills is
 // incomplete), plus the seed population estimate and seed slope, each flagged so the page can label them honestly.

@@ -35,11 +35,6 @@ export default function Landing() {
           <Contours className="absolute -left-40 -bottom-40 w-[800px] h-[800px] text-[#7CC4CF] opacity-15 pointer-events-none" />
           <div className="relative mx-auto max-w-7xl px-5 py-12 lg:py-16 grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-center">
             <div>
-              {/* What this answers, in the problem statement's own words. */}
-              <p className="mb-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-2xl border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-on-brand/85">
-                <span className="font-mono text-xs font-semibold tracking-wide text-[#7CC4CF]">{t('landing.ps_id')}</span>
-                <span>{t('landing.ps_line')}</span>
-              </p>
               <h1 className="text-[2.5rem] lg:text-[3.4rem] font-bold leading-[1.04] text-white text-balance">{t('landing.headline')}</h1>
               <p className="mt-5 max-w-xl text-[1.15rem] text-on-brand/85">{t('landing.one_line')}</p>
               <div className="mt-8 flex flex-wrap gap-3">

@@ -1,4 +1,4 @@
-// Red zones and relocation (PS SIH26191: hazard-based red zones, carrying capacity, immediate relocation needs).
+// Red zones and relocation: hazard-based red zones, carrying capacity, and where relocation is needed first.
 // Zones come from the live risk level (same stream as the map): red at High/Critical, amber at Moderate. What is exposed
 // comes from OpenStreetMap (real, but incomplete in the hills); the population figure is a seed estimate and says so.
 // The relocation order is plain and explainable: level, then risk score, then buildings exposed. Carrying capacity is
@@ -91,8 +91,7 @@ export default function ZonesPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-5 p-4">
       <header>
-        <p className="label-mono">{t('zones.ps')}</p>
-        <h1 className="mt-1 flex items-center gap-2 text-2xl font-bold"><ShieldAlert size={24} className="text-risk-critical" aria-hidden />{t('zones.title')}</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold"><ShieldAlert size={24} className="text-risk-critical" aria-hidden />{t('zones.title')}</h1>
         <p className="mt-1 max-w-3xl text-muted">{t('zones.intro')}</p>
       </header>
 

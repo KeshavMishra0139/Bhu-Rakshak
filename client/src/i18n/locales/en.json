@@ -538,8 +538,6 @@
     "warn": "Warn",
     "warn_d": "Alerts reach residents in English or Hindi, with a loud alarm when the danger is high.",
     "sign_up": "Create an account",
-    "ps_id": "SIH26191",
-    "ps_line": "Red zones, carrying capacity and relocation",
     "open_data": "Built on Open-Meteo weather, NCS and USGS earthquake feeds and OpenStreetMap, with IMD warnings once connected."
   },
   "map": {
@@ -1358,7 +1356,6 @@
     "rain_age": "Rain data {{count}} min ago"
   },
   "zones": {
-    "ps": "PS SIH26191 · Hazard-based red zones, carrying capacity, relocation",
     "title": "Red zones and relocation",
     "intro": "Which places are in a hazard-based zone right now, what is exposed there, and where relocation is needed first.",
     "since": "Since {{time}}",
