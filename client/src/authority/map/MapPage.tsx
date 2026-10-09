@@ -32,8 +32,8 @@ const PILL: Record<Level, string> = {
 };
 const LAYER_KEYS: LayerKey[] = ['zones', 'corridors', 'roads', 'seismic', 'reports', 'resources'];
 const SEG = 'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold';
-const SEG_ON = 'bg-[#2a5d43] text-[#d7efd8]';
-const SEG_OFF = 'text-[#315542] hover:bg-[#e8f3ed]';
+const SEG_ON = 'bg-[#1b5f6c] text-[#dcedf0]';
+const SEG_OFF = 'text-[#1f4a55] hover:bg-[#e4eff1]';
 
 /** Tiny risk-score line from now to +48 h (the engine's forecast), ending in the colour of the last level. */
 function Spark({ l, label }: { l: LocationSnap; label: string }) {
@@ -47,7 +47,7 @@ function Spark({ l, label }: { l: LocationSnap; label: string }) {
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="shrink-0" role="img" aria-label={label}>
       <title>{label}</title>
-      <polyline points={xy.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ')} fill="none" stroke="#9fb3a6" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round" />
+      <polyline points={xy.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ')} fill="none" stroke="#9db3b8" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round" />
       <circle cx={end[0]} cy={end[1]} r="2.4" fill={colour} />
     </svg>
   );
@@ -119,18 +119,18 @@ export default function MapPage() {
         <SituationStrip list={list} reports={reports.data?.reports} />
         <div className={`map-console lg:flex-1 lg:min-h-0 ${mapMin ? 'map-min' : ''}`}>
           {mapMin && (
-            <div className="fade-enter flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-[#15241c] px-4 py-3 text-[#d7efd8]">
+            <div className="fade-enter flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-[#0b2a33] px-4 py-3 text-[#dcedf0]">
               <p className="inline-flex items-center gap-2 text-sm font-semibold">
                 <MapIcon size={16} aria-hidden />{t('map.minimised')}
                 <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${highCount ? 'bg-[#71372f] text-[#ffb4a4]' : 'bg-[#2d6143] text-[#b4e1b9]'}`}>{t('map.minimised_high', { count: highCount })}</span>
               </p>
-              <button type="button" onClick={toggleMin} aria-expanded={false} className="inline-flex items-center gap-1.5 rounded-xl bg-white/95 px-3 py-1.5 text-xs font-bold text-[#315542] shadow-sm transition hover:bg-[#e8f3ed]">
+              <button type="button" onClick={toggleMin} aria-expanded={false} className="inline-flex items-center gap-1.5 rounded-xl bg-white/95 px-3 py-1.5 text-xs font-bold text-[#1f4a55] shadow-sm transition hover:bg-[#e4eff1]">
                 <ChevronDown size={15} aria-hidden />{t('map.show_map')}
               </button>
             </div>
           )}
           {/* Map (and in-person view in the same area) */}
-          <div ref={mapArea} aria-hidden={mapMin || undefined} className={`map-fold relative isolate overflow-hidden bg-[#dcebdc] ${mapMin ? 'map-folded' : 'min-h-[440px]'}`}>
+          <div ref={mapArea} aria-hidden={mapMin || undefined} className={`map-fold relative isolate overflow-hidden bg-[#dbe7ea] ${mapMin ? 'map-folded' : 'min-h-[440px]'}`}>
             <WatchMap basemap={basemap} onMapClick={mode === 'street' ? pickPoint : undefined} locations={list} horizon={horizon} activeId={selectedId}
               onSelect={focusStation} focusTick={focusTick} layers={layers} corridorColors={corridorColors}
               roads={roads.data?.roads || []} reports={reports.data?.reports || []} resources={resources.data?.resources || []} seismic={seismic.data} searchPin={searchPin}>
@@ -141,11 +141,11 @@ export default function MapPage() {
             {/* Inset map while in person: click anywhere on it to move the street view there. Kept above Google's logo. */}
             {showingStreet && (
               <div className="absolute bottom-10 left-3 z-[1100] w-[220px] overflow-hidden rounded-xl border-2 border-white bg-white shadow-lg max-sm:w-[170px]">
-                <Suspense fallback={<div className="h-[150px] animate-pulse bg-[#dcebdc]" />}>
+                <Suspense fallback={<div className="h-[150px] animate-pulse bg-[#dbe7ea]" />}>
                   <MiniMap key={`${viewPoint.lat.toFixed(4)},${viewPoint.lng.toFixed(4)}`} center={[viewPoint.lat, viewPoint.lng]} zoom={15}
                     pin={[viewPoint.lat, viewPoint.lng]} onPick={([lat, lng]) => pickPoint({ lat, lng })} label={t('map.inset_label')} height={150} />
                 </Suspense>
-                <p className="bg-[#15241c] px-2 py-1 text-[10px] font-semibold text-[#d7efd8]">{t('map.inset_hint')}</p>
+                <p className="bg-[#0b2a33] px-2 py-1 text-[10px] font-semibold text-[#dcedf0]">{t('map.inset_hint')}</p>
               </div>
             )}
 
@@ -182,7 +182,7 @@ export default function MapPage() {
                     </div>
                   )}
                   {mode === 'street' && (
-                    <p role="status" className={`pointer-events-auto flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg bg-[#15241c]/90 px-3 py-1.5 text-[11px] text-[#d7efd8] shadow ${showingStreet ? 'max-w-[260px] justify-end text-right' : 'max-w-full'}`}>
+                    <p role="status" className={`pointer-events-auto flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg bg-[#0b2a33]/90 px-3 py-1.5 text-[11px] text-[#dcedf0] shadow ${showingStreet ? 'max-w-[260px] justify-end text-right' : 'max-w-full'}`}>
                       {!viewPoint ? t('map.in_person_hint') : (
                         <>
                           <span className="truncate font-bold">{viewPoint.label}</span>
@@ -223,14 +223,14 @@ export default function MapPage() {
                           ))}
                         </ul>
                         {layers.zones && (
-                          <ul className="mt-3 space-y-1.5 border-t border-[#e3ece4] pt-2 text-[13px]">
+                          <ul className="mt-3 space-y-1.5 border-t border-[#e1eaec] pt-2 text-[13px]">
                             <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-full border-2 border-dashed border-[#C62828] bg-[#C62828]/20" aria-hidden />{t('map.legend_red_zone')}</li>
                             <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-full border-2 border-dashed border-[#C99A12] bg-[#E0B53A]/20" aria-hidden />{t('map.legend_amber_zone')}</li>
                           </ul>
                         )}
                         {layers.seismic && seismic.data && (
-                          <div className="mt-3 border-t border-[#e3ece4] pt-2 text-[13px]" title={seismic.data.feed?.message || undefined}>
-                            <p className="mb-1.5 text-[11px] font-bold text-[#7a8d80]">{t('map.layer_seismic')}</p>
+                          <div className="mt-3 border-t border-[#e1eaec] pt-2 text-[13px]" title={seismic.data.feed?.message || undefined}>
+                            <p className="mb-1.5 text-[11px] font-bold text-[#6f858b]">{t('map.layer_seismic')}</p>
                             <ul className="space-y-1.5">
                               {[[12, 'legend_24h'], [100, 'legend_7d'], [400, 'legend_30d']].map(([h, k]) => (
                                 <li key={k} className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full" style={{ background: quakeColor(h as number) }} aria-hidden />{t(`seismic.${k}`)}</li>
@@ -257,21 +257,21 @@ export default function MapPage() {
           <aside className="map-rail flex flex-col min-h-0" aria-labelledby="stations-title">
             <div className="flex items-start justify-between border-b border-white/10 pb-4">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#819488]">{t('map.region')}</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#7f959b]">{t('map.region')}</p>
                 <h2 id="stations-title" className="mt-1 text-xl font-semibold text-white">{t('map.stations')}</h2>
               </div>
-              <span className="rounded-full bg-[#2a5d43] px-2 py-1 text-[9px] font-bold text-[#d7efd8]">{t('map.online', { count: online })}</span>
+              <span className="rounded-full bg-[#1b5f6c] px-2 py-1 text-[9px] font-bold text-[#dcedf0]">{t('map.online', { count: online })}</span>
             </div>
 
             <div role="radiogroup" aria-label={t('map.time')} className="mt-3 flex items-center gap-1 rounded-xl bg-white/5 p-1">
               {horizons.map((h) => (
                 <button key={h} type="button" role="radio" aria-checked={horizon === h} onClick={() => setHorizon(h)}
-                  className={`flex-1 rounded-lg px-1.5 py-1 text-[11px] font-bold font-mono ${horizon === h ? 'bg-[#2a5d43] text-[#d7efd8]' : 'text-[#91a297] hover:text-white'}`}>
+                  className={`flex-1 rounded-lg px-1.5 py-1 text-[11px] font-bold font-mono ${horizon === h ? 'bg-[#1b5f6c] text-[#dcedf0]' : 'text-[#8fa4a9] hover:text-white'}`}>
                   {h === 0 ? t('map.now') : t('map.plus_h', { h })}
                 </button>
               ))}
             </div>
-            {horizon > 0 && <p className="mt-1 text-[10px] text-[#91a297]" role="status">{t('map.forecast_note', { h: horizon })}</p>}
+            {horizon > 0 && <p className="mt-1 text-[10px] text-[#8fa4a9]" role="status">{t('map.forecast_note', { h: horizon })}</p>}
 
             <div className={`mt-3 overflow-y-auto pr-1 lg:flex-1 lg:min-h-0 ${mapMin ? 'stagger grid gap-x-6 sm:grid-cols-2 xl:grid-cols-3 content-start' : 'max-lg:max-h-[420px]'}`}>
               {list.map((l) => {
@@ -284,9 +284,9 @@ export default function MapPage() {
                   <button key={l.id} type="button" onClick={() => focusStation(l.id)} aria-pressed={selectedId === l.id}
                     className={`map-table-row ${selectedId === l.id ? 'active' : ''}`}>
                     <span className="min-w-0 flex-1">
-                      <span className="flex items-center gap-1.5 text-xs font-bold text-[#f4f7f3]"><span className="truncate">{placeName(l, lang)}</span>
+                      <span className="flex items-center gap-1.5 text-xs font-bold text-[#f2f7f8]"><span className="truncate">{placeName(l, lang)}</span>
                         {isPreview(l) && <span className="shrink-0 rounded bg-[#a27ad6]/25 px-1 py-px text-[9px] font-bold uppercase tracking-wide text-[#d9c6ff]" title={t('preview.tip')}>{t('preview.badge')}</span>}</span>
-                      <span className="mt-1 block text-[10px] text-[#85998b]">
+                      <span className="mt-1 block text-[10px] text-[#83999f]">
                         {t(`districts.${l.district}`)} · {live ? t('map.data_live') : t('map.refreshing')}
                       </span>
                       <span className="mt-1.5 flex items-center gap-2">
@@ -297,7 +297,7 @@ export default function MapPage() {
                     </span>
                     <span className="text-right">
                       <span className={`block text-xs font-bold tabular-nums ${VALUE[lv]}`}>{typeof rain === 'number' ? rain.toFixed(1) : '–'}</span>
-                      <span className="text-[9px] text-[#7f9284]">{t('map.mm24')}</span>
+                      <span className="text-[9px] text-[#7d9399]">{t('map.mm24')}</span>
                     </span>
                     <span className={`ml-3 rounded-full px-2 py-1 text-[9px] font-bold ${PILL[lv]}`}>{t(`levels.${lv}`)}</span>
                   </button>
@@ -305,12 +305,12 @@ export default function MapPage() {
               })}
             </div>
 
-            <div className="mt-4 border-t border-white/10 pt-4 text-[10px] leading-5 text-[#91a297]">
-              <div className="flex items-center gap-2"><CloudRain size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_rain')}</div>
-              <div className="mt-1 flex items-center gap-2"><CloudLightning size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_imd')}</div>
-              <div className="mt-1 flex items-center gap-2"><Activity size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_seismic')}</div>
-              <div className="mt-1 flex items-center gap-2"><Mountain size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_terrain')}</div>
-              <div className="mt-1 flex items-center gap-2"><Satellite size={13} className="text-[#9dc6a5]" aria-hidden /> {t('map.src_maps')}</div>
+            <div className="mt-4 border-t border-white/10 pt-4 text-[10px] leading-5 text-[#8fa4a9]">
+              <div className="flex items-center gap-2"><CloudRain size={13} className="text-[#8ec4cc]" aria-hidden /> {t('map.src_rain')}</div>
+              <div className="mt-1 flex items-center gap-2"><CloudLightning size={13} className="text-[#8ec4cc]" aria-hidden /> {t('map.src_imd')}</div>
+              <div className="mt-1 flex items-center gap-2"><Activity size={13} className="text-[#8ec4cc]" aria-hidden /> {t('map.src_seismic')}</div>
+              <div className="mt-1 flex items-center gap-2"><Mountain size={13} className="text-[#8ec4cc]" aria-hidden /> {t('map.src_terrain')}</div>
+              <div className="mt-1 flex items-center gap-2"><Satellite size={13} className="text-[#8ec4cc]" aria-hidden /> {t('map.src_maps')}</div>
             </div>
           </aside>
         </div>

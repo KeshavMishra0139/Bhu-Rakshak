@@ -32,6 +32,7 @@ import SitrepPage from './SitrepPage';
 import GuidePage from '../pages/GuidePage';
 import ZonesPage from './ZonesPage';
 import { OfflineBanner } from '../components/OfflineBanner';
+import { PageHeader, PAGE_BODY } from '../components/PageHeader';
 
 function Popover({ label, icon, children, align = 'right' }: { label: string; icon: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false);
@@ -127,7 +128,7 @@ function Shell({ children }: { children: ReactNode }) {
               {can('scenario.control') && <ScenarioControl />}
               {can('health.read') && (
                 <section>
-                  <h3 className="font-bold mb-1 inline-flex items-center gap-2"><Activity size={17} aria-hidden />{t('nav.health')}</h3>
+                  <h3 className="font-semibold mb-1 inline-flex items-center gap-2"><Activity size={17} aria-hidden />{t('nav.health')}</h3>
                   <HealthPanel compact />
                 </section>
               )}
@@ -154,7 +155,7 @@ function Shell({ children }: { children: ReactNode }) {
 
 function SettingsPage() {
   const { t } = useTranslation();
-  return <div className="mx-auto max-w-3xl p-4 space-y-4"><h1 className="text-2xl font-bold">{t('settings.title')}</h1><SettingsForm variant="authority" /></div>;
+  return <div><PageHeader title={t('settings.title')} /><div className={PAGE_BODY}><div className="max-w-3xl"><SettingsForm variant="authority" /></div></div></div>;
 }
 
 export default function AuthorityApp() {

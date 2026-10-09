@@ -27,7 +27,7 @@ export default function SitrepPage() {
   const lang = i18n.language;
   const [s, setS] = useState<Sitrep | null>(null);
   useEffect(() => { api.get<Sitrep>('/situation-report').then(setS).catch(() => {}); }, []);
-  const H = ({ children }: { children: string }) => <h2 className="text-lg font-bold mt-6 mb-2 border-b border-line pb-1">{children}</h2>;
+  const H = ({ children }: { children: string }) => <h2 className="text-lg font-semibold mt-6 mb-2 border-b border-line pb-1">{children}</h2>;
   const none = <p className="text-muted">{t('sitrep.none')}</p>;
   return (
     <div className="mx-auto max-w-4xl p-6 print:p-0 bg-surface print:bg-white">
@@ -40,7 +40,7 @@ export default function SitrepPage() {
           <header className="flex items-center justify-between gap-4">
             <Logo />
             <div className="text-right">
-              <h1 className="text-2xl font-bold">{t('sitrep.title')}</h1>
+              <h1 className="text-2xl font-semibold">{t('sitrep.title')}</h1>
               <p className="label-mono">{t('sitrep.generated', { time: dateTimeIST(s.generated_at, lang) })}</p>
             </div>
           </header>

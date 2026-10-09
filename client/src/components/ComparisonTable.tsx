@@ -32,7 +32,7 @@ export function ComparisonTable({ className = '' }: { className?: string }) {
   const rows = data.rows as Row[];
   return (
     <section className={className} aria-labelledby="compare-title">
-      <h2 id="compare-title" className="text-2xl font-bold">{t('compare.title')}</h2>
+      <h2 id="compare-title" className="text-2xl font-semibold">{t('compare.title')}</h2>
       <p className="mt-1 max-w-3xl text-muted">{t('compare.intro')}</p>
       <p className="mt-3 flex items-center gap-1.5 text-sm text-muted sm:hidden"><MoveHorizontal size={16} aria-hidden />{t('compare.swipe')}</p>
       <div className="mt-3 overflow-x-auto rounded-card border border-line" role="region" aria-labelledby="compare-title" tabIndex={0}>

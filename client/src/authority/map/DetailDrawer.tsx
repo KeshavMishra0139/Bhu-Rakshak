@@ -96,7 +96,7 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
       <div className="p-4 border-b border-line">
         <div className="flex items-start gap-2">
           <div className="flex-1 min-w-0">
-            <h2 id="drawer-title" className="text-xl font-bold leading-tight flex items-center gap-1.5">
+            <h2 id="drawer-title" className="text-xl font-semibold leading-tight flex items-center gap-1.5">
               {placeName(live, lang)}
               {live.field_verified_at && <BadgeCheck size={18} className="text-brand" aria-label={t('map.field_verified')} />}
             </h2>
@@ -142,11 +142,11 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
             <SeismicPanel seismic={c.seismic as SeismicSummary | null} />
             <MlPanel locationId={id} />
             <section>
-              <h3 className="font-bold mb-2">{t('mix.title')}</h3>
+              <h3 className="font-semibold mb-2">{t('mix.title')}</h3>
               <RiskMix drivers={r.drivers} labelled />
             </section>
             <section>
-              <h3 className="font-bold mb-2">{t('drawer.drivers')}</h3>
+              <h3 className="font-semibold mb-2">{t('drawer.drivers')}</h3>
               <ul className="space-y-2">
                 {r.drivers.map((dr) => (
                   <li key={dr.key}>
@@ -157,7 +157,7 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
               </ul>
             </section>
             <section>
-              <h3 className="font-bold mb-2">{t('drawer.forecast')}</h3>
+              <h3 className="font-semibold mb-2">{t('drawer.forecast')}</h3>
               <div className="grid grid-cols-4 gap-2">
                 {r.forecast.map((f) => (
                   <div key={f.h} className="rounded-lg border border-line p-2 text-center" style={{ borderTop: `4px solid ${levelVar(f.level)}` }}>
@@ -170,7 +170,7 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
             </section>
             {hist.length > 1 && (
               <section>
-                <h3 className="font-bold mb-2">{t('drawer.history_24h')}</h3>
+                <h3 className="font-semibold mb-2">{t('drawer.history_24h')}</h3>
                 <div className="h-28" role="img" aria-label={t('drawer.history_24h')}>
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={hist} margin={{ top: 4, right: 4, bottom: 0, left: -28 }}>
@@ -199,7 +199,7 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
               ['temp_snow', ['temperature', 'soil_temperature', 'freezing_level', 'snowfall_24h', 'snow_depth', 'freeze_thaw_cycles', 'humidity', 'cloud_cover', 'weather_code']],
             ] as const).map(([g, keys]) => (
               <section key={g}>
-                <h3 className="font-bold">{t(`drawer.${g}`)}</h3>
+                <h3 className="font-semibold">{t(`drawer.${g}`)}</h3>
                 <dl className="mt-1">{keys.map((k) => <FactorRow key={k} k={k} value={c[k]} />)}</dl>
               </section>
             ))}
@@ -238,7 +238,7 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
               <>
                 <section>
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-bold">{t('drawer.open_incidents')}</h3>
+                    <h3 className="font-semibold">{t('drawer.open_incidents')}</h3>
                     {can('incidents.manage') && <button type="button" className="btn-secondary !min-h-[36px] py-1 text-sm" onClick={createIncident}><ClipboardPlus size={15} aria-hidden />{t('drawer.create_incident')}</button>}
                   </div>
                   <ul className="mt-2 space-y-2">
@@ -255,12 +255,12 @@ export function DetailDrawer({ id, onClose }: { id: string; onClose: () => void 
                 </section>
                 {levelSops.length > 0 && (
                   <section>
-                    <h3 className="font-bold">{t('drawer.sop_for', { level: t(`levels.${r!.level}`) })}</h3>
+                    <h3 className="font-semibold">{t('drawer.sop_for', { level: t(`levels.${r!.level}`) })}</h3>
                     <ul className="mt-1 list-disc pl-5 text-sm space-y-1">{levelSops.map((s) => <li key={s.key}>{isDeva(lang) ? s.text_hi : s.text_en}</li>)}</ul>
                   </section>
                 )}
                 <section>
-                  <h3 className="font-bold">{t('drawer.resources_nearby')}</h3>
+                  <h3 className="font-semibold">{t('drawer.resources_nearby')}</h3>
                   <ul className="mt-1 text-sm space-y-1">
                     {(d?.resources || []).map((x) => (
                       <li key={x.id} className="flex justify-between gap-2"><span>{x.name}</span><span className="text-muted">{t(`resources.st_${x.status}`)}</span></li>

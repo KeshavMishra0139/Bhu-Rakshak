@@ -12,6 +12,7 @@ import { driverLabel } from '../lib/factors';
 import { levelVar } from '../lib/risk';
 import { withPane } from '../lib/viewAs';
 import { useAuthority } from './AuthorityContext';
+import { EmptyState, PageHeader, PAGE_BODY } from '../components/PageHeader';
 
 const FILTERS = ['all', 'critical', 'high', 'unread', 'my_district', 'escalated'] as const;
 type Filter = (typeof FILTERS)[number];
@@ -80,17 +81,15 @@ export default function InboxPage() {
   const filters: Filter[] = ['all', 'critical', 'high', 'unread', 'escalated', ...(me?.actor.district && me.actor.district !== 'All' ? ['my_district' as Filter] : [])];
 
   return (
-    <div className="mx-auto max-w-5xl p-4 space-y-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-bold flex-1">{t('inbox.heading')}</h1>
+    <div>
+      <PageHeader title={t('inbox.heading')} actions={<>
         {selected.size > 0 && <button type="button" className="btn-secondary" onClick={() => markRead([...selected])}>{t('inbox.mark_read')} ({t('inbox.selected', { count: selected.size })})</button>}
-        <button type="button" className="btn-ghost" onClick={() => api.post('/inbox/read', { all: true }).then(load)}>{t('inbox.mark_all_read')}</button>
-      </div>
+        <button type="button" className="btn-secondary" onClick={() => api.post('/inbox/read', { all: true }).then(load)}>{t('inbox.mark_all_read')}</button>
+      </>}>
       <div className="flex flex-wrap gap-2 items-center">
-        <div role="tablist" aria-label={t('common.status')} className="flex flex-wrap gap-1.5">
+        <div role="tablist" aria-label={t('common.status')} className="seg">
           {filters.map((f) => (
-            <button key={f} role="tab" type="button" aria-selected={filter === f} onClick={() => setFilter(f)}
-              className={`rounded-pill px-3 py-1.5 text-sm font-semibold border ${filter === f ? 'bg-ink text-bg border-ink' : 'border-line text-muted hover:text-ink'}`}>
+            <button key={f} role="tab" type="button" aria-selected={filter === f} onClick={() => setFilter(f)} className="seg-btn">
               {t(`inbox.filter_${f}`)}
             </button>
           ))}
@@ -109,13 +108,12 @@ export default function InboxPage() {
           <input name="search" autoComplete="off" id="inbox-q" className="input !min-h-[38px] py-1.5 pl-9 text-sm" placeholder={t('inbox.search_placeholder')} value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
       </div>
+      </PageHeader>
+      <div className={`${PAGE_BODY} space-y-4`}>
       {err && <p className="field-error" role="alert">{t(err)}</p>}
 
       {messages && messages.length === 0 && (
-        <div className="card p-10 text-center text-muted">
-          <Inbox size={36} className="mx-auto mb-2" aria-hidden />
-          <p>{t('inbox.empty')}</p>
-        </div>
+        <EmptyState icon={<Inbox size={24} />}><p>{t('inbox.empty')}</p></EmptyState>
       )}
       {!messages && !err && <div className="space-y-2">{[0, 1, 2].map((k) => <div key={k} className="h-20 card animate-pulse" />)}</div>}
 
@@ -197,6 +195,7 @@ export default function InboxPage() {
           {t('common.show_more', { count: Math.min(PAGE, messages.length - shown) })}
         </button>
       )}
+      </div>
     </div>
   );
 }

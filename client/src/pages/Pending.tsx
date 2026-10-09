@@ -44,7 +44,7 @@ export default function Pending() {
             {rejected ? <XCircle size={22} aria-hidden /> : <Hourglass size={22} aria-hidden />}
           </span>
           <div>
-            <h1 className="text-[1.7rem] font-bold leading-tight">{t(rejected ? 'pending.rejected_title' : 'pending.title')}</h1>
+            <h1 className="text-[1.7rem] font-semibold leading-tight">{t(rejected ? 'pending.rejected_title' : 'pending.title')}</h1>
             <p className="mt-2 text-muted">
               {rejected
                 ? (u.rejection_reason ? t('pending.rejected_body', { reason: u.rejection_reason }) : t('pending.rejected_no_reason'))

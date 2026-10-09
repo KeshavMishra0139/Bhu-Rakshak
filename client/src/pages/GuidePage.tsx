@@ -10,6 +10,7 @@ import {
 import guide from '../data/guide.json';
 import { withPane } from '../lib/viewAs';
 import { scrollBehavior } from '../lib/motion';
+import { PageHeader, PAGE_BODY } from '../components/PageHeader';
 
 type Text = { en: string; hi?: string; ne?: string };
 type Section = { id: string; icon: string; to: string | null; title: Text; what: Text; steps: { en: string[]; hi?: string[]; ne?: string[] } };
@@ -33,51 +34,68 @@ export default function GuidePage({ role }: { role: Role }) {
     nav(withPane('/citizen'));
   };
 
-  return (
-    <div className={`mx-auto max-w-3xl space-y-5 ${role === 'officer' ? 'p-4' : ''}`}>
-      <header>
-        <h1 className="flex items-center gap-2 text-[1.8rem] font-bold leading-tight"><BookOpen size={26} className="shrink-0 text-brand" aria-hidden />{t(`guide.title_${role}`)}</h1>
-        <p className="mt-1 text-muted">{t(`guide.intro_${role}`)}</p>
-        {role === 'officer' && <p className="mt-1 text-sm text-muted">{t('guide.roles_note')}</p>}
-        <nav aria-label={t('guide.jump')} className="mt-4 flex flex-wrap gap-2">
-          {sections.map((s) => (
-            <button key={s.id} type="button" onClick={() => jump(s.id)} className="min-h-[36px] rounded-pill border border-line px-3 py-1 text-sm font-semibold hover:bg-surface-2">
-              {pick(s.title)}
-            </button>
-          ))}
-        </nav>
-        {role === 'citizen' && (
-          <button type="button" onClick={replayTour} className="btn-ghost mt-3 -ml-3"><Compass size={18} aria-hidden />{t('guide.replay_tour')}</button>
-        )}
-      </header>
-
-      <ol className="space-y-4">
-        {sections.map((s) => {
-          const Icon = ICONS[s.icon] || BookOpen;
-          return (
-            <li key={s.id} id={`g-${s.id}`} className="card scroll-mt-4 p-5">
-              <div className="flex items-start gap-3">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand/12 text-brand ring-1 ring-brand/20"><Icon size={20} aria-hidden /></span>
-                <div className="min-w-0 flex-1">
-                  <h2 className="text-lg font-semibold leading-snug">{pick(s.title)}</h2>
-                  <p className="text-muted">{pick(s.what)}</p>
-                </div>
+  const list = (
+    <ol className="space-y-4">
+      {sections.map((s) => {
+        const Icon = ICONS[s.icon] || BookOpen;
+        return (
+          <li key={s.id} id={`g-${s.id}`} className="card scroll-mt-4 p-5">
+            <div className="flex items-start gap-3">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand/12 text-brand ring-1 ring-brand/20"><Icon size={20} aria-hidden /></span>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-lg font-semibold leading-snug">{pick(s.title)}</h2>
+                <p className="text-muted">{pick(s.what)}</p>
               </div>
-              <ul className="mt-3 space-y-2">
-                {(s.steps[lg] || s.steps.en).map((step, i) => (
-                  <li key={i} className="flex items-start gap-2.5">
-                    <Check size={17} className="mt-1 shrink-0 text-brand" aria-hidden />
-                    <span>{step}</span>
-                  </li>
-                ))}
-              </ul>
-              {s.to && (
-                <Link to={withPane(s.to)} className="btn-secondary mt-4">{t('guide.open')}<ArrowRight size={16} aria-hidden /></Link>
-              )}
-            </li>
-          );
-        })}
-      </ol>
+            </div>
+            <ul className="mt-3 space-y-2">
+              {(s.steps[lg] || s.steps.en).map((step, i) => (
+                <li key={i} className="flex items-start gap-2.5">
+                  <Check size={17} className="mt-1 shrink-0 text-brand" aria-hidden />
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ul>
+            {s.to && (
+              <Link to={withPane(s.to)} className="btn-secondary mt-4">{t('guide.open')}<ArrowRight size={16} aria-hidden /></Link>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+
+  const jumpNav = (
+    <nav aria-label={t('guide.jump')} className="flex flex-wrap gap-2">
+      {sections.map((s) => (
+        <button key={s.id} type="button" onClick={() => jump(s.id)} className="min-h-[36px] rounded-pill border border-line bg-surface px-3 py-1 text-sm font-semibold hover:bg-surface-2">
+          {pick(s.title)}
+        </button>
+      ))}
+    </nav>
+  );
+
+  // Officers: the same title band as every other dashboard page. Citizens: a plain heading inside the site's column.
+  if (role === 'officer') {
+    return (
+      <div>
+        <PageHeader title={t('guide.title_officer')} intro={<>{t('guide.intro_officer')}<span className="mt-1 block text-sm">{t('guide.roles_note')}</span></>}
+          icon={<span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand"><BookOpen size={20} aria-hidden /></span>}>
+          {jumpNav}
+        </PageHeader>
+        <div className={PAGE_BODY}><div className="max-w-3xl">{list}</div></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto max-w-3xl space-y-5">
+      <header>
+        <h1 className="flex items-center gap-2 text-[1.8rem] font-semibold leading-tight"><BookOpen size={26} className="shrink-0 text-brand" aria-hidden />{t('guide.title_citizen')}</h1>
+        <p className="mt-1 text-muted">{t('guide.intro_citizen')}</p>
+        <div className="mt-4">{jumpNav}</div>
+        <button type="button" onClick={replayTour} className="btn-ghost mt-3 -ml-3"><Compass size={18} aria-hidden />{t('guide.replay_tour')}</button>
+      </header>
+      {list}
     </div>
   );
 }

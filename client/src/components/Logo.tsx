@@ -10,8 +10,8 @@ export function Logo({ onDark = false, compact = false, alert = false }: { onDar
       {!compact && (
         <span className="leading-tight">
           {/* translate="no": browser auto-translate must not change the brand name. */}
-          <span translate="no" className={`block font-bold text-[1.05rem] ${onDark ? 'text-white' : 'text-ink'}`}>{t('app.name')}</span>
-          <span translate="no" className={`block text-xs ${onDark ? 'text-on-brand/70' : 'text-muted'}`} lang={i18n.language === 'en' ? 'hi' : 'en'}>{t('app.name_local')}</span>
+          <span translate="no" className={`block whitespace-nowrap font-display font-semibold text-[1.08rem] tracking-[-0.01em] ${onDark ? 'text-white' : 'text-ink'}`}>{t('app.name')}</span>
+          <span translate="no" className={`block whitespace-nowrap text-xs ${onDark ? 'text-on-brand/70' : 'text-muted'}`} lang={i18n.language === 'en' ? 'hi' : 'en'}>{t('app.name_local')}</span>
         </span>
       )}
     </span>

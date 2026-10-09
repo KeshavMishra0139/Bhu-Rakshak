@@ -72,7 +72,7 @@ export default function HindcastPage() {
       <Link to="/" className="inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline"><ArrowLeft size={15} aria-hidden />{t('notfound.home')}</Link>
       <header className="mt-2">
         <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-muted"><History size={14} aria-hidden />{t('hindcast.eyebrow')}</p>
-        <h1 className="mt-1 text-[1.8rem] sm:text-[2.1rem] font-bold leading-tight">{deva ? ev.title_hi : ev.title_en}</h1>
+        <h1 className="mt-1 text-[1.8rem] sm:text-[2.1rem] font-semibold leading-tight">{deva ? ev.title_hi : ev.title_en}</h1>
         <ul className="mt-3 flex flex-wrap gap-2 text-sm">
           <li className="rounded-pill border border-line px-3 py-1 font-semibold">{dateTimeIST(iso(ev.time_ist), lang)} · {deva ? ev.time_note_hi : ev.time_note_en}</li>
           <li className="rounded-pill border border-line px-3 py-1">{deva ? ev.place_hi : ev.place_en}, {ev.state}</li>
@@ -84,7 +84,7 @@ export default function HindcastPage() {
       {/* The answer, stated plainly — including when it is "not early enough". */}
       <section className="card mt-5 overflow-hidden" aria-labelledby="hc-callout" style={{ borderLeft: `6px solid ${flagged ? levelVar(flagged) : 'rgb(var(--muted))'}` }}>
         <div className="p-5">
-          <h2 id="hc-callout" className="text-xl sm:text-2xl font-bold leading-snug">
+          <h2 id="hc-callout" className="text-xl sm:text-2xl font-semibold leading-snug">
             {flagged
               ? t('hindcast.callout', { hours: leadH, level: t(`levels.${flagged}`), place: deva ? data.station.name_hi : data.station.name_en })
               : t('hindcast.callout_none', { place: deva ? data.station.name_hi : data.station.name_en })}
@@ -100,7 +100,7 @@ export default function HindcastPage() {
       <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
         <section className="card p-4 sm:p-5" aria-labelledby="hc-timeline">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 id="hc-timeline" className="text-lg font-bold">{t('hindcast.timeline')}</h2>
+            <h2 id="hc-timeline" className="text-lg font-semibold">{t('hindcast.timeline')}</h2>
             <div className="flex gap-2">
               <button type="button" className="btn-secondary !min-h-[40px] px-3 text-sm" onClick={() => { if (idx >= data.hours.length - 1) setIdx(0); setPlaying((p) => !p); }} aria-pressed={playing}>
                 {playing ? <Pause size={16} aria-hidden /> : <Play size={16} aria-hidden />}{playing ? t('hindcast.pause') : t('hindcast.play')}
@@ -126,7 +126,7 @@ export default function HindcastPage() {
           <section className="card overflow-hidden" aria-live="polite" aria-labelledby="hc-now">
             <div className="p-4" style={{ borderTop: `6px solid ${levelVar(h.level)}` }}>
               <p className="text-xs font-semibold uppercase tracking-wide text-muted">{hoursToEvent > 0 ? t('hindcast.before', { n: hoursToEvent }) : hoursToEvent === 0 ? t('hindcast.at_slide') : t('hindcast.after', { n: -hoursToEvent })}</p>
-              <h2 id="hc-now" className="mt-0.5 text-lg font-bold">{dateTimeIST(iso(h.t), lang)}</h2>
+              <h2 id="hc-now" className="mt-0.5 text-lg font-semibold">{dateTimeIST(iso(h.t), lang)}</h2>
               <div className="mt-2 flex items-center gap-2">
                 <RiskBadge level={h.level} />
                 <span className="font-mono text-lg tabular-nums">{h.score.toFixed(2)}</span>
@@ -136,7 +136,7 @@ export default function HindcastPage() {
                 <div className="rounded-lg bg-surface-2 p-2"><dt className="text-[11px] text-muted">{t('hindcast.rain_24h')}</dt><dd className="font-bold tabular-nums">{Math.round(h.rain_24h)} <span className="text-xs font-normal">mm</span></dd></div>
                 <div className="rounded-lg bg-surface-2 p-2"><dt className="text-[11px] text-muted">{t('hindcast.soil')}</dt><dd className="font-bold tabular-nums">{Math.round(h.saturation * 100)}%</dd></div>
               </dl>
-              <h3 className="mt-3 text-sm font-bold">{t('why.reasons')}</h3>
+              <h3 className="mt-3 text-sm font-semibold">{t('why.reasons')}</h3>
               <ul className="mt-1.5 space-y-1.5">
                 {h.drivers.map((d) => {
                   const g = groupOf(d.key);
@@ -164,7 +164,7 @@ export default function HindcastPage() {
       </div>
 
       <section className="card mt-5 p-5" aria-labelledby="hc-method">
-        <h2 id="hc-method" className="flex items-center gap-2 text-lg font-bold"><Info size={18} className="text-brand" aria-hidden />{t('hindcast.method_title')}</h2>
+        <h2 id="hc-method" className="flex items-center gap-2 text-lg font-semibold"><Info size={18} className="text-brand" aria-hidden />{t('hindcast.method_title')}</h2>
         <p className="mt-2">{t('hindcast.method_intro')}</p>
         <dl className="mt-3 grid gap-2 sm:grid-cols-2">
           {(['engine', 'weather', 'forecast', 'imd', 'seismic', 'terrain'] as const).filter((k) => data.method[k]).map((k) => (
@@ -174,14 +174,14 @@ export default function HindcastPage() {
             </div>
           ))}
         </dl>
-        <h3 className="mt-4 font-bold">{t('hindcast.limits_title')}</h3>
+        <h3 className="mt-4 font-semibold">{t('hindcast.limits_title')}</h3>
         <ul className="mt-1 list-disc space-y-1 pl-5 text-sm">
           <li>{t('hindcast.limit_point', { km: data.station.distance_km })}</li>
           <li>{t('hindcast.limit_rain')}</li>
           <li>{t('hindcast.limit_terrain')}</li>
           <li>{t('hindcast.limit_one')}</li>
         </ul>
-        <h3 className="mt-4 font-bold">{t('hindcast.sources')}</h3>
+        <h3 className="mt-4 font-semibold">{t('hindcast.sources')}</h3>
         <ul className="mt-1 space-y-1 text-sm">
           {ev.sources.map((s) => (
             <li key={s.url}><a href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-start gap-1 text-brand hover:underline"><ExternalLink size={13} className="mt-1 shrink-0" aria-hidden />{s.title}</a></li>

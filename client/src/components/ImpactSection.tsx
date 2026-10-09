@@ -32,7 +32,7 @@ export function ImpactSection({ loc, technical = false }: { loc: LocationSnap; t
   return (
     <>
       <section className="mt-4" aria-labelledby={`imp-${loc.id}`}>
-        <h3 id={`imp-${loc.id}`} className="font-bold">
+        <h3 id={`imp-${loc.id}`} className="font-semibold">
           {t('impact.title')} <span className="text-sm font-normal text-muted">{t('impact.within', { km: imp?.radius_km ?? 1 })}</span>
         </h3>
         {!imp && !failed && <div className="mt-2 grid grid-cols-2 gap-2">{[0, 1, 2, 3].map((i) => <div key={i} className="skeleton h-[68px] rounded-xl" />)}</div>}
@@ -91,7 +91,7 @@ export function ImpactSection({ loc, technical = false }: { loc: LocationSnap; t
       </section>
 
       <section className="mt-4" aria-labelledby={`act-${loc.id}`}>
-        <h3 id={`act-${loc.id}`} className="font-bold">{t('impact.actions')}</h3>
+        <h3 id={`act-${loc.id}`} className="font-semibold">{t('impact.actions')}</h3>
         <ol className="mt-2 space-y-1.5">
           {actions.map((a, i) => {
             const Icon = a.urgent ? ShieldAlert : CheckCircle2;

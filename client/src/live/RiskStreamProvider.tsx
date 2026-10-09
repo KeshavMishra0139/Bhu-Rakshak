@@ -171,6 +171,12 @@ export function RiskStreamProvider({ children }: { children: ReactNode }) {
     const onOffline = () => setStatus('offline');
     window.addEventListener('online', onOnline);
     window.addEventListener('offline', onOffline);
+    // Leaving the page: close the stream so a page kept in the back/forward cache does not hold a connection
+    // (browsers allow six per site over HTTP/1.1; a few reloads would otherwise stall new requests). Reopen on return.
+    const onPageHide = () => { es?.close(); es = null; clearTimeout(watchdog); clearTimeout(helloTimer); };
+    const onPageShow = (e: PageTransitionEvent) => { if (e.persisted && !closed && !polling) { setStatus('reconnecting'); open(); } };
+    window.addEventListener('pagehide', onPageHide);
+    window.addEventListener('pageshow', onPageShow);
     return () => {
       closed = true;
       clearTimeout(watchdog);
@@ -180,6 +186,8 @@ export function RiskStreamProvider({ children }: { children: ReactNode }) {
       es?.close();
       window.removeEventListener('online', onOnline);
       window.removeEventListener('offline', onOffline);
+      window.removeEventListener('pagehide', onPageHide);
+      window.removeEventListener('pageshow', onPageShow);
     };
   }, [identity]);
 

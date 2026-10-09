@@ -4,6 +4,7 @@ import type { Resource } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
 import { placeName } from '../lib/format';
 import { useLive } from './useLive';
+import { PageHeader, PAGE_BODY } from '../components/PageHeader';
 
 const TYPES: Resource['type'][] = ['excavator', 'rescue_team', 'ambulance', 'shelter'];
 const DOT = { available: 'bg-risk-low', deployed: 'bg-risk-high', unavailable: 'bg-muted' } as const;
@@ -15,11 +16,12 @@ export default function ResourcesPage() {
   const { data, reload } = useLive<{ resources: Resource[] }>('/resources', ['resource_updated', 'incident_updated']);
   const update = (id: string, body: Record<string, unknown>) => api.put(`/resources/${id}`, body).then(reload).catch(() => {});
   return (
-    <div className="mx-auto max-w-6xl p-4 space-y-5">
-      <h1 className="text-2xl font-bold">{t('resources.title')}</h1>
+    <div>
+      <PageHeader title={t('resources.title')} />
+      <div className={`${PAGE_BODY} space-y-6`}>
       {TYPES.map((ty) => (
         <section key={ty} aria-labelledby={`ty-${ty}`}>
-          <h2 id={`ty-${ty}`} className="text-lg font-bold mb-2">{t(`resources.ty_${ty}`)}</h2>
+          <h2 id={`ty-${ty}`} className="text-lg font-semibold mb-2">{t(`resources.ty_${ty}`)}</h2>
           <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {data?.resources.filter((r) => r.type === ty).map((r) => (
               <li key={r.id} className="card p-3 space-y-2">
@@ -50,6 +52,7 @@ export default function ResourcesPage() {
           </ul>
         </section>
       ))}
+      </div>
     </div>
   );
 }

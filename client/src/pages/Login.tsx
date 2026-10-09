@@ -45,7 +45,7 @@ export default function Login() {
         </div>
         <div className="flex-1 flex items-start lg:items-center justify-center px-5 pb-12">
           <div className="w-full max-w-[420px]">
-            <h1 className="text-[1.9rem] font-bold leading-tight">{t('auth.login_title')}</h1>
+            <h1 className="text-[1.9rem] font-semibold leading-tight">{t('auth.login_title')}</h1>
             <p className="text-muted mt-1.5">{t('auth.login_subtitle')}</p>
 
             <form onSubmit={onSubmit} className="mt-7 space-y-4" noValidate>
@@ -82,7 +82,7 @@ export default function Login() {
 
             {demo?.enabled && (
               <section className="mt-9 pt-7 border-t border-line" aria-labelledby="demo-title">
-                <h2 id="demo-title" className="font-bold text-lg">{t('auth.demo_title')}</h2>
+                <h2 id="demo-title" className="font-semibold text-lg">{t('auth.demo_title')}</h2>
                 <p className="text-sm text-muted mt-0.5">{t('auth.demo_hint')}</p>
                 <div className="mt-4 grid grid-cols-3 gap-2">
                   {([['citizen', UserRound], ['officer', ShieldHalf], ['admin', Building2]] as const).map(([acct, Icon]) => (
@@ -137,7 +137,7 @@ function DevDialog({ dialogRef, onSubmit }: { dialogRef: RefObject<HTMLDialogEle
     <dialog ref={dialogRef} className="card p-0 w-[min(92vw,420px)] text-ink backdrop:bg-black/50">
       <form onSubmit={submit} className="p-6 space-y-4">
         <div>
-          <h2 className="text-xl font-bold">{t('auth.dev_title')}</h2>
+          <h2 className="text-xl font-semibold">{t('auth.dev_title')}</h2>
           <p className="text-sm text-muted mt-1">{t('auth.dev_body')}</p>
         </div>
         <div>

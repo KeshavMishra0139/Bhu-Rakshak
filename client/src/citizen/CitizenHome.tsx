@@ -151,7 +151,7 @@ export default function CitizenHome() {
       {!loc || !r ? (
         !viewingId ? (
           <section className="card p-6">
-            <h1 className="text-2xl font-bold">{t('citizen.no_home_title')}</h1>
+            <h1 className="text-2xl font-semibold">{t('citizen.no_home_title')}</h1>
             <p className="text-muted mt-1">{t('citizen.no_home_body')}</p>
           </section>
         ) : status === 'connecting' && !list.length ? (
@@ -159,7 +159,7 @@ export default function CitizenHome() {
         ) : (
           // A place is chosen but there is no risk for it (offline with nothing saved, or no record): say so, never guess.
           <section className="card p-6" role="status">
-            <h1 className="text-2xl font-bold">{t('citizen.no_data_title')}</h1>
+            <h1 className="text-2xl font-semibold">{t('citizen.no_data_title')}</h1>
             <p className="mt-1 text-[1.05rem]">{t('citizen.no_data_body')}</p>
             <a href="tel:112" className="btn-danger mt-4 text-lg"><Phone size={20} aria-hidden />{t('citizen.call_112')}</a>
           </section>
@@ -180,7 +180,7 @@ export default function CitizenHome() {
                   {viewingId === homeId && <span className="ml-2 rounded-pill bg-surface-2 px-2 py-0.5 text-xs">{t('citizen.your_area')}</span>}
                 </p>
                 <div className="flex items-start gap-1">
-                  <h1 id="status-title" className="text-[2rem] sm:text-[2.3rem] font-bold leading-tight">{t(`citizen.lt_${r.level}`)}</h1>
+                  <h1 id="status-title" className="text-[2rem] sm:text-[2.3rem] font-semibold leading-tight">{t(`citizen.lt_${r.level}`)}</h1>
                   <span className="mt-2 sm:mt-3"><HelpButton topic="status" /></span>
                 </div>
                 <p className="text-[1.2rem] mt-1 font-semibold">{sentence}</p>
@@ -251,7 +251,7 @@ export default function CitizenHome() {
 
           <section className="card p-5" aria-labelledby="rain-title">
             <div className="flex items-center gap-1">
-              <h2 id="rain-title" className="text-lg font-bold">{t('citizen.rain_48h')}</h2>
+              <h2 id="rain-title" className="text-lg font-semibold">{t('citizen.rain_48h')}</h2>
               <HelpButton topic="rain" />
             </div>
             {noLiveRain ? <p className="mt-3 text-muted">{t('citizen.rain_unavailable')}</p> : forecast ? (
@@ -280,7 +280,7 @@ export default function CitizenHome() {
           <section className="card p-5" aria-labelledby="roads-title">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1">
-                <h2 id="roads-title" className="text-lg font-bold">{t('citizen.roads_here')}</h2>
+                <h2 id="roads-title" className="text-lg font-semibold">{t('citizen.roads_here')}</h2>
                 <HelpButton topic="roads" />
               </div>
               <Link to={withPane('/citizen/roads')} className="text-brand font-semibold text-sm hover:underline">{t('citizen.all_roads')}</Link>
@@ -298,7 +298,7 @@ export default function CitizenHome() {
 
           <section className="card p-5" aria-labelledby="contacts-title">
             <div className="flex items-center gap-1">
-              <h2 id="contacts-title" className="text-lg font-bold">{t('citizen.contacts')}</h2>
+              <h2 id="contacts-title" className="text-lg font-semibold">{t('citizen.contacts')}</h2>
               <HelpButton topic="contacts" />
             </div>
             <a href="tel:112" className="btn-danger w-full mt-3 text-lg"><Phone size={20} aria-hidden />{t('citizen.call_112')}</a>
@@ -331,9 +331,9 @@ function SaathiCard({ place }: { place: string }) {
   return (
     <section className="card p-5" aria-labelledby="ask-title">
       <div className="flex items-start gap-3">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#f4c993] text-[#49311f]" aria-hidden><Sparkles size={20} /></span>
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#d6ecf0] text-[#0b3a46]" aria-hidden><Sparkles size={20} /></span>
         <div className="min-w-0">
-          <h2 id="ask-title" className="text-lg font-bold">{t('citizen.saathi_card_title')}</h2>
+          <h2 id="ask-title" className="text-lg font-semibold">{t('citizen.saathi_card_title')}</h2>
           <p className="text-muted">{t('citizen.saathi_card_body')}</p>
         </div>
       </div>

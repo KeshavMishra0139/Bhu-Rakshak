@@ -86,7 +86,7 @@ export function WhyCard({ loc, variant = 'panel', onClose, technical = false, ch
       </dl>
 
       <section className="mt-4" aria-labelledby={`why-reasons-${loc.id}`}>
-        <h3 id={`why-reasons-${loc.id}`} className="font-bold">{calm ? t('why.reasons_watch') : t('why.reasons')}</h3>
+        <h3 id={`why-reasons-${loc.id}`} className="font-semibold">{calm ? t('why.reasons_watch') : t('why.reasons')}</h3>
         <ol className="stagger mt-2 space-y-2">
           {reasons.map((d, i) => {
             const g = groupOf(d.key);
@@ -131,7 +131,7 @@ export function WhyCard({ loc, variant = 'panel', onClose, technical = false, ch
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted">{t('why.title')}</p>
-          <h2 id={`why-title-${loc.id}`} className="text-xl font-bold leading-tight">{placeName(loc, lang)}</h2>
+          <h2 id={`why-title-${loc.id}`} className="text-xl font-semibold leading-tight">{placeName(loc, lang)}</h2>
           <p className="text-sm text-muted">{t(`districts.${loc.district}`)}</p>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <RiskBadge level={r.level} size="sm" />

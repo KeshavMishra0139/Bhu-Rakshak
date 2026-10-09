@@ -53,7 +53,7 @@ export default function RiskMapPage() {
     <div className="space-y-3">
       <div className="flex flex-wrap items-end justify-between gap-2">
         <div>
-          <h1 className="text-[1.6rem] font-bold leading-tight">{t('riskmap.title')}</h1>
+          <h1 className="text-[1.6rem] font-semibold leading-tight">{t('riskmap.title')}</h1>
           <p className="text-muted text-sm">{t('riskmap.sub')}</p>
         </div>
         <Link to={withPane('/citizen/report')} className="btn-secondary !min-h-[40px] text-sm"><Megaphone size={16} aria-hidden />{t('community.report_cta')}</Link>
@@ -84,11 +84,11 @@ export default function RiskMapPage() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-2 border-t border-[#e3ece4] pt-2 text-[12px] text-[#5d7364]">{t('riskmap.legend_note')}</p>
+              <p className="mt-2 border-t border-[#e1eaec] pt-2 text-[12px] text-[#566d74]">{t('riskmap.legend_note')}</p>
             </MapPopover>
           </div>
           {!loc && (
-            <p className="pointer-events-none absolute left-3 top-3 z-[1100] max-w-[calc(100%-4.5rem)] rounded-pill bg-[#15241c]/85 px-3 py-1.5 text-xs font-semibold text-[#d7efd8] shadow">
+            <p className="pointer-events-none absolute left-3 top-3 z-[1100] max-w-[calc(100%-4.5rem)] rounded-pill bg-[#0b2a33]/85 px-3 py-1.5 text-xs font-semibold text-[#dcedf0] shadow">
               {t('riskmap.tap_pin')}
             </p>
           )}
@@ -117,7 +117,7 @@ function PlaceList({ ranked, selected, onPick, lang }: { ranked: LocationSnap[];
   const { t } = useTranslation();
   return (
     <section className="card p-3" aria-labelledby="rm-places">
-      <h2 id="rm-places" className="px-1 pb-2 font-bold">{t('riskmap.places')}</h2>
+      <h2 id="rm-places" className="px-1 pb-2 font-semibold">{t('riskmap.places')}</h2>
       <ul className="divide-y divide-line">
         {ranked.map((l) => (
           <li key={l.id}>

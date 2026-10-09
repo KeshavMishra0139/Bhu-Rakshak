@@ -22,7 +22,7 @@ export function ImdPanel({ imd, className = '', plain = false }: { imd: ImdSumma
   const colorLabel = (c: ImdColor | null) => (c ? t(`imd.color_${c}`) : t('imd.none'));
   return (
     <section className={`rounded-lg border border-line p-3 space-y-2 ${className}`} aria-labelledby="imd-title">
-      <h3 id="imd-title" className="font-bold inline-flex items-center gap-1.5"><CloudRain size={17} aria-hidden />{plain ? t('imd.title_plain') : t('imd.title')}</h3>
+      <h3 id="imd-title" className="font-semibold inline-flex items-center gap-1.5"><CloudRain size={17} aria-hidden />{plain ? t('imd.title_plain') : t('imd.title')}</h3>
       {imd.nowcast && (
         <div className="text-sm">
           <p className="font-semibold">{t('imd.nowcast')}

@@ -42,8 +42,8 @@ export function SafePlace({ from, T, lang, tone = 'card' }: Props) {
     .filter((p): p is NonNullable<typeof p> => !!p && p.d <= MAX_KM)
     .sort((a, b) => a.d - b.d)[0] || null;
 
-  const box = tone === 'saathi' ? 'rounded-2xl border border-[#e3ebe3] bg-white p-3.5 text-[#1d2b24]' : 'rounded-lg bg-surface-2 p-3';
-  const muted = tone === 'saathi' ? 'text-[#476350]' : 'text-muted';
+  const box = tone === 'saathi' ? 'rounded-2xl border border-[#e1eaec] bg-white p-3.5 text-[#16242a]' : 'rounded-lg bg-surface-2 p-3';
+  const muted = tone === 'saathi' ? 'text-[#3e5a63]' : 'text-muted';
   return (
     <div className={box}>
       <p className={`flex items-center gap-1.5 text-sm font-semibold ${muted}`}><MapPin size={15} aria-hidden />{tr('citizen.safe_place')}</p>
@@ -57,7 +57,7 @@ export function SafePlace({ from, T, lang, tone = 'card' }: Props) {
             <p className="mt-1.5 inline-block rounded bg-[#fff3df] px-2 py-1 text-xs font-semibold text-[#7a4a12]">{tr('citizen.safe_place_sample')}</p>
           ) : (
             <a href={googleDirectionsUrl({ destination: nearest.at })} target="_blank" rel="noreferrer"
-              className={tone === 'saathi' ? 'mt-2 inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#cfe0d2] px-3.5 text-[14px] font-bold text-[#17392b] hover:bg-[#e8f3ed]' : 'btn-secondary mt-2'}>
+              className={tone === 'saathi' ? 'mt-2 inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#cbdde1] px-3.5 text-[14px] font-bold text-[#0b2a33] hover:bg-[#e4eff1]' : 'btn-secondary mt-2'}>
               <Navigation size={16} aria-hidden />{tr('citizen.safe_place_go')}
             </a>
           )}

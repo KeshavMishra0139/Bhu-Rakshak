@@ -16,7 +16,7 @@ export function WarningSigns() {
   const { t } = useTranslation();
   return (
     <section className="card p-5 lg:col-span-2" aria-labelledby="signs-title">
-      <h2 id="signs-title" className="text-lg font-bold">{t('citizen.signs_title')}</h2>
+      <h2 id="signs-title" className="text-lg font-semibold">{t('citizen.signs_title')}</h2>
       <p className="text-muted">{t('citizen.signs_body')}</p>
       <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
         {SIGNS.map(({ type, Icon }) => (

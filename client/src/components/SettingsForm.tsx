@@ -17,7 +17,7 @@ type Prefs = { alerts_my_area: boolean; road_closures: boolean; alarm_sound: boo
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="card p-5 space-y-4">
-      <h2 className="text-lg font-bold">{title}</h2>
+      <h2 className="text-lg font-semibold">{title}</h2>
       {children}
     </section>
   );
@@ -109,7 +109,8 @@ export function SettingsForm({ variant }: { variant: 'citizen' | 'authority' }) 
 
   return (
     <div className="space-y-5">
-      <div aria-live="polite" className="min-h-[1.5rem]">
+      {/* Status line: takes no room until there is a message (the region stays in the page for screen readers). */}
+      <div aria-live="polite" className="empty:-mb-5">
         {msg && <p className="text-risk-low font-semibold">{msg}</p>}
         {err && <p className="field-error" role="alert">{t(err)}</p>}
       </div>
@@ -234,7 +235,7 @@ export function SettingsForm({ variant }: { variant: 'citizen' | 'authority' }) 
 
       {me.user.role === 'citizen' || me.user.role === 'authority' ? (
         <section className="card p-5 space-y-3 border-risk-critical/40">
-          <h2 className="text-lg font-bold">{t('settings.delete')}</h2>
+          <h2 className="text-lg font-semibold">{t('settings.delete')}</h2>
           <p className="text-muted">{t('settings.delete_body')}</p>
           <div className="flex flex-wrap gap-2">
             <label htmlFor="del-pw" className="sr-only">{t('settings.current_pw')}</label>

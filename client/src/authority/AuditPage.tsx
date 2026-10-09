@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { dateTimeIST } from '../lib/format';
 import { useLive } from './useLive';
+import { PageHeader, PAGE_BODY } from '../components/PageHeader';
 
 const PAGE = 50;
 
@@ -20,18 +21,18 @@ export function AuditTable({ adminPath = false }: { adminPath?: boolean }) {
       <label htmlFor="audit-q" className="sr-only">{t('audit.search')}</label>
       <input name="search" autoComplete="off" id="audit-q" className="input max-w-sm" placeholder={t('audit.search')} value={q} onChange={(e) => setQ(e.target.value)} />
       <div className="card overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-surface-2 text-left text-muted">
-            <tr>{(['when', 'who', 'action', 'entity'] as const).map((k) => <th key={k} scope="col" className="px-3 py-2 font-semibold">{t(`audit.${k}`)}</th>)}</tr>
+        <table className="data-table w-full text-sm">
+          <thead className="border-b border-line bg-surface-2/60 text-left">
+            <tr>{(['when', 'who', 'action', 'entity'] as const).map((k) => <th key={k} scope="col" className="px-4 py-2.5">{t(`audit.${k}`)}</th>)}</tr>
           </thead>
           <tbody className="divide-y divide-line">
-            {data?.entries.length === 0 && <tr><td colSpan={4} className="px-3 py-4 text-muted">{t('audit.empty')}</td></tr>}
+            {data?.entries.length === 0 && <tr><td colSpan={4} className="px-4 py-4 text-muted">{t('audit.empty')}</td></tr>}
             {rows.slice(0, shown).map((e) => (
               <tr key={e.id}>
-                <td className="px-3 py-2 font-mono whitespace-nowrap">{dateTimeIST(e.at, i18n.language)}</td>
-                <td className="px-3 py-2">{e.performed_by}</td>
-                <td className="px-3 py-2 font-mono">{e.action}</td>
-                <td className="px-3 py-2 font-mono text-muted">{e.entity_type ? `${e.entity_type}:${e.entity_id ?? ''}` : ''}</td>
+                <td className="px-4 py-2.5 font-mono text-[0.8rem] text-muted whitespace-nowrap">{dateTimeIST(e.at, i18n.language)}</td>
+                <td className="px-4 py-2.5 font-medium">{e.performed_by}</td>
+                <td className="px-4 py-2.5"><span className="rounded-md bg-surface-2 px-1.5 py-0.5 font-mono text-[0.8rem]">{e.action}</span></td>
+                <td className="px-4 py-2.5 font-mono text-[0.8rem] text-muted">{e.entity_type ? `${e.entity_type}:${e.entity_id ?? ''}` : ''}</td>
               </tr>
             ))}
           </tbody>
@@ -48,5 +49,5 @@ export function AuditTable({ adminPath = false }: { adminPath?: boolean }) {
 
 export default function AuditPage() {
   const { t } = useTranslation();
-  return <div className="mx-auto max-w-6xl p-4 space-y-4"><h1 className="text-2xl font-bold">{t('audit.title')}</h1><AuditTable /></div>;
+  return <div><PageHeader title={t('audit.title')} /><div className={PAGE_BODY}><AuditTable /></div></div>;
 }

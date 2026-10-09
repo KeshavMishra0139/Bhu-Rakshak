@@ -113,7 +113,7 @@ export default function AdminApp() {
     <>
       <AppHeader />
       <main id="main" className="mx-auto max-w-6xl px-4 py-6 space-y-5">
-        <h1 className="text-[1.8rem] font-bold">{t('admin.title')}</h1>
+        <h1 className="text-[1.8rem] font-semibold">{t('admin.title')}</h1>
         <div role="tablist" aria-label={t('admin.title')} className="flex flex-wrap gap-1.5 border-b border-line">
           {(['pending', 'users', 'audit', 'health', 'contacts'] as Tab[]).map((k) => (
             <button key={k} role="tab" type="button" aria-selected={tab === k} onClick={() => setTab(k)}

@@ -81,7 +81,7 @@ export default function Signup() {
         </div>
         <div className="flex-1 flex justify-center px-5 pb-12">
           <div className="w-full max-w-[460px]">
-            <h1 className="text-[1.9rem] font-bold leading-tight">{t('signup.title')}</h1>
+            <h1 className="text-[1.9rem] font-semibold leading-tight">{t('signup.title')}</h1>
 
             <div role="tablist" aria-label={t('signup.title')} className="mt-6 grid grid-cols-2 rounded-lg border border-line bg-surface p-1">
               {(['citizen', 'authority'] as Tab[]).map((k) => (

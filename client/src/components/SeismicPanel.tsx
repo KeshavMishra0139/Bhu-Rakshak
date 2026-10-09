@@ -16,7 +16,7 @@ export function SeismicPanel({ seismic, className = '' }: { seismic: SeismicSumm
   const felt = s && s.severity > 0;
   return (
     <section className={`rounded-lg border border-line p-3 space-y-2 ${className}`} aria-labelledby="seismic-title">
-      <h3 id="seismic-title" className="font-bold inline-flex items-center gap-1.5"><Activity size={17} aria-hidden />{t('seismic.title')}</h3>
+      <h3 id="seismic-title" className="font-semibold inline-flex items-center gap-1.5"><Activity size={17} aria-hidden />{t('seismic.title')}</h3>
       <p className="text-sm">
         {felt
           ? <span className="font-semibold text-risk-high">{t('seismic.shaken', { mmi: roman(s.mmi) })}</span>

@@ -8,6 +8,7 @@ import type { Road } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
 import { dateTimeIST, isDeva } from '../lib/format';
 import { useLive } from './useLive';
+import { PageHeader, PAGE_BODY } from '../components/PageHeader';
 
 const STATUS: Road['status'][] = ['open', 'caution', 'restricted', 'blocked', 'cleared'];
 const COLOR: Record<Road['status'], string> = { open: 'rgb(var(--risk-low))', cleared: 'rgb(var(--risk-low))', caution: 'rgb(var(--risk-moderate))', restricted: 'rgb(var(--risk-high))', blocked: 'rgb(var(--risk-critical))' };
@@ -31,7 +32,7 @@ function RoadRow({ road, onSaved }: { road: Road; onSaved: () => void }) {
   return (
     <li className="card p-4 space-y-3" style={{ borderLeft: `6px solid ${COLOR[road.status]}` }}>
       <div className="flex flex-wrap items-center gap-2">
-        <h2 className="font-bold flex-1">{isDeva(lang) ? road.name_hi : road.name_en}</h2>
+        <h2 className="font-semibold flex-1">{isDeva(lang) ? road.name_hi : road.name_en}</h2>
         <span className="rounded-pill px-2.5 py-0.5 text-xs font-bold" style={{ background: COLOR[road.status], color: road.status === 'caution' ? 'rgb(var(--risk-moderate-ink))' : '#fff' }}>{t(`roads.st_${road.status}`)}</span>
       </div>
       <p className="label-mono">{t('common.updated', { time: dateTimeIST(road.updated_at, lang) })}{road.updated_by ? ` · ${road.updated_by}` : ''}</p>
@@ -76,13 +77,13 @@ export default function RoadsPage() {
   const { can } = useAuth();
   const { data, reload } = useLive<{ roads: Road[] }>('/roads', ['road_updated']);
   return (
-    <div className="mx-auto max-w-5xl p-4 space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-bold">{t('roads.title')}</h1>
-        <Link to={withPane('/authority/roads/check')} className="btn-secondary !min-h-[40px] text-sm"><RouteIcon size={16} aria-hidden />{t('corridor.cta')}</Link>
+    <div>
+      <PageHeader title={t('roads.title')}
+        intro={!can('roads.close') && !can('roads.status') ? t('roads.read_only') : undefined}
+        actions={<Link to={withPane('/authority/roads/check')} className="btn-secondary"><RouteIcon size={16} aria-hidden />{t('corridor.cta')}</Link>} />
+      <div className={PAGE_BODY}>
+        <ul className="grid gap-3 lg:grid-cols-2">{data?.roads.map((r) => <RoadRow key={`${r.id}-${r.updated_at}`} road={r} onSaved={reload} />)}</ul>
       </div>
-      {!can('roads.close') && !can('roads.status') && <p className="text-muted">{t('roads.read_only')}</p>}
-      <ul className="grid gap-3 lg:grid-cols-2">{data?.roads.map((r) => <RoadRow key={`${r.id}-${r.updated_at}`} road={r} onSaved={reload} />)}</ul>
     </div>
   );
 }

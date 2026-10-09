@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Send, RefreshCw, Ban, ShieldCheck } from 'lucide-react';
+import { Send, RefreshCw, Ban, ShieldCheck, Megaphone } from 'lucide-react';
 import { api, errorKey } from '../api/client';
 import type { AlertItem, Level } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
@@ -10,6 +10,11 @@ import { RiskBadge } from '../components/RiskBadge';
 import { useToasts } from '../components/Toasts';
 import { dateTimeIST, placeName, isDeva } from '../lib/format';
 import { useLive } from './useLive';
+import { LEVEL_ICON } from '../lib/risk';
+import { EmptyState, PageHeader, PAGE_BODY } from '../components/PageHeader';
+
+// Severity options: an outlined tile; the chosen one takes its level's colour as a tint and a 2px edge.
+const SEV = 'inline-flex min-h-[40px] items-center gap-2 rounded-[10px] border px-3 text-sm font-semibold transition-colors';
 
 type Draft = { target_type: string; target_id: string; severity: Level; kind: 'warning' | 'all_clear'; title_en: string; title_hi: string; body_en: string; body_hi: string };
 const DISTRICTS = ['East Sikkim', 'West Sikkim', 'North Sikkim', 'South Sikkim', 'Kalimpong', 'Darjeeling'];
@@ -59,10 +64,12 @@ export default function AlertsPage() {
   const set = (k: keyof Draft) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
 
   return (
-    <div className="mx-auto max-w-6xl p-4 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+    <div>
+    <PageHeader title={t('nav.alerts')} />
+    <div className={`${PAGE_BODY} grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]`}>
       {can('alerts.dispatch') ? (
         <form onSubmit={send} className="card p-5 space-y-4 self-start" aria-labelledby="dispatch-title">
-          <h1 id="dispatch-title" className="text-2xl font-bold">{t('alertsx.dispatch')}</h1>
+          <h2 id="dispatch-title" className="text-xl font-semibold">{t('alertsx.dispatch')}</h2>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label htmlFor="a-tt" className="field-label">{t('alertsx.target_type')}</label>
@@ -79,15 +86,21 @@ export default function AlertsPage() {
             </div>
           </div>
           <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={t('alertsx.severity')}>
-            {(['moderate', 'high', 'critical'] as Level[]).map((lv) => (
-              <button key={lv} type="button" role="radio" aria-checked={f.kind === 'warning' && f.severity === lv} onClick={() => setF({ ...f, kind: 'warning', severity: lv })}
-                className={`rounded-pill ${f.kind === 'warning' && f.severity === lv ? 'ring-2 ring-offset-2 ring-ink' : 'opacity-60'}`}>
-                <RiskBadge level={lv} />
-              </button>
-            ))}
+            {(['moderate', 'high', 'critical'] as Level[]).map((lv) => {
+              const on = f.kind === 'warning' && f.severity === lv;
+              const Icon = LEVEL_ICON[lv];
+              return (
+                <button key={lv} type="button" role="radio" aria-checked={on} onClick={() => setF({ ...f, kind: 'warning', severity: lv })}
+                  className={`${SEV} ${on ? 'border-transparent text-ink' : 'border-line text-muted hover:bg-surface-2 hover:text-ink'}`}
+                  style={on ? { background: `rgb(var(--risk-${lv}) / 0.12)`, boxShadow: `inset 0 0 0 2px rgb(var(--risk-${lv}))` } : undefined}>
+                  <Icon size={16} strokeWidth={2.4} style={{ color: `rgb(var(--risk-${lv}))` }} aria-hidden />{t(`levels.${lv}`)}
+                </button>
+              );
+            })}
             <button type="button" role="radio" aria-checked={f.kind === 'all_clear'} onClick={() => setF({ ...f, kind: 'all_clear' })}
-              className={`inline-flex items-center gap-1.5 rounded-pill px-2.5 py-1 text-sm font-semibold text-white bg-risk-low ${f.kind === 'all_clear' ? 'ring-2 ring-offset-2 ring-ink' : 'opacity-60'}`}>
-              <ShieldCheck size={15} aria-hidden />{t('alertsx.kind_all_clear')}
+              className={`${SEV} ${f.kind === 'all_clear' ? 'border-transparent text-ink' : 'border-line text-muted hover:bg-surface-2 hover:text-ink'}`}
+              style={f.kind === 'all_clear' ? { background: 'rgb(var(--risk-low) / 0.12)', boxShadow: 'inset 0 0 0 2px rgb(var(--risk-low))' } : undefined}>
+              <ShieldCheck size={16} strokeWidth={2.4} className="text-risk-low" aria-hidden />{t('alertsx.kind_all_clear')}
             </button>
           </div>
           {(['title_en', 'title_hi', 'body_en', 'body_hi'] as const).map((k) => (
@@ -118,8 +131,8 @@ export default function AlertsPage() {
       ) : <div />}
 
       <section aria-labelledby="history-title" className="space-y-3">
-        <h2 id="history-title" className="text-xl font-bold">{t('alertsx.history')}</h2>
-        {data && data.alerts.length === 0 && <p className="card p-6 text-muted">{t('alertsx.empty')}</p>}
+        <h2 id="history-title" className="text-xl font-semibold">{t('alertsx.history')}</h2>
+        {data && data.alerts.length === 0 && <EmptyState icon={<Megaphone size={24} />}><p>{t('alertsx.empty')}</p></EmptyState>}
         {!data && <div className="h-32 card animate-pulse" />}
         <ul className="space-y-3">
           {data?.alerts.map((a) => (
@@ -144,6 +157,7 @@ export default function AlertsPage() {
           ))}
         </ul>
       </section>
+    </div>
     </div>
   );
 }

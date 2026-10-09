@@ -35,7 +35,7 @@ export default function Landing() {
           <Contours className="absolute -left-40 -bottom-40 w-[800px] h-[800px] text-[#7CC4CF] opacity-15 pointer-events-none" />
           <div className="relative mx-auto max-w-7xl px-5 py-12 lg:py-16 grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-center">
             <div>
-              <h1 className="text-[2.5rem] lg:text-[3.4rem] font-bold leading-[1.04] text-white text-balance">{t('landing.headline')}</h1>
+              <h1 className="text-[2.5rem] lg:text-[3.4rem] font-semibold leading-[1.04] text-white text-balance">{t('landing.headline')}</h1>
               <p className="mt-5 max-w-xl text-[1.15rem] text-on-brand/85">{t('landing.one_line')}</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 {me ? <Link to={homePathFor(me)} className="btn bg-white text-brand-deep hover:bg-white/90">{t('landing.open_live')}</Link> : (
@@ -67,7 +67,7 @@ export default function Landing() {
         </section>
 
         <section className="mx-auto max-w-7xl px-5 py-14" aria-labelledby="how">
-          <h2 id="how" className="text-2xl font-bold">{t('landing.how_title')}</h2>
+          <h2 id="how" className="text-2xl font-semibold">{t('landing.how_title')}</h2>
           {/* The four steps as one flow: a line joins the icons on wide screens (the order is already the list's). */}
           <ol className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             {STEPS.map(([k, Icon], i) => (

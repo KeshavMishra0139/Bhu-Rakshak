@@ -14,6 +14,7 @@ import { riskConfig } from '../lib/risk';
 import { useAuthority } from './AuthorityContext';
 import { useLive } from './useLive';
 import { zoneOf } from './map/WatchMap';
+import { PageHeader, PAGE_BODY } from '../components/PageHeader';
 
 type Exposure = {
   osm: { radius_km: number; generated_at: string } | null;
@@ -82,18 +83,17 @@ export default function ZonesPage() {
 
   const stat = (label: string, value: string | number, note?: string, tone = '') => (
     <div className="card p-4">
-      <p className="text-sm font-semibold text-muted">{label}</p>
-      <p className={`mt-1 text-3xl font-bold tabular-nums ${tone}`}>{value}</p>
-      {note && <p className="mt-0.5 text-xs text-muted">{note}</p>}
+      <p className="text-sm font-medium text-muted">{label}</p>
+      <p className={`mt-1.5 font-display text-[2rem] font-semibold leading-none tabular-nums ${tone}`}>{value}</p>
+      {note && <p className="mt-2 text-xs text-muted">{note}</p>}
     </div>
   );
 
   return (
-    <div className="mx-auto max-w-5xl space-y-5 p-4">
-      <header>
-        <h1 className="flex items-center gap-2 text-2xl font-bold"><ShieldAlert size={24} className="text-risk-critical" aria-hidden />{t('zones.title')}</h1>
-        <p className="mt-1 max-w-3xl text-muted">{t('zones.intro')}</p>
-      </header>
+    <div>
+      <PageHeader title={t('zones.title')} intro={t('zones.intro')}
+        icon={<span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-risk-critical/10 text-risk-critical"><ShieldAlert size={20} aria-hidden /></span>} />
+      <div className={`${PAGE_BODY} space-y-5`}>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {stat(t('zones.stat_red'), list.length ? red.length : '–', undefined, red.length ? 'text-risk-critical' : '')}
@@ -103,7 +103,7 @@ export default function ZonesPage() {
       </div>
 
       <section className="card p-5" aria-labelledby="relocate-title">
-        <h2 id="relocate-title" className="text-lg font-bold">{t('zones.relocate_title')}</h2>
+        <h2 id="relocate-title" className="text-lg font-semibold">{t('zones.relocate_title')}</h2>
         <p className="text-sm text-muted">{t('zones.relocate_order')}</p>
         {red.length ? (
           <ol className="mt-1 divide-y divide-line">{red.map((l, i) => <Row key={l.id} l={l} rank={i + 1} />)}</ol>
@@ -113,7 +113,7 @@ export default function ZonesPage() {
       </section>
 
       <section className="card p-5" aria-labelledby="watch-title">
-        <h2 id="watch-title" className="text-lg font-bold">{t('zones.watch_title')}</h2>
+        <h2 id="watch-title" className="text-lg font-semibold">{t('zones.watch_title')}</h2>
         <p className="text-sm text-muted">{t('zones.watch_intro')}</p>
         {amber.length ? <ul className="mt-1 divide-y divide-line">{amber.map((l) => <Row key={l.id} l={l} compact />)}</ul>
           : <p className="mt-3 text-muted">{t('zones.watch_empty')}</p>}
@@ -121,13 +121,13 @@ export default function ZonesPage() {
 
       <section className="card p-5" aria-labelledby="cc-title">
         <div className="flex flex-wrap items-center gap-2">
-          <h2 id="cc-title" className="flex-1 text-lg font-bold">{t('zones.cc_title')}</h2>
+          <h2 id="cc-title" className="flex-1 text-lg font-semibold">{t('zones.cc_title')}</h2>
           <span className="rounded-pill bg-risk-moderate/15 px-3 py-1 text-xs font-bold text-[rgb(var(--risk-moderate-ink))] dark:text-risk-moderate">{t('zones.cc_status')}</span>
         </div>
         <p className="mt-1 text-[0.95rem]">{t('zones.cc_body')}</p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <div className="rounded-lg bg-surface-2 p-4">
-            <h3 className="text-sm font-bold">{t('zones.cc_have')}</h3>
+            <h3 className="text-sm font-semibold">{t('zones.cc_have')}</h3>
             <ul className="mt-2 space-y-2 text-sm">
               <li className="flex gap-2"><Building2 size={16} className="mt-0.5 shrink-0 text-muted" aria-hidden />{t('zones.cc_have_osm')}</li>
               <li className="flex gap-2"><Ruler size={16} className="mt-0.5 shrink-0 text-muted" aria-hidden />{t('zones.cc_have_slope')}</li>
@@ -135,7 +135,7 @@ export default function ZonesPage() {
             </ul>
           </div>
           <div className="rounded-lg border border-dashed border-line p-4">
-            <h3 className="text-sm font-bold">{t('zones.cc_need')}</h3>
+            <h3 className="text-sm font-semibold">{t('zones.cc_need')}</h3>
             <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm">
               <li>{t('zones.cc_need_1')}</li>
               <li>{t('zones.cc_need_2')}</li>
@@ -146,6 +146,7 @@ export default function ZonesPage() {
       </section>
 
       <p className="flex items-start gap-2 text-sm text-muted"><Info size={16} className="mt-0.5 shrink-0" aria-hidden />{t('zones.method', { km })}</p>
+      </div>
     </div>
   );
 }

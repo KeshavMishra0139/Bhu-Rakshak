@@ -49,7 +49,7 @@ export function MlPanel({ locationId }: { locationId: string }) {
   return (
     <section className="rounded-lg border border-dashed border-line p-3 space-y-2" aria-labelledby="ml-title">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 id="ml-title" className="font-bold inline-flex items-center gap-1.5"><FlaskConical size={17} aria-hidden />{t('ml.title')}</h3>
+        <h3 id="ml-title" className="font-semibold inline-flex items-center gap-1.5"><FlaskConical size={17} aria-hidden />{t('ml.title')}</h3>
         <span className="rounded-pill bg-surface-2 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted">{t('ml.experimental')}</span>
       </div>
       {p ? (

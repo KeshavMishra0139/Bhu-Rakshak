@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { MapPin, ImageOff, Clock, X } from 'lucide-react';
+import { MapPin, ImageOff, Clock, X, FileWarning } from 'lucide-react';
 import { api, errorKey } from '../api/client';
 import type { Report } from '../api/types';
 import { useAuth } from '../auth/AuthProvider';
@@ -10,6 +10,7 @@ import { riskConfig } from '../lib/risk';
 import { useNow } from '../lib/useNow';
 import { useLive } from './useLive';
 import { useAuthority } from './AuthorityContext';
+import { EmptyState, PageHeader, PAGE_BODY } from '../components/PageHeader';
 
 type F = 'submitted' | 'verified' | 'rejected' | 'resolved' | '';
 
@@ -45,18 +46,19 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl p-4 space-y-4">
-      <h1 className="text-2xl font-bold">{t('reports.title')}</h1>
-      <div role="tablist" aria-label={t('common.status')} className="flex flex-wrap gap-1.5">
+    <div>
+      <PageHeader title={t('reports.title')}>
+      <div role="tablist" aria-label={t('common.status')} className="seg">
         {(['submitted', 'verified', 'rejected', 'resolved', ''] as F[]).map((f) => (
-          <button key={f || 'all'} role="tab" type="button" aria-selected={filter === f} onClick={() => setFilter(f)}
-            className={`rounded-pill px-3 py-1.5 text-sm font-semibold border ${filter === f ? 'bg-ink text-bg border-ink' : 'border-line text-muted hover:text-ink'}`}>
+          <button key={f || 'all'} role="tab" type="button" aria-selected={filter === f} onClick={() => setFilter(f)} className="seg-btn">
             {f ? t(`reports.f_${f}`) : t('common.all')}
           </button>
         ))}
       </div>
+      </PageHeader>
+      <div className={`${PAGE_BODY} space-y-4`}>
       {err && <p className="field-error" role="alert">{t(err)}</p>}
-      {data && data.reports.length === 0 && <p className="card p-6 text-muted">{t('reports.empty')}</p>}
+      {data && data.reports.length === 0 && <EmptyState icon={<FileWarning size={24} />}><p>{t('reports.empty')}</p></EmptyState>}
       <ul className="grid gap-3 md:grid-cols-2">
         {data?.reports.map((r) => {
           const mins = Math.floor((secondsSince(r.created_at, now) || 0) / 60);
@@ -96,6 +98,7 @@ export default function ReportsPage() {
           );
         })}
       </ul>
+      </div>
       {photo && <PhotoDialog src={photo.src} alt={photo.alt} onClose={closePhoto} />}
     </div>
   );

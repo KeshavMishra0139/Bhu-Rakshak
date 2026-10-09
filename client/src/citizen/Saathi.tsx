@@ -33,7 +33,7 @@ type FaqEntry = { id: string; match: string | null; en: string; hi: string; ne?:
 const FAQ = (faq.entries as FaqEntry[]).map((e) => ({ ...e, re: e.match ? new RegExp(e.match, 'i') : null }));
 type Ask = { question?: string; intent?: string; label: string };
 
-const CHIP = 'min-h-[40px] rounded-full border border-[#cfe0d2] bg-white px-3.5 py-2 text-left text-[14px] font-semibold text-[#17392b] hover:border-[#2d765b] hover:bg-[#e8f3ed]';
+const CHIP = 'min-h-[40px] rounded-full border border-[#cbdde1] bg-white px-3.5 py-2 text-left text-[14px] font-semibold text-[#0b2a33] hover:border-[#0f5e6e] hover:bg-[#e4eff1]';
 
 /** Suggested questions, each answered by a fixed intent so the reply is always on topic. */
 export const SAATHI_PROMPTS = ['status', 'roads', 'travel', 'why', 'prepare', 'signs', 'report', 'rain'] as const;
@@ -175,22 +175,22 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
       const from = placeName(locations[a.from], lang) || a.from;
       const to = placeName(locations[a.to], lang) || a.to;
       return (
-        <button type="button" onClick={() => go(`/citizen/roads/check?from=${encodeURIComponent(a.from)}&to=${encodeURIComponent(a.to)}`)} className={`${BTN} bg-[#17392b] text-white hover:bg-[#21503c]`}>
+        <button type="button" onClick={() => go(`/citizen/roads/check?from=${encodeURIComponent(a.from)}&to=${encodeURIComponent(a.to)}`)} className={`${BTN} bg-[#0b2a33] text-white hover:bg-[#134652]`}>
           <RouteIcon size={16} aria-hidden />{T('citizen.saathi_check_road', { from, to })}
         </button>
       );
     }
     const report = () => go(`/citizen/report${a.report_type ? `?type=${encodeURIComponent(a.report_type)}` : ''}`);
     if (!a.ask_danger) {
-      return <button type="button" onClick={report} className={`${BTN} bg-[#17392b] text-white hover:bg-[#21503c]`}><Megaphone size={16} aria-hidden />{T('citizen.saathi_open_report')}</button>;
+      return <button type="button" onClick={report} className={`${BTN} bg-[#0b2a33] text-white hover:bg-[#134652]`}><Megaphone size={16} aria-hidden />{T('citizen.saathi_open_report')}</button>;
     }
     // One question at a time: danger first, then the report form (which asks one thing per step).
     return (
-      <div className="rounded-2xl border border-[#e3ebe3] bg-white p-3">
+      <div className="rounded-2xl border border-[#e1eaec] bg-white p-3">
         <p className="font-bold">{T('citizen.saathi_danger_q')}</p>
         <div className="mt-2 flex flex-wrap gap-2">
           <button type="button" onClick={() => setEmergency(true)} className={`${BTN} bg-risk-critical text-white`}><Phone size={16} aria-hidden />{T('citizen.saathi_danger_yes')}</button>
-          <button type="button" onClick={report} className={`${BTN} border border-[#cfe0d2] bg-white text-[#17392b] hover:bg-[#e8f3ed]`}><Megaphone size={16} aria-hidden />{T('citizen.saathi_danger_no')}</button>
+          <button type="button" onClick={report} className={`${BTN} border border-[#cbdde1] bg-white text-[#0b2a33] hover:bg-[#e4eff1]`}><Megaphone size={16} aria-hidden />{T('citizen.saathi_danger_no')}</button>
         </div>
       </div>
     );
@@ -233,16 +233,16 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
       {isOpen && (
         <section role="dialog" aria-modal="false" aria-labelledby="saathi-title" lang={chrome}
           onKeyDown={(e) => { if (e.key === 'Escape') close(); }}
-          className="saathi-panel fixed z-[60] inset-x-2 bottom-2 top-[7vh] flex flex-col overflow-hidden rounded-[24px] border border-[#d9e5da] bg-[#fbfcf8] text-[#1d2b24] shadow-[0_24px_80px_rgba(24,53,38,0.28)]
+          className="saathi-panel fixed z-[60] inset-x-2 bottom-2 top-[7vh] flex flex-col overflow-hidden rounded-[24px] border border-[#d5e2e5] bg-[#fbfdfd] text-[#16242a] shadow-[0_24px_80px_rgba(11,42,51,0.28)]
             sm:inset-x-auto sm:left-6 sm:bottom-6 sm:top-auto sm:h-[min(640px,calc(100vh-3rem))] sm:w-[420px]">
-          <header className="bg-[#17392b] px-4 py-3.5 text-white">
+          <header className="bg-[#0b2a33] px-4 py-3.5 text-white">
             <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[#f4c993] text-[#49311f]" aria-hidden><Sparkles size={19} /></span>
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[#d6ecf0] text-[#0b3a46]" aria-hidden><Sparkles size={19} /></span>
               <div className="min-w-0 flex-1">
-                <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#bcd7c0]">{T('citizen.saathi_name')}</p>
-                <h2 id="saathi-title" className="text-lg font-bold leading-tight">{T('citizen.saathi_title')}</h2>
+                <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#b8d3d9]">{T('citizen.saathi_name')}</p>
+                <h2 id="saathi-title" className="text-lg font-semibold leading-tight">{T('citizen.saathi_title')}</h2>
               </div>
-              <button type="button" onClick={close} className="grid h-11 w-11 place-items-center rounded-full text-[#cfe3d1] hover:bg-white/10" aria-label={T('citizen.saathi_close')}>
+              <button type="button" onClick={close} className="grid h-11 w-11 place-items-center rounded-full text-[#cee2e6] hover:bg-white/10" aria-label={T('citizen.saathi_close')}>
                 <X size={20} aria-hidden />
               </button>
             </div>
@@ -253,30 +253,30 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
                 <span className="sr-only">{T('citizen.saathi_lang')}</span>
                 <select name="saathi-lang" value={lang} onChange={(e) => setLang(e.target.value as Lang)} className="bg-transparent text-white outline-none">
                   {/* Explicit colours: the option list is drawn by the browser and would be dark-on-dark in the dark theme. */}
-                  <option value="en" className="bg-white text-[#17392b]">English</option>
-                  <option value="hi" className="bg-white text-[#17392b]">हिन्दी</option>
-                  <option value="ne" className="bg-white text-[#17392b]">नेपाली</option>
+                  <option value="en" className="bg-white text-[#0b2a33]">English</option>
+                  <option value="hi" className="bg-white text-[#0b2a33]">हिन्दी</option>
+                  <option value="ne" className="bg-white text-[#0b2a33]">नेपाली</option>
                 </select>
               </label>
               <button type="button" onClick={toggleVoice} aria-pressed={listening}
-                className={`flex min-h-[40px] items-center gap-2 rounded-full px-3 text-[13px] font-bold ${listening ? 'bg-[#f4c993] text-[#49311f]' : 'bg-white/10 hover:bg-white/15'}`}>
+                className={`flex min-h-[40px] items-center gap-2 rounded-full px-3 text-[13px] font-bold ${listening ? 'bg-[#d6ecf0] text-[#0b3a46]' : 'bg-white/10 hover:bg-white/15'}`}>
                 {listening ? <MicOff size={15} aria-hidden /> : <Mic size={15} aria-hidden />}
                 {listening ? T('citizen.saathi_listening') : T('citizen.saathi_speak')}
               </button>
               <button type="button" onClick={() => { setReadAloud((v) => !v); stopSpeaking(); }} aria-pressed={readAloud}
-                className={`flex min-h-[40px] items-center gap-2 rounded-full px-3 text-[13px] font-bold ${readAloud ? 'bg-[#f4c993] text-[#49311f]' : 'bg-white/10 hover:bg-white/15'}`}>
+                className={`flex min-h-[40px] items-center gap-2 rounded-full px-3 text-[13px] font-bold ${readAloud ? 'bg-[#d6ecf0] text-[#0b3a46]' : 'bg-white/10 hover:bg-white/15'}`}>
                 {readAloud ? <Volume2 size={15} aria-hidden /> : <VolumeX size={15} aria-hidden />}
                 {readAloud ? T('citizen.saathi_voice_on') : T('citizen.saathi_read')}
               </button>
             </div>
-            {chrome !== lang && <p className="mt-2 text-[12px] text-[#cfe3d1]">{T('citizen.saathi_answers_note')}</p>}
+            {chrome !== lang && <p className="mt-2 text-[12px] text-[#cee2e6]">{T('citizen.saathi_answers_note')}</p>}
           </header>
 
-          <div className="flex items-center gap-2 border-b border-[#e3ebe3] bg-[#f3f7f1] px-4 py-2 text-[13px]">
-            <MapPin size={15} className="shrink-0 text-[#2d765b]" aria-hidden />
-            <label htmlFor="saathi-place" className="font-semibold text-[#476350]">{T('citizen.saathi_place')}</label>
+          <div className="flex items-center gap-2 border-b border-[#e1eaec] bg-[#f1f6f7] px-4 py-2 text-[13px]">
+            <MapPin size={15} className="shrink-0 text-[#0f5e6e]" aria-hidden />
+            <label htmlFor="saathi-place" className="font-semibold text-[#3e5a63]">{T('citizen.saathi_place')}</label>
             <select id="saathi-place" value={place || ''} onChange={(e) => setPlaceId(e.target.value || null)}
-              className="min-w-0 flex-1 rounded-lg border border-[#d9e5da] bg-white px-2 py-1.5 font-semibold text-[#1d2b24]">
+              className="min-w-0 flex-1 rounded-lg border border-[#d5e2e5] bg-white px-2 py-1.5 font-semibold text-[#16242a]">
               {!place && <option value="">{T('citizen.saathi_pick_place')}</option>}
               {places.map((l) => <option key={l.id} value={l.id}>{placeName(l, lang)}</option>)}
             </select>
@@ -302,13 +302,13 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
             ))}
             {busy && (
               <Bubble role="assistant">
-                <span className="inline-flex items-center gap-2 text-[#476350]"><Loader2 size={16} className="animate-spin" aria-hidden />{T('citizen.saathi_thinking')}</span>
+                <span className="inline-flex items-center gap-2 text-[#3e5a63]"><Loader2 size={16} className="animate-spin" aria-hidden />{T('citizen.saathi_thinking')}</span>
               </Bubble>
             )}
             {/* Before the first question: the full list of suggestions. */}
             {msgs.length === 0 && !busy && (
               <div className="pt-1">
-                <p className="mb-2 text-[12px] font-bold uppercase tracking-[0.12em] text-[#7a8d80]">{T('citizen.saathi_suggest')}</p>
+                <p className="mb-2 text-[12px] font-bold uppercase tracking-[0.12em] text-[#6f858b]">{T('citizen.saathi_suggest')}</p>
                 <div className="flex flex-wrap gap-2">
                   {SAATHI_PROMPTS.map((k) => (
                     <button key={k} type="button" onClick={() => send({ intent: k, label: T(`citizen.q_${k}`) })} className={CHIP}>
@@ -323,7 +323,7 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
 
           {/* After that: one scrollable row, so the newest answer stays in view. */}
           {msgs.length > 0 && (
-            <div className="flex gap-2 overflow-x-auto border-t border-[#e3ebe3] bg-[#f3f7f1] px-3 py-2" role="group" aria-label={T('citizen.saathi_suggest')}>
+            <div className="flex gap-2 overflow-x-auto border-t border-[#e1eaec] bg-[#f1f6f7] px-3 py-2" role="group" aria-label={T('citizen.saathi_suggest')}>
               {SAATHI_PROMPTS.map((k) => (
                 <button key={k} type="button" disabled={busy} onClick={() => send({ intent: k, label: T(`citizen.q_${k}`) })}
                   className={`${CHIP} shrink-0 whitespace-nowrap disabled:opacity-50`}>
@@ -335,17 +335,17 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
 
           {notice && <p className="mx-4 mb-2 rounded-lg bg-[#fff3df] px-3 py-2 text-[13px] text-[#7a4a12]" role="alert">{notice}</p>}
 
-          <form onSubmit={submit} className="flex items-end gap-2 border-t border-[#e3ebe3] bg-white px-3 py-3">
+          <form onSubmit={submit} className="flex items-end gap-2 border-t border-[#e1eaec] bg-white px-3 py-3">
             <label htmlFor="saathi-input" className="sr-only">{T('citizen.saathi_input')}</label>
             <textarea name="message" autoComplete="off" id="saathi-input" ref={input} rows={1} value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={onKey}
               placeholder={T('citizen.saathi_input')}
-              className="max-h-32 min-h-[44px] flex-1 resize-none rounded-2xl border border-[#d9e5da] bg-[#fbfcf8] px-3.5 py-2.5 text-[16px] text-[#1d2b24] placeholder:text-[#8a9a8f] focus:border-[#2d765b]" />
+              className="max-h-32 min-h-[44px] flex-1 resize-none rounded-2xl border border-[#d5e2e5] bg-[#fbfdfd] px-3.5 py-2.5 text-[16px] text-[#16242a] placeholder:text-[#83979c] focus:border-[#0f5e6e]" />
             <button type="submit" disabled={busy || !draft.trim()} aria-label={T('citizen.saathi_send')}
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#d37e4c] text-white hover:bg-[#bf6d3d] disabled:opacity-50">
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#0b2a33] text-white hover:bg-[#134652] disabled:opacity-50">
               {busy ? <Loader2 size={18} className="animate-spin" aria-hidden /> : <Send size={18} aria-hidden />}
             </button>
           </form>
-          <div className="flex items-center justify-between gap-2 bg-white px-4 pb-3 text-[12px] text-[#6b7d71]">
+          <div className="flex items-center justify-between gap-2 bg-white px-4 pb-3 text-[12px] text-[#5f747a]">
             <span className="truncate">{placeLoc ? T('citizen.saathi_note', { place: placeName(placeLoc, lang) }) : ''}</span>
             <a href="tel:112" className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-risk-critical px-3 py-1.5 font-bold text-white">
               <Phone size={13} aria-hidden />{T('citizen.saathi_danger')}
@@ -357,8 +357,9 @@ export function SaathiProvider({ children }: { children: ReactNode }) {
 
       {!isOpen && (
         <button ref={fab} type="button" onClick={() => open()} aria-haspopup="dialog" aria-label={t('citizen.saathi_open_label')} data-tour="saathi"
-          className="saathi-fab fixed z-40 left-4 bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] md:bottom-6 inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#d37e4c] px-5 text-[15px] font-bold text-white shadow-[0_12px_28px_rgba(211,126,76,0.38)] transition hover:-translate-y-0.5 hover:bg-[#bf6d3d]">
-          <MessageCircle size={20} aria-hidden />{t('citizen.saathi_open')}
+          className="saathi-fab fixed z-40 left-4 bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] md:bottom-6 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-[#0b2a33] px-5 max-sm:w-[52px] max-sm:px-0 text-[15px] font-bold text-white shadow-[0_12px_28px_rgba(11,42,51,0.32)] ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-[#134652] dark:bg-brand dark:text-brand-deep dark:hover:bg-brand/90">
+          {/* Phones: a round chat button, so it covers less of the page (the name stays for screen readers). */}
+          <MessageCircle size={20} aria-hidden /><span className="max-sm:sr-only">{t('citizen.saathi_open')}</span>
         </button>
       )}
     </SaathiCtx.Provider>
@@ -380,17 +381,17 @@ function SourceLine({ sources, basis, T, lang }: { sources?: string[]; basis?: B
   }
   if (sources.includes('forecast')) parts.push(T('citizen.saathi_src_rain', { time: timeIST(basis.weather_fetched_at, lang) }));
   if (sources.includes('roads')) parts.push(T('citizen.saathi_src_roads'));
-  return <p className="mt-1 pl-9 text-[12px] leading-snug text-[#6b7d71]">{parts.join(' · ')}</p>;
+  return <p className="mt-1 pl-9 text-[12px] leading-snug text-[#5f747a]">{parts.join(' · ')}</p>;
 }
 
 function Bubble({ role, children }: { role: Msg['role']; children: ReactNode }) {
   if (role === 'user') {
-    return <div className="flex justify-end"><p className="max-w-[85%] rounded-2xl rounded-br-md bg-[#17392b] px-3.5 py-2.5 text-[15px] leading-relaxed text-white">{children}</p></div>;
+    return <div className="flex justify-end"><p className="max-w-[85%] rounded-2xl rounded-br-md bg-[#0b2a33] px-3.5 py-2.5 text-[15px] leading-relaxed text-white">{children}</p></div>;
   }
   return (
     <div className="flex items-start gap-2">
-      <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-xl bg-[#e8f3ed] text-[#2d765b]" aria-hidden><Sparkles size={14} /></span>
-      <p className="max-w-[85%] rounded-2xl rounded-tl-md border border-[#e3ebe3] bg-white px-3.5 py-2.5 text-[15px] leading-relaxed">{children}</p>
+      <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-xl bg-[#e4eff1] text-[#0f5e6e]" aria-hidden><Sparkles size={14} /></span>
+      <p className="max-w-[85%] rounded-2xl rounded-tl-md border border-[#e1eaec] bg-white px-3.5 py-2.5 text-[15px] leading-relaxed">{children}</p>
     </div>
   );
 }

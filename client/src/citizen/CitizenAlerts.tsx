@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Phone, Share2, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Phone, Share2, CheckCircle2, ShieldCheck, Bell } from 'lucide-react';
+import { EmptyState } from '../components/PageHeader';
 import { api, errorKey } from '../api/client';
 import type { AlertItem } from '../api/types';
 import { useRiskStream, useStreamEvent } from '../live/RiskStreamProvider';
@@ -45,10 +46,10 @@ export default function CitizenAlerts() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-[1.8rem] font-bold">{t('citizen.alerts_title')}</h1>
+      <h1 className="text-[1.8rem] font-semibold">{t('citizen.alerts_title')}</h1>
       {err && <p className="field-error" role="alert">{t(err)}</p>}
       {!alerts && !err && <div className="space-y-3">{[0, 1].map((k) => <div key={k} className="h-32 card animate-pulse" />)}</div>}
-      {alerts && alerts.length === 0 && <p className="card p-6 text-muted">{t('citizen.alerts_empty')}</p>}
+      {alerts && alerts.length === 0 && <EmptyState icon={<Bell size={24} />}><p>{t('citizen.alerts_empty')}</p></EmptyState>}
       <ul className="space-y-3">
         {alerts?.map((a) => {
           const clear = a.kind === 'all_clear';
@@ -66,7 +67,7 @@ export default function CitizenAlerts() {
                 {cancelled && <span className="text-sm font-semibold">{t('citizen.cancelled')}</span>}
                 <span className="label-mono ml-auto">{dateTimeIST(a.created_at, lang)}</span>
               </div>
-              <h2 className="mt-2 text-xl font-bold">{isDeva(lang) ? a.title_hi : a.title_en}</h2>
+              <h2 className="mt-2 text-xl font-semibold">{isDeva(lang) ? a.title_hi : a.title_en}</h2>
               <p className="text-sm text-muted">{isDeva(lang) ? a.target_name_hi : a.target_name_en}</p>
               <p className="mt-2 text-[1.05rem]">{isDeva(lang) ? a.body_hi : a.body_en}</p>
               <div className="mt-4 flex flex-wrap gap-2">

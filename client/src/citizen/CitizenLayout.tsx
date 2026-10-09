@@ -59,7 +59,7 @@ export function CitizenLayout({ children }: { children: ReactNode }) {
     return () => { delete d.barLight; delete d.barDark; applyThemeColor(resolved); };
   }, [resolved]);
   const linkCls = ({ isActive }: { isActive: boolean }) =>
-    `px-3 py-2 rounded-lg font-semibold ${isActive ? 'bg-brand/12 text-brand' : 'text-muted hover:text-ink'}`;
+    `whitespace-nowrap px-3 py-2 rounded-lg font-semibold transition-colors ${isActive ? 'bg-brand/10 text-brand' : 'text-muted hover:text-ink hover:bg-surface-2'}`;
   return (
     <div className="min-h-screen pb-24 md:pb-10">
       <header className="bg-surface border-b border-line">
@@ -76,7 +76,8 @@ export function CitizenLayout({ children }: { children: ReactNode }) {
           <InstallButton />
           <span className="hidden sm:inline"><LiveIndicator /></span>
           <LanguageToggle />
-          <span className="hidden md:inline"><ThemeToggle /></span>
+          {/* Only on very wide screens so the menu never wraps (theme is also on the Profile page). */}
+          <span className="hidden 2xl:inline"><ThemeToggle /></span>
         </div>
       </header>
       <div className="mx-auto max-w-[1100px] px-4 empty:hidden [&>*]:mt-3"><OfflineBanner /></div>

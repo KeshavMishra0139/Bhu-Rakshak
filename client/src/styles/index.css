@@ -70,8 +70,9 @@ html[lang='hi'] body, html[lang='ne'] body { @apply font-deva; line-height: 1.65
 
 /* Headings: a display face with a little more character than the body text, balanced line breaks. Tighter tracking
    only for Latin-script languages (it would crowd Devanagari and Bengali). */
-h1, h2, h3 { @apply font-display; text-wrap: balance; }
+h1, h2, h3 { @apply font-display font-semibold; text-wrap: balance; }
 html:is([lang='en'], [lang='lus'], [lang='nag']) h1 { letter-spacing: -0.02em; }
+html:is([lang='en'], [lang='lus'], [lang='nag']) :is(h2, h3) { letter-spacing: -0.01em; }
 p { text-wrap: pretty; }
 ::selection { background: rgb(var(--brand) / 0.25); }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
@@ -112,6 +113,19 @@ p { text-wrap: pretty; }
   .field-label { @apply block text-sm font-semibold mb-1.5; }
   .field-hint { @apply mt-1 text-sm text-muted; }
   .field-error { @apply mt-1 text-sm text-risk-critical; }
+  /* Segmented filters (inbox, field reports): one track, the chosen option filled with the brand colour. */
+  .seg { @apply inline-flex flex-wrap items-center gap-0.5 rounded-[10px] border border-line bg-surface p-0.5; }
+  .seg-btn { @apply rounded-[8px] px-3 py-1.5 text-sm font-semibold text-muted hover:text-ink hover:bg-surface-2; transition: background-color 0.18s, color 0.18s; }
+  .seg-btn[aria-selected='true'] { @apply bg-brand text-white shadow-sm hover:bg-brand hover:text-white; }
+  [data-theme='dark'] .seg-btn[aria-selected='true'] { @apply text-brand-deep hover:text-brand-deep; }
+  /* Data tables: quiet uppercase column heads, hairline rows. */
+  .data-table thead th { @apply text-[0.72rem] font-semibold uppercase tracking-[0.06em] text-muted; }
+  .data-table tbody tr { transition: background-color 0.15s; }
+  .data-table tbody tr:hover { background: rgb(var(--surface-2) / 0.6); }
+  /* Small uppercase label above a group of fields or a list. */
+  .eyebrow { @apply text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-muted; }
+  /* Letter-spacing would pull Devanagari and Bengali conjuncts apart. */
+  html:not(:is([lang='en'], [lang='lus'], [lang='nag'])) :is(.eyebrow, .data-table thead th) { letter-spacing: 0; }
 }
 
 /* ---------- Entrances ---------- */
@@ -180,23 +194,23 @@ p { text-wrap: pretty; }
 
 /* Corridor watch console (authority map), from the team's citizen-portal map. */
 .map-console {
-  background: rgb(21 36 28); border: 1px solid rgb(155 193 161 / 0.22); border-radius: 1.5rem; min-height: 440px;
-  display: grid; overflow: hidden; box-shadow: 0 22px 60px rgb(6 17 12 / 0.24);
+  background: rgb(11 42 51); border: 1px solid rgb(140 190 200 / 0.2); border-radius: 1.5rem; min-height: 440px;
+  display: grid; overflow: hidden; box-shadow: 0 22px 60px rgb(4 16 20 / 0.24);
 }
 @media (min-width: 1024px) { .map-console { grid-template-columns: minmax(0, 1fr) 360px; grid-template-rows: minmax(0, 1fr); } }
 @media (max-width: 767px) { .map-console { border-radius: 0; border: 0; } }
-.map-rail { color: #fff; background: linear-gradient(rgb(24 36 30), rgb(16 25 20)); padding: 1.15rem; }
+.map-rail { color: #fff; background: linear-gradient(rgb(14 47 57), rgb(9 33 41)); padding: 1.15rem; }
 .map-legend {
-  color: rgb(71 99 80); background: rgb(255 255 255 / 0.9); border: 1px solid rgb(255 255 255 / 0.7); border-radius: 999px;
+  color: rgb(62 90 99); background: rgb(255 255 255 / 0.9); border: 1px solid rgb(255 255 255 / 0.7); border-radius: 999px;
   display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.45rem 0.6rem; font-size: 0.62rem; font-weight: 800;
-  box-shadow: 0 4px 12px rgb(25 45 31 / 0.08);
+  box-shadow: 0 4px 12px rgb(11 42 51 / 0.08);
 }
 .map-table-row {
   display: flex; align-items: center; gap: 0.45rem; width: 100%; padding: 0.8rem 0.45rem; text-align: left;
   border-bottom: 1px solid rgb(255 255 255 / 0.07); transition: background 0.16s, transform 0.16s;
 }
-.map-table-row:hover, .map-table-row.active { background: rgb(106 160 119 / 0.16); border-radius: 0.75rem; transform: translateX(2px); }
-.map-table-row:focus-visible { outline: 2px solid #9dc6a5; outline-offset: 2px; border-radius: 0.75rem; }
+.map-table-row:hover, .map-table-row.active { background: rgb(110 170 182 / 0.14); border-radius: 0.75rem; transform: translateX(2px); }
+.map-table-row:focus-visible { outline: 2px solid #8ec4cc; outline-offset: 2px; border-radius: 0.75rem; }
 /* Classic teardrop pins on the watch map, labelled by risk level. */
 .watch-pin { filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.35)); transform-origin: 50% 100%; }
 .watch-pin svg { display: block; transition: transform 0.18s cubic-bezier(0.23, 1, 0.32, 1); transform-origin: 50% 100%; }

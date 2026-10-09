@@ -63,7 +63,7 @@ export function IncidentDetail({ id, onClose }: { id: string; onClose?: () => vo
     <div className="space-y-5">
       <div className="flex items-start gap-3">
         <div className="flex-1">
-          <h3 className="text-lg font-bold leading-snug">{inc.title}</h3>
+          <h3 className="text-lg font-semibold leading-snug">{inc.title}</h3>
           <p className="text-sm text-muted">{placeName(inc, lang)}, {t(`districts.${inc.district}`)} · {t(`incidents.src_${inc.source}`)}</p>
           <p className="label-mono">{t('incidents.detected_at', { time: dateTimeIST(inc.detected_at, lang) })}</p>
         </div>

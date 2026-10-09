@@ -26,37 +26,37 @@ export function MapTypePicker({ value, onChange, iconOnly = false }: { value: Ba
       {iconOnly ? (
         <button ref={button} type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-haspopup="true"
           aria-label={`${t('map.map_type')}: ${t(`map.${value}`)}`} title={`${t('map.map_type')}: ${t(`map.${value}`)}`}
-          className={`inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/80 bg-white/95 text-[#315542] shadow-sm backdrop-blur transition hover:bg-[#e8f3ed] active:scale-95 ${open ? '!bg-[#2a5d43] !text-[#d7efd8] !border-[#2a5d43]' : ''}`}>
+          className={`inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/80 bg-white/95 text-[#1f4a55] shadow-sm backdrop-blur transition hover:bg-[#e4eff1] active:scale-95 ${open ? '!bg-[#1b5f6c] !text-[#dcedf0] !border-[#1b5f6c]' : ''}`}>
           <Globe size={16} aria-hidden />
         </button>
       ) : (
         <button ref={button} type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-haspopup="true"
-          className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-white/80 bg-white/95 px-3 text-[11px] font-bold text-[#315542] shadow-sm backdrop-blur hover:bg-[#e8f3ed]">
+          className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-white/80 bg-white/95 px-3 text-[11px] font-bold text-[#1f4a55] shadow-sm backdrop-blur hover:bg-[#e4eff1]">
           <Layers3 size={14} aria-hidden />
           <span className="sr-only">{t('map.map_type')}: </span>{t(`map.${value}`)}
           <ChevronDown size={13} aria-hidden className={open ? 'rotate-180' : ''} />
         </button>
       )}
       {open && (
-        <div className={`pop-enter absolute w-[292px] rounded-2xl border border-[#d9e5da] bg-white p-3 shadow-xl ${iconOnly ? 'right-full top-0 mr-2 origin-top-right' : 'right-0 top-[calc(100%+6px)]'}`}>
-          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#7a8d80]">{t('map.map_type')}</p>
+        <div className={`pop-enter absolute w-[292px] rounded-2xl border border-[#d5e2e5] bg-white p-3 shadow-xl ${iconOnly ? 'right-full top-0 mr-2 origin-top-right' : 'right-0 top-[calc(100%+6px)]'}`}>
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#6f858b]">{t('map.map_type')}</p>
           <div role="radiogroup" aria-label={t('map.map_type')} className="grid grid-cols-3 gap-2">
             {BASEMAPS.map((b) => {
               const selected = b.id === value;
               return (
                 <button key={b.id} type="button" role="radio" aria-checked={selected} onClick={() => { onChange(b.id); setOpen(false); button.current?.focus(); }}
-                  className={`group rounded-xl p-1 text-center ${selected ? 'bg-[#e8f3ed] ring-2 ring-[#2d765b]' : 'hover:bg-[#f3f7f1]'}`}>
-                  <span className="relative block h-[62px] overflow-hidden rounded-lg bg-[#dcebdc]">
+                  className={`group rounded-xl p-1 text-center ${selected ? 'bg-[#e4eff1] ring-2 ring-[#0f5e6e]' : 'hover:bg-[#f1f6f7]'}`}>
+                  <span className="relative block h-[62px] overflow-hidden rounded-lg bg-[#dbe7ea]">
                     <img src={tileThumb(basemapUrl(b, resolved))} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                     {basemapOverlays(b, resolved).map((o) => <img key={o.url} src={tileThumb(o.url)} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />)}
-                    {selected && <span className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-[#2d765b] text-white"><Check size={12} aria-hidden /></span>}
+                    {selected && <span className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-[#0f5e6e] text-white"><Check size={12} aria-hidden /></span>}
                   </span>
-                  <span className="mt-1 block text-[11px] font-bold text-[#17392b]">{t(`map.${b.id}`)}</span>
+                  <span className="mt-1 block text-[11px] font-bold text-[#0b2a33]">{t(`map.${b.id}`)}</span>
                 </button>
               );
             })}
           </div>
-          <p className="mt-2 text-[10px] leading-4 text-[#6b7d71]">{t(`map.${value}_hint`)}</p>
+          <p className="mt-2 text-[10px] leading-4 text-[#5f747a]">{t(`map.${value}_hint`)}</p>
         </div>
       )}
     </div>

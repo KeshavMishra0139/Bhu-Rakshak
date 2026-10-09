@@ -25,7 +25,7 @@ export function ScenarioControl() {
 
   return (
     <section className="card p-4" aria-labelledby="scenario-title">
-      <h2 id="scenario-title" className="font-bold text-lg inline-flex items-center gap-2"><CloudLightning size={20} aria-hidden />{t('authority.scenario_title')}</h2>
+      <h2 id="scenario-title" className="font-semibold text-lg inline-flex items-center gap-2"><CloudLightning size={20} aria-hidden />{t('authority.scenario_title')}</h2>
       <p className="text-sm text-muted mt-1">{t('authority.scenario_hint')}</p>
       <fieldset className="mt-3" disabled={active || busy}>
         <legend className="field-label">{t('authority.scenario_corridors')}</legend>

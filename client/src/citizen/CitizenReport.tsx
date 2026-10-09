@@ -94,13 +94,13 @@ export default function CitizenReport() {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
       <section className="card p-5 sm:p-6">
-        <h1 className="text-[1.8rem] font-bold">{t('citizen.report_title')}</h1>
+        <h1 className="text-[1.8rem] font-semibold">{t('citizen.report_title')}</h1>
         <p className="text-muted">{t('citizen.report_intro')}</p>
 
         {done ? (
           <div className="mt-6 text-center py-6" role="status">
             <CheckCircle2 size={56} className="mx-auto text-risk-low" aria-hidden />
-            <h2 className="mt-3 text-2xl font-bold">{t('citizen.report_sent')}</h2>
+            <h2 className="mt-3 text-2xl font-semibold">{t('citizen.report_sent')}</h2>
             <p className="mt-1 text-muted">{t('citizen.report_sent_body')}</p>
             <button type="button" className="btn-secondary mt-5" onClick={reset}>{t('citizen.report_another')}</button>
           </div>
@@ -126,7 +126,7 @@ export default function CitizenReport() {
 
             {step === 2 && (
               <div className="mt-5 space-y-4">
-                <h2 className="text-xl font-bold">{t('citizen.step2')}</h2>
+                <h2 className="text-xl font-semibold">{t('citizen.step2')}</h2>
                 <div>
                   <label className="btn-secondary cursor-pointer">
                     <Camera size={18} aria-hidden />{photo ? t('citizen.change_photo') : t('citizen.add_photo')}
@@ -149,7 +149,7 @@ export default function CitizenReport() {
 
             {step === 3 && (
               <div className="mt-5 space-y-4">
-                <h2 className="text-xl font-bold">{t('citizen.step3')}</h2>
+                <h2 className="text-xl font-semibold">{t('citizen.step3')}</h2>
                 <button type="button" className="btn-secondary" onClick={gps}><Crosshair size={18} aria-hidden />{t('citizen.loc_gps')}</button>
                 {gpsErr && <p className="field-error" role="alert">{t('citizen.gps_denied')}</p>}
                 <p className="text-sm text-muted">{t('citizen.loc_pin')}</p>
@@ -178,7 +178,7 @@ export default function CitizenReport() {
       </section>
 
       <section className="card p-5" aria-labelledby="mine-title">
-        <h2 id="mine-title" className="text-lg font-bold">{t('citizen.my_reports')}</h2>
+        <h2 id="mine-title" className="text-lg font-semibold">{t('citizen.my_reports')}</h2>
         {mine.length === 0 && <p className="mt-2 text-muted">{t('citizen.no_reports')}</p>}
         <ul className="mt-3 divide-y divide-line">
           {mine.map((r) => (

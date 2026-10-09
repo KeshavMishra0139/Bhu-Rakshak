@@ -74,40 +74,40 @@ export function MapSearch({ locations, onPickStation, onPickPlace, autoFocus = f
 
   return (
     <div ref={box} className="pointer-events-auto relative z-20 w-[min(340px,100%)]">
-      <div className="flex items-center gap-2 rounded-xl border border-white/80 bg-white/95 px-3 shadow-sm backdrop-blur focus-within:ring-2 focus-within:ring-[#2d765b]">
-        <Search size={16} className="shrink-0 text-[#476350]" aria-hidden />
+      <div className="flex items-center gap-2 rounded-xl border border-white/80 bg-white/95 px-3 shadow-sm backdrop-blur focus-within:ring-2 focus-within:ring-[#0f5e6e]">
+        <Search size={16} className="shrink-0 text-[#3e5a63]" aria-hidden />
         <input name="place_search" autoComplete="off" type="search" role="combobox" aria-expanded={showList} aria-controls={listId} aria-autocomplete="list"
           aria-activedescendant={showList && options[active] ? optId(active) : undefined} aria-label={t('map.search_label')}
           autoFocus={autoFocus} placeholder={t('map.search_placeholder')} value={q} onChange={(e) => { setQ(e.target.value); setOpen(true); }} onFocus={() => setOpen(true)} onKeyDown={onKey}
-          className="min-h-[40px] w-full bg-transparent text-[13px] font-semibold text-[#1d2b24] placeholder:text-[#7a8d80] outline-none [&::-webkit-search-cancel-button]:hidden" />
-        {state === 'loading' && <Loader2 size={15} className="shrink-0 animate-spin text-[#476350]" aria-hidden />}
+          className="min-h-[40px] w-full bg-transparent text-[13px] font-semibold text-[#16242a] placeholder:text-[#6f858b] outline-none [&::-webkit-search-cancel-button]:hidden" />
+        {state === 'loading' && <Loader2 size={15} className="shrink-0 animate-spin text-[#3e5a63]" aria-hidden />}
         {q && (
           <button type="button" onClick={() => { setQ(''); setPlaces([]); setOpen(false); }} aria-label={t('map.search_clear')}
-            className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-[#476350] hover:bg-[#e8f3ed]"><X size={15} aria-hidden /></button>
+            className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-[#3e5a63] hover:bg-[#e4eff1]"><X size={15} aria-hidden /></button>
         )}
       </div>
 
       {showList && (
         <ul id={listId} role="listbox" aria-label={t('map.search_label')}
-          className="pop-enter origin-top absolute left-0 right-0 top-[calc(100%+6px)] max-h-[320px] overflow-y-auto rounded-xl border border-[#d9e5da] bg-white py-1 text-[13px] text-[#1d2b24] shadow-xl">
-          {stations.length > 0 && <li role="presentation" className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#7a8d80]">{t('map.search_stations')}</li>}
+          className="pop-enter origin-top absolute left-0 right-0 top-[calc(100%+6px)] max-h-[320px] overflow-y-auto rounded-xl border border-[#d5e2e5] bg-white py-1 text-[13px] text-[#16242a] shadow-xl">
+          {stations.length > 0 && <li role="presentation" className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#6f858b]">{t('map.search_stations')}</li>}
           {options.map((o, i) => (
             <Fragment key={o.kind === 'station' ? `s-${o.loc.id}` : `p-${o.place.lat},${o.place.lng}`}>
-              {i === stations.length && <li role="presentation" className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#7a8d80]">{t('map.search_places')}</li>}
+              {i === stations.length && <li role="presentation" className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#6f858b]">{t('map.search_places')}</li>}
               <li id={optId(i)} role="option" aria-selected={i === active}
                 onMouseDown={(e) => e.preventDefault()} onClick={() => choose(o)} onMouseEnter={() => setActive(i)}
-                className={`flex cursor-pointer items-start gap-2 px-3 py-2 ${i === active ? 'bg-[#e8f3ed]' : ''}`}>
+                className={`flex cursor-pointer items-start gap-2 px-3 py-2 ${i === active ? 'bg-[#e4eff1]' : ''}`}>
                 {o.kind === 'station'
-                  ? <><ShieldAlert size={15} className="mt-0.5 shrink-0 text-[#cf624f]" aria-hidden /><span><span className="font-bold">{placeName(o.loc, lang)}</span><span className="block text-[11px] text-[#6b7d71]">{t(`districts.${o.loc.district}`)}{o.loc.risk ? ` · ${t(`levels.${o.loc.risk.level}`)}` : ''}</span></span></>
-                  : <><MapPin size={15} className="mt-0.5 shrink-0 text-[#1a73e8]" aria-hidden /><span><span className="font-bold">{o.place.name}</span>{o.place.detail && <span className="block text-[11px] text-[#6b7d71]">{o.place.detail}</span>}</span></>}
+                  ? <><ShieldAlert size={15} className="mt-0.5 shrink-0 text-[#cf624f]" aria-hidden /><span><span className="font-bold">{placeName(o.loc, lang)}</span><span className="block text-[11px] text-[#5f747a]">{t(`districts.${o.loc.district}`)}{o.loc.risk ? ` · ${t(`levels.${o.loc.risk.level}`)}` : ''}</span></span></>
+                  : <><MapPin size={15} className="mt-0.5 shrink-0 text-[#1a73e8]" aria-hidden /><span><span className="font-bold">{o.place.name}</span>{o.place.detail && <span className="block text-[11px] text-[#5f747a]">{o.place.detail}</span>}</span></>}
               </li>
             </Fragment>
           ))}
-          {query.length >= 3 && state === 'idle' && places.length === 0 && stations.length === 0 && <li role="presentation" className="px-3 py-2 text-[#6b7d71]">{t('map.search_none')}</li>}
-          {query.length < 3 && stations.length === 0 && <li role="presentation" className="px-3 py-2 text-[#6b7d71]">{t('map.search_more')}</li>}
+          {query.length >= 3 && state === 'idle' && places.length === 0 && stations.length === 0 && <li role="presentation" className="px-3 py-2 text-[#5f747a]">{t('map.search_none')}</li>}
+          {query.length < 3 && stations.length === 0 && <li role="presentation" className="px-3 py-2 text-[#5f747a]">{t('map.search_more')}</li>}
           {state === 'error' && <li role="presentation" className="px-3 py-2 text-[#a8681f]">{t('map.search_unavailable')}</li>}
-          {state === 'loading' && <li role="presentation" className="px-3 py-2 text-[#6b7d71]">{t('map.search_loading')}</li>}
-          {places.length > 0 && <li role="presentation" className="px-3 pb-1 pt-2 text-[10px] text-[#8a9a8f]">{t('map.search_credit')}</li>}
+          {state === 'loading' && <li role="presentation" className="px-3 py-2 text-[#5f747a]">{t('map.search_loading')}</li>}
+          {places.length > 0 && <li role="presentation" className="px-3 pb-1 pt-2 text-[10px] text-[#83979c]">{t('map.search_credit')}</li>}
         </ul>
       )}
     </div>

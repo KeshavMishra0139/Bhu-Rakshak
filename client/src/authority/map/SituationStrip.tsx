@@ -31,10 +31,10 @@ export function SituationStrip({ list, reports }: { list: LocationSnap[]; report
   const item = 'flex shrink-0 items-center gap-2 rounded-xl px-3 py-1.5';
   const link = `${item} hover:bg-white/10 focus-visible:bg-white/10`;
   const num = 'text-lg font-bold leading-none tabular-nums text-white';
-  const label = 'text-[11px] font-semibold leading-tight text-[#9fb3a6]';
+  const label = 'text-[11px] font-semibold leading-tight text-[#9db3b8]';
 
   return (
-    <section aria-label={t('sit.label')} className="flex items-center gap-1 overflow-x-auto rounded-2xl border border-[rgb(155_193_161/0.22)] bg-[#15241c] px-2 py-1.5 text-[#d7efd8] shadow-[0_10px_30px_rgb(6_17_12/0.18)] max-md:rounded-none max-md:border-x-0">
+    <section aria-label={t('sit.label')} className="flex items-center gap-1 overflow-x-auto rounded-2xl border border-[rgb(140_190_200/0.2)] bg-[#0b2a33] px-2 py-1.5 text-[#dcedf0] shadow-[0_10px_30px_rgb(4_16_20/0.18)] max-md:rounded-none max-md:border-x-0">
       <div className="flex shrink-0 items-center" role="group" aria-label={t('sit.by_level')}>
         {ORDER.map((lv) => (
           <div key={lv} className={item}>
@@ -46,24 +46,24 @@ export function SituationStrip({ list, reports }: { list: LocationSnap[]; report
       </div>
       <span className="mx-1 h-7 w-px shrink-0 bg-white/10" aria-hidden />
       <Link to={withPane('/authority/zones')} className={link}>
-        <ShieldAlert size={16} className={red ? 'text-[#ff8a80]' : 'text-[#9fb3a6]'} aria-hidden />
+        <ShieldAlert size={16} className={red ? 'text-[#ff8a80]' : 'text-[#9db3b8]'} aria-hidden />
         <span className={num}>{list.length ? red : '–'}</span><span className={label}>{t('sit.red_zones')}</span>
       </Link>
       {can('incidents.view') && (
         <>
           <Link to={withPane('/authority/incidents')} className={link}>
-            <ClipboardList size={16} className="text-[#9fb3a6]" aria-hidden />
+            <ClipboardList size={16} className="text-[#9db3b8]" aria-hidden />
             <span className={num}>{openIncidents ?? '–'}</span><span className={label}>{t('sit.open_incidents')}</span>
           </Link>
           <Link to={withPane('/authority/reports')} className={link}>
-            <FileWarning size={16} className={waiting ? 'text-[#f4c993]' : 'text-[#9fb3a6]'} aria-hidden />
+            <FileWarning size={16} className={waiting ? 'text-[#f4c993]' : 'text-[#9db3b8]'} aria-hidden />
             <span className={num}>{waiting ?? '–'}</span><span className={label}>{t('sit.reports_waiting')}</span>
           </Link>
         </>
       )}
       <div className={`${item} ml-auto`} title={t('sit.rain_title')}>
         <CloudRain size={16} className={mins == null ? 'text-[#f4c993]' : 'text-[#9dd2a6]'} aria-hidden />
-        <span className="text-xs font-semibold text-[#d7efd8]">
+        <span className="text-xs font-semibold text-[#dcedf0]">
           {mins == null ? t('sit.rain_not_live') : mins < 1 ? t('sit.rain_now') : t('sit.rain_age', { count: mins })}
         </span>
       </div>

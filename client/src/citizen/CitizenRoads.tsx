@@ -59,7 +59,7 @@ function RoadDirections({ road, stops, state }: { road: Road; stops: LocationSna
   return (
     <div className="space-y-3">
       <section className="rounded-lg border border-line p-3 space-y-2" aria-label={t('roads.nav_title')}>
-        <h3 className="font-bold inline-flex items-center gap-1.5"><Navigation size={17} aria-hidden />{t('roads.nav_title')}</h3>
+        <h3 className="font-semibold inline-flex items-center gap-1.5"><Navigation size={17} aria-hidden />{t('roads.nav_title')}</h3>
         <div role="radiogroup" aria-label={t('roads.nav_towards_label')} className="flex flex-wrap gap-2">
           {[destination, origin].map((end, i) => {
             const on = towardsStart === (i === 1);
@@ -113,7 +113,7 @@ export default function CitizenRoads() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-[1.8rem] font-bold">{t('citizen.roads_title')}</h1>
+        <h1 className="text-[1.8rem] font-semibold">{t('citizen.roads_title')}</h1>
         <p className="text-muted">{t('citizen.roads_intro')}</p>
         <Link to={withPane('/citizen/roads/check')} className="btn-primary mt-3 w-full sm:w-auto"><Route size={18} aria-hidden />{t('corridor.cta')}</Link>
       </div>

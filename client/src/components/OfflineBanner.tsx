@@ -55,7 +55,7 @@ export function InstallButton({ className = '' }: { className?: string }) {
   useEffect(() => onInstallAvailable(setAvailable), []);
   if (!available) return null;
   return (
-    <button type="button" onClick={() => promptInstall()} className={`btn-ghost px-2.5 text-sm ${className}`} title={t('offline.install_tip')}>
+    <button type="button" onClick={() => promptInstall()} className={`btn-ghost whitespace-nowrap px-2.5 text-sm ${className}`} title={t('offline.install_tip')}>
       <Download size={17} aria-hidden /><span className="max-sm:sr-only">{t('offline.install')}</span>
     </button>
   );

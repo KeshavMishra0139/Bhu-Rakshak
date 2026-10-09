@@ -128,7 +128,7 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
     return (
       <div className="min-w-0">
         <span className="field-label inline-flex items-center gap-1.5">
-          <span className="grid h-5 w-5 place-items-center rounded-full text-[11px] font-bold text-white" style={{ background: w === 'start' ? '#2d765b' : '#15241c' }} aria-hidden>{w === 'start' ? 'A' : 'B'}</span>
+          <span className="grid h-5 w-5 place-items-center rounded-full text-[11px] font-bold text-white" style={{ background: w === 'start' ? '#0f5e6e' : '#0b2a33' }} aria-hidden>{w === 'start' ? 'A' : 'B'}</span>
           {t(`corridor.${w}`)}
         </span>
         {p ? (
@@ -159,7 +159,7 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
     <div className="space-y-4">
       <div>
         <Link to={withPane(backTo)} className="inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline"><ArrowLeft size={15} aria-hidden />{t('corridor.back')}</Link>
-        <h1 className="mt-1 text-[1.7rem] font-bold leading-tight">{t('corridor.title')}</h1>
+        <h1 className="mt-1 text-[1.7rem] font-semibold leading-tight">{t('corridor.title')}</h1>
         <p className="text-muted">{t('corridor.intro')}</p>
       </div>
 
@@ -196,7 +196,7 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
               onPick={(p) => { if (!picking) return; set(picking, { lat: p[0], lng: p[1], label: `${p[0].toFixed(4)}, ${p[1].toFixed(4)}` }); setPicking(null); }} />
           </Suspense>
           {picking && (
-            <p className="pointer-events-none absolute left-3 top-3 z-[1100] max-w-[calc(100%-1.5rem)] rounded-pill bg-[#15241c]/90 px-3 py-1.5 text-xs font-semibold text-[#d7efd8] shadow">
+            <p className="pointer-events-none absolute left-3 top-3 z-[1100] max-w-[calc(100%-1.5rem)] rounded-pill bg-[#0b2a33]/90 px-3 py-1.5 text-xs font-semibold text-[#dcedf0] shadow">
               {t('corridor.tap_map', { which: t(`corridor.${picking}`) })}
             </p>
           )}
@@ -217,7 +217,7 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
           {main && sum && (
             <section className="card overflow-hidden fade-enter" aria-labelledby="cc-summary">
               <div className="p-4" style={{ borderTop: `6px solid ${sum.worst === 'none' ? SEG_COLOR_NONE : levelVar(sum.worst)}` }}>
-                <h2 id="cc-summary" className="text-xl font-bold leading-tight">
+                <h2 id="cc-summary" className="text-xl font-semibold leading-tight">
                   {sum.high > 0 ? t('corridor.summary', { high: sum.high, total: sum.total }) : t('corridor.summary_none', { total: sum.total })}
                 </h2>
                 <p className="mt-1 text-sm text-muted">{t('corridor.distance', { km: km(main.distance_m), dur: dur(main.duration_s) })}</p>
@@ -248,7 +248,7 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
 
           {main && sum && sum.high > 0 && (
             <section className="card p-4 fade-enter" aria-labelledby="cc-alt" aria-live="polite">
-              <h2 id="cc-alt" className="flex items-center gap-2 font-bold"><ShieldCheck size={18} className="text-brand" aria-hidden />{t('corridor.alt_title')}</h2>
+              <h2 id="cc-alt" className="flex items-center gap-2 font-semibold"><ShieldCheck size={18} className="text-brand" aria-hidden />{t('corridor.alt_title')}</h2>
               {altState === 'idle' && (
                 <button type="button" className="btn-secondary mt-2 !min-h-[40px] text-sm" onClick={() => pts.start && pts.end && findAlt(pts.start, pts.end)}>{t('corridor.alt_find')}</button>
               )}
@@ -281,7 +281,7 @@ export default function CorridorCheckPage({ backTo = '/citizen/roads' }: { backT
 
           {main && sum && (
             <section className="card p-3" aria-labelledby="cc-segs">
-              <h2 id="cc-segs" className="px-1 pb-2 font-bold">{t('corridor.segments', { n: sum.total })}</h2>
+              <h2 id="cc-segs" className="px-1 pb-2 font-semibold">{t('corridor.segments', { n: sum.total })}</h2>
               <ol ref={listRef} className="space-y-1.5 lg:max-h-[calc(100dvh-26rem)] lg:overflow-y-auto lg:pr-1">
                 {(wide ? rows : visibleRows).map((row) => {
                   const near = row.seg.place_id ? locations[row.seg.place_id] : null;

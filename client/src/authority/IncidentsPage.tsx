@@ -6,7 +6,7 @@ import { RiskBadge } from '../components/RiskBadge';
 import { dateTimeIST, placeName } from '../lib/format';
 import { useLive } from './useLive';
 import { IncidentDetail, STAGES } from './IncidentDetail';
-import { Clock } from 'lucide-react';
+import { Clock, ClipboardList } from 'lucide-react';
 import { useNow } from '../lib/useNow';
 
 /** "45 min", "3 h 10 min", "2 d 4 h": how long an incident has been open. */
@@ -31,18 +31,19 @@ export default function IncidentsPage() {
 
   return (
     <div className="flex h-full min-h-0">
-      <div className="flex-1 min-w-0 overflow-auto p-4">
-        <div className="flex items-center gap-3 mb-3">
-          <h1 className="text-2xl font-bold flex-1">{t('incidents.title')}</h1>
-          <label className="inline-flex items-center gap-2 text-sm"><input type="checkbox" className="h-4 w-4 accent-[rgb(var(--brand))]" checked={showClosed} onChange={(e) => setShowClosed(e.target.checked)} />{t('incidents.show_closed')}</label>
+      <div className="flex-1 min-w-0 overflow-auto">
+        <div className="flex flex-wrap items-center gap-3 border-b border-line bg-surface px-4 pt-6 pb-5 sm:px-6">
+          <h1 className="flex-1 text-[1.625rem] font-semibold leading-tight">{t('incidents.title')}</h1>
+          <label className="inline-flex items-center gap-2 text-sm font-medium"><input type="checkbox" className="h-4 w-4 accent-[rgb(var(--brand))]" checked={showClosed} onChange={(e) => setShowClosed(e.target.checked)} />{t('incidents.show_closed')}</label>
         </div>
+        <div className="px-4 py-5 sm:px-6">
         {error && <p className="field-error" role="alert">{t(error)}</p>}
         <div className="flex gap-3 overflow-x-auto pb-3">
           {stages.map((s) => {
             const items = (data?.incidents || []).filter((i) => i.stage === s);
             return (
               <section key={s} className="w-[250px] shrink-0 rounded-card bg-surface-2/60 p-2" aria-labelledby={`col-${s}`}>
-                <h2 id={`col-${s}`} className="px-1 py-1 text-sm font-bold flex justify-between">{t(`stage.${s}`)}<span className="font-mono text-muted">{items.length}</span></h2>
+                <h2 id={`col-${s}`} className="flex items-center justify-between px-1.5 py-1 text-sm font-semibold">{t(`stage.${s}`)}<span className="min-w-[1.5rem] rounded-pill bg-surface px-1.5 text-center text-xs font-semibold tabular-nums text-muted shadow-sm">{items.length}</span></h2>
                 <ul className="space-y-2 mt-1">
                   {!data && <li className="h-20 card animate-pulse" />}
                   {data && items.length === 0 && <li className="text-xs text-muted px-1 py-2">{t('incidents.empty')}</li>}
@@ -67,9 +68,15 @@ export default function IncidentsPage() {
             );
           })}
         </div>
+        </div>
       </div>
       <aside className={`${selected ? 'block' : 'hidden xl:block'} w-[420px] max-w-full shrink-0 border-l border-line bg-surface overflow-y-auto p-4 max-xl:absolute max-xl:inset-y-0 max-xl:right-0 max-xl:z-[700] max-xl:shadow-2xl`}>
-        {selected ? <IncidentDetail key={selected} id={selected} onClose={() => select(null)} /> : <p className="text-muted">{t('incidents.select_prompt')}</p>}
+        {selected ? <IncidentDetail key={selected} id={selected} onClose={() => select(null)} /> : (
+          <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center text-muted">
+            <span className="grid h-12 w-12 place-items-center rounded-xl bg-surface-2" aria-hidden><ClipboardList size={24} /></span>
+            <p className="max-w-[16rem]">{t('incidents.select_prompt')}</p>
+          </div>
+        )}
       </aside>
     </div>
   );
